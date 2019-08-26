@@ -13,7 +13,7 @@ extend RSpec::WithParams::DSL
 		[nil,nil],
 	) do
 		it 'responds to command request' do
-			SupervisorRunner.with_site do |task,site|
+			RSMP::SiteTester.connected do |task,site|
 				site.send_command 'AA+BBCCC=DDDEE002', [{"cCI":"MA104","n":"message","cO":"","v":"Rainbows!"}]
 				response = site.wait_for_command_response component: 'AA+BBCCC=DDDEE002', timeout: 1
 				expect(response).to be_a(RSMP::CommandResponse)

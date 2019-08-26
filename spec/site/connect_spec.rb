@@ -50,13 +50,13 @@ extend RSpec::WithParams::DSL
 			]],
 		) do
 			it 'exchanges correct connection sequence' do
-				SupervisorRunner.without_site do |task|
+				RSMP::SiteTester.disconnected do |task|
 					supervisor = RSMP::Supervisor.new supervisor_settings: {
 						'rsmp_versions' =>  [version],
 						'log' => { 'active' => false }
 					}
 					supervisor.start
-					remote_site = SupervisorRunner.instance.wait_for_site supervisor
+					remote_site = RSMP::SiteTester.instance.wait_for_site supervisor
 			
 					items = supervisor.archive.capture task, with_message: true, num: expected_sequence.size, timeout: 1, from: 0
 					got = items.map { |item| item[:message] }.map { |message| [message.direction.to_s, message.type] }

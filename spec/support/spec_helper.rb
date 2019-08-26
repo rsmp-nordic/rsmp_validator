@@ -1,6 +1,6 @@
 require 'rsmp'
 require 'rspec/with_params/dsl'
-require_relative 'supervisor_runner'
+require_relative 'site_tester'
 
 
 RSpec.configure do |config|
