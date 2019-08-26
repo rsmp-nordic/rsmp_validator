@@ -8,7 +8,6 @@ module RSMP
 
     def initialize
       @reactor = Async::Reactor.new
-      @supervisor = RSMP::Supervisor.new supervisor_settings: { 'log' => { 'active' => false }}
     end
 
     def within_reactor &block
@@ -21,6 +20,7 @@ module RSMP
 
     def start
       return if @remote_site
+      @supervisor = RSMP::Supervisor.new supervisor_settings: { 'log' => { 'active' => false }} unless @supervisor
       @supervisor.start
       @remote_site = wait_for_site @supervisor
     end
@@ -29,12 +29,13 @@ module RSMP
       return unless @remote_site
       @supervisor.stop
       @remote_site = nil
+      @supervisor = nil
     end
 
     def connected &block
       within_reactor do |task|
         start
-        yield task, @remote_site
+        yield task, @supervisor, @remote_site
       end
     end
 
@@ -45,12 +46,24 @@ module RSMP
       end
     end
 
+    def reconnected &block
+      within_reactor do |task|
+        stop
+        start
+        yield task, @supervisor, @remote_site
+      end
+    end
+
     def self.connected &block
       instance.connected &block
     end
 
     def self.disconnected &block
       instance.disconnected &block
+    end
+
+    def self.reconnected &block
+      instance.reconnected &block
     end
 
     def wait_for_site supervisor
