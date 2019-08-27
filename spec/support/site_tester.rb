@@ -14,22 +14,24 @@ module RSMP
       @reactor.run do |task|
         yield task
       ensure
-        @reactor.stop
+        Async::Task.current.stop
       end
     end
 
     def start
-      return if @remote_site
-      @supervisor = RSMP::Supervisor.new supervisor_settings: { 'log' => { 'active' => false }} unless @supervisor
-      @supervisor.start
-      @remote_site = wait_for_site @supervisor
+      unless @supervisor
+        @supervisor = RSMP::Supervisor.new supervisor_settings: { 'log' => { 'active' => false }}
+        @supervisor.start
+        @remote_site = wait_for_site @supervisor
+      end
     end
 
     def stop
-      return unless @remote_site
-      @supervisor.stop
-      @remote_site = nil
-      @supervisor = nil
+      if @supervisor
+        @supervisor.stop
+        @supervisor = nil
+        @remote_site = nil
+      end
     end
 
     def connected &block
