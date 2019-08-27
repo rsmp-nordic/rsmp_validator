@@ -1,5 +1,5 @@
 require 'rsmp'
-require_relative 'site_tester'
+require_relative 'test_site'
 
 
 RSpec.configure do |config|

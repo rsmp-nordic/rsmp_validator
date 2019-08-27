@@ -1,7 +1,7 @@
 RSpec.describe "RSMP site connection" do
-  
+
   def check_connection_sequence versions, expected
-    RSMP::SiteTester.reconnected('rsmp_versions' => [versions].flatten) do |task,supervisor,site|
+    TestSite.reconnected('rsmp_versions' => [versions].flatten) do |task,supervisor,site|
       items = supervisor.archive.capture task, with_message: true, num: expected.size, timeout: 1, from: 0
       got = items.map { |item| item[:message] }.map { |message| [message.direction.to_s, message.type] }
       expect(got).to eq(expected)

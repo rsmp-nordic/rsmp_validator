@@ -1,6 +1,6 @@
 RSpec.describe "RSMP site commands" do
   it 'responds to valid command request' do
-    RSMP::SiteTester.connected do |task,supervisor,site|
+    TestSite.connected do |task,supervisor,site|
       # TODO
       # list of compoments should be read from a config, or fetched from the site
       # list of commands and parameters should be read from an SXL specification (in JSON Schema?)
