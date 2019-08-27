@@ -1,4 +1,4 @@
 source "https://rubygems.org"
 
-gem 'rsmp', git: '/Users/emiltin/Documents/code/rsmp', branch: 'master'
+gem 'rsmp', path: '/Users/emiltin/Documents/code/rsmp'
 gem 'rspec'

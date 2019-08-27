@@ -1,7 +1,5 @@
-GIT
+PATH
   remote: /Users/emiltin/Documents/code/rsmp
-  revision: 90165f4a4955d12d170e266d21a885339a300ab9
-  branch: master
   specs:
     rsmp (0.1.0)
       async (~> 1.20.1)

@@ -10,10 +10,14 @@ class TestSite
   end
 
   def within_reactor &block
-    @reactor.run do |task|
+    task = @reactor.run do |task|
       yield task
     ensure
-      Async::Task.current.stop
+      # It much faster to use @supervisor.task.stop,
+      # but unfortunately that will kills the task after which
+      # it does not work anymore. Trying to use the supervisor will
+      # result io closed stream errors.
+      @reactor.stop
     end
   end
 
