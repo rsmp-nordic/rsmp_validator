@@ -1,5 +1,4 @@
 require 'rsmp'
-require 'rspec/with_params/dsl'
 require_relative 'site_tester'
 
 

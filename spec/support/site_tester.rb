@@ -18,11 +18,12 @@ module RSMP
       end
     end
 
-    def start
-      unless @supervisor
-        @supervisor = RSMP::Supervisor.new supervisor_settings: { 'log' => { 'active' => false }}
-        @supervisor.start
-        @remote_site = wait_for_site @supervisor
+    def start options={}
+     unless @supervisor
+      supervisor_settings = { 'log' => { 'active' => false }}.merge(options)
+      @supervisor = RSMP::Supervisor.new supervisor_settings: supervisor_settings
+      @supervisor.start
+      @remote_site = wait_for_site @supervisor
       end
     end
 
@@ -34,9 +35,17 @@ module RSMP
       end
     end
 
-    def connected &block
+    def connected options={}, &block
       within_reactor do |task|
-        start
+        start options
+        yield task, @supervisor, @remote_site
+      end
+    end
+
+    def reconnected options={}, &block
+      within_reactor do |task|
+        stop
+        start options
         yield task, @supervisor, @remote_site
       end
     end
@@ -48,24 +57,16 @@ module RSMP
       end
     end
 
-    def reconnected &block
-      within_reactor do |task|
-        stop
-        start
-        yield task, @supervisor, @remote_site
-      end
+    def self.connected options={}, &block
+      instance.connected options, &block
     end
 
-    def self.connected &block
-      instance.connected &block
+    def self.reconnected options={}, &block
+      instance.reconnected options, &block
     end
 
     def self.disconnected &block
       instance.disconnected &block
-    end
-
-    def self.reconnected &block
-      instance.reconnected &block
     end
 
     def wait_for_site supervisor
