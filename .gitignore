@@ -1,4 +1,5 @@
 .rspec_status
+.DS_Store
 
 /.bundle/
 /.yardoc
