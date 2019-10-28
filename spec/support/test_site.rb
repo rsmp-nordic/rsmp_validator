@@ -23,10 +23,16 @@ class TestSite
 
   def start options={}
    unless @supervisor
-    supervisor_settings = { 'log' => { 'active' => false }}.merge(options)
+    log_settings = {
+      'active' => false,
+      'color' => true
+    }
+
+    supervisor_settings = { 'log' => log_settings }.merge(options)
     @supervisor = RSMP::Supervisor.new supervisor_settings: supervisor_settings
     @supervisor.start
     @remote_site = wait_for_site @supervisor
+    @remote_site.wait_for_state :ready, 1
     end
   end
 

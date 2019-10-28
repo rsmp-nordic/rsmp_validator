@@ -36,7 +36,7 @@ Finished in 1.28 seconds (files took 0.20949 seconds to load)
 	
 ~~~~
 
-See https://rspec.info/ for more info about how to run specific test, hot to format output, etc.
+See https://rspec.info/ for more info about how to run specific tests, formatting output, etc.
 
 ## Testing an RSMP supervisor
 To be implemented.
