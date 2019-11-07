@@ -28,7 +28,7 @@ Some tests specify that the connection is reestablished before the test is run. 
 To run test, cd to the root of this project, then:
 	
 ~~~~
-% rspec test/site
+% rspec spec/site
 ............
 
 Finished in 1.28 seconds (files took 0.20949 seconds to load)
@@ -39,4 +39,20 @@ Finished in 1.28 seconds (files took 0.20949 seconds to load)
 See https://rspec.info/ for more info about how to run specific tests, formatting output, etc.
 
 ## Testing an RSMP supervisor
-To be implemented.
+A local RSMP site will be started. The site will try to connect to the remote supervisor at   127.0.0.1:12111. You might have to adjust network settings to enable the site to reach the supervisor.
+
+Once the site has connected, tests will be run to validate aspects like connection sequence, commmands, alarms, etc.
+
+
+To run tests, cd to the root of this project, then:
+	
+~~~~
+% rspec spec/supervisor
+............
+
+Finished in 1.28 seconds (files took 0.20949 seconds to load)
+12 examples, 0 failures
+	
+~~~~
+
+
