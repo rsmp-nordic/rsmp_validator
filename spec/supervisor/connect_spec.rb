@@ -1,7 +1,11 @@
 RSpec.describe "RSMP supervisor connection" do
 
   def check_connection_sequence versions, expected
-    TestSupervisor.reconnected('rsmp_versions' => [versions].flatten) do |task,supervisor_proxy,site|
+    options = {
+      'rsmp_versions' => [versions].flatten,
+      'send_after_connect' => true
+    }
+    TestSupervisor.reconnected(options) do |task,supervisor_proxy,site|
       items = site.archive.capture task, level: :log, with_message: true, num: expected.size, timeout: 1, from: 0
       got = items.map { |item| item[:message] }.map { |message| [message.direction.to_s, message.type] }
       expect(got).to eq(expected)
