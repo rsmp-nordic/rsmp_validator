@@ -4,13 +4,7 @@ rsmp-validator is a tool written in Ruby for testing RSMP equipment or software 
 It uses the rsmp gem to handle RSMP communication.
 
 ## Installation
-Make sure you have a Ruby installed. A version manager like rbenv is recommended.
-Then ensure you have the 'bundler' gem installed.
-
-The rsmp gem is not yet public, and is therefore currently loaded from a local file path.
-
-First ensure you have a local checkout of the rsmp gem repository, and then adjust the path to the repo in the Gemfile to point to your local folder.
-Note that the gem repo currently uses a git submodule to get the json schema. Read the readme in the gem repo to see how to setup the submodule.
+Make sure you have Ruby installed. Then ensure you have the 'bundler' gem installed.
 
 Now run this to install gems:
 
