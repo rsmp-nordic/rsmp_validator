@@ -12,7 +12,7 @@ Now run this to install gems:
 % bundle
 ```
 
-## Testing an RSPM site
+## Testing an RSMP site
 A local RSMP supervisor will be started on 127.0.0.1:12111. The site is expected to connect to it. You might have to adjust network settings to enable the site to reach the supervisor.
 
 Once the site has connected, tests will be run to validate aspects like connection sequence, commmands, alarms, etc.
