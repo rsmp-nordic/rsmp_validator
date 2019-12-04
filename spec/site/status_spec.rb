@@ -6,7 +6,7 @@ RSpec.describe "RSMP site status" do
       # list of commands and parameters should be read from an SXL specification (in JSON Schema?)
       component = 'AA+BBCCC=DDDEE002'
       status_code = 'S0001'
-      status_name = 'count'
+      status_name = 'signalgroupstatus'
 
       message, response = site.request_status component, [{'sCI'=>status_code,'n'=>status_name}], 1
       expect(response).to be_a(RSMP::StatusResponse)
