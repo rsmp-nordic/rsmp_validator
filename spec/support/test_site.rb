@@ -85,8 +85,12 @@ class TestSite
 
   def wait_for_site supervisor
     #puts "Waiting for site...".colorize(:light_blue)
-    remote_site = supervisor.wait_for_site(:any,1)
-    expect(remote_site).not_to be_nil, "Site did not connect"
+    remote_site = supervisor.wait_for_site(:any,3)
+    unless remote_site
+      supervisor.logger.settings['color'] = true
+      log = @supervisor.logger.dump @supervisor.archive
+      expect(remote_site).not_to be_nil, "Site did not connect:\n#{log}"
+    end
 
     if remote_site
       remote_site.wait_for_state :ready, 3
