@@ -22,26 +22,29 @@ class TestSite
   end
 
   def start options={}
-   unless @supervisor
-    log_settings = {
-      'active' => false,
-      'color' => true
-    }
+    unless @supervisor
+      log_settings = {
+        'active' => false,
+        'color' => true
+      }
 
-    supervisor_settings = { 'log' => log_settings }.merge(options)
-    @supervisor = RSMP::Supervisor.new supervisor_settings: supervisor_settings
-    @supervisor.start
-    @remote_site = wait_for_site @supervisor
-    @remote_site.wait_for_state :ready, 1
+      supervisor_settings = { 'log' => log_settings }.merge(options)
+      @supervisor = RSMP::Supervisor.new supervisor_settings: supervisor_settings
+      @supervisor.start
+    end
+
+    unless @remote_site
+      @remote_site = wait_for_site @supervisor
+      @remote_site.wait_for_state :ready, 1
     end
   end
 
   def stop
     if @supervisor
       @supervisor.stop
-      @supervisor = nil
-      @remote_site = nil
     end
+    @supervisor = nil
+    @remote_site = nil
   end
 
   def connected options={}, &block
@@ -87,7 +90,7 @@ class TestSite
       #puts "Site #{remote_site.site_id} connected from #{from}".colorize(:light_blue)
       remote_site
     else
-      raise "Site connection timeout".colorize(:red)
+      raise RSMP::TimeoutError.new("Site did not connect")
     end
   end
 end

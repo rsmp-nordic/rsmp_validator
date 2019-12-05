@@ -38,6 +38,9 @@ class TestSupervisor
       site_settings = defaults.merge(options)
       @site = RSMP::Site.new site_settings: site_settings
       @site.start
+    end
+
+    unless @remote_supervisor
       @remote_supervisor = @site.proxies.first
       remote_supervisor_state = @remote_supervisor.wait_for_state [:ready,:cannot_connect], READY_TIMEOUT
       expect(remote_supervisor_state).to eq(:ready)
@@ -48,9 +51,9 @@ class TestSupervisor
   def stop
     if @site
       @site.stop
-      @site = nil
-      @remote_supervisor = nil
     end
+    @site = nil
+    @remote_supervisor = nil
   end
 
   def connected options={}, &block
