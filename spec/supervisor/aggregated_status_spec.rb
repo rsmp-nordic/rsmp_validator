@@ -4,6 +4,7 @@ RSpec.describe 'RSMP supervisor' do
       component = site.components.first[1]   # value of first key/value pair, ie. first component
       component.set_aggregated_status :high_priority_alarm
       supervisor_proxy.wait_for_acknowledgements 1
+      # TODO should have a way to easily check that what we send is acknowledged
     end
   end
 end

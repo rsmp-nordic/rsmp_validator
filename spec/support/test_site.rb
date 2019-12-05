@@ -1,9 +1,11 @@
 require 'rsmp'
 require 'singleton'
 require 'colorize'
+require 'rspec/expectations'
 
 class TestSite
   include Singleton
+  include RSpec::Matchers
 
   def initialize
     @reactor = Async::Reactor.new
@@ -83,7 +85,9 @@ class TestSite
 
   def wait_for_site supervisor
     #puts "Waiting for site...".colorize(:light_blue)
-    remote_site = supervisor.wait_for_site(:any,10)
+    remote_site = supervisor.wait_for_site(:any,1)
+    expect(remote_site).not_to be_nil, "Site did not connect"
+
     if remote_site
       remote_site.wait_for_state :ready, 3
       from = "#{remote_site.connection_info[:ip]}:#{remote_site.connection_info[:port]}"
