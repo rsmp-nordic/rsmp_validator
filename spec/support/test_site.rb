@@ -26,12 +26,19 @@ class TestSite
   def start options={}
     unless @supervisor
       log_settings = {
-        'active' => false,
-        'color' => true
+        'active' => true,
+        'path' => 'log/validation.log',
+        'color' => true,
+        'json' => true,
+        'acknowledgements' => true,
+        'watchdogs' => true
       }
 
-      supervisor_settings = { 'log' => log_settings }.merge(options)
-      @supervisor = RSMP::Supervisor.new supervisor_settings: supervisor_settings
+      supervisor_settings = {}
+      @supervisor = RSMP::Supervisor.new(
+        supervisor_settings: supervisor_settings,
+        log_settings: log_settings
+      )
       @supervisor.start
     end
 

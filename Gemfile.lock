@@ -5,7 +5,7 @@ GEM
       console (~> 1.0)
       nio4r (~> 2.3)
       timers (~> 4.1)
-    async-io (1.27.0)
+    async-io (1.27.1)
       async (~> 1.14)
     colorize (0.8.1)
     console (1.6.0)
@@ -20,9 +20,9 @@ GEM
       uri_template (~> 0.7)
     nio4r (2.5.2)
     regexp_parser (1.6.0)
-    rsmp (0.1.4)
+    rsmp (0.1.6)
       async (~> 1.23.0)
-      async-io (~> 1.27.0)
+      async-io (~> 1.27.1)
       colorize (~> 0.8.1)
       json_schemer (~> 0.2.8)
       thor (~> 0.20.3)
@@ -47,7 +47,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  rsmp (~> 0.1.4)
+  rsmp (~> 0.1.6)
   rspec
 
 BUNDLED WITH
