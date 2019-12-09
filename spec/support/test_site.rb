@@ -80,6 +80,15 @@ class TestSite
     end
   end
 
+  def isolated options={}, &block
+    within_reactor do |task|
+      stop
+      start options
+      yield task, @supervisor, @remote_site
+      stop
+    end
+  end
+
   def self.connected options={}, &block
     instance.connected options, &block
   end
@@ -90,6 +99,10 @@ class TestSite
 
   def self.disconnected &block
     instance.disconnected &block
+  end
+
+  def self.isolated options={}, &block
+    instance.isolated options, &block
   end
 
   def wait_for_site supervisor

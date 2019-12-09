@@ -11,7 +11,7 @@ RSpec.describe "RSMP site status" do
   let(:timeout) { 10 }
 
   it 'disconnects if watchdogs are not acknowledged' do
-    TestSite.reconnected do |task,supervisor,site|
+    TestSite.isolated do |task,supervisor,site|
       def site.acknowledge original
       end
       expect { site.wait_for_state :stopping, timeout }.to_not raise_error
@@ -19,7 +19,7 @@ RSpec.describe "RSMP site status" do
   end
 
   it 'disconnects if no watchdogs are send' do
-    TestSite.reconnected do |task,supervisor,site|
+    TestSite.isolated do |task,supervisor,site|
       def site.send_watchdog now=nil
       end
       expect { site.wait_for_state :stopping, timeout }.to_not raise_error
