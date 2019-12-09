@@ -34,7 +34,9 @@ class TestSite
         'watchdogs' => true
       }
 
-      supervisor_settings = {}
+      supervisor_settings = {
+        'stop_after_first_session' => true
+      }
       @supervisor = RSMP::Supervisor.new(
         supervisor_settings: supervisor_settings,
         log_settings: log_settings
@@ -91,21 +93,15 @@ class TestSite
   end
 
   def wait_for_site supervisor
-    #puts "Waiting for site...".colorize(:light_blue)
     remote_site = supervisor.wait_for_site(:any,3)
-    unless remote_site
-      supervisor.logger.settings['color'] = true
-      log = @supervisor.logger.dump @supervisor.archive
-      expect(remote_site).not_to be_nil, "Site did not connect:\n#{log}"
-    end
-
     if remote_site
       remote_site.wait_for_state :ready, 3
       from = "#{remote_site.connection_info[:ip]}:#{remote_site.connection_info[:port]}"
-      #puts "Site #{remote_site.site_id} connected from #{from}".colorize(:light_blue)
       remote_site
     else
-      raise RSMP::TimeoutError.new("Site did not connect")
+      supervisor.logger.settings['color'] = true
+      log = @supervisor.logger.dump @supervisor.archive
+      expect(remote_site).not_to be_nil, "Site did not connect:\n#{log}"
     end
   end
 end
