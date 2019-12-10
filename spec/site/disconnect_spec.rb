@@ -6,9 +6,9 @@
 # Note that we use TestSite.reconnect, rather than TestSite.connect,
 # to ensure we get a fresh SiteProxy object each time.
 
-RSpec.describe "RSMP site status" do
+RSpec.describe "RSMP site disconnect" do
 
-  let(:timeout) { 10 }
+  let(:timeout) { 60 }
 
   it 'disconnects if watchdogs are not acknowledged' do
     TestSite.isolated do |task,supervisor,site|

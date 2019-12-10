@@ -4,7 +4,7 @@ RSpec.describe "RSMP site status" do
       # TODO
       # compoments should be read from a config, or fetched from the site
       # list of commands and parameters should be read from an SXL specification (in JSON Schema?)
-      component = 'AA+BBCCC=DDDEE002'
+      component = 'AA+BBCCC=DDDEE001'
       status_code = 'S0001'
       status_name = 'signalgroupstatus'
 
