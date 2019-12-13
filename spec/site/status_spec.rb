@@ -1,22 +1,33 @@
 RSpec.describe "RSMP site status" do
   it 'responds to valid status request' do
     TestSite.connected do |task,supervisor,site|
-      # TODO
-      # compoments should be read from a config, or fetched from the site
-      # list of commands and parameters should be read from an SXL specification (in JSON Schema?)
-      component = 'AA+BBCCC=DDDEE001'
+      component = MAIN_COMPONENT
       status_code = 'S0001'
       status_name = 'signalgroupstatus'
 
-      message, response = site.request_status component, [{'sCI'=>status_code,'n'=>status_name}], 1
-      expect(response).to be_a(RSMP::StatusResponse)
-      expect(response.attributes["cId"]).to eq(component)
+      site.log "Requesting signal group status", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component, [{'sCI'=>status_code,'n'=>status_name}], 180
+      end.not_to raise_error
 
-      copy = response.attributes["sS"].dup
-      copy.each do |sS|
-        sS["s"] = "1234" if sS["s"]
-      end
-      expect(copy).to eq( [{"n"=>status_name, "q"=>"recent", "sCI"=>status_code, "s"=>"1234"}] )
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got signal group status after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      item = response.attributes["sS"].first
+
+      expect(item["sCI"]).to eq(status_code)
+      expect(item["n"]).to eq(status_name)
+
+      expect(item["s"]).to match(/[a-hA-G0-9NOP]*/)
+      expect(item["q"]).to eq('recent')
     end
   end
 

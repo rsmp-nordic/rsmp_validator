@@ -31,15 +31,22 @@ class TestSite
         'color' => true,
         'json' => true,
         'acknowledgements' => true,
-        'watchdogs' => true
+        'watchdogs' => true,
+        'test' => true
       }
 
       supervisor_settings = {
-        'stop_after_first_session' => true
+        'stop_after_first_session' => true,
+        'watchdog_interval' => 5,
+        'watchdog_timeout' => 10,
+        'acknowledgement_timeout' => 10,
+        'command_response_timeout' => 10,
+        'status_response_timeout' => 10,
+        'status_update_timeout' => 10
       }
       @supervisor = RSMP::Supervisor.new(
-        supervisor_settings: supervisor_settings,
-        log_settings: log_settings
+        supervisor_settings: supervisor_settings.merge(RSMP_CONFIG['supervisor']),
+        log_settings: log_settings.merge(LOG_CONFIG)
       )
       @supervisor.start
     end
@@ -106,9 +113,10 @@ class TestSite
   end
 
   def wait_for_site supervisor
-    remote_site = supervisor.wait_for_site(:any,3)
+    @supervisor.log "Waiting for site to connect", level: :test
+    remote_site = supervisor.wait_for_site(:any, RSMP_CONFIG['connect_timeout'])
     if remote_site
-      remote_site.wait_for_state :ready, 3
+      remote_site.wait_for_state :ready, RSMP_CONFIG['ready_timeout']
       from = "#{remote_site.connection_info[:ip]}:#{remote_site.connection_info[:port]}"
       remote_site
     else

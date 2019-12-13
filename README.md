@@ -12,6 +12,17 @@ Now run this to install gems:
 % bundle
 ```
 
+Some tests require security codes to run. Place these in config/secrets.yaml, in this format:
+
+```yaml
+securityCodes:
+  1: '0000'
+  2: '0000'
+```
+
+The file config/secrets.yaml is gitignored and should not be added to the repository.
+
+
 ## Testing an RSMP site
 A local RSMP supervisor will be started on 127.0.0.1:12111. The site is expected to connect to it. You might have to adjust network settings to enable the site to reach the supervisor.
 

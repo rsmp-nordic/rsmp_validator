@@ -95,7 +95,6 @@ class TestSupervisor
     if remote_supervisor
       remote_supervisor.wait_for_state :ready, 3
       from = "#{remote_supervisor.connection_info[:ip]}:#{remote_supervisor.connection_info[:port]}"
-      #puts "Site #{remote_supervisor.site_id} connected from #{from}".colorize(:light_blue)
       remote_supervisor
     else
       raise "Timeout while trýing to connect to supervisor".colorize(:red)
