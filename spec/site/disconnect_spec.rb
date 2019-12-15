@@ -3,18 +3,18 @@
 # The site object passed by TestSite a SiteProxy object. We can redefine methods
 # on this object to modify behaviour after connection is established
 #
-# Note that we use TestSite.reconnect, rather than TestSite.connect,
-# to ensure we get a fresh SiteProxy object each time.
+# Note that we use TestSite.isolate, rather than TestSite.connect,
+# to ensure we get a fresh SiteProxy object each time, and that it's not reused in
+# later tests
 
 RSpec.describe "RSMP site disconnect" do
 
-  let(:timeout) { 60 }
 
   it 'disconnects if watchdogs are not acknowledged' do
     TestSite.isolated do |task,supervisor,site|
       def site.acknowledge original
       end
-      expect { site.wait_for_state :stopping, timeout }.to_not raise_error
+      expect { site.wait_for_state :stopping, 60 }.to_not raise_error
     end
   end
 
@@ -22,7 +22,7 @@ RSpec.describe "RSMP site disconnect" do
     TestSite.isolated do |task,supervisor,site|
       def site.send_watchdog now=nil
       end
-      expect { site.wait_for_state :stopping, timeout }.to_not raise_error
+      expect { site.wait_for_state :stopping, 180 }.to_not raise_error
     end
   end
 
