@@ -1,0 +1,18 @@
+supervisor:
+  sites:
+    :any:
+      plans:
+        - '8'
+        - '9'
+      intersections: 2
+      components:
+        KK+AG9998=001TC000:
+  watchdog_interval: 60
+  watchdog_timeout: 120
+  acknowledgement_timeout: 20
+  command_response_timeout: 20
+  status_response_timeout: 20
+  status_update_timeout: 20
+
+connect_timeout: 10
+ready_timeout: 10
