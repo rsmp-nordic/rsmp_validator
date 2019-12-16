@@ -4,6 +4,7 @@ supervisor:
       plans:
         - '3'
         - '4'
+      intersections: 1
       components:
         KK+AG9998=001TC000:
   watchdog_interval: 60
