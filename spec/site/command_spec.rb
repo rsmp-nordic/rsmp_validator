@@ -17,7 +17,7 @@ end
 
 def set_plan task,supervisor,site, plan
   status = 'True'
-  securityCode = SECRETS['securityCodes'][2]
+  securityCode = SECRETS['security_codes'][2]
 
   site.log "Switching to plan #{plan}", level: :test
   start_time = Time.now
@@ -47,7 +47,7 @@ end
 def set_functional_position task,supervisor,site,status
   timeout = '0'
   intersection = '0'
-  securityCode = SECRETS['securityCodes'][2]
+  securityCode = SECRETS['security_codes'][2]
 
   site.log "Switching to " + status, level: :test
   start_time = Time.now
