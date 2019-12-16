@@ -17,15 +17,37 @@ end
 
 include RSpec
 
-VALIDATOR_CONFIG = YAML.load_file 'config/validator.yaml' rescue {}
-RSMP_CONFIG = YAML.load_file VALIDATOR_CONFIG['rsmp_config_path'] rescue {}
+def load_secrets path
+	secrets_path = 'config/secrets.yaml'
+	unless File.exist? secrets_path
+		puts "Secrets file #{secrets_path} not found. Please add it and try again."
+		exit
+	end
+	secrets = YAML.load_file(secrets_path)
+
+	required_keys = ['security_codes']
+	required_keys.each { |key| verify_presence_of_secret secrets, secrets_path, key }
+	secrets
+end
+
+def verify_presence_of_secret secrets, secrets_path, key
+	unless secrets[key]
+		puts "The key '#{key}' is missing from #{secrets_path}. Please add it and try again."
+		exit
+	end
+end
+
+
+VALIDATOR_CONFIG = YAML.load_file 'config/validator.yaml'
+RSMP_CONFIG = YAML.load_file VALIDATOR_CONFIG['rsmp_config_path']
 LOG_CONFIG = YAML.load_file VALIDATOR_CONFIG['log_config_path'] rescue {}
-SECRETS = YAML.load_file('config/secrets.yaml') rescue {}
+
+SECRETS = load_secrets 'config/secrets.yaml'
 
 #sugar
 SUPERVISOR_CONFIG = RSMP_CONFIG['supervisor'] rescue {}
 SITE_CONFIG = SUPERVISOR_CONFIG['sites'].values.first rescue {}
 MAIN_COMPONENT = SITE_CONFIG['components'].keys.first rescue {}
 
-
 puts "Using test config #{VALIDATOR_CONFIG['rsmp_config_path']}"
+
