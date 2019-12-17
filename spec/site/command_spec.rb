@@ -3,6 +3,7 @@ def unsubscribe_from_all task,supervisor,site
     {'sCI'=>'S0014','n'=>'status'},
     {'sCI'=>'S0011','n'=>'status'},
     {'sCI'=>'S0007','n'=>'status'},
+    {'sCI'=>'S0005','n'=>'status'},
     {'sCI'=>'S0001','n'=>'signalgroupstatus'},
     {'sCI'=>'S0001','n'=>'cyclecounter'},
     {'sCI'=>'S0001','n'=>'basecyclecounter'},
@@ -106,10 +107,17 @@ def switch_yellow_flash task,supervisor,site,intersections
   set_functional_position task,supervisor,site,'YellowFlash'
   site.log "Waiting for status update that confirms switch to yellow flash", level: :test
   start_time = Time.now
+
+  # Wait for yellow flash status to be true
+  @status_code_id = 'S0011'
+  @status_name = 'status'
+  subscribe task,supervisor,site
   status = get_intersection_boolean 'True',intersections
   response = site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
   current_functional_position = get_status_value response
   expect(current_functional_position).to eq(status)
+  unsubscribe_from_all task,supervisor,site
+
   delay = Time.now - start_time
   site.log "Switch to yellow flash confirmed after #{delay.to_i}s", level: :test
 end
@@ -118,10 +126,16 @@ def switch_dark_mode task,supervisor,site,intersections
   set_functional_position task,supervisor,site,'Dark'
   site.log "Waiting for status update that confirms switch to dark mode", level: :test
   start_time = Time.now
-  status = get_intersection_boolean 'True',intersections
+
+  @status_code_id = 'S0007'
+  @status_name = 'status'
+  subscribe task,supervisor,site
+  status = get_intersection_boolean 'False',intersections
   response = site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
   current_functional_position = get_status_value response
   expect(current_functional_position).to eq(status)
+  unsubscribe_from_all task,supervisor,site
+
   delay = Time.now - start_time
   site.log "Switch to dark mode confirmed after #{delay.to_i}s", level: :test
 end
@@ -130,16 +144,43 @@ def switch_normal_control task,supervisor,site,intersections
   set_functional_position task,supervisor,site,'NormalControl'
   site.log "Waiting for status update that confirms switch to NormalControl", level: :test
   start_time = Time.now
+
+  # Wait for 'switched on' to be true (dark mode false)
+  @status_code_id = 'S0007'
+  @status_name = 'status'
+  subscribe task,supervisor,site
   status = get_intersection_boolean 'True',intersections
   response = site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
-  current_functional_position = get_status_value response
-  expect(current_functional_position).to eq(status)
+  current_dark_mode = get_status_value response
+  expect(current_dark_mode).to eq(status)
+  unsubscribe_from_all task,supervisor,site
+
+  # Wait for yellow flash status to be false
+  @status_code_id = 'S0011'
+  @status_name = 'status'
+  subscribe task,supervisor,site
+  status = get_intersection_boolean 'False',intersections
+  response = site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
+  current_dark_mode = get_status_value response
+  expect(current_dark_mode).to eq(status)
+  unsubscribe_from_all task,supervisor,site
+
+  # Wait for startup mode to be false
+  @status_code_id = 'S0005'
+  @status_name = 'status'
+  subscribe task,supervisor,site
+  status = 'False'
+  response = site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
+  current_controller_starting = get_status_value response
+  expect(current_controller_starting).to eq(status)
+  unsubscribe_from_all task,supervisor,site
+
   delay = Time.now - start_time
   site.log "Switch to NormalControl confirmed after #{delay.to_i}s", level: :test
 end
 
 RSpec.describe 'RSMP site commands' do
-  it 'M0001 set functional position' do
+  it 'M0001 set yellow flash' do
     @component = MAIN_COMPONENT
     @command_code_id = 'M0001'
     @command_name = 'setValue'
@@ -148,13 +189,22 @@ RSpec.describe 'RSMP site commands' do
 
     TestSite.connected do |task,supervisor,site|
       unsubscribe_from_all task,supervisor,site
-      @status_code_id = 'S0011'
-      @status_name = 'status'
-      subscribe task,supervisor,site
+
       switch_yellow_flash task,supervisor,site,intersections
-      @status_code_id = 'S0007'
-      @status_name = 'status'
-      subscribe task,supervisor,site
+      switch_normal_control task,supervisor,site,intersections
+    end
+  end
+
+  it 'M0001 set dark mode' do
+    @component = MAIN_COMPONENT
+    @command_code_id = 'M0001'
+    @command_name = 'setValue'
+
+    intersections = SITE_CONFIG['intersections']
+
+    TestSite.connected do |task,supervisor,site|
+      unsubscribe_from_all task,supervisor,site
+
       switch_dark_mode task,supervisor,site,intersections
       switch_normal_control task,supervisor,site,intersections
     end
