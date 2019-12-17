@@ -2,6 +2,7 @@ log
 .rspec_status
 .DS_Store
 config/secrets.yaml
+config/validator.yaml
 /.bundle/
 /.yardoc
 /_yardoc/

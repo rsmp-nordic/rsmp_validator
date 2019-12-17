@@ -38,8 +38,12 @@ def verify_presence_of_secret secrets, secrets_path, key
 end
 
 
-VALIDATOR_CONFIG = YAML.load_file 'config/validator.yaml'
-RSMP_CONFIG = YAML.load_file VALIDATOR_CONFIG['rsmp_config_path']
+VALIDATOR_CONFIG = YAML.load_file 'config/validator.yaml' rescue {}
+
+rsmp_config_path = VALIDATOR_CONFIG['rsmp_config_path']
+rsmp_config_path = 'config/ruby.yaml' unless rsmp_config_path
+RSMP_CONFIG = YAML.load_file rsmp_config_path
+
 LOG_CONFIG = YAML.load_file VALIDATOR_CONFIG['log_config_path'] rescue {}
 
 SECRETS = load_secrets 'config/secrets.yaml'
@@ -47,7 +51,7 @@ SECRETS = load_secrets 'config/secrets.yaml'
 #sugar
 SUPERVISOR_CONFIG = RSMP_CONFIG['supervisor'] rescue {}
 SITE_CONFIG = SUPERVISOR_CONFIG['sites'].values.first rescue {}
-MAIN_COMPONENT = SITE_CONFIG['components'].keys.first rescue {}
+MAIN_COMPONENT = SITE_CONFIG['components'].keys.first rescue nil
 
 puts "Using test config #{VALIDATOR_CONFIG['rsmp_config_path']}"
 

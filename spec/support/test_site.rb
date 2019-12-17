@@ -120,7 +120,9 @@ class TestSite
       from = "#{remote_site.connection_info[:ip]}:#{remote_site.connection_info[:port]}"
       remote_site
     else
-      supervisor.logger.settings['color'] = true
+      supervisor.logger.settings['color'] = false
+      supervisor.logger.settings['debug'] = false
+      supervisor.logger.settings['statistics'] = false
       log = @supervisor.logger.dump @supervisor.archive
       expect(remote_site).not_to be_nil, "Site did not connect:\n#{log}"
     end

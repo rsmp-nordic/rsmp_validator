@@ -1,0 +1,19 @@
+supervisor:
+  sites:
+    :any:
+      plans:
+        - '1'
+        - '2'
+      intersections: 1
+      components:
+        C1:
+          type: main
+  watchdog_interval: 1
+  watchdog_timeout: 2
+  acknowledgement_timeout: 1
+  command_response_timeout: 1
+  status_response_timeout: 1
+  status_update_timeout: 1
+
+connect_timeout: 1
+ready_timeout: 1
