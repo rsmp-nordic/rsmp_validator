@@ -123,7 +123,7 @@ def switch_yellow_flash intersections
 end
 
 def switch_dark_mode intersections
-  set_functional_position task,supervisor,site,'Dark'
+  set_functional_position 'Dark'
   log_confirmation "switch to dark nmode" do
     @status_code_id = 'S0007'
     @status_name = 'status'
@@ -137,7 +137,7 @@ def switch_dark_mode intersections
 end
 
 def switch_normal_control intersections
-  set_functional_position task,supervisor,site,'NormalControl'
+  set_functional_position 'NormalControl'
   log_confirmation "switch to NormalControl" do
     # Wait for 'switched on' to be true (dark mode false)
     @status_code_id = 'S0007'
