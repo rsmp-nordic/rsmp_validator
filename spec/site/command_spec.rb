@@ -219,6 +219,7 @@ RSpec.describe 'RSMP site commands' do
       @status_name = 'status'
 
       plans = SITE_CONFIG['plans']
+      @site = site
       
       unsubscribe_from_all
       subscribe
