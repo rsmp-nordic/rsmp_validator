@@ -82,9 +82,16 @@ def set_functional_position status
   end
 end
 
-
-def get_status_value message
-  message.attributes['sS'].first['s']
+def get_status_value message,id,name
+  sS = message.attributes['sS']
+  value = false
+  sS.each do |status|
+     next if id && id != status['sCI']
+     next if name && name != status['n']
+     value = status['s']
+    break
+  end
+  value
 end
 
 # TLC's with multiple intersections (rings) can respond with multiple statuses,
@@ -102,7 +109,7 @@ def switch plan
   set_plan plan
   log_confirmation"intention to switch to plan #{plan}" do
     response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s: plan, timeout: 180
-    current_plan = get_status_value response
+    current_plan = get_status_value response,@status_code_id,@status_name
     expect(current_plan).to eq(plan)
   end
 end
@@ -116,7 +123,7 @@ def switch_yellow_flash intersections
     subscribe
     status = get_intersection_boolean 'True',intersections
     response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
-    current_functional_position = get_status_value response
+    current_functional_position = get_status_value response,@status_code_id,@status_name
     expect(current_functional_position).to eq(status)
     unsubscribe_from_all
   end
@@ -130,7 +137,7 @@ def switch_dark_mode intersections
     subscribe
     status = get_intersection_boolean 'False',intersections
     response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
-    current_functional_position = get_status_value response
+    current_functional_position = get_status_value response,@status_code_id,@status_name
     expect(current_functional_position).to eq(status)
     unsubscribe_from_all
   end
@@ -145,7 +152,7 @@ def switch_normal_control intersections
     subscribe
     status = get_intersection_boolean 'True',intersections
     response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
-    current_dark_mode = get_status_value response
+    current_dark_mode = get_status_value response,@status_code_id,@status_name
     expect(current_dark_mode).to eq(status)
     unsubscribe_from_all
 
@@ -155,7 +162,7 @@ def switch_normal_control intersections
     subscribe
     status = get_intersection_boolean 'False',intersections
     response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
-    current_dark_mode = get_status_value response
+    current_dark_mode = get_status_value response,@status_code_id,@status_name
     expect(current_dark_mode).to eq(status)
     unsubscribe_from_all
 
@@ -165,7 +172,7 @@ def switch_normal_control intersections
     subscribe
     status = 'False'
     response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
-    current_controller_starting = get_status_value response
+    current_controller_starting = get_status_value response,@status_code_id,@status_name
     expect(current_controller_starting).to eq(status)
     unsubscribe_from_all
   end
