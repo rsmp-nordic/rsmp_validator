@@ -41,7 +41,7 @@ end
 VALIDATOR_CONFIG = YAML.load_file 'config/validator.yaml' rescue {}
 
 rsmp_config_path = VALIDATOR_CONFIG['rsmp_config_path']
-rsmp_config_path = 'config/ruby.yaml' unless rsmp_config_path
+rsmp_config_path = 'config/ruby.yaml' unless rsmp_config_path
 RSMP_CONFIG = YAML.load_file rsmp_config_path
 
 LOG_CONFIG = YAML.load_file VALIDATOR_CONFIG['log_config_path'] rescue {}
