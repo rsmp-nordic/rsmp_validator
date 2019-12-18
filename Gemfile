@@ -1,4 +1,4 @@
 source "https://rubygems.org"
 
-gem 'rsmp', :github => 'rsmp-nordic/rsmp', :ref => '6eec', :submodules => true
+gem 'rsmp', '~> 0.1.11'
 gem 'rspec'
