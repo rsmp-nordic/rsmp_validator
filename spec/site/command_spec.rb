@@ -146,34 +146,42 @@ end
 def switch_normal_control intersections
   set_functional_position 'NormalControl'
   log_confirmation "switch to NormalControl" do
-    # Wait for 'switched on' to be true (dark mode false)
+
+    # Establish subscriptions
     @status_code_id = 'S0007'
     @status_name = 'status'
     subscribe
+    @status_code_id = 'S0011'
+    @status_name = 'status'
+    subscribe
+    @status_code_id = 'S0005'
+    @status_name = 'status'
+    subscribe
+
+    # Wait for 'switched on' to be true (dark mode false)
+    @status_code_id = 'S0007'
+    @status_name = 'status'
     status = get_intersection_boolean 'True',intersections
     response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
     current_dark_mode = get_status_value response,@status_code_id,@status_name
     expect(current_dark_mode).to eq(status)
-    unsubscribe_from_all
 
     # Wait for yellow flash status to be false
     @status_code_id = 'S0011'
     @status_name = 'status'
-    subscribe
     status = get_intersection_boolean 'False',intersections
     response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
     current_dark_mode = get_status_value response,@status_code_id,@status_name
     expect(current_dark_mode).to eq(status)
-    unsubscribe_from_all
 
     # Wait for startup mode to be false
     @status_code_id = 'S0005'
     @status_name = 'status'
-    subscribe
     status = 'False'
     response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
     current_controller_starting = get_status_value response,@status_code_id,@status_name
     expect(current_controller_starting).to eq(status)
+
     unsubscribe_from_all
   end
 end
