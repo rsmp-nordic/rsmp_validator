@@ -16,3 +16,7 @@ supervisor:
 
 connect_timeout: 10
 ready_timeout: 10
+
+command_timeout: 180
+status_timeout: 180
+subscribe_timeout: 180
