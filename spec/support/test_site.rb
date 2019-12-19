@@ -68,7 +68,7 @@ class TestSite
   def connected options={}, &block
     within_reactor do |task|
       start options
-      expect { yield task, @supervisor, @remote_site }.to_not raise_error
+      yield task, @supervisor, @remote_site
     end
   end
 
@@ -76,14 +76,14 @@ class TestSite
     within_reactor do |task|
       stop
       start options
-      expect { yield task, @supervisor, @remote_site }.to_not raise_error
+       yield task, @supervisor, @remote_site
     end
   end
 
   def disconnected &block
     within_reactor do |task|
       stop
-      expect { yield task }.to_not raise_error
+      yield task
     end
   end
 
@@ -91,7 +91,7 @@ class TestSite
     within_reactor do |task|
       stop
       start options
-      expect { yield task, @supervisor, @remote_site }.to_not raise_error
+      yield task, @supervisor, @remote_site
       stop
     end
   end

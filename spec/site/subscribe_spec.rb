@@ -5,9 +5,9 @@ RSpec.describe "RSMP site status" do
       status_code = 'S0001'
       status_name = 'signalgroupstatus'
 
-      message, response = site.subscribe_to_status component, [{'sCI'=>status_code,'n'=>status_name,'uRt'=>'0'}], 180
+      message, response = site.subscribe_to_status component, [{'sCI'=>status_code,'n'=>status_name,'uRt'=>'0'}], RSMP_CONFIG['subscribe_timeout']
 
-      expect(response).to be_a(RSMP::StatusUpdate)#, "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusUpdate)
 
       expect(response.attributes["cId"]).to eq(component)
       expect(response.attributes["sS"]).to be_a(Array)
