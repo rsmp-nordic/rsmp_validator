@@ -10,10 +10,14 @@ supervisor:
           type: main
   watchdog_interval: 1
   watchdog_timeout: 2
-  acknowledgement_timeout: 1
-  command_response_timeout: 1
-  status_response_timeout: 1
-  status_update_timeout: 1
+  acknowledgement_timeout: 0.1
+  command_response_timeout: 0.1
+  status_response_timeout: 0.1
+  status_update_timeout: 0.1
 
 connect_timeout: 1
-ready_timeout: 1
+ready_timeout: 0.1
+
+command_timeout: 0.1
+status_timeout: 0.1
+subscribe_timeout: 0.1
