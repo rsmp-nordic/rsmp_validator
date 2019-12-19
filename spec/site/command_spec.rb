@@ -13,6 +13,7 @@ def unsubscribe_from_all
   @site.unsubscribe_to_status @component, [
     {'sCI'=>'S0014','n'=>'status'},
     {'sCI'=>'S0011','n'=>'status'},
+    {'sCI'=>'S0009','n'=>'status'},
     {'sCI'=>'S0007','n'=>'status'},
     {'sCI'=>'S0005','n'=>'status'},
     {'sCI'=>'S0001','n'=>'signalgroupstatus'},
@@ -94,6 +95,34 @@ def set_functional_position status
   end
 end
 
+def set_fixed_time status
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Switching to fixed time: #{status}", level: :test
+  command_code_id = 'M0007'
+  command_name = 'setFixedTime'
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation"intention to switch to fixed time: #{status}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    age = 'recent'
+    expect(response.attributes['rvs']).to eq([
+      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age }
+    ])
+  end
+end
+
 # TLC's with multiple intersections (rings) can respond with multiple statuses,
 # e.g. "True,True" for two intersections
 def multi_value value
@@ -165,6 +194,14 @@ def switch_normal_control
   end
 end
 
+def switch_fixed_time status
+  set_fixed_time status
+  verify_status({
+    description:"switch to fixed time: #{status}",
+    status_list:[{'sCI'=>'S0009','n'=>'status','status'=>multi_value(status)}]
+  })
+end
+
 def prepare task, site
   @component = MAIN_COMPONENT
   @task = task
@@ -198,6 +235,14 @@ RSpec.describe 'RSMP site commands' do
       @task = task
       @site = site
       SITE_CONFIG['plans'].each { |plan| switch_plan plan }
+    end
+  end
+
+  it 'M0007 set fixed time' do
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      switch_fixed_time 'True'
+      switch_fixed_time 'False'
     end
   end
 end
