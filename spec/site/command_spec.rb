@@ -108,7 +108,7 @@ end
 def switch plan
   set_plan plan
   log_confirmation"intention to switch to plan #{plan}" do
-    response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s: plan, timeout: 180
+    expect { response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s: plan, timeout: 180 }.to_not raise_error
     current_plan = get_status_value response,@status_code_id,@status_name
     expect(current_plan).to eq(plan)
   end
@@ -122,7 +122,7 @@ def switch_yellow_flash intersections
     @status_name = 'status'
     subscribe
     status = get_intersection_boolean 'True',intersections
-    response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
+    expect { response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180 }.to_not raise_error
     current_functional_position = get_status_value response,@status_code_id,@status_name
     expect(current_functional_position).to eq(status)
     unsubscribe_from_all
@@ -136,7 +136,7 @@ def switch_dark_mode intersections
     @status_name = 'status'
     subscribe
     status = get_intersection_boolean 'False',intersections
-    response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
+    expect { response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180 }.to_not raise_error
     current_functional_position = get_status_value response,@status_code_id,@status_name
     expect(current_functional_position).to eq(status)
     unsubscribe_from_all
@@ -162,7 +162,7 @@ def switch_normal_control intersections
     @status_code_id = 'S0007'
     @status_name = 'status'
     status = get_intersection_boolean 'True',intersections
-    response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
+    expect { response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180 }.to_not raise_error
     current_dark_mode = get_status_value response,@status_code_id,@status_name
     expect(current_dark_mode).to eq(status)
 
@@ -170,7 +170,7 @@ def switch_normal_control intersections
     @status_code_id = 'S0011'
     @status_name = 'status'
     status = get_intersection_boolean 'False',intersections
-    response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
+    expect { response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180 }.to_not raise_error
     current_dark_mode = get_status_value response,@status_code_id,@status_name
     expect(current_dark_mode).to eq(status)
 
@@ -178,7 +178,7 @@ def switch_normal_control intersections
     @status_code_id = 'S0005'
     @status_name = 'status'
     status = 'False'
-    response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180
+    expect { response = @site.wait_for_status_update component: @component, sCI: @status_code_id, n: @status_name, q:'recent', s:status, timeout: 180 }.to_not raise_error
     current_controller_starting = get_status_value response,@status_code_id,@status_name
     expect(current_controller_starting).to eq(status)
 
