@@ -15,7 +15,7 @@ Now run this to install gems:
 Some tests require security codes to run. Place these in config/secrets.yaml, in this format:
 
 ```yaml
-securityCodes:
+security_codes:
   1: '0000'
   2: '0000'
 ```
