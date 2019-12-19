@@ -146,7 +146,7 @@ def switch_normal_control
     # Wait for 'switched on' to be true (dark mode false)
     verify_status({
       description:"dark mode off",
-      status_list:[{'sCI'=>'S0007','n'=>'status','status'=>multi_value('False')}]
+      status_list:[{'sCI'=>'S0007','n'=>'status','status'=>multi_value('True')}]
     })
 
     # Wait for yellow flash status to be false
