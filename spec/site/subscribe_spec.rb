@@ -1,5 +1,6 @@
 RSpec.describe "RSMP site status" do
-  it 'responds to valid status request' do
+  it 'responds to valid status request' do |example|
+    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       component = 'KK+AG9998=001TC000'
       status_code = 'S0001'

@@ -1,5 +1,6 @@
 RSpec.describe "RSMP site status" do
-  it 'responds to valid status request' do
+  it 'responds to valid status request' do |example|
+    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       component = MAIN_COMPONENT
       status_code = 'S0001'
@@ -31,7 +32,8 @@ RSpec.describe "RSMP site status" do
     end
   end
 
-  it 'S0013 police key' do
+  it 'S0013 police key' do |example|
+    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       component = MAIN_COMPONENT
       status_code = 'S0013'

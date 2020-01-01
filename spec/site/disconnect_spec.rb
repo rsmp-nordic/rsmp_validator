@@ -8,9 +8,8 @@
 # later tests
 
 RSpec.describe "RSMP site disconnect" do
-
-
-  it 'disconnects if watchdogs are not acknowledged' do
+  it 'disconnects if watchdogs are not acknowledged' do |example|
+    TestSite.log_test_header example
     TestSite.isolated do |task,supervisor,site|
       def site.acknowledge original
       end
@@ -18,7 +17,8 @@ RSpec.describe "RSMP site disconnect" do
     end
   end
 
-  it 'disconnects if no watchdogs are send' do
+  it 'disconnects if no watchdogs are send' do |example|
+    TestSite.log_test_header example
     TestSite.isolated do |task,supervisor,site|
       def site.send_watchdog now=nil
       end

@@ -2,11 +2,12 @@
 # responses and status updates
 
 def log_confirmation action, &block
-  @site.log "Waiting for confirmation of #{action}", level: :test
+  @site.log "Confirming #{action}", level: :test
   start_time = Time.now
   yield block
   delay = Time.now - start_time
-  @site.log "#{action.capitalize} confirmed after #{delay.to_i}s", level: :test
+  upcase_first = action.sub(/\S/, &:upcase)
+  @site.log "#{upcase_first} confirmed after #{delay.to_i}s", level: :test
 end
 
 def unsubscribe_from_all
@@ -43,9 +44,9 @@ def set_plan plan
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'timeplan', 'v' => plan}
   ]
 
-  log_confirmation"intention to switch to plan #{plan}" do
-      response = nil
-      expect do
+  log_confirmation "intention to switch to plan #{plan}" do
+    response = nil
+    expect do
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
@@ -76,7 +77,7 @@ def set_functional_position status
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'intersection', 'v' => intersection}
   ]
 
-  log_confirmation"intention to switch to  #{status}" do
+  log_confirmation"intention to switch to #{status}" do
     response = nil
     expect do
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
@@ -98,7 +99,7 @@ end
 def set_fixed_time status
   security_code = SECRETS['security_codes'][2]
 
-  @site.log "Switching to fixed time: #{status}", level: :test
+  @site.log "Switching to fixed time #{status}", level: :test
   command_code_id = 'M0007'
   command_name = 'setFixedTime'
   @site.send_command @component, [
@@ -106,7 +107,7 @@ def set_fixed_time status
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
   ]
 
-  log_confirmation"intention to switch to fixed time: #{status}" do
+  log_confirmation"intention to switch to fixed time #{status}" do
     response = nil
     expect do
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
@@ -132,7 +133,7 @@ end
 def switch_plan plan
   set_plan plan
   verify_status({
-    description: "intention to switch to plan #{plan}",
+    description: "switch to plan #{plan}",
     status_list: [{'sCI'=>'S0014','n'=>'status','status'=>plan}]
   })
 end
@@ -170,34 +171,32 @@ end
 
 def switch_normal_control
   set_functional_position 'NormalControl'
-  log_confirmation "switch to NormalControl" do
 
-    # Wait for 'switched on' to be true (dark mode false)
-    verify_status({
-      description:"dark mode off",
-      status_list:[{'sCI'=>'S0007','n'=>'status','status'=>multi_value('True')}]
-    })
+  # Wait for 'switched on' to be true (dark mode false)
+  verify_status({
+    description:"dark mode off",
+    status_list:[{'sCI'=>'S0007','n'=>'status','status'=>multi_value('True')}]
+  })
 
-    # Wait for yellow flash status to be false
-    verify_status({
-      description:"yellow flash off",
-      status_list:[{'sCI'=>'S0011','n'=>'status','status'=>multi_value('False')}]
-    })
+  # Wait for yellow flash status to be false
+  verify_status({
+    description:"yellow flash off",
+    status_list:[{'sCI'=>'S0011','n'=>'status','status'=>multi_value('False')}]
+  })
 
-    # Wait for startup mode to be false
-    verify_status({
-      description:"start-up mode off",
-      status_list:[{'sCI'=>'S0005','n'=>'status','status'=>'False'}]
-    })
+  # Wait for startup mode to be false
+  verify_status({
+    description:"start-up mode off",
+    status_list:[{'sCI'=>'S0005','n'=>'status','status'=>'False'}]
+  })
 
-    unsubscribe_from_all
-  end
+  unsubscribe_from_all
 end
 
 def switch_fixed_time status
   set_fixed_time status
   verify_status({
-    description:"switch to fixed time: #{status}",
+    description:"switch to fixed time #{status}",
     status_list:[{'sCI'=>'S0009','n'=>'status','status'=>multi_value(status)}]
   })
 end
@@ -210,7 +209,8 @@ def prepare task, site
 end
 
 RSpec.describe 'RSMP site commands' do
-  it 'M0001 set yellow flash' do
+  it 'M0001 set yellow flash' do |example|
+    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_yellow_flash
@@ -218,7 +218,8 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0001 set dark mode' do
+  it 'M0001 set dark mode' do |example|
+    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       @component = MAIN_COMPONENT
       @task = task
@@ -229,7 +230,8 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0002 set time plan' do
+  it 'M0002 set time plan' do |example|
+    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       @component = MAIN_COMPONENT
       @task = task
@@ -238,7 +240,8 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0007 set fixed time' do
+  it 'M0007 set fixed time' do |example|
+    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_fixed_time 'True'

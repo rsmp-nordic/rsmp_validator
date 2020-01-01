@@ -7,8 +7,16 @@ class TestSite
   include Singleton
   include RSpec::Matchers
 
+  LOG_PATH = 'log/validation.log'
+
   def initialize
     @reactor = Async::Reactor.new
+  end
+
+  def self.log_test_header example
+    File.open(LOG_PATH, 'a') do |file|
+      file.puts "\nRunning test #{example.metadata[:location]} - #{example.full_description}".colorize(:light_black)
+    end
   end
 
   def within_reactor &block
@@ -27,7 +35,7 @@ class TestSite
     unless @supervisor
       log_settings = {
         'active' => true,
-        'path' => 'log/validation.log',
+        'path' => LOG_PATH,
         'color' => true,
         'json' => true,
         'acknowledgements' => true,
