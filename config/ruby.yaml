@@ -6,7 +6,7 @@ supervisor:
         - '2'
       intersections: 1
       components:
-        C1:
+        TC:
           type: main
   watchdog_interval: 1
   watchdog_timeout: 2
