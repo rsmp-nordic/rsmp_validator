@@ -239,9 +239,7 @@ def switch_dark_mode
   })
 end
 
-def switch_normal_control
-  set_functional_position 'NormalControl'
-
+def wait_normal_control
   # Wait for 'switched on' to be true (dark mode false)
   verify_status({
     description:"dark mode off",
@@ -263,6 +261,11 @@ def switch_normal_control
   unsubscribe_from_all
 end
 
+def switch_normal_control
+  set_functional_position 'NormalControl'
+  wait_normal_control
+end
+
 def switch_fixed_time status
   set_fixed_time status
   verify_status({
@@ -281,7 +284,7 @@ end
 RSpec.describe 'RSMP site commands' do
   it 'M0001 set yellow flash' do |example|
     TestSite.log_test_header example
-    TestSite.connected do |task,supervisor,site|
+    TestSite.isolated do |task,supervisor,site|
       prepare task, site
       switch_yellow_flash
       switch_normal_control
@@ -290,7 +293,7 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0001 set dark mode' do |example|
     TestSite.log_test_header example
-    TestSite.connected do |task,supervisor,site|
+    TestSite.isolated do |task,supervisor,site|
       prepare task, site
       switch_dark_mode
       switch_normal_control
@@ -299,7 +302,7 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0002 set time plan' do |example|
     TestSite.log_test_header example
-    TestSite.connected do |task,supervisor,site|
+    TestSite.isloated do |task,supervisor,site|
       prepare task, site
       SITE_CONFIG['plans'].each { |plan| switch_plan plan }
     end
@@ -307,7 +310,7 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0003 set traffic situation' do |example|
     TestSite.log_test_header example
-    TestSite.connected do |task,supervisor,site|
+    TestSite.isolated do |task,supervisor,site|
       prepare task, site
       SITE_CONFIG['traffic_situation'].each { |ts| switch_traffic_situation ts }
     end
@@ -315,18 +318,24 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0004 restart' do |example|
     TestSite.log_test_header example
-    TestSite.connected do |task,supervisor,site|
+    TestSite.isolated do |task,supervisor,site|
       prepare task, site
-      set_restart
-      print "Did the traffic controller restart? (y/n): "
+      print "Testing traffic controller restart. Enter 'y' to continue, 'n' to skip: "
       response = $stdin.gets.chomp
       expect(response).to eq('y')
+
+      set_restart
+      expect { site.wait_for_state :stopping, 120}.to_not raise_error
+    end
+    TestSite.isolated do |task,supervisor,site|
+      prepare task, site
+      wait_normal_control
     end
   end
 
   it 'M0007 set fixed time' do |example|
     TestSite.log_test_header example
-    TestSite.connected do |task,supervisor,site|
+    TestSite.isolated do |task,supervisor,site|
       prepare task, site
       switch_fixed_time 'True'
       switch_fixed_time 'False'
