@@ -221,10 +221,7 @@ RSpec.describe 'RSMP site commands' do
   it 'M0001 set dark mode' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      @component = MAIN_COMPONENT
-      @task = task
-      @site = site
-      unsubscribe_from_all
+      prepare task, site
       switch_dark_mode
       switch_normal_control
     end
@@ -233,9 +230,7 @@ RSpec.describe 'RSMP site commands' do
   it 'M0002 set time plan' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      @component = MAIN_COMPONENT
-      @task = task
-      @site = site
+      prepare task, site
       SITE_CONFIG['plans'].each { |plan| switch_plan plan }
     end
   end
