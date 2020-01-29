@@ -17,6 +17,7 @@ def unsubscribe_from_all
     {'sCI'=>'S0011','n'=>'status'},
     {'sCI'=>'S0009','n'=>'status'},
     {'sCI'=>'S0007','n'=>'status'},
+    {'sCI'=>'S0006','n'=>'status'},
     {'sCI'=>'S0005','n'=>'status'},
     {'sCI'=>'S0001','n'=>'signalgroupstatus'},
     {'sCI'=>'S0001','n'=>'cyclecounter'},
@@ -186,6 +187,36 @@ def set_restart
   end
 end
 
+def set_emergency_route status, route
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Set emergency route", level: :test
+  command_code_id = 'M0005'
+  command_name = 'setEmergency'
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'emergencyroute', 'v' => route}
+  ]
+
+  log_confirmation "intention to switch to emergency route #{route}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    age = 'recent'
+    expect(response.attributes['rvs']).to eq([
+      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'emergencyroute','v' => route, 'age' => age }
+    ])
+  end
+end
+
 # TLC's with multiple intersections (rings) can respond with multiple statuses,
 # e.g. "True,True" for two intersections
 def multi_value value
@@ -274,6 +305,19 @@ def switch_fixed_time status
   })
 end
 
+def switch_emergency_route route
+  set_emergency_route 'True',route
+  verify_status({
+    description:"activate emergency route #{route}",
+    status_list:[{'sCI'=>'S0006','n'=>'status','status'=>'True','emergencystage'=>route}]
+  })
+  set_emergency_route 'False',route
+  verify_status({
+    description:"deactivate emergency route #{route}",
+    status_list:[{'sCI'=>'S0006','n'=>'status','status'=>'False','emergencystage'=>route}]
+  })
+end
+
 def prepare task, site
   @component = MAIN_COMPONENT
   @task = task
@@ -302,7 +346,7 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0002 set time plan' do |example|
     TestSite.log_test_header example
-    TestSite.isloated do |task,supervisor,site|
+    TestSite.isolated do |task,supervisor,site|
       prepare task, site
       SITE_CONFIG['plans'].each { |plan| switch_plan plan }
     end
@@ -330,6 +374,14 @@ RSpec.describe 'RSMP site commands' do
     TestSite.isolated do |task,supervisor,site|
       prepare task, site
       wait_normal_control
+    end
+  end
+
+  it 'M0005 activate emergency route' do |example|
+    TestSite.log_test_header example
+    TestSite.isolated do |task,supervisor,site|
+      prepare task, site
+      SITE_CONFIG['emergency_route'].each { |route| switch_emergency_route route }
     end
   end
 

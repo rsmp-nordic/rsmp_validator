@@ -7,6 +7,8 @@ supervisor:
       traffic_situation:
         - '1'
         - '2'
+      emergency_route:
+        - '1'
       intersections: 2
       components:
         KK+AG9998=001TC000:
