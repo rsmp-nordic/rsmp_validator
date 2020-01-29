@@ -12,6 +12,7 @@ end
 
 def unsubscribe_from_all
   @site.unsubscribe_to_status @component, [
+    {'sCI'=>'S0015','n'=>'status'},
     {'sCI'=>'S0014','n'=>'status'},
     {'sCI'=>'S0011','n'=>'status'},
     {'sCI'=>'S0009','n'=>'status'},
@@ -58,6 +59,38 @@ def set_plan plan
       { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
       { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age },
       { 'cCI' => command_code_id, 'n' => 'timeplan','v' => plan, 'age' => age }
+    ])
+  end
+end
+
+# Note the spelling error 'traficsituation'. This should be fixed in future version
+def set_traffic_situation ts
+  status = 'True'
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Switching to traffic situation #{ts}", level: :test
+  command_code_id = 'M0003'
+  command_name = 'setTrafficSituation'
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'traficsituation', 'v' => ts}
+  ]
+
+  log_confirmation "intention to switch to traffic situation #{ts}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    age = 'recent'
+    expect(response.attributes['rvs']).to eq([
+      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'traficsituation','v' => ts, 'age' => age }
     ])
   end
 end
@@ -135,6 +168,14 @@ def switch_plan plan
   verify_status({
     description: "switch to plan #{plan}",
     status_list: [{'sCI'=>'S0014','n'=>'status','status'=>plan}]
+  })
+end
+
+def switch_traffic_situation ts
+  set_traffic_situation ts
+  verify_status({
+    description: "switch to traffic situation #{ts}",
+    status_list: [{'sCI'=>'S0015','n'=>'status','status'=>ts}]
   })
 end
 
@@ -232,6 +273,14 @@ RSpec.describe 'RSMP site commands' do
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       SITE_CONFIG['plans'].each { |plan| switch_plan plan }
+    end
+  end
+
+  it 'M0003 set traffic situation' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      SITE_CONFIG['traffic_situation'].each { |ts| switch_traffic_situation ts }
     end
   end
 

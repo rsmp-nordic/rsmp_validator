@@ -4,6 +4,9 @@ supervisor:
       plans:
         - '3'
         - '4'
+      traffic_situation:
+        - '1'
+        - '2'
       intersections: 1
       components:
         KK+AG9998=001TC000:
