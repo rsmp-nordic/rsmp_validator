@@ -780,7 +780,7 @@ RSpec.describe "RSMP site status" do
   it 'S0201 traffic counting: number of vehicles'  do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      component = SITE_CONFIG['detector_logic_prefix'].keys.first rescue nil
+      component = COMPONENT_CONFIG['detector_logic_prefix'] + "001"
       status_code = 'S0201'
 
       site.log "Requesting traffic counting: number of vehicles", level: :test
@@ -813,7 +813,7 @@ RSpec.describe "RSMP site status" do
   it 'S0202 traffic counting: vehicle speed'  do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      component = SITE_CONFIG['detector_logic_prefix'].keys.first rescue nil
+      component = COMPONENT_CONFIG['detector_logic_prefix'] + "001"
       status_code = 'S0202'
 
       site.log "Requesting traffic counting: vehicle speed", level: :test
@@ -846,7 +846,7 @@ RSpec.describe "RSMP site status" do
   it 'S0203 traffic counting: occupancy'  do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      component = SITE_CONFIG['detector_logic_prefix'].keys.first rescue nil
+      component = COMPONENT_CONFIG['detector_logic_prefix'] + "001"
       status_code = 'S0203'
 
       site.log "Requesting traffic counting: occupancy", level: :test
@@ -879,7 +879,7 @@ RSpec.describe "RSMP site status" do
   it 'S0204 traffic counting: classification'  do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      component = SITE_CONFIG['detector_logic_prefix'].keys.first rescue nil
+      component = COMPONENT_CONFIG['detector_logic_prefix'] + "001"
       status_code = 'S0204'
 
       site.log "Requesting traffic counting: classification", level: :test

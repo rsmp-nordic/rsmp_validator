@@ -11,7 +11,10 @@ supervisor:
         - '1'
       intersections: 2
       components:
-        KK+AG9998=001TC000:
+        :any:
+          traffic_controller: 'KK+AG9998=001TC000'
+          signal_group_prefix: 'KK+AG9998=001SG'
+          detector_logic_prefix: 'KK+AG9998=001DL'
   watchdog_interval: 60
   watchdog_timeout: 120
   acknowledgement_timeout: 20
