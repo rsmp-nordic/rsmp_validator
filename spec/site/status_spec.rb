@@ -129,6 +129,37 @@ RSpec.describe "RSMP site status" do
     end
   end
 
+  it 'S0005 traffic controller starting'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0005'
+
+      site.log "Requesting traffic controller starting (true/false)", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'status'},
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got traffic controller starting (true/false) after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/True|False/) if sS["n"] == 'status'
+      end
+    end
+  end
+
   it 'S0013 police key' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
