@@ -259,6 +259,138 @@ RSpec.describe "RSMP site status" do
     end
   end
 
+  it 'S0009 fixed time control'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0009'
+
+      site.log "Requesting fixed time control status", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'status'},
+          {'sCI'=>status_code,'n'=>'intersection'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got fixed time control status after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
+        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
+      end
+    end
+  end
+
+  it 'S0010 isolated control'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0010'
+
+      site.log "Requesting isloated control status", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'status'},
+          {'sCI'=>status_code,'n'=>'intersection'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got isolated control status after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
+        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
+      end
+    end
+  end
+
+  it 'S0011 yellow flash'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0011'
+
+      site.log "Requesting yellow flash status", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'status'},
+          {'sCI'=>status_code,'n'=>'intersection'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got yellow flash status after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
+        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
+      end
+    end
+  end
+
+  it 'S0012 all red'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0012'
+
+      site.log "Requesting 'all red' status", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'status'},
+          {'sCI'=>status_code,'n'=>'intersection'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got 'all red' status after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
+        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
+      end
+    end
+  end
+
   it 'S0013 police key' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
@@ -289,6 +421,507 @@ RSpec.describe "RSMP site status" do
 
       expect(item["s"]).to match(/^[0-2](,[0-2])*$/)
       expect(item["q"]).to eq('recent')
+    end
+  end
+
+  it 'S0014 current time plan'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0014'
+
+      site.log "Requesting current time plan", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'status'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got current time plan after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'status'
+      end
+    end
+  end
+
+  it 'S0015 current traffic situation'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0015'
+
+      site.log "Requesting current traffic situation", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'status'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got current traffic situation after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'status'
+      end
+    end
+  end
+
+  it 'S0016 number of detector logics'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0016'
+
+      site.log "Requesting number of detector logics", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'number'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got number of detector logics after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'number'
+      end
+    end
+  end
+
+  it 'S0017 number of signal groups'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0017'
+
+      site.log "Requesting number of signal groups", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'number'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got number of signal groups after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'number'
+      end
+    end
+  end
+
+  it 'S0018 number of time plans'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0018'
+
+      site.log "Requesting number of time plans", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'number'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got number of time plans after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'number'
+      end
+    end
+  end
+
+  it 'S0019 number of traffic situations'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0019'
+
+      site.log "Requesting number of traffic situations", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'number'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got number of traffic situations after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'number'
+      end
+    end
+  end
+
+  it 'S0020 control mode'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0020'
+
+      site.log "Requesting control mode", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'controlmode'},
+          {'sCI'=>status_code,'n'=>'intersection'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got control mode after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^startup|control|standby|failure|test(,startup|control|standby|failure|test)*$/) if sS["n"] == 'controlmode'
+        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
+      end
+    end
+  end
+
+  it 'S0021 manually set detector logic'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0021'
+
+      site.log "Requesting manually set detector logics", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'detectorlogics'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got manually set detector logics after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-1]+$/) if sS["n"] == 'detectorlogics'
+      end
+    end
+  end
+
+  it 'S0022 list of time plans'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0021'
+
+      site.log "Requesting list of time plans", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'status'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got list of time plans after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-9](,[0-9])+$/) if sS["n"] == 'status'
+      end
+    end
+  end
+
+  it 'S0095 version of traffic controller' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0095'
+
+      site.log "Requesting version of traffic controller", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'status'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got version of traffic controller after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).not_to match(/^$/) if sS["n"] == 'status'
+      end
+    end
+  end
+
+  it 'S0096 current date and time'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0096'
+
+      site.log "Requesting current date and time", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'year'},
+          {'sCI'=>status_code,'n'=>'month'},
+          {'sCI'=>status_code,'n'=>'day'},
+          {'sCI'=>status_code,'n'=>'hour'},
+          {'sCI'=>status_code,'n'=>'minute'},
+          {'sCI'=>status_code,'n'=>'second'},
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got current date and time after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-9]{4}$/) if sS["n"] == 'year'
+        expect(sS["s"]).to match(/^[0-9]{1,2}$/) if sS["n"] == 'month'
+        expect(sS["s"]).to match(/^[0-9]{1,2}$/) if sS["n"] == 'day'
+        expect(sS["s"]).to match(/^[0-9]{1,2}$/) if sS["n"] == 'hour'
+        expect(sS["s"]).to match(/^[0-9]{2}$/) if sS["n"] == 'minute'
+        expect(sS["s"]).to match(/^[0-9]{2}$/) if sS["n"] == 'second'
+      end
+    end
+  end
+
+  it 'S0201 traffic counting: number of vehicles'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = SITE_CONFIG['detector_logic_prefix'].keys.first rescue nil
+      status_code = 'S0201'
+
+      site.log "Requesting traffic counting: number of vehicles", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'vehicles'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got traffic counting: number of vehicles after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'vehicles'
+      end
+    end
+  end
+
+  it 'S0202 traffic counting: vehicle speed'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = SITE_CONFIG['detector_logic_prefix'].keys.first rescue nil
+      status_code = 'S0202'
+
+      site.log "Requesting traffic counting: vehicle speed", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'vehicles'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got traffic counting: vehicle speed after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'speed'
+      end
+    end
+  end
+
+  it 'S0203 traffic counting: occupancy'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = SITE_CONFIG['detector_logic_prefix'].keys.first rescue nil
+      status_code = 'S0203'
+
+      site.log "Requesting traffic counting: occupancy", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'occupancy'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got traffic counting: occupancy after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'occupancy'
+      end
+    end
+  end
+
+  it 'S0204 traffic counting: classification'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = SITE_CONFIG['detector_logic_prefix'].keys.first rescue nil
+      status_code = 'S0204'
+
+      site.log "Requesting traffic counting: classification", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'P'},
+          {'sCI'=>status_code,'n'=>'PS'},
+          {'sCI'=>status_code,'n'=>'L'},
+          {'sCI'=>status_code,'n'=>'LS'},
+          {'sCI'=>status_code,'n'=>'B'},
+          {'sCI'=>status_code,'n'=>'SP'},
+          {'sCI'=>status_code,'n'=>'MC'},
+          {'sCI'=>status_code,'n'=>'C'},
+          {'sCI'=>status_code,'n'=>'F'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got traffic counting: classification after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'P'
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'PS'
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'L'
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'LS'
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'B'
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'SP'
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'MC'
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'C'
+        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'F'
+      end
     end
   end
 end
