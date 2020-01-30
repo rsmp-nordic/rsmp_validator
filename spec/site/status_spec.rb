@@ -140,7 +140,7 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'status'},
+          {'sCI'=>status_code,'n'=>'status'}
         ], 180
       end.not_to raise_error
 
@@ -156,6 +156,39 @@ RSpec.describe "RSMP site status" do
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
         expect(sS["s"]).to match(/True|False/) if sS["n"] == 'status'
+      end
+    end
+  end
+
+  it 'S0006 emergency stage'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0006'
+
+      site.log "Requesting emergency stage status", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'status'},
+          {'sCI'=>status_code,'n'=>'emergencystage'}
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got emergency stage status after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/True|False/) if sS["n"] == 'status'
+        expect(sS["s"]).to match(/[1-9]+/) if sS["n"] == 'emergencystage'
       end
     end
   end
