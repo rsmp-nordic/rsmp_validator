@@ -47,7 +47,7 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'detectorlogicstatus'},
+          {'sCI'=>status_code,'n'=>'detectorlogicstatus'}
         ], 180
       end.not_to raise_error
 
@@ -63,6 +63,68 @@ RSpec.describe "RSMP site status" do
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
         expect(sS["s"]).to match(/[0-9]+/) if sS["n"] == 'detectorlogicstatus'
+      end
+    end
+  end
+
+  it 'S0003 input status'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0003'
+
+      site.log "Requesting input status", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'inputstatus'},
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got input status after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/[0-9]+/) if sS["n"] == 'inputstatus'
+      end
+    end
+  end
+
+  it 'S0004 output status'  do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0004'
+
+      site.log "Requesting output status", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'outputstatus'},
+        ], 180
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got output status after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/[0-9]+/) if sS["n"] == 'outputstatus'
       end
     end
   end
