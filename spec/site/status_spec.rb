@@ -1,16 +1,20 @@
 RSpec.describe "RSMP site status" do
-  it 'responds to valid status request' do |example|
+  it 'S0001 signal group status' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       component = MAIN_COMPONENT
       status_code = 'S0001'
-      status_name = 'signalgroupstatus'
 
       site.log "Requesting signal group status", level: :test
       start_time = Time.now
       message, response = nil,nil
       expect do
-        message, response = site.request_status component, [{'sCI'=>status_code,'n'=>status_name}], 180
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'signalgroupstatus'},
+          {'sCI'=>status_code,'n'=>'cyclecounter'},
+          {'sCI'=>status_code,'n'=>'basecyclecounter'},
+          {'sCI'=>status_code,'n'=>'stage'}
+        ], 180
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -22,13 +26,13 @@ RSpec.describe "RSMP site status" do
       expect(response.attributes["cId"]).to eq(component)
       expect(response.attributes["sS"]).to be_a(Array)
 
-      item = response.attributes["sS"].first
-
-      expect(item["sCI"]).to eq(status_code)
-      expect(item["n"]).to eq(status_name)
-
-      expect(item["s"]).to match(/[a-hA-G0-9NOP]*/)
-      expect(item["q"]).to eq('recent')
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+        expect(sS["s"]).to match(/[a-hA-G0-9NOP]*/) if sS["n"] == 'signalgroupstatus'
+        expect(sS["s"]).to match(/[0-9]+/) if sS["n"] == 'cyclecounter'
+        expect(sS["s"]).to match(/[0-9]+/) if sS["n"] == 'basecyclecounter'
+        expect(sS["s"]).to match(/[0-9]+/) if sS["n"] == 'stage'
+      end
     end
   end
 
