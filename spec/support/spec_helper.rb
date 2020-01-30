@@ -51,7 +51,8 @@ SECRETS = load_secrets 'config/secrets.yaml'
 #sugar
 SUPERVISOR_CONFIG = RSMP_CONFIG['supervisor'] rescue {}
 SITE_CONFIG = SUPERVISOR_CONFIG['sites'].values.first rescue {}
-MAIN_COMPONENT = SITE_CONFIG['components'].keys.first rescue nil
+COMPONENT_CONFIG = SITE_CONFIG['components'].values.first rescue {}
+MAIN_COMPONENT = COMPONENT_CONFIG['traffic_controller']
 
 puts "Using test config #{VALIDATOR_CONFIG['rsmp_config_path']}"
 
