@@ -678,7 +678,7 @@ RSpec.describe "RSMP site status" do
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       component = MAIN_COMPONENT
-      status_code = 'S0021'
+      status_code = 'S0022'
 
       site.log "Requesting list of time plans", level: :test
       start_time = Time.now
