@@ -340,13 +340,17 @@ end
 def switch_emergency_route route
   set_emergency_route 'True',route
   verify_status({
+    description:"activate emergency route",
+    status_list:[{'sCI'=>'S0006','n'=>'status','status'=>'True'}]
+  })
+  verify_status({
     description:"activate emergency route #{route}",
-    status_list:[{'sCI'=>'S0006','n'=>'status','status'=>'True','emergencystage'=>route}]
+    status_list:[{'sCI'=>'S0006','n'=>'emergencystage','status'=>route}]
   })
   set_emergency_route 'False',route
   verify_status({
-    description:"deactivate emergency route #{route}",
-    status_list:[{'sCI'=>'S0006','n'=>'status','status'=>'False','emergencystage'=>route}]
+    description:"deactivate emergency route",
+    status_list:[{'sCI'=>'S0006','n'=>'status','status'=>'False'}]
   })
 end
 
