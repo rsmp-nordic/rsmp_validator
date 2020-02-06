@@ -18,7 +18,10 @@ def unsubscribe_from_all
     {'sCI'=>'S0009','n'=>'status'},
     {'sCI'=>'S0007','n'=>'status'},
     {'sCI'=>'S0006','n'=>'status'},
+    {'sCI'=>'S0006','n'=>'emergencystage'},
     {'sCI'=>'S0005','n'=>'status'},
+    {'sCI'=>'S0003','n'=>'inputstatus'},
+    {'sCI'=>'S0002','n'=>'detectorlogicstatus'},
     {'sCI'=>'S0001','n'=>'signalgroupstatus'},
     {'sCI'=>'S0001','n'=>'cyclecounter'},
     {'sCI'=>'S0001','n'=>'basecyclecounter'},
@@ -217,6 +220,36 @@ def set_emergency_route status, route
   end
 end
 
+def set_input status, input
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Set input", level: :test
+  command_code_id = 'M0006'
+  command_name = 'setInput'
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'input', 'v' => input}
+  ]
+
+  log_confirmation "intention to set input #{input}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    age = 'recent'
+    expect(response.attributes['rvs']).to eq([
+      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'input','v' => input, 'age' => age }
+    ])
+  end
+end
+
 # TLC's with multiple intersections (rings) can respond with multiple statuses,
 # e.g. "True,True" for two intersections
 def multi_value value
@@ -246,9 +279,8 @@ def verify_status status_list:, description:
       response = nil
       expect do
         response = @site.wait_for_status_update component: @component, sCI: item['sCI'],
-          n: item['n'], q:'recent', s:item['status'], timeout: RSMP_CONFIG['status_timeout']
+          n: item['n'], q:'recent', s:item['status'], regex:item['regex'], timeout: RSMP_CONFIG['status_timeout']
       end.to_not raise_error, "Did not receive status #{item.inspect}"
-      expect(response[:status]['s']).to eq(item['status'])
     end
     unsubscribe_from_all
   end
@@ -315,6 +347,23 @@ def switch_emergency_route route
   verify_status({
     description:"deactivate emergency route #{route}",
     status_list:[{'sCI'=>'S0006','n'=>'status','status'=>'False','emergencystage'=>route}]
+  })
+end
+
+def switch_input input
+  set_input 'True',input
+
+  prefix_num = input.to_i - 1
+  match = "^[0-1]{" + prefix_num.to_s + "}1([0-1])*$"
+  verify_status({
+    description:"activate input #{input}",
+    status_list:[{'sCI'=>'S0003','n'=>'inputstatus','status'=>match,'regex'=>1}]
+  })
+  set_input 'False',input
+  match = "^[0-1]{" + prefix_num.to_s + "}0([0-1])*$"
+  verify_status({
+    description:"deactivate input #{input}",
+    status_list:[{'sCI'=>'S0003','n'=>'inputstatus','status'=>match,'regex'=>1}]
   })
 end
 
@@ -385,6 +434,15 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
+  it 'M0006 activate input' do |example|
+    TestSite.log_test_header example
+    TestSite.isolated do |task,supervisor,site|
+      prepare task, site
+      unsubscribe_from_all
+      switch_input '6'
+    end
+  end
+
   it 'M0007 set fixed time' do |example|
     TestSite.log_test_header example
     TestSite.isolated do |task,supervisor,site|
@@ -394,5 +452,4 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 end
-
 
