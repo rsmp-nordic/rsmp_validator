@@ -4,7 +4,6 @@ supervisor:
       plans:
         - '1'
         - '2'
-      intersections: 1
       components:
         TC:
           type: main

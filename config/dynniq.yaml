@@ -9,7 +9,6 @@ supervisor:
         - '2'
       emergency_route:
         - '1'
-      intersections: 1
       components:
         :any:
           traffic_controller: 'KK+AG9998=001TC000'

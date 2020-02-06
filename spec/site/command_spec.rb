@@ -250,12 +250,6 @@ def set_input status, input
   end
 end
 
-# TLC's with multiple intersections (rings) can respond with multiple statuses,
-# e.g. "True,True" for two intersections
-def multi_value value
-  Array.new(SITE_CONFIG['intersections'],value).join(',')
-end
-
 def switch_plan plan
   set_plan plan
   verify_status({
@@ -290,7 +284,7 @@ def switch_yellow_flash
   set_functional_position 'YellowFlash'
   verify_status({
     description:"switch to yellow flash",
-    status_list:[{'sCI'=>'S0011','n'=>'status','status'=>multi_value('True')}]
+    status_list:[{'sCI'=>'S0011','n'=>'status','status'=>'^True(,True)+$','regex'=>1}]
   })
 end
 
@@ -298,7 +292,7 @@ def switch_dark_mode
   set_functional_position 'Dark'
   verify_status({
     description:"switch to dark mode",
-    status_list:[{'sCI'=>'S0007','n'=>'status','status'=>multi_value('False')}]
+    status_list:[{'sCI'=>'S0007','n'=>'status','status'=>'^False(,False)+$','regex'=>1}]
   })
 end
 
@@ -306,13 +300,13 @@ def wait_normal_control
   # Wait for 'switched on' to be true (dark mode false)
   verify_status({
     description:"dark mode off",
-    status_list:[{'sCI'=>'S0007','n'=>'status','status'=>multi_value('True')}]
+    status_list:[{'sCI'=>'S0007','n'=>'status','status'=>'^True(,True)+$','regex'=>1}]
   })
 
   # Wait for yellow flash status to be false
   verify_status({
     description:"yellow flash off",
-    status_list:[{'sCI'=>'S0011','n'=>'status','status'=>multi_value('False')}]
+    status_list:[{'sCI'=>'S0011','n'=>'status','status'=>'^False(,False)+$','regex'=>1}]
   })
 
   # Wait for startup mode to be false
@@ -331,9 +325,10 @@ end
 
 def switch_fixed_time status
   set_fixed_time status
+  match = '^' + status + '(,' + status + ')+$'
   verify_status({
     description:"switch to fixed time #{status}",
-    status_list:[{'sCI'=>'S0009','n'=>'status','status'=>multi_value(status)}]
+    status_list:[{'sCI'=>'S0009','n'=>'status','status'=>match,'regex'=>1}]
   })
 end
 
