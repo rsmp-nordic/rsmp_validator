@@ -252,7 +252,7 @@ end
 
 def switch_plan plan
   set_plan plan
-  verify_status({
+  verify_status(**{
     description: "switch to plan #{plan}",
     status_list: [{'sCI'=>'S0014','n'=>'status','status'=>plan}]
   })
@@ -260,7 +260,7 @@ end
 
 def switch_traffic_situation ts
   set_traffic_situation ts
-  verify_status({
+  verify_status(**{
     description: "switch to traffic situation #{ts}",
     status_list: [{'sCI'=>'S0015','n'=>'status','status'=>ts}]
   })
@@ -282,7 +282,7 @@ end
 
 def switch_yellow_flash
   set_functional_position 'YellowFlash'
-  verify_status({
+  verify_status(**{
     description:"switch to yellow flash",
     status_list:[{'sCI'=>'S0011','n'=>'status','status'=>'^True(,True)+$','regex'=>1}]
   })
@@ -290,7 +290,7 @@ end
 
 def switch_dark_mode
   set_functional_position 'Dark'
-  verify_status({
+  verify_status(**{
     description:"switch to dark mode",
     status_list:[{'sCI'=>'S0007','n'=>'status','status'=>'^False(,False)+$','regex'=>1}]
   })
@@ -298,19 +298,19 @@ end
 
 def wait_normal_control
   # Wait for 'switched on' to be true (dark mode false)
-  verify_status({
+  verify_status(**{
     description:"dark mode off",
     status_list:[{'sCI'=>'S0007','n'=>'status','status'=>'^True(,True)+$','regex'=>1}]
   })
 
   # Wait for yellow flash status to be false
-  verify_status({
+  verify_status(**{
     description:"yellow flash off",
     status_list:[{'sCI'=>'S0011','n'=>'status','status'=>'^False(,False)+$','regex'=>1}]
   })
 
   # Wait for startup mode to be false
-  verify_status({
+  verify_status(**{
     description:"start-up mode off",
     status_list:[{'sCI'=>'S0005','n'=>'status','status'=>'False'}]
   })
@@ -326,7 +326,7 @@ end
 def switch_fixed_time status
   set_fixed_time status
   match = '^' + status + '(,' + status + ')+$'
-  verify_status({
+  verify_status(**{
     description:"switch to fixed time #{status}",
     status_list:[{'sCI'=>'S0009','n'=>'status','status'=>match,'regex'=>1}]
   })
@@ -334,16 +334,16 @@ end
 
 def switch_emergency_route route
   set_emergency_route 'True',route
-  verify_status({
+  verify_status(**{
     description:"activate emergency route",
     status_list:[{'sCI'=>'S0006','n'=>'status','status'=>'True'}]
   })
-  verify_status({
+  verify_status(**{
     description:"activate emergency route #{route}",
     status_list:[{'sCI'=>'S0006','n'=>'emergencystage','status'=>route}]
   })
   set_emergency_route 'False',route
-  verify_status({
+  verify_status(**{
     description:"deactivate emergency route",
     status_list:[{'sCI'=>'S0006','n'=>'status','status'=>'False'}]
   })
@@ -354,13 +354,13 @@ def switch_input input
 
   prefix_num = input.to_i - 1
   match = "^[0-1]{" + prefix_num.to_s + "}1([0-1])*$"
-  verify_status({
+  verify_status(**{
     description:"activate input #{input}",
     status_list:[{'sCI'=>'S0003','n'=>'inputstatus','status'=>match,'regex'=>1}]
   })
   set_input 'False',input
   match = "^[0-1]{" + prefix_num.to_s + "}0([0-1])*$"
-  verify_status({
+  verify_status(**{
     description:"deactivate input #{input}",
     status_list:[{'sCI'=>'S0003','n'=>'inputstatus','status'=>match,'regex'=>1}]
   })
