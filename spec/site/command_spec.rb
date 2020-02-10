@@ -250,6 +250,36 @@ def set_input status, input
   end
 end
 
+def set_detector_logic status
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Set detector logic", level: :test
+  command_code_id = 'M0008'
+  command_name = 'setForceDetectorLogic'
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'mode', 'v' => status}
+  ]
+
+  log_confirmation "intention to set detector logic" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    age = 'recent'
+    expect(response.attributes['rvs']).to eq([
+      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'mode','v' => status, 'age' => age }
+    ])
+  end
+end
+
 def switch_plan plan
   set_plan plan
   verify_status(**{
@@ -366,6 +396,27 @@ def switch_input input
   })
 end
 
+def switch_detector_logic dl
+  @component = COMPONENT_CONFIG['detector_logic_prefix'] + "006"
+  set_detector_logic 'True'
+
+  prefix_num = dl.to_i - 1
+  match = "^[0-1]{" + prefix_num.to_s + "}1([0-1])*$"
+  @component = MAIN_COMPONENT
+  verify_status(**{
+    description:"activate detector logic #{dl}",
+    status_list:[{'sCI'=>'S0002','n'=>'detectorlogicstatus','status'=>match,'regex'=>1}]
+  })
+  @component = COMPONENT_CONFIG['detector_logic_prefix'] + "006"
+  set_detector_logic 'False'
+  match = "^[0-1]{" + prefix_num.to_s + "}0([0-1])*$"
+  @component = MAIN_COMPONENT
+  verify_status(**{
+    description:"deactivate detector logic #{dl}",
+    status_list:[{'sCI'=>'S0002','n'=>'detectorlogicstatus','status'=>match,'regex'=>1}]
+  })
+end
+
 def prepare task, site
   @component = MAIN_COMPONENT
   @task = task
@@ -450,5 +501,12 @@ RSpec.describe 'RSMP site commands' do
       switch_fixed_time 'False'
     end
   end
-end
 
+  it 'M0008 activate detector logic' do |example|
+    TestSite.log_test_header example
+    TestSite.isolated do |task,supervisor,site|
+      prepare task, site
+      switch_detector_logic '6'
+    end
+  end
+end
