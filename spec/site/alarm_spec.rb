@@ -2,7 +2,7 @@ RSpec.describe 'RSMP site alarm' do
   it 'A0301 detector error (hardware)' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      component = COMPONENT_CONFIG['signal_group_prefix'] + "001"
+      component = COMPONENT_CONFIG['detector_logic_prefix'] + "001"
 
       site.log "Waiting for alarm", level: :test
       start_time = Time.now
