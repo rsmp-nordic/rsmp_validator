@@ -1080,7 +1080,7 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'start'},
           {'sCI'=>status_code,'n'=>'vehicles'}
         ], 180
       end.not_to raise_error
@@ -1096,7 +1096,7 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
+        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
         expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'vehicles'
       end
     end
@@ -1113,7 +1113,7 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'start'},
           {'sCI'=>status_code,'n'=>'speed'}
         ], 180
       end.not_to raise_error
@@ -1129,7 +1129,7 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
+        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
         expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'speed'
       end
     end
@@ -1146,7 +1146,7 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'start'},
           {'sCI'=>status_code,'n'=>'occupancy'}
         ], 180
       end.not_to raise_error
@@ -1162,7 +1162,7 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
+        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
         expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'occupancy'
       end
     end
@@ -1179,7 +1179,7 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'start'},
           {'sCI'=>status_code,'n'=>'P'},
           {'sCI'=>status_code,'n'=>'PS'},
           {'sCI'=>status_code,'n'=>'L'},
@@ -1203,7 +1203,7 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
+        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
         expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'P'
         expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'PS'
         expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'L'
@@ -1228,7 +1228,7 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'start'},
           {'sCI'=>status_code,'n'=>'vehicles'}
         ], 180
       end.not_to raise_error
@@ -1244,7 +1244,7 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
+        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
         expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'vehicles'
       end
     end
@@ -1261,7 +1261,7 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'start'},
           {'sCI'=>status_code,'n'=>'speed'}
         ], 180
       end.not_to raise_error
@@ -1277,7 +1277,7 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
+        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
         expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'speed'
       end
     end
@@ -1294,7 +1294,7 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'start'},
           {'sCI'=>status_code,'n'=>'occupancy'}
         ], 180
       end.not_to raise_error
@@ -1310,7 +1310,7 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
+        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
         expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'occupancy'
       end
     end
@@ -1327,7 +1327,7 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'start'},
           {'sCI'=>status_code,'n'=>'P'},
           {'sCI'=>status_code,'n'=>'PS'},
           {'sCI'=>status_code,'n'=>'L'},
@@ -1351,7 +1351,7 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
+        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
         expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'P'
         expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'PS'
         expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'L'
