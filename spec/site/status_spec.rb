@@ -28,10 +28,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[a-hA-G0-9NOP]*$/) if sS["n"] == 'signalgroupstatus'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'cyclecounter'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'basecyclecounter'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'stage'
       end
     end
   end
@@ -62,7 +58,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'detectorlogicstatus'
       end
     end
   end
@@ -93,7 +88,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'inputstatus'
       end
     end
   end
@@ -124,7 +118,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'outputstatus'
       end
     end
   end
@@ -155,7 +148,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False$/) if sS["n"] == 'status'
       end
     end
   end
@@ -187,8 +179,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[1-9]+$/) if sS["n"] == 'emergencystage'
       end
     end
   end
@@ -220,8 +210,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[1-9](,[1-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -253,8 +241,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -286,8 +272,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -319,8 +303,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -352,8 +334,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -385,8 +365,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -419,7 +397,6 @@ RSpec.describe "RSMP site status" do
       expect(item["sCI"]).to eq(status_code)
       expect(item["n"]).to eq(status_name)
 
-      expect(item["s"]).to match(/^[0-2](,[0-2])*$/)
       expect(item["q"]).to eq('recent')
     end
   end
@@ -450,7 +427,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -481,7 +457,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -512,7 +487,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'number'
       end
     end
   end
@@ -543,7 +517,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'number'
       end
     end
   end
@@ -574,7 +547,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'number'
       end
     end
   end
@@ -605,7 +577,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'number'
       end
     end
   end
@@ -637,8 +608,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^startup|control|standby|failure|test(,startup|control|standby|failure|test)*$/) if sS["n"] == 'controlmode'
-        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -669,7 +638,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-1]+$/) if sS["n"] == 'detectorlogics'
       end
     end
   end
@@ -700,7 +668,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9](,[0-9])+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -731,7 +698,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{2}-[0-9]{2}-[0-9]{2}(,[0-9]{2}-[0-9]{2}-[0-9]{2})+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -762,7 +728,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{2}-[0-9]{2}(,[0-9]{2}-[0-9]{2})+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -800,9 +765,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        if sS["n"].match(/minToGEstimate|maxToGEstimate|likelyToGEstimate|likelyToGEstimate|ToGConfidence|minToREstimate|maxToREstimate|likelyToREstimate|likelyToREstimate|ToRConfidence/)
-           expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/)
-        end
       end
     end
   end
@@ -833,7 +795,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]-[0-9](,[0-9]-[0-9])+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -864,9 +825,9 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]-[0-9]-[0-9]-[0-9](,[0-9]-[0-9]-[0-9]-[0-9])+$/) if sS["n"] == 'status'
       end
     end
+
   end
 
   it 'S0028 cycle time' do |example|
@@ -895,7 +856,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+-[0-9]+-(,[0-9]+-[0-9])+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -926,7 +886,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+/) if sS["n"] == 'status'
       end
     end
   end
@@ -958,8 +917,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/login|logout/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^.*$/) if sS["n"] == 'user'
       end
     end
   end
@@ -991,8 +948,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/login|logout/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^.*$/) if sS["n"] == 'user'
       end
     end
   end
@@ -1023,7 +978,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).not_to match(/^$/) if sS["n"] == 'status'
       end
     end
   end
@@ -1059,12 +1013,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}$/) if sS["n"] == 'year'
-        expect(sS["s"]).to match(/^[0-9]{1,2}$/) if sS["n"] == 'month'
-        expect(sS["s"]).to match(/^[0-9]{1,2}$/) if sS["n"] == 'day'
-        expect(sS["s"]).to match(/^[0-9]{1,2}$/) if sS["n"] == 'hour'
-        expect(sS["s"]).to match(/^[0-9]{2}$/) if sS["n"] == 'minute'
-        expect(sS["s"]).to match(/^[0-9]{2}$/) if sS["n"] == 'second'
       end
     end
   end
@@ -1096,8 +1044,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'vehicles'
       end
     end
   end
@@ -1129,8 +1075,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'speed'
       end
     end
   end
@@ -1162,8 +1106,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'occupancy'
       end
     end
   end
@@ -1203,16 +1145,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'P'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'PS'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'L'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'LS'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'B'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'SP'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'MC'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'C'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'F'
       end
     end
   end
@@ -1244,8 +1176,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'vehicles'
       end
     end
   end
@@ -1277,8 +1207,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'speed'
       end
     end
   end
@@ -1310,8 +1238,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'occupancy'
       end
     end
   end
@@ -1351,16 +1277,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'start'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'P'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'PS'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'L'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'LS'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'B'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'SP'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'MC'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'C'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'F'
       end
     end
   end
