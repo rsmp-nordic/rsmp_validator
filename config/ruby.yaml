@@ -1,12 +1,14 @@
 supervisor:
   sites:
     :any:
-      plans:
-        - '1'
-        - '2'
       components:
-        TC:
-          type: main
+        main:
+          TC:
+        signal_group:
+          A1:
+          A2:
+          B1:
+          B2:
   watchdog_interval: 1
   watchdog_timeout: 2
   acknowledgement_timeout: 0.1
