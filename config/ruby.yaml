@@ -9,6 +9,8 @@ supervisor:
           A2:
           B1:
           B2:
+        detector_logic:
+          DL1:
   watchdog_interval: 1
   watchdog_timeout: 2
   acknowledgement_timeout: 0.1

@@ -53,6 +53,7 @@ SUPERVISOR_CONFIG = RSMP_CONFIG['supervisor'] rescue {}
 SITE_CONFIG = SUPERVISOR_CONFIG['sites'].values.first rescue {}
 COMPONENT_CONFIG = SITE_CONFIG['components'] rescue {}
 MAIN_COMPONENT = COMPONENT_CONFIG['main'].keys.first
+STATUS_RESPONSE_TIMEOUT = SUPERVISOR_CONFIG['status_response_timeout']
 
 puts "Using test config #{VALIDATOR_CONFIG['rsmp_config_path']}"
 
