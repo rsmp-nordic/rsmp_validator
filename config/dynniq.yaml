@@ -2,13 +2,13 @@ supervisor:
   sites:
     :any:
       plans:
-        - '3'
-        - '4'
-      traffic_situation:
-        - '1'
-        - '2'
-      emergency_route:
-        - '1'
+        - 3
+        - 4
+      traffic_situations:
+        - 1
+        - 2
+      emergency_routes:
+        - 1
       components:
         main:
           KK+AG9998=001TC000:

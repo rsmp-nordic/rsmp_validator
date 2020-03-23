@@ -46,7 +46,7 @@ def set_plan plan
   @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
-    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'timeplan', 'v' => plan}
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'timeplan', 'v' => plan.to_s}
   ]
 
   log_confirmation "intention to switch to plan #{plan}" do
@@ -62,7 +62,7 @@ def set_plan plan
     expect(response.attributes['rvs']).to eq([
       { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
       { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age },
-      { 'cCI' => command_code_id, 'n' => 'timeplan','v' => plan, 'age' => age }
+      { 'cCI' => command_code_id, 'n' => 'timeplan','v' => plan.to_s, 'age' => age }
     ])
   end
 end
@@ -250,41 +250,42 @@ def set_input status, input
   end
 end
 
-def set_detector_logic status
+def force_detector_logic component, status, value='True'
   security_code = SECRETS['security_codes'][2]
 
-  @site.log "Set detector logic", level: :test
+  @site.log "Force detector logic", level: :test
   command_code_id = 'M0008'
   command_name = 'setForceDetectorLogic'
-  @site.send_command @component, [
+
+  @site.send_command component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
-    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'mode', 'v' => status}
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'mode', 'v' => value}
   ]
 
-  log_confirmation "intention to set detector logic" do
+  log_confirmation "intention to force detector logic" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response component: component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).to be_a(RSMP::CommandResponse)
-    expect(response.attributes['cId']).to eq(@component)
+    expect(response.attributes['cId']).to eq(component)
 
     age = 'recent'
     expect(response.attributes['rvs']).to eq([
       { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
       { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age },
-      { 'cCI' => command_code_id, 'n' => 'mode','v' => status, 'age' => age }
+      { 'cCI' => command_code_id, 'n' => 'mode','v' => value, 'age' => age }
     ])
   end
 end
 
 def switch_plan plan
-  set_plan plan
+  set_plan plan.to_s
   verify_status(**{
     description: "switch to plan #{plan}",
-    status_list: [{'sCI'=>'S0014','n'=>'status','status'=>plan}]
+    status_list: [{'sCI'=>'S0014','n'=>'status','status'=>plan.to_s}]
   })
 end
 
@@ -314,7 +315,7 @@ def switch_yellow_flash
   set_functional_position 'YellowFlash'
   verify_status(**{
     description:"switch to yellow flash",
-    status_list:[{'sCI'=>'S0011','n'=>'status','status'=>'^True(,True)+$','regex'=>1}]
+    status_list:[{'sCI'=>'S0011','n'=>'status','status'=>'^True(,True)*$','regex'=>1}]
   })
 end
 
@@ -322,7 +323,7 @@ def switch_dark_mode
   set_functional_position 'Dark'
   verify_status(**{
     description:"switch to dark mode",
-    status_list:[{'sCI'=>'S0007','n'=>'status','status'=>'^False(,False)+$','regex'=>1}]
+    status_list:[{'sCI'=>'S0007','n'=>'status','status'=>'^False(,False)*$','regex'=>1}]
   })
 end
 
@@ -330,13 +331,13 @@ def wait_normal_control
   # Wait for 'switched on' to be true (dark mode false)
   verify_status(**{
     description:"dark mode off",
-    status_list:[{'sCI'=>'S0007','n'=>'status','status'=>'^True(,True)+$','regex'=>1}]
+    status_list:[{'sCI'=>'S0007','n'=>'status','status'=>'^True(,True)*$','regex'=>1}]
   })
 
   # Wait for yellow flash status to be false
   verify_status(**{
     description:"yellow flash off",
-    status_list:[{'sCI'=>'S0011','n'=>'status','status'=>'^False(,False)+$','regex'=>1}]
+    status_list:[{'sCI'=>'S0011','n'=>'status','status'=>'^False(,False)*$','regex'=>1}]
   })
 
   # Wait for startup mode to be false
@@ -355,7 +356,7 @@ end
 
 def switch_fixed_time status
   set_fixed_time status
-  match = '^' + status + '(,' + status + ')+$'
+  match = '^' + status + '(,' + status + ')*$'
   verify_status(**{
     description:"switch to fixed time #{status}",
     status_list:[{'sCI'=>'S0009','n'=>'status','status'=>match,'regex'=>1}]
@@ -372,6 +373,7 @@ def switch_emergency_route route
     description:"activate emergency route #{route}",
     status_list:[{'sCI'=>'S0006','n'=>'emergencystage','status'=>route}]
   })
+
   set_emergency_route 'False',route
   verify_status(**{
     description:"deactivate emergency route",
@@ -379,40 +381,43 @@ def switch_emergency_route route
   })
 end
 
-def switch_input input
-  set_input 'True',input
+def switch_input
+  input_index = 0
+  set_input 'True',input_index.to_s
 
-  prefix_num = input.to_i - 1
-  match = "^[0-1]{" + prefix_num.to_s + "}1([0-1])*$"
+  match = "^.{#{input_index}}1"
   verify_status(**{
-    description:"activate input #{input}",
+    description:"activate input #{input_index}",
     status_list:[{'sCI'=>'S0003','n'=>'inputstatus','status'=>match,'regex'=>1}]
   })
-  set_input 'False',input
-  match = "^[0-1]{" + prefix_num.to_s + "}0([0-1])*$"
+  set_input 'False',input_index.to_s
+  match = "^.{#{input_index}}0"
   verify_status(**{
-    description:"deactivate input #{input}",
+    description:"deactivate input #{input_index}",
     status_list:[{'sCI'=>'S0003','n'=>'inputstatus','status'=>match,'regex'=>1}]
   })
 end
 
-def switch_detector_logic dl
-  @component = COMPONENT_CONFIG['detector_logic_prefix'] + "006"
-  set_detector_logic 'True'
+def switch_detector_logic
+  detector_logic_index = 0
+  component = COMPONENT_CONFIG['detector_logic'].keys[detector_logic_index]
 
-  prefix_num = dl.to_i - 1
-  match = "^[0-1]{" + prefix_num.to_s + "}1([0-1])*$"
+  force_detector_logic component, 'True', 'True'
+
+  match = "^.{#{detector_logic_index}}1"
   @component = MAIN_COMPONENT
   verify_status(**{
-    description:"activate detector logic #{dl}",
+    description:"activate detector logic #{component}",
     status_list:[{'sCI'=>'S0002','n'=>'detectorlogicstatus','status'=>match,'regex'=>1}]
   })
-  @component = COMPONENT_CONFIG['detector_logic_prefix'] + "006"
-  set_detector_logic 'False'
-  match = "^[0-1]{" + prefix_num.to_s + "}0([0-1])*$"
+  
+
+  force_detector_logic component, 'False'
+  
+  match = "^.{#{detector_logic_index}}0"
   @component = MAIN_COMPONENT
   verify_status(**{
-    description:"deactivate detector logic #{dl}",
+    description:"deactivate detector logic #{component}",
     status_list:[{'sCI'=>'S0002','n'=>'detectorlogicstatus','status'=>match,'regex'=>1}]
   })
 end
@@ -455,7 +460,7 @@ RSpec.describe 'RSMP site commands' do
     TestSite.log_test_header example
     TestSite.isolated do |task,supervisor,site|
       prepare task, site
-      SITE_CONFIG['traffic_situation'].each { |ts| switch_traffic_situation ts }
+      SITE_CONFIG['traffic_situations'].each { |ts| switch_traffic_situation ts.to_s }
     end
   end
 
@@ -463,24 +468,22 @@ RSpec.describe 'RSMP site commands' do
     TestSite.log_test_header example
     TestSite.isolated do |task,supervisor,site|
       prepare task, site
-      print "Testing traffic controller restart. Enter 'y' to continue, 'n' to skip: "
-      response = $stdin.gets.chomp
-      expect(response).to eq('y')
-
-      set_restart
-      expect { site.wait_for_state :stopping, 120}.to_not raise_error
+      if ask_user site, "Going to restart controller. Press enter to continue or 'n' to skip test:"
+        set_restart
+        #expect { site.wait_for_state :stopping, RSMP_CONFIG['shutdown_timeout'] }.to_not raise_error
+        wait_normal_control
+      end
     end
-    TestSite.isolated do |task,supervisor,site|
-      prepare task, site
-      wait_normal_control
-    end
+    #TestSite.isolated do |task,supervisor,site|
+      #prepare task, site
+    #end
   end
 
   it 'M0005 activate emergency route' do |example|
     TestSite.log_test_header example
     TestSite.isolated do |task,supervisor,site|
       prepare task, site
-      SITE_CONFIG['emergency_route'].each { |route| switch_emergency_route route }
+      SITE_CONFIG['emergency_routes'].each { |route| switch_emergency_route route.to_s }
     end
   end
 
@@ -489,7 +492,7 @@ RSpec.describe 'RSMP site commands' do
     TestSite.isolated do |task,supervisor,site|
       prepare task, site
       unsubscribe_from_all
-      switch_input '6'
+      switch_input
     end
   end
 
@@ -506,7 +509,7 @@ RSpec.describe 'RSMP site commands' do
     TestSite.log_test_header example
     TestSite.isolated do |task,supervisor,site|
       prepare task, site
-      switch_detector_logic '6'
+      switch_detector_logic 
     end
   end
 end

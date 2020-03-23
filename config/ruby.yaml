@@ -1,6 +1,14 @@
 supervisor:
   sites:
     :any:
+      plans:
+        - 1
+        - 2
+      traffic_situations:
+        - 1
+        - 2
+      emergency_routes:
+        - 1
       components:
         main:
           TC:
@@ -20,7 +28,8 @@ supervisor:
 
 connect_timeout: 1
 ready_timeout: 0.1
-
-command_timeout: 0.1
+command_timeout: 10.1
 status_timeout: 0.1
 subscribe_timeout: 0.1
+alarm_timeout: 0.1
+shutdown_timeout: 0.1

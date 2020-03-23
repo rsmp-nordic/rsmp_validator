@@ -1,7 +1,10 @@
-PATH
-  remote: /Users/emiltin/Documents/code/rsmp
+GIT
+  remote: https://github.com/rsmp-nordic/rsmp.git
+  revision: 7d9a85d0ee6af867960d20b77836586d19ec2f32
+  ref: 7d9a85d0ee6a
+  submodules: true
   specs:
-    rsmp (0.1.14)
+    rsmp (0.1.15)
       async (~> 1.23.0)
       async-io (~> 1.27.4)
       colorize (~> 0.8.1)
@@ -15,7 +18,7 @@ GEM
       console (~> 1.0)
       nio4r (~> 2.3)
       timers (~> 4.1)
-    async-io (1.27.4)
+    async-io (1.27.5)
       async (~> 1.14)
     colorize (0.8.1)
     console (1.8.2)
