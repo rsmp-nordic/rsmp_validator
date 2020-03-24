@@ -1,10 +1,10 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: 7d9a85d0ee6af867960d20b77836586d19ec2f32
-  ref: 7d9a85d0ee6a
+  revision: c6958824b77380cc3c39f267c568e2a9ef3ee8ba
+  ref: c6958824b77380
   submodules: true
   specs:
-    rsmp (0.1.15)
+    rsmp (0.1.17)
       async (~> 1.23.0)
       async-io (~> 1.27.4)
       colorize (~> 0.8.1)

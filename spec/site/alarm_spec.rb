@@ -3,7 +3,7 @@ RSpec.describe 'RSMP site alarm' do
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       component = COMPONENT_CONFIG['detector_logic'].keys.first
-      if ask_user site, "Please activate detector error on equipment. Press enter when done or 'n' to skip test: ".colorize(:color => :light_magenta)
+      if ask_user site, "Please activate detector error on equipment. Press enter when ready or 's' to skip: ".colorize(:color => :light_magenta)
         site.log "Waiting for alarm", level: :test
         start_time = Time.now
         message, response = nil,nil

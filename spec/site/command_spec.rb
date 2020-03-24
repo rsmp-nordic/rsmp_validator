@@ -173,21 +173,8 @@ def set_restart
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
   ]
 
-  log_confirmation "intention to restart traffic controller" do
-    response = nil
-    expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
-    end.to_not raise_error
-
-    expect(response).to be_a(RSMP::CommandResponse)
-    expect(response.attributes['cId']).to eq(@component)
-
-    age = 'recent'
-    expect(response.attributes['rvs']).to eq([
-      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
-      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age },
-    ])
-  end
+  # if the controller restarts immediately, we will not receive a command response,
+  # so do not expect this
 end
 
 def set_emergency_route status, route
@@ -285,7 +272,7 @@ def switch_plan plan
   set_plan plan.to_s
   verify_status(**{
     description: "switch to plan #{plan}",
-    status_list: [{'sCI'=>'S0014','n'=>'status','status'=>plan.to_s}]
+    status_list: [{'sCI'=>'S0014','n'=>'status','s'=>plan.to_s}]
   })
 end
 
@@ -293,7 +280,7 @@ def switch_traffic_situation ts
   set_traffic_situation ts
   verify_status(**{
     description: "switch to traffic situation #{ts}",
-    status_list: [{'sCI'=>'S0015','n'=>'status','status'=>ts}]
+    status_list: [{'sCI'=>'S0015','n'=>'status','s'=>ts}]
   })
 end
 
@@ -304,7 +291,7 @@ def verify_status status_list:, description:
       response = nil
       expect do
         response = @site.wait_for_status_update component: @component, sCI: item['sCI'],
-          n: item['n'], q:'recent', s:item['status'], regex:item['regex'], timeout: RSMP_CONFIG['status_timeout']
+          n: item['n'], q:'recent', s:item['s'], timeout: RSMP_CONFIG['status_timeout']
       end.to_not raise_error, "Did not receive status #{item.inspect}"
     end
     unsubscribe_from_all
@@ -315,7 +302,7 @@ def switch_yellow_flash
   set_functional_position 'YellowFlash'
   verify_status(**{
     description:"switch to yellow flash",
-    status_list:[{'sCI'=>'S0011','n'=>'status','status'=>'^True(,True)*$','regex'=>1}]
+    status_list:[{'sCI'=>'S0011','n'=>'status','s'=>/^True(,True)*$/}]
   })
 end
 
@@ -323,7 +310,7 @@ def switch_dark_mode
   set_functional_position 'Dark'
   verify_status(**{
     description:"switch to dark mode",
-    status_list:[{'sCI'=>'S0007','n'=>'status','status'=>'^False(,False)*$','regex'=>1}]
+    status_list:[{'sCI'=>'S0007','n'=>'status','s'=>/^False(,False)*$/}]
   })
 end
 
@@ -331,19 +318,19 @@ def wait_normal_control
   # Wait for 'switched on' to be true (dark mode false)
   verify_status(**{
     description:"dark mode off",
-    status_list:[{'sCI'=>'S0007','n'=>'status','status'=>'^True(,True)*$','regex'=>1}]
+    status_list:[{'sCI'=>'S0007','n'=>'status','s'=>/^True(,True)*$/}]
   })
 
   # Wait for yellow flash status to be false
   verify_status(**{
     description:"yellow flash off",
-    status_list:[{'sCI'=>'S0011','n'=>'status','status'=>'^False(,False)*$','regex'=>1}]
+    status_list:[{'sCI'=>'S0011','n'=>'status','s'=>/^False(,False)*$/}]
   })
 
   # Wait for startup mode to be false
   verify_status(**{
     description:"start-up mode off",
-    status_list:[{'sCI'=>'S0005','n'=>'status','status'=>'False'}]
+    status_list:[{'sCI'=>'S0005','n'=>'status','s'=>'False'}]
   })
 
   unsubscribe_from_all
@@ -356,10 +343,9 @@ end
 
 def switch_fixed_time status
   set_fixed_time status
-  match = '^' + status + '(,' + status + ')*$'
   verify_status(**{
     description:"switch to fixed time #{status}",
-    status_list:[{'sCI'=>'S0009','n'=>'status','status'=>match,'regex'=>1}]
+    status_list:[{'sCI'=>'S0009','n'=>'status','s'=>/^#{status}(,#{status})*$/}]
   })
 end
 
@@ -367,58 +353,52 @@ def switch_emergency_route route
   set_emergency_route 'True',route
   verify_status(**{
     description:"activate emergency route",
-    status_list:[{'sCI'=>'S0006','n'=>'status','status'=>'True'}]
+    status_list:[{'sCI'=>'S0006','n'=>'status','s'=>'True'}]
   })
   verify_status(**{
     description:"activate emergency route #{route}",
-    status_list:[{'sCI'=>'S0006','n'=>'emergencystage','status'=>route}]
+    status_list:[{'sCI'=>'S0006','n'=>'emergencystage','s'=>route}]
   })
 
   set_emergency_route 'False',route
   verify_status(**{
     description:"deactivate emergency route",
-    status_list:[{'sCI'=>'S0006','n'=>'status','status'=>'False'}]
+    status_list:[{'sCI'=>'S0006','n'=>'status','s'=>'False'}]
   })
 end
 
 def switch_input
-  input_index = 0
-  set_input 'True',input_index.to_s
-
-  match = "^.{#{input_index}}1"
+  indx = 0
+  set_input 'True',indx.to_s
   verify_status(**{
-    description:"activate input #{input_index}",
-    status_list:[{'sCI'=>'S0003','n'=>'inputstatus','status'=>match,'regex'=>1}]
+    description:"activate input #{indx}",
+    status_list:[{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx}}1/}]
   })
-  set_input 'False',input_index.to_s
-  match = "^.{#{input_index}}0"
+
+  set_input 'False',indx.to_s
   verify_status(**{
-    description:"deactivate input #{input_index}",
-    status_list:[{'sCI'=>'S0003','n'=>'inputstatus','status'=>match,'regex'=>1}]
+    description:"deactivate input #{indx}",
+    status_list:[{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx}}0/}]
   })
 end
 
 def switch_detector_logic
-  detector_logic_index = 0
-  component = COMPONENT_CONFIG['detector_logic'].keys[detector_logic_index]
+  indx = 0
+  component = COMPONENT_CONFIG['detector_logic'].keys[indx]
 
   force_detector_logic component, 'True', 'True'
-
-  match = "^.{#{detector_logic_index}}1"
   @component = MAIN_COMPONENT
   verify_status(**{
     description:"activate detector logic #{component}",
-    status_list:[{'sCI'=>'S0002','n'=>'detectorlogicstatus','status'=>match,'regex'=>1}]
+    status_list:[{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}1/}]
   })
   
 
   force_detector_logic component, 'False'
-  
-  match = "^.{#{detector_logic_index}}0"
   @component = MAIN_COMPONENT
   verify_status(**{
     description:"deactivate detector logic #{component}",
-    status_list:[{'sCI'=>'S0002','n'=>'detectorlogicstatus','status'=>match,'regex'=>1}]
+    status_list:[{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}0/}]
   })
 end
 
@@ -468,15 +448,20 @@ RSpec.describe 'RSMP site commands' do
     TestSite.log_test_header example
     TestSite.isolated do |task,supervisor,site|
       prepare task, site
-      if ask_user site, "Going to restart controller. Press enter to continue or 'n' to skip test:"
-        set_restart
-        #expect { site.wait_for_state :stopping, RSMP_CONFIG['shutdown_timeout'] }.to_not raise_error
-        wait_normal_control
-      end
+      #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
+      set_restart
+      expect { site.wait_for_state :stopped, 100 }.to_not raise_error
     end
-    #TestSite.isolated do |task,supervisor,site|
-      #prepare task, site
-    #end
+    # NOTE
+    # when a remote site closes the connection, our site proxy object will stop.
+    # when the site reconnects, a new site proxy object will be created.
+    # this means we can't wait for the old site to become ready
+    # it also means we need a new TestSite.
+    TestSite.isolated do |task,supervisor,site|
+      prepare task, site
+      expect { site.wait_for_state :ready, RSMP_CONFIG['ready_timeout'] }.to_not raise_error
+      wait_normal_control
+    end
   end
 
   it 'M0005 activate emergency route' do |example|
