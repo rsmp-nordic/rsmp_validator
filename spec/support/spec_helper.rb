@@ -1,4 +1,5 @@
 require 'rsmp'
+require 'fileutils'
 require_relative 'test_site'
 require_relative 'test_supervisor'
 
@@ -94,3 +95,6 @@ required.each do |key|
 	raise "Config #{key} is missing from #{rsmp_config_path}" unless RSMP_CONFIG[key]
 end
 
+
+# create log folder if it doesn't exist
+FileUtils.mkdir_p 'log'
