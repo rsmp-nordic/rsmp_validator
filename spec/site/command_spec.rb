@@ -409,7 +409,7 @@ def prepare task, site
   unsubscribe_from_all
 end
 
-RSpec.describe 'RSMP site commands' do
+RSpec.describe 'RSMP site commands' do  
   it 'M0001 set yellow flash' do |example|
     TestSite.log_test_header example
     TestSite.isolated do |task,supervisor,site|
