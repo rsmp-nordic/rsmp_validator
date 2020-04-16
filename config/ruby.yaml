@@ -2,11 +2,23 @@ supervisor:
   sites:
     :any:
       plans:
-        - '1'
-        - '2'
+        - 1
+        - 2
+      traffic_situations:
+        - 1
+        - 2
+      emergency_routes:
+        - 1
       components:
-        TC:
-          type: main
+        main:
+          TC:
+        signal_group:
+          A1:
+          A2:
+          B1:
+          B2:
+        detector_logic:
+          DL1:
   watchdog_interval: 1
   watchdog_timeout: 2
   acknowledgement_timeout: 0.1
@@ -14,9 +26,10 @@ supervisor:
   status_response_timeout: 0.1
   status_update_timeout: 0.1
 
-connect_timeout: 1
+connect_timeout: 0.2
 ready_timeout: 0.1
-
 command_timeout: 0.1
 status_timeout: 0.1
 subscribe_timeout: 0.1
+alarm_timeout: 0.1
+shutdown_timeout: 0.1

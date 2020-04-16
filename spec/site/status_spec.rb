@@ -1,4 +1,6 @@
 RSpec.describe "RSMP site status" do
+  status_response_timeout = SUPERVISOR_CONFIG['status_response_timeout']
+
   it 'S0001 signal group status' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
@@ -14,7 +16,7 @@ RSpec.describe "RSMP site status" do
           {'sCI'=>status_code,'n'=>'cyclecounter'},
           {'sCI'=>status_code,'n'=>'basecyclecounter'},
           {'sCI'=>status_code,'n'=>'stage'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -28,10 +30,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[a-hA-G0-9NOP]*$/) if sS["n"] == 'signalgroupstatus'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'cyclecounter'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'basecyclecounter'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'stage'
       end
     end
   end
@@ -48,7 +46,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'detectorlogicstatus'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -62,7 +60,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'detectorlogicstatus'
       end
     end
   end
@@ -79,7 +76,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'inputstatus'},
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -93,7 +90,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'inputstatus'
       end
     end
   end
@@ -110,7 +106,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'outputstatus'},
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -124,7 +120,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'outputstatus'
       end
     end
   end
@@ -141,7 +136,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -155,7 +150,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False$/) if sS["n"] == 'status'
       end
     end
   end
@@ -173,7 +167,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'},
           {'sCI'=>status_code,'n'=>'emergencystage'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -187,8 +181,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[1-9]+$/) if sS["n"] == 'emergencystage'
       end
     end
   end
@@ -206,7 +198,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'},
           {'sCI'=>status_code,'n'=>'intersection'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -220,8 +212,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[1-9](,[1-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -239,7 +229,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'},
           {'sCI'=>status_code,'n'=>'intersection'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -253,8 +243,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -272,7 +260,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'},
           {'sCI'=>status_code,'n'=>'intersection'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -286,8 +274,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -305,7 +291,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'},
           {'sCI'=>status_code,'n'=>'intersection'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -319,8 +305,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -338,7 +322,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'},
           {'sCI'=>status_code,'n'=>'intersection'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -352,8 +336,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -371,7 +353,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'},
           {'sCI'=>status_code,'n'=>'intersection'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -385,8 +367,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^True|False(,True|False)*$/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -402,7 +382,7 @@ RSpec.describe "RSMP site status" do
       start_time = Time.now
       message, response = nil,nil
       expect do
-        message, response = site.request_status component, [{'sCI'=>status_code,'n'=>status_name}], 180
+        message, response = site.request_status component, [{'sCI'=>status_code,'n'=>status_name}], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -419,7 +399,6 @@ RSpec.describe "RSMP site status" do
       expect(item["sCI"]).to eq(status_code)
       expect(item["n"]).to eq(status_name)
 
-      expect(item["s"]).to match(/^[0-2](,[0-2])*$/)
       expect(item["q"]).to eq('recent')
     end
   end
@@ -436,7 +415,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -450,7 +429,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -467,7 +445,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -481,7 +459,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -498,7 +475,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'number'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -512,7 +489,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'number'
       end
     end
   end
@@ -529,7 +505,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'number'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -543,7 +519,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'number'
       end
     end
   end
@@ -560,7 +535,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'number'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -574,7 +549,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'number'
       end
     end
   end
@@ -591,7 +565,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'number'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -605,7 +579,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'number'
       end
     end
   end
@@ -623,7 +596,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'controlmode'},
           {'sCI'=>status_code,'n'=>'intersection'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -637,8 +610,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^startup|control|standby|failure|test(,startup|control|standby|failure|test)*$/) if sS["n"] == 'controlmode'
-        expect(sS["s"]).to match(/^[0-9](,[0-9])*$/) if sS["n"] == 'intersection'
       end
     end
   end
@@ -655,7 +626,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'detectorlogics'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -669,7 +640,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-1]+$/) if sS["n"] == 'detectorlogics'
       end
     end
   end
@@ -686,7 +656,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -700,7 +670,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9](,[0-9])+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -717,7 +686,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -731,7 +700,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{2}-[0-9]{2}-[0-9]{2}(,[0-9]{2}-[0-9]{2}-[0-9]{2})+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -748,7 +716,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -762,7 +730,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{2}-[0-9]{2}(,[0-9]{2}-[0-9]{2})+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -770,7 +737,7 @@ RSpec.describe "RSMP site status" do
   it 'S0025 time-of-green/time-of-red' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      component = COMPONENT_CONFIG['signal_group_prefix'] + "001"
+      component = COMPONENT_CONFIG['signal_group'].keys.first
       status_code = 'S0025'
 
       site.log "Requesting time-of-green/time-of-red", level: :test
@@ -786,7 +753,7 @@ RSpec.describe "RSMP site status" do
           {'sCI'=>status_code,'n'=>'maxToREstimate'},
           {'sCI'=>status_code,'n'=>'likelyToREstimate'},
           {'sCI'=>status_code,'n'=>'ToRConfidence'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -800,9 +767,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        if sS["n"].match(/minToGEstimate|maxToGEstimate|likelyToGEstimate|likelyToGEstimate|ToGConfidence|minToREstimate|maxToREstimate|likelyToREstimate|likelyToREstimate|ToRConfidence/)
-           expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/)
-        end
       end
     end
   end
@@ -819,7 +783,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -833,7 +797,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]-[0-9](,[0-9]-[0-9])+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -850,7 +813,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -864,9 +827,9 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]-[0-9]-[0-9]-[0-9](,[0-9]-[0-9]-[0-9]-[0-9])+$/) if sS["n"] == 'status'
       end
     end
+
   end
 
   it 'S0028 cycle time' do |example|
@@ -881,7 +844,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -895,7 +858,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+-[0-9]+-(,[0-9]+-[0-9])+$/) if sS["n"] == 'status'
       end
     end
   end
@@ -912,7 +874,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -926,7 +888,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]+/) if sS["n"] == 'status'
       end
     end
   end
@@ -944,7 +905,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'},
           {'sCI'=>status_code,'n'=>'user'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -958,8 +919,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/login|logout/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^.*$/) if sS["n"] == 'user'
       end
     end
   end
@@ -977,7 +936,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'},
           {'sCI'=>status_code,'n'=>'user'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -991,8 +950,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/login|logout/) if sS["n"] == 'status'
-        expect(sS["s"]).to match(/^.*$/) if sS["n"] == 'user'
       end
     end
   end
@@ -1009,7 +966,7 @@ RSpec.describe "RSMP site status" do
       expect do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'status'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -1023,7 +980,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).not_to match(/^$/) if sS["n"] == 'status'
       end
     end
   end
@@ -1045,7 +1001,7 @@ RSpec.describe "RSMP site status" do
           {'sCI'=>status_code,'n'=>'hour'},
           {'sCI'=>status_code,'n'=>'minute'},
           {'sCI'=>status_code,'n'=>'second'},
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -1059,12 +1015,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}$/) if sS["n"] == 'year'
-        expect(sS["s"]).to match(/^[0-9]{1,2}$/) if sS["n"] == 'month'
-        expect(sS["s"]).to match(/^[0-9]{1,2}$/) if sS["n"] == 'day'
-        expect(sS["s"]).to match(/^[0-9]{1,2}$/) if sS["n"] == 'hour'
-        expect(sS["s"]).to match(/^[0-9]{2}$/) if sS["n"] == 'minute'
-        expect(sS["s"]).to match(/^[0-9]{2}$/) if sS["n"] == 'second'
       end
     end
   end
@@ -1072,7 +1022,7 @@ RSpec.describe "RSMP site status" do
   it 'S0201 traffic counting: number of vehicles'  do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      component = COMPONENT_CONFIG['detector_logic_prefix'] + "001"
+      component = COMPONENT_CONFIG['detector_logic'].keys.first
       status_code = 'S0201'
 
       site.log "Requesting traffic counting: number of vehicles", level: :test
@@ -1082,7 +1032,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'starttime'},
           {'sCI'=>status_code,'n'=>'vehicles'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -1096,8 +1046,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'vehicles'
       end
     end
   end
@@ -1105,7 +1053,7 @@ RSpec.describe "RSMP site status" do
   it 'S0202 traffic counting: vehicle speed' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      component = COMPONENT_CONFIG['detector_logic_prefix'] + "001"
+      component = COMPONENT_CONFIG['detector_logic'].keys.first
       status_code = 'S0202'
 
       site.log "Requesting traffic counting: vehicle speed", level: :test
@@ -1115,7 +1063,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'starttime'},
           {'sCI'=>status_code,'n'=>'speed'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -1129,8 +1077,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'speed'
       end
     end
   end
@@ -1138,7 +1084,7 @@ RSpec.describe "RSMP site status" do
   it 'S0203 traffic counting: occupancy'  do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      component = COMPONENT_CONFIG['detector_logic_prefix'] + "001"
+      component = COMPONENT_CONFIG['detector_logic'].keys.first
       status_code = 'S0203'
 
       site.log "Requesting traffic counting: occupancy", level: :test
@@ -1148,7 +1094,7 @@ RSpec.describe "RSMP site status" do
         message, response = site.request_status component,[
           {'sCI'=>status_code,'n'=>'starttime'},
           {'sCI'=>status_code,'n'=>'occupancy'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -1162,8 +1108,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'occupancy'
       end
     end
   end
@@ -1171,7 +1115,7 @@ RSpec.describe "RSMP site status" do
   it 'S0204 traffic counting: classification' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      component = COMPONENT_CONFIG['detector_logic_prefix'] + "001"
+      component = COMPONENT_CONFIG['detector_logic'].keys.first
       status_code = 'S0204'
 
       site.log "Requesting traffic counting: classification", level: :test
@@ -1189,7 +1133,7 @@ RSpec.describe "RSMP site status" do
           {'sCI'=>status_code,'n'=>'MC'},
           {'sCI'=>status_code,'n'=>'C'},
           {'sCI'=>status_code,'n'=>'F'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -1203,16 +1147,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'P'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'PS'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'L'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'LS'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'B'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'SP'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'MC'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'C'
-        expect(sS["s"]).to match(/^[0-9]+$/) if sS["n"] == 'F'
       end
     end
   end
@@ -1228,9 +1162,9 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'start'},
           {'sCI'=>status_code,'n'=>'vehicles'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -1244,8 +1178,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'vehicles'
       end
     end
   end
@@ -1261,9 +1193,9 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'start'},
           {'sCI'=>status_code,'n'=>'speed'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -1277,8 +1209,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'speed'
       end
     end
   end
@@ -1294,9 +1224,9 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'start'},
           {'sCI'=>status_code,'n'=>'occupancy'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -1310,8 +1240,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'occupancy'
       end
     end
   end
@@ -1327,7 +1255,7 @@ RSpec.describe "RSMP site status" do
       message, response = nil,nil
       expect do
         message, response = site.request_status component,[
-          {'sCI'=>status_code,'n'=>'starttime'},
+          {'sCI'=>status_code,'n'=>'start'},
           {'sCI'=>status_code,'n'=>'P'},
           {'sCI'=>status_code,'n'=>'PS'},
           {'sCI'=>status_code,'n'=>'L'},
@@ -1337,7 +1265,7 @@ RSpec.describe "RSMP site status" do
           {'sCI'=>status_code,'n'=>'MC'},
           {'sCI'=>status_code,'n'=>'C'},
           {'sCI'=>status_code,'n'=>'F'}
-        ], 180
+        ], status_response_timeout
       end.not_to raise_error
 
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -1351,16 +1279,6 @@ RSpec.describe "RSMP site status" do
 
       response.attributes["sS"].each do |sS|
         expect(sS["q"]).to eq('recent')
-        expect(sS["s"]).to match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/) if sS["n"] == 'starttime'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'P'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'PS'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'L'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'LS'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'B'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'SP'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'MC'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'C'
-        expect(sS["s"]).to match(/^[0-9]+(,[0-9]+)+$/) if sS["n"] == 'F'
       end
     end
   end

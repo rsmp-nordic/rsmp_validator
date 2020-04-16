@@ -2,18 +2,21 @@ supervisor:
   sites:
     :any:
       plans:
-        - '8'
-        - '9'
-      traffic_situation:
-        - '1'
-        - '2'
-      emergency_route:
-        - '1'
+        - 8
+        - 9
+      traffic_situations:
+        - 1
+        - 2
+      emergency_routes:
+        - 1
       components:
-        :any:
-          traffic_controller: 'KK+AG9998=001TC000'
-          signal_group_prefix: 'KK+AG9998=001SG'
-          detector_logic_prefix: 'KK+AG9998=001DL'
+        main:
+          KK+AG9998=001TC000:
+        signal_group:
+          KK+AG9998=001SG001:
+        detector_logic:
+          KK+AG9998=001DL001:
+  watchdog_interval: 60
   watchdog_interval: 60
   watchdog_timeout: 120
   acknowledgement_timeout: 20
