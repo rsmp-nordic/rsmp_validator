@@ -412,7 +412,7 @@ end
 RSpec.describe 'RSMP site commands' do  
   it 'M0001 set yellow flash' do |example|
     TestSite.log_test_header example
-    TestSite.isolated do |task,supervisor,site|
+    TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_yellow_flash
       switch_normal_control
@@ -421,7 +421,7 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0001 set dark mode' do |example|
     TestSite.log_test_header example
-    TestSite.isolated do |task,supervisor,site|
+    TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_dark_mode
       switch_normal_control
@@ -430,7 +430,7 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0002 set time plan' do |example|
     TestSite.log_test_header example
-    TestSite.isolated do |task,supervisor,site|
+    TestSite.connected do |task,supervisor,site|
       prepare task, site
       SITE_CONFIG['plans'].each { |plan| switch_plan plan }
     end
@@ -438,7 +438,7 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0003 set traffic situation' do |example|
     TestSite.log_test_header example
-    TestSite.isolated do |task,supervisor,site|
+    TestSite.connected do |task,supervisor,site|
       prepare task, site
       SITE_CONFIG['traffic_situations'].each { |ts| switch_traffic_situation ts.to_s }
     end
@@ -466,7 +466,7 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0005 activate emergency route' do |example|
     TestSite.log_test_header example
-    TestSite.isolated do |task,supervisor,site|
+    TestSite.connected do |task,supervisor,site|
       prepare task, site
       SITE_CONFIG['emergency_routes'].each { |route| switch_emergency_route route.to_s }
     end
@@ -474,7 +474,7 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0006 activate input' do |example|
     TestSite.log_test_header example
-    TestSite.isolated do |task,supervisor,site|
+    TestSite.connected do |task,supervisor,site|
       prepare task, site
       unsubscribe_from_all
       switch_input
@@ -483,7 +483,7 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0007 set fixed time' do |example|
     TestSite.log_test_header example
-    TestSite.isolated do |task,supervisor,site|
+    TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_fixed_time 'True'
       switch_fixed_time 'False'
@@ -492,7 +492,7 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0008 activate detector logic' do |example|
     TestSite.log_test_header example
-    TestSite.isolated do |task,supervisor,site|
+    TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_detector_logic 
     end
