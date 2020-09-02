@@ -31,3 +31,4 @@ command_timeout: 180
 status_timeout: 180
 subscribe_timeout: 180
 alarm_timeout: 180
+shutdown_timeout: 180
