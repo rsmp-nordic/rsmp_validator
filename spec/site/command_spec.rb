@@ -36,6 +36,40 @@ def subscribe status_list, update_rate: 1
   end.to_not raise_error
 end
 
+def set_functional_position status
+  timeout = '0'
+  intersection = '0'
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Switching to #{status}", level: :test
+  command_code_id = 'M0001'
+  command_name = 'setValue'
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'timeout', 'v' => timeout},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'intersection', 'v' => intersection}
+  ]
+
+  log_confirmation"intention to switch to #{status}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    age = 'recent'
+    expect(response.attributes['rvs']).to eq([
+      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'timeout','v' => timeout, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'intersection','v' => intersection, 'age' => age }
+    ])
+  end
+end
+
 def set_plan plan
   status = 'True'
   security_code = SECRETS['security_codes'][2]
@@ -95,68 +129,6 @@ def set_traffic_situation ts
       { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
       { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age },
       { 'cCI' => command_code_id, 'n' => 'traficsituation','v' => ts, 'age' => age }
-    ])
-  end
-end
-
-def set_functional_position status
-  timeout = '0'
-  intersection = '0'
-  security_code = SECRETS['security_codes'][2]
-
-  @site.log "Switching to #{status}", level: :test
-  command_code_id = 'M0001'
-  command_name = 'setValue'
-  @site.send_command @component, [
-    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
-    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
-    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'timeout', 'v' => timeout},
-    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'intersection', 'v' => intersection}
-  ]
-
-  log_confirmation"intention to switch to #{status}" do
-    response = nil
-    expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
-    end.to_not raise_error
-
-    expect(response).to be_a(RSMP::CommandResponse)
-    expect(response.attributes['cId']).to eq(@component)
-
-    age = 'recent'
-    expect(response.attributes['rvs']).to eq([
-      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
-      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age },
-      { 'cCI' => command_code_id, 'n' => 'timeout','v' => timeout, 'age' => age },
-      { 'cCI' => command_code_id, 'n' => 'intersection','v' => intersection, 'age' => age }
-    ])
-  end
-end
-
-def set_fixed_time status
-  security_code = SECRETS['security_codes'][2]
-
-  @site.log "Switching to fixed time #{status}", level: :test
-  command_code_id = 'M0007'
-  command_name = 'setFixedTime'
-  @site.send_command @component, [
-    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
-    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
-  ]
-
-  log_confirmation"intention to switch to fixed time #{status}" do
-    response = nil
-    expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
-    end.to_not raise_error
-
-    expect(response).to be_a(RSMP::CommandResponse)
-    expect(response.attributes['cId']).to eq(@component)
-
-    age = 'recent'
-    expect(response.attributes['rvs']).to eq([
-      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
-      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age }
     ])
   end
 end
@@ -237,6 +209,34 @@ def set_input status, input
   end
 end
 
+def set_fixed_time status
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Switching to fixed time #{status}", level: :test
+  command_code_id = 'M0007'
+  command_name = 'setFixedTime'
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation"intention to switch to fixed time #{status}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    age = 'recent'
+    expect(response.attributes['rvs']).to eq([
+      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age }
+    ])
+  end
+end
+
 def force_detector_logic component, status, value='True'
   security_code = SECRETS['security_codes'][2]
 
@@ -265,6 +265,341 @@ def force_detector_logic component, status, value='True'
       { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age },
       { 'cCI' => command_code_id, 'n' => 'mode','v' => value, 'age' => age }
     ])
+  end
+end
+
+def set_dynamic_bands status, plan
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Set dynamic bands", level: :test
+  command_code_id = 'M0014'
+  command_name = 'setCommands'
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'plan', 'v' => plan},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to set dynamic bands #{plan}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    expect(response.attributes['rvs']).to eq([
+      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
+      {'cCI' => command_code_id, 'n' => 'plan', 'v' => plan},
+      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code}
+    ])
+  end
+end
+
+def set_offset status, plan
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Set offset", level: :test
+  command_code_id = 'M0015'
+  command_name = 'setOffset'
+
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'plan', 'v' => plan},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to set offset #{plan}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    expect(response.attributes['rvs']).to eq([
+      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
+      {'cCI' => command_code_id, 'n' => 'plan', 'v' => plan},
+      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code}
+    ])
+  end
+end
+
+def set_week_table status
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Set week table", level: :test
+  command_code_id = 'M0016'
+  command_name = 'setWeekTable'
+
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to set week table #{status}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    expect(response.attributes['rvs']).to eq([
+      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
+      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code}
+    ])
+  end
+end
+
+def set_time_table status
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Set time table", level: :test
+  command_code_id = 'M0017'
+  command_name = 'setTimeTable'
+
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to set time table #{status}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    expect(response.attributes['rvs']).to eq([
+      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
+      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code}
+    ])
+  end
+end
+
+def set_cycle_time status, plan
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Set cycle time", level: :test
+  command_code_id = 'M0018'
+  command_name = 'setCycleTable'
+
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'plan', 'v' => plan},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to set cycle table #{plan}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    expect(response.attributes['rvs']).to eq([
+      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
+      {'cCI' => command_code_id, 'n' => 'plan', 'v' => plan},
+      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code}
+    ])
+  end
+end
+
+def force_input status, input, inputValue
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Force input", level: :test
+  command_code_id = 'M0019'
+  command_name = 'setInput'
+
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'input', 'v' => input},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'inputValue', 'v' => inputValue},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to force input #{inputValue}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    expect(response.attributes['rvs']).to eq([
+      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
+      {'cCI' => command_code_id, 'n' => 'input', 'v' => input},
+      {'cCI' => command_code_id, 'n' => 'inputValue', 'v' => inputValue},
+      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code}
+    ])
+  end
+end
+
+def force_output status, output, outputValue
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Force output", level: :test
+  command_code_id = 'M0020'
+  command_name = 'setOutput'
+
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'output', 'v' => output},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'outputValue', 'v' => outputValue},
+    {'cCI' => command_code_id, 'cO' => 'setInput', 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to force output #{outputValue}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    expect(response.attributes['rvs']).to eq([
+      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
+      {'cCI' => command_code_id, 'n' => 'output', 'v' => output},
+      {'cCI' => command_code_id, 'n' => 'outputValue', 'v' => outputValue},
+      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code}
+    ])
+  end
+end
+
+def set_cycle_time status
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Set trigger level sensitivity for loop detector", level: :test
+  command_code_id = 'M0021'
+  command_name = 'setLevel'
+
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => 'setInput', 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to set trigger level sensitivity for loop detector #{status}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    expect(response.attributes['rvs']).to eq([
+      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
+      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code}
+    ])
+  end
+end
+
+def set_security_code status
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Set security code", level: :test
+  command_code_id = 'M0103'
+  command_name = 'setSecurityCode'
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'oldSecurityCode', 'v' => security_code},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'newSecurityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to set security code" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    expect(response.attributes['rvs']).to eq([
+      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
+      {'cCI' => command_code_id, 'n' => 'oldSecurityCode', 'v' => security_code},
+      {'cCI' => command_code_id, 'n' => 'newSecurityCode', 'v' => security_code}
+    ])
+  end
+end
+
+def set_date status
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Set date", level: :test
+  command_code_id = 'M0104'
+  command_name = 'setDate'
+  year = 2020
+  month = "09"
+  day = 29
+  hour = 17
+  minute = 29
+  second = 51
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'year', 'v' => year},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'month', 'v' => month},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'day', 'v' => day},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'hour', 'v' => hour},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'minute', 'v' => minute},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'second', 'v' => second}
+  ]
+
+  log_confirmation "intention to set date" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    age = 'recent'
+    expect(response.attributes['rvs']).to eq([
+      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code},
+      {'cCI' => command_code_id, 'n' => 'year', 'v' => year},
+      {'cCI' => command_code_id, 'n' => 'month', 'v' => month},
+      {'cCI' => command_code_id, 'n' => 'day', 'v' => day},
+      {'cCI' => command_code_id, 'n' => 'hour', 'v' => hour},
+      {'cCI' => command_code_id, 'n' => 'minute', 'v' => minute},
+      {'cCI' => command_code_id, 'n' => 'second', 'v' => second}
+    ])
+  end
+end
+
+def wrong_security_code component, status, value='True'
+  security_code = SECRETS['security_codes'][3]
+
+  @site.log "Force detector logic", level: :test
+  command_code_id = 'M0008'
+  command_name = 'setForceDetectorLogic'
+
+  @site.send_command component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'mode', 'v' => value}
+  ]
+
+  log_confirmation "intention to force detector logic with wrong security code" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: component, timeout: RSMP_CONFIG['command_timeout']
+    end.to raise_error
+
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(component)
+    put(response)
   end
 end
 
@@ -495,6 +830,111 @@ RSpec.describe 'RSMP site commands' do
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_detector_logic 
+    end
+  end
+
+  it 'M0103 set security code' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      set_security_code '-Level1'
+    end
+  end
+
+  it 'M0104 set date' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      set_date
+    end
+  end
+
+  it 'Send the wrong security code' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      wrong_security_code 
+    end
+  end
+
+  it 'M0014 set date' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      plan = 1
+      status = "10,10"
+      prepare task, site
+      set_dynamic_bands status, plan
+    end
+  end
+
+  it 'M0015 set offset' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      plan = 1
+      status = 255
+      prepare task, site
+      set_offset status, plan
+    end
+  end
+
+  it 'M0016 set week table' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = "0-1,6-2"
+      prepare task, site
+      set_week_table status
+    end
+  end
+
+  it 'M0017 set time table' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = "12-1-12-59,1-0-23-12"
+      prepare task, site
+      set_time_table status
+    end
+  end
+
+  it 'M0018 set cycle time' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = 5
+      plan = 0
+      prepare task, site
+      set_cycle_time status, plan
+    end
+  end
+
+  it 'M0019 force input' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = False
+      input = 1
+      inputValue = True
+      prepare task, site
+      force_input status, input, inputValue
+    end
+  end
+
+  it 'M0020 force output' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = False
+      output = 1
+      outputValue = True
+      prepare task, site
+      force_output status, output, outputValue
+    end
+  end
+
+  it 'M0021 set trigger sensitivity' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = False
+      output = 1
+      outputValue = True
+      prepare task, site
+      force_output status
     end
   end
 end
