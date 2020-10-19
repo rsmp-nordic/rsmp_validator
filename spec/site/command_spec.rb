@@ -57,6 +57,7 @@ def set_functional_position status
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -89,6 +90,7 @@ def set_plan plan
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -121,6 +123,7 @@ def set_traffic_situation ts
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -167,6 +170,7 @@ def set_emergency_route status, route
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -197,6 +201,7 @@ def set_input status, input
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -226,6 +231,7 @@ def set_fixed_time status
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -256,6 +262,7 @@ def force_detector_logic component, status, value='True'
       response = @site.wait_for_command_response component: component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(component)
 
@@ -286,6 +293,7 @@ def set_dynamic_bands status, plan
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -316,6 +324,7 @@ def set_offset status, plan
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -345,6 +354,7 @@ def set_week_table status
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -373,6 +383,7 @@ def set_time_table status
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -402,6 +413,7 @@ def set_cycle_time status, plan
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -433,6 +445,7 @@ def force_input status, input, inputValue
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -465,6 +478,7 @@ def force_output status, output, outputValue
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -495,6 +509,7 @@ def set_cycle_time status
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -523,13 +538,15 @@ def set_security_code status
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
+    age = "recent"
     expect(response.attributes['rvs']).to eq([
-      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
-      {'cCI' => command_code_id, 'n' => 'oldSecurityCode', 'v' => security_code},
-      {'cCI' => command_code_id, 'n' => 'newSecurityCode', 'v' => security_code}
+      {'age' => age, 'cCI' => command_code_id, 'n' => 'status', 'v' => status},
+      {'age' => age, 'cCI' => command_code_id, 'n' => 'oldSecurityCode', 'v' => security_code},
+      {'age' => age, 'cCI' => command_code_id, 'n' => 'newSecurityCode', 'v' => security_code}
     ])
   end
 end
@@ -562,6 +579,7 @@ def set_date status
       response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
@@ -597,6 +615,7 @@ def wrong_security_code component, status, value='True'
       response = @site.wait_for_command_response component: component, timeout: RSMP_CONFIG['command_timeout']
     end.to raise_error
 
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(component)
     put(response)
@@ -816,7 +835,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0007 set fixed time' do |example|
+  it 'M0007 set fixed time', important: true do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -825,7 +844,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0008 activate detector logic' do |example|
+  it 'M0008 activate detector logic', important: true do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -833,7 +852,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0103 set security code' do |example|
+  it 'M0103 set security code', foobar: true do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -857,7 +876,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0014 set date' do |example|
+  it 'M0014 set command table' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       plan = 1
