@@ -1079,6 +1079,37 @@ RSpec.describe "RSMP site status" do
     end
   end
 
+  it 'S0097 version of traffic program' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0097'
+
+      site.log "Requesting version of traffic program", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'version'},
+          {'sCI'=>status_code,'n'=>'hash'}
+        ], status_response_timeout
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got version of traffic program after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+      end
+    end
+  end
+
   it 'S0201 traffic counting: number of vehicles'  do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
