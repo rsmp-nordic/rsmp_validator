@@ -892,6 +892,66 @@ RSpec.describe "RSMP site status" do
     end
   end
 
+  it 'S0030 forced output status' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0030'
+
+      site.log "Requesting forced output status", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'status'}
+        ], status_response_timeout
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got forced output status after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+      end
+    end
+  end
+
+  it 'S0031 trigger level sensitivity for loop detector' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_code = 'S0031'
+
+      site.log "Requesting trigger level sensitivity for loop detector", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        message, response = site.request_status component,[
+          {'sCI'=>status_code,'n'=>'status'}
+        ], status_response_timeout
+      end.not_to raise_error
+
+      expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+      expect(response).to be_a(RSMP::StatusResponse)
+
+      delay = Time.now - start_time
+      site.log "Got trigger level sensitivity for loop detector after #{delay}s", level: :test
+
+      expect(response.attributes["cId"]).to eq(component)
+      expect(response.attributes["sS"]).to be_a(Array)
+
+      response.attributes["sS"].each do |sS|
+        expect(sS["q"]).to eq('recent')
+      end
+    end
+  end
+
   it 'S0091 operator logged in/out OP-panel' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
