@@ -879,7 +879,7 @@ RSpec.describe 'RSMP site commands' do
   it 'M0014 set command table' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      plan = 1
+      plan = "1"
       status = "10,10"
       prepare task, site
       set_dynamic_bands status, plan
