@@ -275,6 +275,35 @@ def force_detector_logic component, status, value='True'
   end
 end
 
+def set_series_of_inputs status
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Activate a series of inputs", level: :test
+  command_code_id = 'M0013'
+  command_name = 'setInput'
+  @site.send_command @component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to activate a series of inputs #{plan}" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(@component)
+
+    expect(response.attributes['rvs']).to eq([
+      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
+      {'cCI' => command_code_id, 'n' => 'plan', 'v' => plan},
+      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code}
+    ])
+  end
+end
+
 def set_dynamic_bands status, plan
   security_code = SECRETS['security_codes'][2]
 
@@ -876,6 +905,15 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
+  it 'M0013 activate a series of inputs' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = "5,4134,65;511"
+      prepare task, site
+      set_series_of_inputs status
+    end
+  end
+  
   it 'M0014 set command table' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
