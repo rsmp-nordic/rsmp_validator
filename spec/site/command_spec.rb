@@ -275,6 +275,97 @@ def force_detector_logic component, status, value='True'
   end
 end
 
+def set_signal_start status
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Start of signal group. Orders a signal group to green.", level: :test
+  command_code_id = 'M0010'
+  command_name = 'setStart'
+
+  @site.send_command component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to set start of signal group." do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(component)
+
+    age = 'recent'
+    expect(response.attributes['rvs']).to eq([
+      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age }
+    ])
+  end
+end
+
+def set_signal_stop status
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Stop of signal group. Orders a signal group to red.", level: :test
+  command_code_id = 'M0011'
+  command_name = 'setStop'
+
+  @site.send_command component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to set stop of signal group" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(component)
+
+    age = 'recent'
+    expect(response.attributes['rvs']).to eq([
+      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age }
+    ])
+  end
+end
+
+def set_signal_start_or_stop status
+  security_code = SECRETS['security_codes'][2]
+
+  @site.log "Request start or stop of a series of signal groups", level: :test
+  command_code_id = 'M0012'
+  command_name = 'setStart'
+
+  @site.send_command component, [
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
+    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
+  ]
+
+  log_confirmation "intention to request start or stop of a series of signal groups" do
+    response = nil
+    expect do
+      response = @site.wait_for_command_response component: component, timeout: RSMP_CONFIG['command_timeout']
+    end.to_not raise_error
+
+    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+    expect(response).to be_a(RSMP::CommandResponse)
+    expect(response.attributes['cId']).to eq(component)
+
+    age = 'recent'
+    expect(response.attributes['rvs']).to eq([
+      { 'cCI' => command_code_id, 'n' => 'status','v' => status, 'age' => age },
+      { 'cCI' => command_code_id, 'n' => 'securityCode','v' => security_code, 'age' => age }
+    ])
+  end
+end
+
+
 def set_series_of_inputs status
   security_code = SECRETS['security_codes'][2]
 
@@ -296,10 +387,10 @@ def set_series_of_inputs status
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
+    age = 'recent'
     expect(response.attributes['rvs']).to eq([
-      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
-      {'cCI' => command_code_id, 'n' => 'plan', 'v' => plan},
-      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code}
+      {'cCI' => command_code_id, 'n' => 'status', 'v' => status, 'age' => age},
+      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code, 'age' => age}
     ])
   end
 end
@@ -881,27 +972,27 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0103 set security code', foobar: true do |example|
+  it 'M0010 start signal group', important: true do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      set_security_code '-Level1'
+      set_signal_start True
     end
   end
 
-  it 'M0104 set date' do |example|
+  it 'M0011 stop signal group', important: true do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      set_date
+      set_signal_stop False
     end
   end
 
-  it 'Send the wrong security code' do |example|
+  it 'M0012 activate detector logic', important: true do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      wrong_security_code 
+      set_signal_stop False
     end
   end
 
@@ -992,6 +1083,30 @@ RSpec.describe 'RSMP site commands' do
       outputValue = True
       prepare task, site
       force_output status
+    end
+  end
+
+  it 'M0103 set security code', foobar: true do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      set_security_code '-Level1'
+    end
+  end
+
+  it 'M0104 set date' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      set_date
+    end
+  end
+
+  it 'Send the wrong security code' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      wrong_security_code 
     end
   end
 end
