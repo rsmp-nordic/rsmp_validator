@@ -437,10 +437,11 @@ def set_dynamic_bands status, plan
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(@component)
 
+    age = 'recent'
     expect(response.attributes['rvs']).to eq([
-      {'cCI' => command_code_id, 'n' => 'status', 'v' => status},
-      {'cCI' => command_code_id, 'n' => 'plan', 'v' => plan},
-      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code}
+      {'cCI' => command_code_id, 'n' => 'status', 'v' => status, 'age' => age},
+      {'cCI' => command_code_id, 'n' => 'plan', 'v' => plan, 'age' => age},
+      {'cCI' => command_code_id, 'n' => 'securityCode', 'v' => security_code, 'age' => age}
     ])
   end
 end
