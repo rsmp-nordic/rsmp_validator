@@ -44,7 +44,9 @@ def set_functional_position status
   @site.log "Switching to #{status}", level: :test
   command_code_id = 'M0001'
   command_name = 'setValue'
-  @site.send_command @component, [
+  message = nil
+
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'timeout', 'v' => timeout},
@@ -54,7 +56,7 @@ def set_functional_position status
   log_confirmation"intention to switch to #{status}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -78,7 +80,9 @@ def set_plan plan
   @site.log "Switching to plan #{plan}", level: :test
   command_code_id = 'M0002'
   command_name = 'setPlan'
-  @site.send_command @component, [
+  message = nil
+
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'timeplan', 'v' => plan.to_s}
@@ -87,7 +91,7 @@ def set_plan plan
   log_confirmation "intention to switch to plan #{plan}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -111,7 +115,9 @@ def set_traffic_situation ts
   @site.log "Switching to traffic situation #{ts}", level: :test
   command_code_id = 'M0003'
   command_name = 'setTrafficSituation'
-  @site.send_command @component, [
+  message = nil
+
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'traficsituation', 'v' => ts}
@@ -120,7 +126,7 @@ def set_traffic_situation ts
   log_confirmation "intention to switch to traffic situation #{ts}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -158,7 +164,9 @@ def set_emergency_route status, route
   @site.log "Set emergency route", level: :test
   command_code_id = 'M0005'
   command_name = 'setEmergency'
-  @site.send_command @component, [
+  message = nil
+
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'emergencyroute', 'v' => route}
@@ -167,7 +175,7 @@ def set_emergency_route status, route
   log_confirmation "intention to switch to emergency route #{route}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -189,6 +197,8 @@ def set_input status, input
   @site.log "Set input", level: :test
   command_code_id = 'M0006'
   command_name = 'setInput'
+  message = nil
+
   @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
@@ -198,7 +208,7 @@ def set_input status, input
   log_confirmation "intention to set input #{input}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -220,7 +230,9 @@ def set_fixed_time status
   @site.log "Switching to fixed time #{status}", level: :test
   command_code_id = 'M0007'
   command_name = 'setFixedTime'
-  @site.send_command @component, [
+  message = nil
+
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
   ]
@@ -228,7 +240,7 @@ def set_fixed_time status
   log_confirmation"intention to switch to fixed time #{status}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -249,8 +261,9 @@ def force_detector_logic component, status, value='True'
   @site.log "Force detector logic", level: :test
   command_code_id = 'M0008'
   command_name = 'setForceDetectorLogic'
+  message = nil
 
-  @site.send_command component, [
+  message = @site.send_command component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'mode', 'v' => value}
@@ -259,7 +272,7 @@ def force_detector_logic component, status, value='True'
   log_confirmation "intention to force detector logic" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -281,8 +294,9 @@ def set_signal_start status
   @site.log "Start of signal group. Orders a signal group to green.", level: :test
   command_code_id = 'M0010'
   command_name = 'setStart'
+  message = nil
 
-  @site.send_command component, [
+  message = @site.send_command component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
   ]
@@ -290,7 +304,7 @@ def set_signal_start status
   log_confirmation "intention to set start of signal group." do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -311,8 +325,9 @@ def set_signal_stop status
   @site.log "Stop of signal group. Orders a signal group to red.", level: :test
   command_code_id = 'M0011'
   command_name = 'setStop'
+  message = nil
 
-  @site.send_command component, [
+  message = @site.send_command component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
   ]
@@ -320,7 +335,7 @@ def set_signal_stop status
   log_confirmation "intention to set stop of signal group" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -341,8 +356,9 @@ def set_signal_start_or_stop status
   @site.log "Request start or stop of a series of signal groups", level: :test
   command_code_id = 'M0012'
   command_name = 'setStart'
+  message = nil
 
-  @site.send_command component, [
+  message = @site.send_command component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
   ]
@@ -350,7 +366,7 @@ def set_signal_start_or_stop status
   log_confirmation "intention to request start or stop of a series of signal groups" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -372,7 +388,9 @@ def set_series_of_inputs status
   @site.log "Activate a series of inputs", level: :test
   command_code_id = 'M0013'
   command_name = 'setInput'
-  @site.send_command @component, [
+  message = nil
+
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
   ]
@@ -380,7 +398,7 @@ def set_series_of_inputs status
   log_confirmation "intention to activate a series of inputs #{plan}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -401,7 +419,9 @@ def set_dynamic_bands status, plan
   @site.log "Set dynamic bands", level: :test
   command_code_id = 'M0014'
   command_name = 'setCommands'
-  @site.send_command @component, [
+  message = nil
+
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'plan', 'v' => plan},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
@@ -410,7 +430,7 @@ def set_dynamic_bands status, plan
   log_confirmation "intention to set dynamic bands #{plan}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -431,8 +451,9 @@ def set_offset status, plan
   @site.log "Set offset", level: :test
   command_code_id = 'M0015'
   command_name = 'setOffset'
+  message = nil
 
-  @site.send_command @component, [
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'plan', 'v' => plan},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
@@ -441,7 +462,7 @@ def set_offset status, plan
   log_confirmation "intention to set offset #{plan}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -462,8 +483,9 @@ def set_week_table status
   @site.log "Set week table", level: :test
   command_code_id = 'M0016'
   command_name = 'setWeekTable'
+  message = nil
 
-  @site.send_command @component, [
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
   ]
@@ -471,7 +493,7 @@ def set_week_table status
   log_confirmation "intention to set week table #{status}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -491,8 +513,9 @@ def set_time_table status
   @site.log "Set time table", level: :test
   command_code_id = 'M0017'
   command_name = 'setTimeTable'
+  message = nil
 
-  @site.send_command @component, [
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
   ]
@@ -500,7 +523,7 @@ def set_time_table status
   log_confirmation "intention to set time table #{status}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -520,8 +543,9 @@ def set_cycle_time status, plan
   @site.log "Set cycle time", level: :test
   command_code_id = 'M0018'
   command_name = 'setCycleTable'
+  message = nil
 
-  @site.send_command @component, [
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'plan', 'v' => plan},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
@@ -530,7 +554,7 @@ def set_cycle_time status, plan
   log_confirmation "intention to set cycle table #{plan}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -551,8 +575,9 @@ def force_input status, input, inputValue
   @site.log "Force input", level: :test
   command_code_id = 'M0019'
   command_name = 'setInput'
+  message = nil
 
-  @site.send_command @component, [
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'input', 'v' => input},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'inputValue', 'v' => inputValue},
@@ -562,7 +587,7 @@ def force_input status, input, inputValue
   log_confirmation "intention to force input #{inputValue}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -584,8 +609,9 @@ def force_output status, output, outputValue
   @site.log "Force output", level: :test
   command_code_id = 'M0020'
   command_name = 'setOutput'
+  message = nil
 
-  @site.send_command @component, [
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'output', 'v' => output},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'outputValue', 'v' => outputValue},
@@ -595,7 +621,7 @@ def force_output status, output, outputValue
   log_confirmation "intention to force output #{outputValue}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -617,8 +643,9 @@ def set_cycle_time status
   @site.log "Set trigger level sensitivity for loop detector", level: :test
   command_code_id = 'M0021'
   command_name = 'setLevel'
+  message = nil
 
-  @site.send_command @component, [
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => 'setInput', 'n' => 'securityCode', 'v' => security_code}
   ]
@@ -626,7 +653,7 @@ def set_cycle_time status
   log_confirmation "intention to set trigger level sensitivity for loop detector #{status}" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -646,7 +673,9 @@ def set_security_code status
   @site.log "Set security code", level: :test
   command_code_id = 'M0103'
   command_name = 'setSecurityCode'
-  @site.send_command @component, [
+  message = nil
+
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'oldSecurityCode', 'v' => security_code},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'newSecurityCode', 'v' => security_code}
@@ -655,7 +684,7 @@ def set_security_code status
   log_confirmation "intention to set security code" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -683,8 +712,9 @@ def set_date status
   hour = 17
   minute = 29
   second = 51
-  @site.send_command @component, [
-    {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
+  message = nil
+
+  message = @site.send_command @component, [ {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'year', 'v' => year},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'month', 'v' => month},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'day', 'v' => day},
@@ -696,7 +726,7 @@ def set_date status
   log_confirmation "intention to set date" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: @component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -722,8 +752,9 @@ def wrong_security_code component, status, value='True'
   @site.log "Force detector logic", level: :test
   command_code_id = 'M0008'
   command_name = 'setForceDetectorLogic'
+  message = nil
 
-  @site.send_command component, [
+  message = @site.send_command component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'mode', 'v' => value}
@@ -732,7 +763,7 @@ def wrong_security_code component, status, value='True'
   log_confirmation "intention to force detector logic with wrong security code" do
     response = nil
     expect do
-      response = @site.wait_for_command_response component: component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: component, timeout: RSMP_CONFIG['command_timeout']
     end.to raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
