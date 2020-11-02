@@ -9,6 +9,8 @@ supervisor:
         - 2
       emergency_routes:
         - 1
+      inputs:
+        - 1
       components:
         main:
           KK+AG9998=001TC000:

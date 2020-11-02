@@ -872,11 +872,11 @@ def switch_emergency_route route
   })
 end
 
-def switch_input
-  indx = 0
-  set_input 'True',indx.to_s
+def switch_input input
+  indx = input - 1
+  set_input 'True',input.to_s
   verify_status(**{
-    description:"activate input #{indx}",
+    description:"activate input #{input}",
     status_list:[{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx}}1/}]
   })
 
@@ -982,7 +982,7 @@ RSpec.describe 'RSMP site commands' do
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       unsubscribe_from_all
-      switch_input
+      SITE_CONFIG['inputs'].each { |input| switch_input input }
     end
   end
 
