@@ -199,7 +199,7 @@ def set_input status, input
   command_name = 'setInput'
   message = nil
 
-  @site.send_command @component, [
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'input', 'v' => input}
