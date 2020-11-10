@@ -11,6 +11,8 @@ RSpec.describe 'RSMP site alarm' do
         response = site.wait_for_alarm component: component, aCId: 'A0302',
           aSp: 'Issue', aS: 'Active', timeout: RSMP_CONFIG['alarm_timeout']
       end.to_not raise_error, "Did not receive alarm"
+      
+      expect(response.attributes["aTs"].utc).to be_within(1.minute).of Time.now
         
       delay = Time.now - start_time
       site.log "alarm confirmed after #{delay.to_i}s", level: :test
