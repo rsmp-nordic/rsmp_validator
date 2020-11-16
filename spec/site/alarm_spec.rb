@@ -16,7 +16,8 @@ RSpec.describe 'RSMP site alarm' do
       site.log "alarm confirmed after #{delay.to_i}s", level: :test
       system("~/deactivate_alarm.sh")
 
-      expect(response[:message].attributes["aTs"].utc).to be_within(1.minute).of Time.now
+      alarm_time = Time.parse(response[:message].attributes["aTs"])
+      expect(alarm_time).to be_within(1.minute).of Time.now.utc
       expect(response[:message].attributes['rvs']).to eq([{
         "n":"detector","v":"1"},
         {"n":"type","v":"loop"},
