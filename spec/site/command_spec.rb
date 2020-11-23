@@ -290,6 +290,7 @@ end
 
 def set_signal_start status
   security_code = SECRETS['security_codes'][2]
+  indx = 0
   component = COMPONENT_CONFIG['signal_group'].keys[indx]
 
   @site.log "Start of signal group. Orders a signal group to green.", level: :test
@@ -322,6 +323,7 @@ end
 
 def set_signal_stop status
   security_code = SECRETS['security_codes'][2]
+  indx = 0
   component = COMPONENT_CONFIG['signal_group'].keys[indx]
 
   @site.log "Stop of signal group. Orders a signal group to red.", level: :test
@@ -749,7 +751,11 @@ def set_date status
   end
 end
 
-def wrong_security_code component, status, value='True'
+def wrong_security_code
+  indx = 0
+  component = COMPONENT_CONFIG['detector_logic'].keys[indx]
+  status = 'True'
+  value = 'True'
   security_code = SECRETS['security_codes'][3]
 
   @site.log "Force detector logic", level: :test
