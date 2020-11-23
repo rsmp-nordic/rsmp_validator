@@ -642,7 +642,7 @@ def force_output status, output, outputValue
   end
 end
 
-def set_cycle_time status
+def set_trigger_level status
   security_code = SECRETS['security_codes'][2]
 
   @site.log "Set trigger level sensitivity for loop detector", level: :test
@@ -1122,7 +1122,7 @@ RSpec.describe 'RSMP site commands' do
       output = 1
       outputValue = 'True'
       prepare task, site
-      force_output status
+      set_trigger_level status
     end
   end
 
