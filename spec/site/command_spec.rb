@@ -370,7 +370,7 @@ def set_signal_start_or_stop status
   log_confirmation "intention to request start or stop of a series of signal groups" do
     response = nil
     expect do
-      response = @site.wait_for_command_response message: message, component: component, timeout: RSMP_CONFIG['command_timeout']
+      response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
     end.to_not raise_error
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
