@@ -397,7 +397,7 @@ def set_series_of_inputs status
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
   ]
 
-  log_confirmation "intention to activate a series of inputs #{plan}" do
+  log_confirmation "intention to activate a series of inputs #{status}" do
     response = nil
     expect do
       response = @site.wait_for_command_response message: message, component: @component, timeout: RSMP_CONFIG['command_timeout']
