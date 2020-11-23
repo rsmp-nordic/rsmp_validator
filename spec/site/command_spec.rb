@@ -362,7 +362,7 @@ def set_signal_start_or_stop status
   command_name = 'setStart'
   message = nil
 
-  message = @site.send_command component, [
+  message = @site.send_command @component, [
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'status', 'v' => status},
     {'cCI' => command_code_id, 'cO' => command_name, 'n' => 'securityCode', 'v' => security_code}
   ]
