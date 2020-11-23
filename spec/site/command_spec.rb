@@ -756,7 +756,7 @@ def wrong_security_code
   component = COMPONENT_CONFIG['detector_logic'].keys[indx]
   status = 'True'
   value = 'True'
-  security_code = SECRETS['security_codes'][3]
+  security_code = 'foobar'
 
   @site.log "Force detector logic", level: :test
   command_code_id = 'M0008'
@@ -778,7 +778,6 @@ def wrong_security_code
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(component)
-    put(response)
   end
 end
 
