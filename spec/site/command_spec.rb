@@ -1020,7 +1020,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0012 activate detector logic', important: true do |example|
+  it 'M0012 request start/stop of a series of signal groups', important: true do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
