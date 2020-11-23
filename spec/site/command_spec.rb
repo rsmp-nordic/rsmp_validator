@@ -1026,7 +1026,7 @@ RSpec.describe 'RSMP site commands' do
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      set_signal_stop 'False'
+      set_signal_start_or_stop '5,4134,65;5,11'
     end
   end
 
