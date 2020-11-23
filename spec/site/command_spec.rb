@@ -290,6 +290,7 @@ end
 
 def set_signal_start status
   security_code = SECRETS['security_codes'][2]
+  component = COMPONENT_CONFIG['signal_group'].keys[indx]
 
   @site.log "Start of signal group. Orders a signal group to green.", level: :test
   command_code_id = 'M0010'
@@ -321,6 +322,7 @@ end
 
 def set_signal_stop status
   security_code = SECRETS['security_codes'][2]
+  component = COMPONENT_CONFIG['signal_group'].keys[indx]
 
   @site.log "Stop of signal group. Orders a signal group to red.", level: :test
   command_code_id = 'M0011'
