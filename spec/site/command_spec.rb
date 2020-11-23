@@ -705,7 +705,7 @@ def set_security_code status
   end
 end
 
-def set_date status
+def set_date
   security_code = SECRETS['security_codes'][2]
 
   @site.log "Set date", level: :test
