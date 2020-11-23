@@ -773,11 +773,10 @@ def wrong_security_code
     response = nil
     expect do
       response = @site.wait_for_command_response message: message, component: component, timeout: RSMP_CONFIG['command_timeout']
-    end.to raise_error, "Did not receive command response M0008"
+    end.to_not raise_error
 
-    expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
-    expect(response).to be_a(RSMP::CommandResponse)
     expect(response.attributes['cId']).to eq(component)
+    expect(response).to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
   end
 end
 
