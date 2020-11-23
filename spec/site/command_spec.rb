@@ -1008,7 +1008,7 @@ RSpec.describe 'RSMP site commands' do
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      set_signal_start True
+      set_signal_start 'True'
     end
   end
 
@@ -1016,7 +1016,7 @@ RSpec.describe 'RSMP site commands' do
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      set_signal_stop False
+      set_signal_stop 'False'
     end
   end
 
@@ -1024,7 +1024,7 @@ RSpec.describe 'RSMP site commands' do
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      set_signal_stop False
+      set_signal_stop 'False'
     end
   end
 
@@ -1088,7 +1088,7 @@ RSpec.describe 'RSMP site commands' do
   it 'M0019 force input' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      status = False
+      status = 'False'
       input = 1
       inputValue = True
       prepare task, site
@@ -1099,7 +1099,7 @@ RSpec.describe 'RSMP site commands' do
   it 'M0020 force output' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      status = False
+      status = 'False'
       output = 1
       outputValue = True
       prepare task, site
@@ -1110,7 +1110,7 @@ RSpec.describe 'RSMP site commands' do
   it 'M0021 set trigger sensitivity' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
-      status = False
+      status = 'False'
       output = 1
       outputValue = True
       prepare task, site
