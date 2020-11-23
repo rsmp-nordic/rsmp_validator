@@ -1092,7 +1092,7 @@ RSpec.describe 'RSMP site commands' do
     TestSite.connected do |task,supervisor,site|
       status = 'False'
       input = 1
-      inputValue = True
+      inputValue = 'True'
       prepare task, site
       force_input status, input, inputValue
     end
@@ -1103,7 +1103,7 @@ RSpec.describe 'RSMP site commands' do
     TestSite.connected do |task,supervisor,site|
       status = 'False'
       output = 1
-      outputValue = True
+      outputValue = 'True'
       prepare task, site
       force_output status, output, outputValue
     end
@@ -1114,7 +1114,7 @@ RSpec.describe 'RSMP site commands' do
     TestSite.connected do |task,supervisor,site|
       status = 'False'
       output = 1
-      outputValue = True
+      outputValue = 'True'
       prepare task, site
       force_output status
     end
