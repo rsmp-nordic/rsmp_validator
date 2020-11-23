@@ -1,3 +1,4 @@
+require 'active_support/time'
 require 'rsmp'
 require 'fileutils'
 require_relative 'test_site'
