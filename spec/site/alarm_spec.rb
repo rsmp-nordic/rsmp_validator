@@ -42,7 +42,7 @@ RSpec.describe 'RSMP site alarm' do
       end.to_not raise_error, "Did not receive alarm"
 
       alarm_code_id = 'A0302'
-      message = @site.send_alarm_acknowledged @component, alarm_code_id
+      message = @site.send_alarm_acknowledgement @component, alarm_code_id
 
       delay = Time.now - start_time
       site.log "alarm confirmed after #{delay.to_i}s", level: :test
