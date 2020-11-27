@@ -375,7 +375,7 @@ def set_signal_start_or_stop status
 
     expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
     expect(response).to be_a(RSMP::CommandResponse)
-    expect(response.attributes['cId']).to eq(component)
+    expect(response.attributes['cId']).to eq(@component)
 
     age = 'recent'
     expect(response.attributes['rvs']).to eq([
