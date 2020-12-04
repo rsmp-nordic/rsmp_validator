@@ -1,10 +1,10 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: c6958824b77380cc3c39f267c568e2a9ef3ee8ba
-  ref: c6958824b77380
+  revision: 41e8fe8dc05ff386c8bde54f7da8d8c64764975b
+  branch: support_sxl_1.0.15
   submodules: true
   specs:
-    rsmp (0.1.17)
+    rsmp (0.1.18)
       async (~> 1.23.0)
       async-io (~> 1.27.4)
       colorize (~> 0.8.1)
@@ -24,25 +24,27 @@ GEM
       console (~> 1.0)
       nio4r (~> 2.3)
       timers (~> 4.1)
-    async-io (1.27.5)
+    async-io (1.27.7)
       async (~> 1.14)
     colorize (0.8.1)
     concurrent-ruby (1.1.7)
-    console (1.8.2)
+    console (1.10.1)
+      fiber-local
     diff-lcs (1.3)
-    ecma-re-validator (0.2.0)
+    ecma-re-validator (0.2.1)
       regexp_parser (~> 1.2)
-    hana (1.3.5)
+    fiber-local (1.0.0)
+    hana (1.3.7)
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
-    json_schemer (0.2.11)
+    json_schemer (0.2.16)
       ecma-re-validator (~> 0.2)
       hana (~> 1.3)
       regexp_parser (~> 1.5)
       uri_template (~> 0.7)
     minitest (5.14.2)
-    nio4r (2.5.2)
-    regexp_parser (1.7.0)
+    nio4r (2.5.4)
+    regexp_parser (1.8.2)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -58,7 +60,7 @@ GEM
     rspec-support (3.8.2)
     thor (1.0.1)
     thread_safe (0.3.6)
-    timers (4.3.0)
+    timers (4.3.2)
     tzinfo (1.2.8)
       thread_safe (~> 0.1)
     uri_template (0.7.0)

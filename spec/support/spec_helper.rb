@@ -3,6 +3,7 @@ require 'rsmp'
 require 'fileutils'
 require_relative 'test_site'
 require_relative 'test_supervisor'
+require_relative 'command_helpers'
 
 
 RSpec.configure do |config|
@@ -80,6 +81,20 @@ puts "Warning: #{rsmp_config_path} components settings is missing or empty" if C
 
 MAIN_COMPONENT = COMPONENT_CONFIG['main'].keys.first rescue {}
 puts "Warning: #{rsmp_config_path} main component settings is missing or empty" if MAIN_COMPONENT == {}
+
+
+SCRIPT_PATHS = RSMP_CONFIG['scripts']
+puts "Warning: Script path for activating alarm is missing or empty" if SCRIPT_PATHS['activate_alarm'] == {}
+unless File.exist? SCRIPT_PATHS['activate_alarm']
+	puts "Warning: Script at #{SCRIPT_PATHS['activate_alarm']} for activating alarm is missing"
+end
+
+DEACTIVATE_ALARM_SCRIPT_PATH = RSMP_CONFIG['scripts']['deactivate_alarm']
+puts "Warning: Script path for deactivating alarm is missing or empty" if SCRIPT_PATHS['deactivate_alarm'] == {}
+unless File.exist? SCRIPT_PATHS['deactivate_alarm']
+	puts "Warning: Script at #{SCRIPT_PATHS['deactivate_alarm']} for deactivating alarm is missing"
+end
+
 
 
 # check required configs
