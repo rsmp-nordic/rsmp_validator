@@ -2,12 +2,15 @@
 # responses and status updates
 
 RSpec.describe 'RSMP site commands' do  
+  include CommandHelpers
+  include StatusHelpers
+
   it 'M0001 set yellow flash' do |example|
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_yellow_flash
-      #switch_normal_control
+      switch_normal_control
     end
   end
 
@@ -87,6 +90,144 @@ RSpec.describe 'RSMP site commands' do
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_detector_logic
+    end
+  end
+
+  it 'M0010 start signal group', important: true do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      set_signal_start 'True'
+    end
+  end
+
+  it 'M0011 stop signal group', important: true do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      set_signal_stop 'True'
+    end
+  end
+
+  it 'M0012 request start/stop of a series of signal groups', important: true do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      set_signal_start_or_stop '5,4134,65;5,11'
+    end
+  end
+
+  it 'M0013 activate a series of inputs' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = "5,4134,65;511"
+      prepare task, site
+      set_series_of_inputs status
+    end
+  end
+  
+  it 'M0014 set command table' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      plan = "1"
+      status = "10,10"
+      prepare task, site
+      set_dynamic_bands status, plan
+    end
+  end
+
+  it 'M0015 set offset' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      plan = 1
+      status = 255
+      prepare task, site
+      set_offset status, plan
+    end
+  end
+
+  it 'M0016 set week table' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = "0-1,6-2"
+      prepare task, site
+      set_week_table status
+    end
+  end
+
+  it 'M0017 set time table' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = "12-1-12-59,1-0-23-12"
+      prepare task, site
+      set_time_table status
+    end
+  end
+
+  it 'M0018 set cycle time' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = 5
+      plan = 0
+      prepare task, site
+      set_cycle_time status, plan
+    end
+  end
+
+  it 'M0019 force input' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = 'False'
+      input = 1
+      inputValue = 'True'
+      prepare task, site
+      force_input status, input, inputValue
+    end
+  end
+
+  it 'M0020 force output' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = 'False'
+      output = 1
+      outputValue = 'True'
+      prepare task, site
+      force_output status, output, outputValue
+    end
+  end
+
+  it 'M0021 set trigger sensitivity' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      status = 'False'
+      output = 1
+      outputValue = 'True'
+      prepare task, site
+      set_trigger_level status
+    end
+  end
+
+  it 'M0103 set security code' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      set_security_code 'Level1'
+    end
+  end
+
+  it 'M0104 set date' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      set_date
+    end
+  end
+
+  it 'Send the wrong security code' do |example|
+    TestSite.log_test_header example
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      #wrong_security_code 
     end
   end
 end

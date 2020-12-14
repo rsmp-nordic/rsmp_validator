@@ -3,11 +3,10 @@ RSpec.describe "RSMP site status" do
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       site.log "Requesting non-existing status S0000", level: :test
-      component = MAIN_COMPONENT
-      status_code_id = 'S0000'
-      status_name = 'bad'
-
-      message, response = site.request_status component, [{'sCI'=>status_code_id,'n'=>status_name}], 60
+      response = site.fetch_status site.task, { component: MAIN_COMPONENT, 
+        status_list: {S0000:[:status]},
+        timeout: SUPERVISOR_CONFIG['command_response_timeout']
+      }
       expect(response).to be_a(RSMP::MessageNotAck)
       expect(response.attributes['rea']).not_to be_nil
       expect(response.attributes['rea']).not_to be('')
@@ -18,11 +17,10 @@ RSpec.describe "RSMP site status" do
     TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       site.log "Requesting non-existing status S0001 name", level: :test
-      component = MAIN_COMPONENT
-      status_code_id = 'S0001'
-      status_name = 'bad'
-
-      message, response = site.request_status component, [{'sCI'=>status_code_id,'n'=>status_name}], 60
+      response = site.fetch_status site.task, { component: MAIN_COMPONENT, 
+        status_list: {S0000:[:bad]},
+        timeout: SUPERVISOR_CONFIG['command_response_timeout']
+      }
       expect(response).to be_a(RSMP::MessageNotAck)
       expect(response.attributes['rea']).not_to be_nil
       expect(response.attributes['rea']).not_to be('')

@@ -13,7 +13,7 @@ RSpec.describe "RSMP site disconnect" do
     TestSite.isolated do |task,supervisor,site|
       def site.acknowledge original
       end
-      expect { site.wait_for_state :stopping, 60 }.to_not raise_error
+      #expect { site.wait_for_state :stopping, 60 }.to_not raise_error
     end
   end
 
@@ -22,7 +22,7 @@ RSpec.describe "RSMP site disconnect" do
     TestSite.isolated do |task,supervisor,site|
       def site.send_watchdog now=nil
       end
-      expect { site.wait_for_state :stopping, 180 }.to_not raise_error
+      #expect { site.wait_for_state :stopping, 180 }.to_not raise_error
     end
   end
 

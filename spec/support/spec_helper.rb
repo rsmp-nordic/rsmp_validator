@@ -4,7 +4,8 @@ require 'fileutils'
 require_relative 'test_site'
 require_relative 'test_supervisor'
 require_relative 'command_helpers'
-
+require_relative 'status_helpers'
+require_relative 'log_helpers'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -19,6 +20,7 @@ RSpec.configure do |config|
 end
 
 include RSpec
+include LogHelpers
 
 def load_secrets path
 	secrets_path = 'config/secrets.yaml'
@@ -101,9 +103,8 @@ end
 required = [
 	'connect_timeout',
 	'ready_timeout',
-	'command_timeout',
-	'status_timeout',
 	'subscribe_timeout',
+	'status_update_rate',
 	'alarm_timeout',
 	'shutdown_timeout'
 ]
