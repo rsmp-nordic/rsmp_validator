@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: 41e8fe8dc05ff386c8bde54f7da8d8c64764975b
+  revision: 6dbd26879b43209931b024058965b3c8568cd710
   branch: support_sxl_1.0.15
   submodules: true
   specs:
@@ -31,20 +31,20 @@ GEM
     console (1.10.1)
       fiber-local
     diff-lcs (1.3)
-    ecma-re-validator (0.2.1)
-      regexp_parser (~> 1.2)
+    ecma-re-validator (0.3.0)
+      regexp_parser (~> 2.0)
     fiber-local (1.0.0)
     hana (1.3.7)
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
-    json_schemer (0.2.16)
-      ecma-re-validator (~> 0.2)
+    json_schemer (0.2.17)
+      ecma-re-validator (~> 0.3)
       hana (~> 1.3)
-      regexp_parser (~> 1.5)
+      regexp_parser (~> 2.0)
       uri_template (~> 0.7)
     minitest (5.14.2)
     nio4r (2.5.4)
-    regexp_parser (1.8.2)
+    regexp_parser (2.0.0)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
