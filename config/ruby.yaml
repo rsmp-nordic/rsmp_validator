@@ -22,7 +22,7 @@ supervisor:
         detector_logic:
           DL1:
   watchdog_interval: 0.1
-  watchdog_timeout: 0.2
+  watchdog_timeout: 0.3
   acknowledgement_timeout: 0.3
   command_response_timeout: 0.3
   status_response_timeout: 0.3
@@ -30,11 +30,8 @@ supervisor:
 
 connect_timeout: 0.3
 ready_timeout: 0.3
-command_timeout: 0.3
-status_timeout: 0.3
 status_update_rate: 0   # rsmp only allow integer update rates
 subscribe_timeout: 0.3
-command_response_timeout: 0.3
 alarm_timeout: 0.3
 shutdown_timeout: 0.3
 
