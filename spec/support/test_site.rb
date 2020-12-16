@@ -143,7 +143,8 @@ class TestSite
   end
 
   def wait_for_site
-    unless @supervisor.find_site :any
+    @remote_site = @supervisor.find_site :any
+    unless @remote_site
       @supervisor.log "Waiting for site to connect", level: :test
       @remote_site = @supervisor.wait_for_site(:any, RSMP_CONFIG['connect_timeout'])
       if @remote_site
@@ -156,7 +157,6 @@ class TestSite
         expect(@remote_site).not_to be_nil, "Site did not connect:\n#{log}"
       end
     end
-
     @remote_site.wait_for_state :ready, RSMP_CONFIG['ready_timeout']
   end
 end
