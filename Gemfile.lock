@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: 6dbd26879b43209931b024058965b3c8568cd710
-  branch: support_sxl_1.0.15
+  revision: e0d0e7acca912f4c0fa9c2cc84434cef9d1e9b4a
+  ref: e0d0e7a
   submodules: true
   specs:
     rsmp (0.1.18)

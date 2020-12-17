@@ -1,5 +1,5 @@
 source "https://rubygems.org"
 
-gem 'rsmp', :github => 'rsmp-nordic/rsmp', :branch => 'support_sxl_1.0.15', :submodules => true
+gem 'rsmp', :github => 'rsmp-nordic/rsmp', :ref => 'e0d0e7a', :submodules => true
 gem 'rspec'
 gem 'activesupport'
