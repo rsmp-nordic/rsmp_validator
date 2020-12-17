@@ -9,6 +9,8 @@ supervisor:
         - 2
       emergency_routes:
         - 1
+      inputs:
+        - 1
       components:
         main:
           TC:
@@ -19,17 +21,21 @@ supervisor:
           B2:
         detector_logic:
           DL1:
-  watchdog_interval: 1
-  watchdog_timeout: 2
-  acknowledgement_timeout: 0.1
-  command_response_timeout: 0.1
-  status_response_timeout: 0.1
-  status_update_timeout: 0.1
+  watchdog_interval: 0.1
+  watchdog_timeout: 0.3
+  acknowledgement_timeout: 0.3
+  command_response_timeout: 0.3
+  status_response_timeout: 0.3
+  status_update_timeout: 0.3
 
-connect_timeout: 0.2
-ready_timeout: 0.1
-command_timeout: 0.1
-status_timeout: 0.1
-subscribe_timeout: 0.1
-alarm_timeout: 0.1
-shutdown_timeout: 0.1
+connect_timeout: 0.3
+ready_timeout: 0.3
+status_update_rate: 0   # rsmp only allow integer update rates
+subscribe_timeout: 0.3
+alarm_timeout: 0.3
+shutdown_timeout: 0.3
+
+scripts:
+  activate_alarm: "~/activate_alarm.sh"
+  deactivate_alarm: "~/deactivate_alarm.sh"
+

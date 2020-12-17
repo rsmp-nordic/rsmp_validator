@@ -3,7 +3,9 @@ require 'rsmp'
 require 'fileutils'
 require_relative 'test_site'
 require_relative 'test_supervisor'
-
+require_relative 'command_helpers'
+require_relative 'status_helpers'
+require_relative 'log_helpers'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -18,6 +20,7 @@ RSpec.configure do |config|
 end
 
 include RSpec
+include LogHelpers
 
 def load_secrets path
 	secrets_path = 'config/secrets.yaml'
@@ -82,13 +85,26 @@ MAIN_COMPONENT = COMPONENT_CONFIG['main'].keys.first rescue {}
 puts "Warning: #{rsmp_config_path} main component settings is missing or empty" if MAIN_COMPONENT == {}
 
 
+SCRIPT_PATHS = RSMP_CONFIG['scripts']
+puts "Warning: Script path for activating alarm is missing or empty" if SCRIPT_PATHS['activate_alarm'] == {}
+unless File.exist? SCRIPT_PATHS['activate_alarm']
+	puts "Warning: Script at #{SCRIPT_PATHS['activate_alarm']} for activating alarm is missing"
+end
+
+DEACTIVATE_ALARM_SCRIPT_PATH = RSMP_CONFIG['scripts']['deactivate_alarm']
+puts "Warning: Script path for deactivating alarm is missing or empty" if SCRIPT_PATHS['deactivate_alarm'] == {}
+unless File.exist? SCRIPT_PATHS['deactivate_alarm']
+	puts "Warning: Script at #{SCRIPT_PATHS['deactivate_alarm']} for deactivating alarm is missing"
+end
+
+
+
 # check required configs
 required = [
 	'connect_timeout',
 	'ready_timeout',
-	'command_timeout',
-	'status_timeout',
 	'subscribe_timeout',
+	'status_update_rate',
 	'alarm_timeout',
 	'shutdown_timeout'
 ]
