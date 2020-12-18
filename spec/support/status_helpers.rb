@@ -18,27 +18,28 @@ module StatusHelpers
     ]
   end
 
-  def subscribe status_list, update_rate: RSMP_CONFIG['status_update_rate']
+  def subscribe status_list, update_rate: RSMP_CONFIG['status_update_rate'], m_id:
     sub_list = status_list.map { |item| item.slice('sCI','n').merge 'uRt'=>update_rate.to_s }
     expect do
-      @site.subscribe_to_status @component, sub_list
+      @site.subscribe_to_status @component, sub_list, m_id: m_id
     end.to_not raise_error
   end
 
   def verify_status parent_task, description, status_list
     log_confirmation description do
       begin
-        @site.wait_for_status_updates(parent_task,{
+        @site.wait_for_status_updates( parent_task,{
           component: @component,
           status_list: status_list,
           timeout: SUPERVISOR_CONFIG['status_update_timeout']
-        }) do
-          subscribe status_list
+        }) do |m_id|
+          subscribe status_list, m_id: m_id
         end
-      rescue Async::TimeoutError
-        expect { raise "Did not receive status within #{SUPERVISOR_CONFIG['status_update_timeout']}s" }.not_to raise_error
+      rescue RSMP::MessageRejected => e
+        expect { raise "Message was rejected, #{e.message}" }.not_to raise_error
+      ensure
+        unsubscribe_from_all
       end
-      unsubscribe_from_all
     end
   end
 
@@ -46,12 +47,10 @@ module StatusHelpers
     TestSite.connected do |task,supervisor,site|
       @site = site
       log_confirmation "request of #{description}" do
-        begin
-          site.fetch_status task,
-                            component: component,
-                            status_list: status_list, 
-                            timeout: SUPERVISOR_CONFIG['status_response_timeout']
-        end
+        site.fetch_status task,
+                          component: component,
+                          status_list: status_list,
+                          timeout: SUPERVISOR_CONFIG['status_response_timeout']
       end
     end
   end

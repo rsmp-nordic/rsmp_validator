@@ -1,6 +1,5 @@
 RSpec.describe "RSMP site status" do
   it 'responds with NotAck to invalid status request code' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       site.log "Requesting non-existing status S0000", level: :test
       response = site.fetch_status site.task, { component: MAIN_COMPONENT, 
@@ -14,7 +13,6 @@ RSpec.describe "RSMP site status" do
   end
 
   it 'responds with NotAck to invalid status request name' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       site.log "Requesting non-existing status S0001 name", level: :test
       response = site.fetch_status site.task, { component: MAIN_COMPONENT, 

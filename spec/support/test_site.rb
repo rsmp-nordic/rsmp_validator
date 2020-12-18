@@ -7,16 +7,8 @@ class TestSite
   include Singleton
   include RSpec::Matchers
 
-  LOG_PATH = 'log/validation.log'
-
   def initialize
     @reactor = Async::Reactor.new
-  end
-
-  def self.log_test_header example
-    File.open(LOG_PATH, 'a') do |file|
-      file.puts "\nRunning test #{example.metadata[:location]} - #{example.full_description}".colorize(:light_black)
-    end
   end
 
   def within_reactor &block
@@ -39,12 +31,14 @@ class TestSite
 
     # reraise errors outside task to surface them in rspec
     if error
-      @supervisor.log error.to_s, level: :test
+      @supervisor.log "Failed: #{error.class}: #{error}", level: :test
       raise error
+    else
+      @supervisor.log "OK", level: :test
     end
   end
 
-  def start options={}
+  def start options={}, why=nil
     unless @supervisor
       log_settings = {
         'active' => true,
@@ -74,17 +68,19 @@ class TestSite
           supervisor_settings: supervisor_settings.merge(RSMP_CONFIG['supervisor']),
           log_settings: log_settings.merge(LOG_CONFIG)
         )
+        @supervisor.log why, level: :test if why
         @supervisor.start  # keep running inside the async task, listening for sites
       end
     end
 
   end
 
-  def stop
+  def stop why=nil
     # will be called outside within_reactor
     # supervisor.stop uses wait(), which requires an async context
     Async do
       if @supervisor
+        @supervisor.log why, level: :test if @supervisor && why
         @supervisor.stop
       end
       @supervisor = nil
@@ -93,7 +89,7 @@ class TestSite
   end
 
   def connected options={}, &block
-    start options
+    start options, 'Connecting'
     within_reactor do |task|
       wait_for_site
       yield task, @supervisor, @remote_site
@@ -101,7 +97,7 @@ class TestSite
   end
 
   def reconnected options={}, &block
-    stop
+    stop 'Reconnecting'
     start options
     within_reactor do |task|
       wait_for_site
@@ -110,20 +106,20 @@ class TestSite
   end
 
   def disconnected &block
-    stop
+    stop 'Disconnecting'
     within_reactor do |task|
       yield task
     end
   end
 
   def isolated options={}, &block
-    stop
-    start options
+    stop 'Isolating'
+    start options, 'Connecting'
     within_reactor do |task|
       wait_for_site
       yield task, @supervisor, @remote_site
     end
-    stop
+    stop 'Isolating'
   end
 
   def self.connected options={}, &block

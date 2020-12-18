@@ -7,6 +7,8 @@ require_relative 'command_helpers'
 require_relative 'status_helpers'
 require_relative 'log_helpers'
 
+LOG_PATH = 'log/validation.log'
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
@@ -17,6 +19,13 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.before(:example) do |example|
+    File.open(LOG_PATH, 'a') do |file|
+      file.puts "\nRunning test #{example.metadata[:location]} - #{example.full_description}".colorize(:light_black)
+    end
+  end
+
 end
 
 include RSpec

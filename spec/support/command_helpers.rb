@@ -1,17 +1,12 @@
 module CommandHelpers
-  def send_command_and_confirm command_list, message, component=@component
+  def send_command_and_confirm parent_task, command_list, message, component=@component
     log_confirmation message do
-      begin
-        sent = nil
-        @site.wait_for_command_responses({
-          component: component, 
-          command_list: command_list,
-          timeout: SUPERVISOR_CONFIG['command_response_timeout']
-        }) do
-          sent = @site.send_command component, command_list
-        end
-      rescue Async::TimeoutError
-        expect { raise "Did not receive command response to #{sent.m_id} within #{SUPERVISOR_CONFIG['command_response_timeout']}s" }.not_to raise_error
+      result = @site.wait_for_command_responses parent_task, {
+        component: component,
+        command_list: command_list,
+        timeout: SUPERVISOR_CONFIG['command_response_timeout']
+      } do |m_id|
+        @site.send_command component, command_list, m_id: m_id
       end
     end
   end
@@ -35,7 +30,7 @@ module CommandHelpers
     }
     indx = 0
     component = COMPONENT_CONFIG['signal_group'].keys[indx]
-    send_command_and_confirm command_list, "intention to set start of signal group #{indx}.", component
+    send_command_and_confirm @task, command_list, "intention to set start of signal group #{indx}.", component
   end
 
   def set_signal_stop status
@@ -46,7 +41,7 @@ module CommandHelpers
     }
     indx = 0
     component = COMPONENT_CONFIG['signal_group'].keys[indx]
-    send_command_and_confirm command_list, "intention to set stop of signal group #{indx}.", component
+    send_command_and_confirm @task, command_list, "intention to set stop of signal group #{indx}.", component
   end
 
   def set_signal_start_or_stop status
@@ -55,7 +50,7 @@ module CommandHelpers
       securityCode: SECRETS['security_codes'][2],
       status: status
     }
-    send_command_and_confirm command_list,
+    send_command_and_confirm @task, command_list,
       "intention to request start or stop of a series of signal groups"
   end
 
@@ -65,7 +60,7 @@ module CommandHelpers
       securityCode: SECRETS['security_codes'][2],
       timeplan: plan
     }
-    send_command_and_confirm command_list, "intention to switch to plan #{plan}"
+    send_command_and_confirm @task, command_list, "intention to switch to plan #{plan}"
   end
 
   def set_traffic_situation ts
@@ -75,7 +70,7 @@ module CommandHelpers
       traficsituation: ts   # misspell 'traficsituation'is in the rsmp spec
 
     }
-    send_command_and_confirm command_list, "intention to switch to traffic situation #{ts}"
+    send_command_and_confirm @task, command_list, "intention to switch to traffic situation #{ts}"
   end
 
   def set_functional_position status
@@ -86,7 +81,7 @@ module CommandHelpers
       timeout: 0,
       intersection: 0 
     }
-    send_command_and_confirm command_list, "intention to switch to #{status}"
+    send_command_and_confirm @task, command_list, "intention to switch to #{status}"
   end
 
   def set_fixed_time status
@@ -95,7 +90,7 @@ module CommandHelpers
       securityCode: SECRETS['security_codes'][2],
       status: status
     }
-    send_command_and_confirm command_list, "intention to switch to fixed time #{status}"
+    send_command_and_confirm @task, command_list, "intention to switch to fixed time #{status}"
   end
 
   def set_restart
@@ -115,7 +110,7 @@ module CommandHelpers
       securityCode: SECRETS['security_codes'][2],
       emergencyroute: route
     }
-    send_command_and_confirm command_list, "intention to switch to emergency route #{route}"
+    send_command_and_confirm @task, command_list, "intention to switch to emergency route #{route}"
   end
 
   def set_input status, input
@@ -124,7 +119,7 @@ module CommandHelpers
       securityCode: SECRETS['security_codes'][2],
       input: input
     }
-    send_command_and_confirm command_list, "intention to set input #{input}"
+    send_command_and_confirm @task, command_list, "intention to set input #{input}"
   end
 
   def force_detector_logic component, status, mode='True'
@@ -134,7 +129,7 @@ module CommandHelpers
       status: status,
       mode: mode
     }
-    send_command_and_confirm command_list, "intention to force detector logic #{status} to #{mode}", component
+    send_command_and_confirm @task, command_list, "intention to force detector logic #{status} to #{mode}", component
   end
 
   def switch_plan plan
@@ -175,7 +170,7 @@ module CommandHelpers
       securityCode: SECRETS['security_codes'][2],
       status: status
     }
-    send_command_and_confirm command_list, "intention to activate a series of inputs #{status}"
+    send_command_and_confirm @task, command_list, "intention to activate a series of inputs #{status}"
   end
 
   def set_dynamic_bands status, plan
@@ -185,7 +180,7 @@ module CommandHelpers
       status: status,
       plan: plan
     }
-    send_command_and_confirm command_list, "intention to set dynamic bands #{status} for plan #{plan}"
+    send_command_and_confirm @task, command_list, "intention to set dynamic bands #{status} for plan #{plan}"
   end
 
   def set_offset status, plan
@@ -195,7 +190,7 @@ module CommandHelpers
       status: status,
       plan: plan
     }
-    send_command_and_confirm command_list, "intention to set offset #{plan}"
+    send_command_and_confirm @task, command_list, "intention to set offset #{plan}"
   end
 
   def set_week_table status
@@ -204,7 +199,7 @@ module CommandHelpers
       securityCode: SECRETS['security_codes'][2],
       status: status
     }
-    send_command_and_confirm command_list, "intention to set week table #{status}"
+    send_command_and_confirm @task, command_list, "intention to set week table #{status}"
   end
 
   def set_time_table status
@@ -213,7 +208,7 @@ module CommandHelpers
       securityCode: SECRETS['security_codes'][2],
       status: status
     }
-    send_command_and_confirm command_list, "intention to set time table #{status}"
+    send_command_and_confirm @task, command_list, "intention to set time table #{status}"
   end
 
   def set_cycle_time status, plan
@@ -223,7 +218,7 @@ module CommandHelpers
       status: status,
       plan: plan
     }
-    send_command_and_confirm command_list, "intention to set cycle table #{plan}"
+    send_command_and_confirm @task, command_list, "intention to set cycle table #{plan}"
   end
 
   def force_input status, input, value
@@ -234,7 +229,7 @@ module CommandHelpers
       input: input,
       inputValue: value
     }
-    send_command_and_confirm command_list,  "intention to force input #{input} to #{value}"
+    send_command_and_confirm @task, command_list,  "intention to force input #{input} to #{value}"
   end
 
   def force_output status, output, value
@@ -245,7 +240,7 @@ module CommandHelpers
       output: output,
       outputValue: value
     }
-    send_command_and_confirm command_list, "intention to force output #{output} to #{value}"
+    send_command_and_confirm @task, command_list, "intention to force output #{output} to #{value}"
   end
 
   def set_trigger_level status
@@ -254,7 +249,7 @@ module CommandHelpers
       securityCode: SECRETS['security_codes'][2],
       status: status
     }
-    send_command_and_confirm command_list, "intention to set trigger level sensitivity for loop detector #{status}"
+    send_command_and_confirm @task, command_list, "intention to set trigger level sensitivity for loop detector #{status}"
   end
 
   def set_security_code status
@@ -264,7 +259,7 @@ module CommandHelpers
       newSecurityCode: SECRETS['security_codes'][2],
       status: status
     }
-    send_command_and_confirm command_list, "intention to set security code"
+    send_command_and_confirm @task, command_list, "intention to set security code"
   end
 
   def set_date
@@ -278,7 +273,7 @@ module CommandHelpers
       minute: 29,
       second: 51
     }
-    send_command_and_confirm command_list, "intention to set date"
+    send_command_and_confirm @task, command_list, "intention to set date"
   end
 
   def wait_normal_control

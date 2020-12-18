@@ -6,7 +6,6 @@ RSpec.describe 'RSMP site commands' do
   include StatusHelpers
 
   it 'M0001 set yellow flash' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_yellow_flash
@@ -15,7 +14,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0001 set dark mode' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_dark_mode
@@ -24,7 +22,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0002 set time plan' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       SITE_CONFIG['plans'].each { |plan| switch_plan plan }
@@ -32,7 +29,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0003 set traffic situation' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       SITE_CONFIG['traffic_situations'].each { |ts| switch_traffic_situation ts.to_s }
@@ -40,7 +36,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0004 restart' do |example|
-    TestSite.log_test_header example
     TestSite.isolated do |task,supervisor,site|
       prepare task, site
       #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
@@ -60,7 +55,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0005 activate emergency route' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       SITE_CONFIG['emergency_routes'].each { |route| switch_emergency_route route.to_s }
@@ -68,7 +62,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0006 activate input' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       unsubscribe_from_all
@@ -77,7 +70,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0007 set fixed time' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_fixed_time 'True'
@@ -86,7 +78,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0008 activate detector logic' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       switch_detector_logic
@@ -94,7 +85,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0010 start signal group', important: true do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       set_signal_start 'True'
@@ -102,7 +92,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0011 stop signal group', important: true do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       set_signal_stop 'True'
@@ -110,7 +99,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0012 request start/stop of a series of signal groups', important: true do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       set_signal_start_or_stop '5,4134,65;5,11'
@@ -118,7 +106,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0013 activate a series of inputs' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       status = "5,4134,65;511"
       prepare task, site
@@ -127,7 +114,6 @@ RSpec.describe 'RSMP site commands' do
   end
   
   it 'M0014 set command table' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       plan = "1"
       status = "10,10"
@@ -137,7 +123,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0015 set offset' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       plan = 1
       status = 255
@@ -147,7 +132,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0016 set week table' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       status = "0-1,6-2"
       prepare task, site
@@ -156,7 +140,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0017 set time table' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       status = "12-1-12-59,1-0-23-12"
       prepare task, site
@@ -165,7 +148,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0018 set cycle time' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       status = 5
       plan = 0
@@ -175,7 +157,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0019 force input' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       status = 'False'
       input = 1
@@ -186,7 +167,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0020 force output' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       status = 'False'
       output = 1
@@ -197,7 +177,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0021 set trigger sensitivity' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       status = 'False'
       output = 1
@@ -208,7 +187,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0103 set security code' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       set_security_code 'Level1'
@@ -216,7 +194,6 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'M0104 set date' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       set_date
@@ -224,10 +201,9 @@ RSpec.describe 'RSMP site commands' do
   end
 
   it 'Send the wrong security code' do |example|
-    TestSite.log_test_header example
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      #wrong_security_code 
+      wrong_security_code 
     end
   end
 end

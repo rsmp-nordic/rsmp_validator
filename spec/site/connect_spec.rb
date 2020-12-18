@@ -11,8 +11,7 @@ RSpec.describe "RSMP site connection" do
 
   context 'Version 3.1.1' do
     it 'exchanges correct connection sequence' do |example|
-      TestSite.log_test_header example
-      check_connection_sequence '3.1.1', [
+        check_connection_sequence '3.1.1', [
         ['in','Version'],
         ['out','MessageAck'],
         ['out','Version'],
@@ -27,8 +26,7 @@ RSpec.describe "RSMP site connection" do
 
   context 'Version 3.1.2' do
     it 'exchanges correct connection sequence' do |example|
-      TestSite.log_test_header example
-      check_connection_sequence '3.1.2', [
+        check_connection_sequence '3.1.2', [
         ['in','Version'],
         ['out','MessageAck'],
         ['out','Version'],
@@ -43,8 +41,7 @@ RSpec.describe "RSMP site connection" do
 
   context 'Version 3.1.3' do
     it 'exchanges correct connection sequence' do |example|
-      TestSite.log_test_header example
-      check_connection_sequence '3.1.3', [
+        check_connection_sequence '3.1.3', [
         ['in','Version'],
         ['out','MessageAck'],
         ['out','Version'],
@@ -61,8 +58,7 @@ RSpec.describe "RSMP site connection" do
 
   context 'Version 3.1.4' do
     it 'exchanges correct connection sequence' do |example|
-      TestSite.log_test_header example
-      check_connection_sequence '3.1.4', [
+        check_connection_sequence '3.1.4', [
         ['in','Version'],
         ['out','MessageAck'],
         ['out','Version'],
