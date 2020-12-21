@@ -64,7 +64,6 @@ RSpec.describe 'RSMP site commands' do
   it 'M0006 activate input' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      unsubscribe_from_all
       switch_input
     end
   end
@@ -189,7 +188,8 @@ RSpec.describe 'RSMP site commands' do
   it 'M0103 set security code' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      set_security_code 'Level1'
+      set_security_code 1
+      set_security_code 2
     end
   end
 

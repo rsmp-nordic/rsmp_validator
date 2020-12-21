@@ -37,8 +37,6 @@ module StatusHelpers
         end
       rescue RSMP::MessageRejected => e
         expect { raise "Message was rejected, #{e.message}" }.not_to raise_error
-      ensure
-        unsubscribe_from_all
       end
     end
   end

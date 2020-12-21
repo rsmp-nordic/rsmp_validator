@@ -252,11 +252,12 @@ module CommandHelpers
     send_command_and_confirm @task, command_list, "intention to set trigger level sensitivity for loop detector #{status}"
   end
 
-  def set_security_code status
+  def set_security_code level
+    status = "Level#{level}"
     @site.log "Set security code", level: :test
     command_list = build_command_list :M0103, :setSecurityCode, {
-      oldSecurityCode: SECRETS['security_codes'][2],
-      newSecurityCode: SECRETS['security_codes'][2],
+      oldSecurityCode: SECRETS['security_codes'][level],
+      newSecurityCode: SECRETS['security_codes'][level],
       status: status
     }
     send_command_and_confirm @task, command_list, "intention to set security code"
@@ -265,7 +266,7 @@ module CommandHelpers
   def set_date
     @site.log "Set date", level: :test
     command_list = build_command_list :M0104, :setDate, {
-      securityCode: SECRETS['security_codes'][2],
+      securityCode: SECRETS['security_codes'][1],
       year: 2020,
       month: '09',
       day: 29,
@@ -274,6 +275,19 @@ module CommandHelpers
       second: 51
     }
     send_command_and_confirm @task, command_list, "intention to set date"
+  end
+
+  def wrong_security_code
+    @site.log "Force detector logic", level: :test
+    command_list = build_command_list :M0008, :setForceDetectorLogic, {
+      securityCode: '1111',
+      status: 'True',
+      mode: 'True'
+    }
+    component = COMPONENT_CONFIG['detector_logic'].keys[0]
+    expect {
+      send_command_and_confirm @task, command_list, "rejection of wrong security code", component
+    }.to raise_error(RSMP::MessageRejected)
   end
 
   def wait_normal_control
@@ -294,8 +308,6 @@ module CommandHelpers
       "start-up mode off",
       [{'sCI'=>'S0005','n'=>'status','s'=>'False'}]
     )
-
-    unsubscribe_from_all
   end
 
   def switch_normal_control
@@ -368,6 +380,5 @@ module CommandHelpers
     @component = MAIN_COMPONENT
     @task = task
     @site = site
-    unsubscribe_from_all
   end
 end

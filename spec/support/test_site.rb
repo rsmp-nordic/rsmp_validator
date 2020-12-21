@@ -14,7 +14,7 @@ class TestSite
   def within_reactor &block
     error = nil
 
-    # use run() to restart the reactor. this will give as a new task,
+    # use run() to continue the reactor. this will give as a new task,
     # which we can use to run a test in
     task = @reactor.run do |task|
       task.annotate 'test'
