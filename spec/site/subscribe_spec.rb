@@ -9,7 +9,11 @@ RSpec.describe "RSMP site status" do
         timeout: SUPERVISOR_CONFIG['status_update_timeout']
       }) do
         message = site.subscribe_to_status component, status_list
-      end 
+      end
+      unsubscribe_list = status_list.map do |item|
+        item.reject! { |k,v| k=='uRt' }
+      end
+      site.unsubscribe_to_status component, unsubscribe_list
     end
   end
 
