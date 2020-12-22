@@ -1,5 +1,13 @@
 RSpec.describe 'RSMP site alarm' do
+  def check_scripts
+    raise "Aborting test because script config is missing" unless SCRIPT_PATHS
+    raise "Aborting test because script config is missing" unless SCRIPT_PATHS['activate_alarm']
+    raise "Aborting test because script config is missing" unless SCRIPT_PATHS['deactivate_alarm']
+  end
+
+
   it 'A0302 detector error (logic error)', script: true do |example|
+    check_scripts
     TestSite.connected do |task,supervisor,site|
       component = COMPONENT_CONFIG['detector_logic'].keys.first
       system(SCRIPT_PATHS['activate_alarm'])
@@ -30,6 +38,7 @@ RSpec.describe 'RSMP site alarm' do
   end
 
   it 'Acknowledge alarm', script: true do |example|
+    check_scripts
     TestSite.connected do |task,supervisor,site|
       component = COMPONENT_CONFIG['detector_logic'].keys.first
       system(SCRIPT_PATHS['activate_alarm'])

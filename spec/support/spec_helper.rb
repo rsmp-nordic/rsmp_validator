@@ -95,17 +95,24 @@ puts "Warning: #{rsmp_config_path} main component settings is missing or empty" 
 
 
 SCRIPT_PATHS = RSMP_CONFIG['scripts']
-puts "Warning: Script path for activating alarm is missing or empty" if SCRIPT_PATHS['activate_alarm'] == {}
-unless File.exist? SCRIPT_PATHS['activate_alarm']
-	puts "Warning: Script at #{SCRIPT_PATHS['activate_alarm']} for activating alarm is missing"
+if SCRIPT_PATHS
+	puts "Warning: Script path for activating alarm is missing or empty" if SCRIPT_PATHS['activate_alarm'] == {}
+	unless File.exist? SCRIPT_PATHS['activate_alarm']
+		puts "Warning: Script at #{SCRIPT_PATHS['activate_alarm']} for activating alarm is missing"
+	end
+	puts "Warning: Script path for deactivating alarm is missing or empty" if SCRIPT_PATHS['deactivate_alarm'] == {}
+	unless File.exist? SCRIPT_PATHS['deactivate_alarm']
+		puts "Warning: Script at #{SCRIPT_PATHS['deactivate_alarm']} for deactivating alarm is missing"
+	end
 end
 
-DEACTIVATE_ALARM_SCRIPT_PATH = RSMP_CONFIG['scripts']['deactivate_alarm']
-puts "Warning: Script path for deactivating alarm is missing or empty" if SCRIPT_PATHS['deactivate_alarm'] == {}
-unless File.exist? SCRIPT_PATHS['deactivate_alarm']
-	puts "Warning: Script at #{SCRIPT_PATHS['deactivate_alarm']} for deactivating alarm is missing"
+# check recommended configs
+required = [
+	'scripts'
+]
+required.each do |key|
+	puts "Warning: Config '#{key}' is missing from #{rsmp_config_path}" unless RSMP_CONFIG[key]
 end
-
 
 
 # check required configs
@@ -118,7 +125,7 @@ required = [
 	'shutdown_timeout'
 ]
 required.each do |key|
-	raise "Config #{key} is missing from #{rsmp_config_path}" unless RSMP_CONFIG[key]
+	raise "Config '#{key}'' is missing from #{rsmp_config_path}" unless RSMP_CONFIG[key]
 end
 
 

@@ -22,20 +22,16 @@ supervisor:
         detector_logic:
           DL1:
   watchdog_interval: 0.1
-  watchdog_timeout: 0.3
-  acknowledgement_timeout: 0.3
-  command_response_timeout: 0.3
-  status_response_timeout: 0.3
-  status_update_timeout: 0.3
+  watchdog_timeout: 0.2
+  acknowledgement_timeout: 0.2
+  command_response_timeout: 0.2
+  status_response_timeout: 0.2
+  status_update_timeout: 0.2
 
-connect_timeout: 0.3
-ready_timeout: 0.3
+connect_timeout: 0.2
+ready_timeout: 0.2
 status_update_rate: 0   # rsmp only allow integer update rates
-subscribe_timeout: 0.3
-alarm_timeout: 0.3
-shutdown_timeout: 0.3
-
-scripts:
-  activate_alarm: "~/activate_alarm.sh"
-  deactivate_alarm: "~/deactivate_alarm.sh"
+subscribe_timeout: 0.2
+alarm_timeout: 0.2
+shutdown_timeout: 0.2
 
