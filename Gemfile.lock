@@ -1,10 +1,10 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: e0d0e7acca912f4c0fa9c2cc84434cef9d1e9b4a
-  ref: e0d0e7a
+  revision: 396cf3ec49ebae771041f883fde08b71efd5794b
+  tag: v0.1.19
   submodules: true
   specs:
-    rsmp (0.1.18)
+    rsmp (0.1.19)
       async (~> 1.23.0)
       async-io (~> 1.27.4)
       colorize (~> 0.8.1)
@@ -44,7 +44,7 @@ GEM
       uri_template (~> 0.7)
     minitest (5.14.2)
     nio4r (2.5.4)
-    regexp_parser (2.0.0)
+    regexp_parser (2.0.1)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
