@@ -150,7 +150,7 @@ class TestSite
         @supervisor.logger.settings['debug'] = false
         @supervisor.logger.settings['statistics'] = false
         log = @supervisor.logger.dump @supervisor.archive
-        expect(@remote_site).not_to be_nil, "Site did not connect:\n#{log}"
+        expect(@remote_site).not_to be_nil, "Site did not connect within #{RSMP_CONFIG['connect_timeout']}s:\n#{log}"
       end
     end
     @remote_site.wait_for_state :ready, RSMP_CONFIG['ready_timeout']
