@@ -15,18 +15,14 @@ class TestSite
     error = nil
 
     # use run() to continue the reactor. this will give as a new task,
-    # which we can use to run a test in
-    task = @reactor.run do |task|
+    # which we run the rspec test inside
+    more = @reactor.run do |task|
       task.annotate 'test'
       yield task              # run block until it's finished
     rescue StandardError => e
       error = e               # catch and store errors
     ensure
-      # It much faster to use @supervisor.task.stop,
-      # but unfortunately that will kill the task after which
-      # it does not work anymore. Trying to use the supervisor will
-      # result io closed stream errors.
-      @reactor.stop           # stop reactor, and exit block
+      @reactor.interrupt      # interrupt reactor
     end
 
     # reraise errors outside task to surface them in rspec

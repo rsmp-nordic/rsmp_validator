@@ -1,14 +1,11 @@
-GIT
-  remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: 396cf3ec49ebae771041f883fde08b71efd5794b
-  tag: v0.1.19
-  submodules: true
+PATH
+  remote: ../rsmp
   specs:
     rsmp (0.1.19)
-      async (~> 1.23.0)
-      async-io (~> 1.27.4)
+      async (~> 1.28.2)
+      async-io (~> 1.30.1)
       colorize (~> 0.8.1)
-      json_schemer (~> 0.2.11)
+      json_schemer (~> 0.2.17)
       thor (~> 1.0.1)
 
 GEM
@@ -20,11 +17,11 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
       zeitwerk (~> 2.2, >= 2.2.2)
-    async (1.23.0)
-      console (~> 1.0)
+    async (1.28.2)
+      console (~> 1.10)
       nio4r (~> 2.3)
       timers (~> 4.1)
-    async-io (1.27.7)
+    async-io (1.30.1)
       async (~> 1.14)
     colorize (0.8.1)
     concurrent-ruby (1.1.7)
@@ -44,7 +41,7 @@ GEM
       uri_template (~> 0.7)
     minitest (5.14.2)
     nio4r (2.5.4)
-    regexp_parser (2.0.1)
+    regexp_parser (2.0.2)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
