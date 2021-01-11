@@ -44,7 +44,7 @@ class TestSite
         'acknowledgements' => true,
         'watchdogs' => true,
         'test' => true
-      }
+      }.merge(LOG_CONFIG)
 
       supervisor_settings = {
         'stop_after_first_session' => false,
@@ -54,15 +54,18 @@ class TestSite
         'command_response_timeout' => 10,
         'status_response_timeout' => 10,
         'status_update_timeout' => 10
-      }
+      }.merge(RSMP_CONFIG['supervisor'])
+
+      supervisor_settings['sites'][:any]["collect"] = options['collect']
 
       # start the supervisor in a separe async task that will
       # persist across tests
       @reactor.async do |task|
         @supervisor = RSMP::Supervisor.new(
           task: task,
-          supervisor_settings: supervisor_settings.merge(RSMP_CONFIG['supervisor']),
-          log_settings: log_settings.merge(LOG_CONFIG)
+          supervisor_settings: supervisor_settings,
+          log_settings: log_settings,
+          collect: options['collect']
         )
         @supervisor.log why, level: :test if why
         @supervisor.start  # keep running inside the async task, listening for sites
@@ -139,15 +142,7 @@ class TestSite
     unless @remote_site
       @supervisor.log "Waiting for site to connect", level: :test
       @remote_site = @supervisor.wait_for_site(:any, RSMP_CONFIG['connect_timeout'])
-      if @remote_site
-        from = "#{@remote_site.connection_info[:ip]}:#{@remote_site.connection_info[:port]}"
-      else
-        @supervisor.logger.settings['color'] = false
-        @supervisor.logger.settings['debug'] = false
-        @supervisor.logger.settings['statistics'] = false
-        log = @supervisor.logger.dump @supervisor.archive
-        expect(@remote_site).not_to be_nil, "Site did not connect within #{RSMP_CONFIG['connect_timeout']}s:\n#{log}"
-      end
+      expect(@remote_site).not_to be_nil, "Site did not connect within #{RSMP_CONFIG['connect_timeout']}s"
     end
     @remote_site.wait_for_state :ready, RSMP_CONFIG['ready_timeout']
   end

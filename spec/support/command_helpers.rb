@@ -291,22 +291,17 @@ module CommandHelpers
   end
 
   def wait_normal_control
-    # Wait for 'switched on' to be true (dark mode false)
+    # Wait for:
+    # 'switched on' to be true (dark mode false)
+    #  yellow flash status to be false
+    # for startup mode to be false
     verify_status(@task,
-      "dark mode off",
-      [{'sCI'=>'S0007','n'=>'status','s'=>/^True(,True)*$/}]
-    )
-
-    # Wait for yellow flash status to be false
-    verify_status(@task,
-      "yellow flash off",
-      [{'sCI'=>'S0011','n'=>'status','s'=>/^False(,False)*$/}]
-    )
-
-    # Wait for startup mode to be false
-    verify_status(@task,
-      "start-up mode off",
-      [{'sCI'=>'S0005','n'=>'status','s'=>'False'}]
+      "dark mode off, yellow flash off, start-up mode off",
+      [
+        {'sCI'=>'S0007','n'=>'status','s'=>/^True(,True)*$/},
+        {'sCI'=>'S0011','n'=>'status','s'=>/^False(,False)*$/},
+        {'sCI'=>'S0005','n'=>'status','s'=>'False'}
+      ]
     )
   end
 
@@ -327,11 +322,10 @@ module CommandHelpers
     set_emergency_route 'True',route
     verify_status(@task,
       "activate emergency route",
-      [{'sCI'=>'S0006','n'=>'status','s'=>'True'}]
-    )
-    verify_status(@task,
-      "activate emergency route #{route}",
-      [{'sCI'=>'S0006','n'=>'emergencystage','s'=>route}]
+      [
+        {'sCI'=>'S0006','n'=>'status','s'=>'True'},
+        {'sCI'=>'S0006','n'=>'emergencystage','s'=>route}
+      ]
     )
 
     set_emergency_route 'False',route

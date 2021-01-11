@@ -1,0 +1,77 @@
+wait api
+
+status
+command
+alarm
+
+send and wait for response
+just wait for response
+pick m_id beforehand
+
+timeout
+notack
+ok
+other error
+
+
+return nil?
+return NotAck?
+raise exceptions?
+
+--
+wait_for_acknowledgement
+wait_for_response
+
+
+SENDING
+# send a message
+send_message
+	=> nil
+
+STATUS
+# send request
+# does not wait for ack
+request_status
+	=> message
+
+# collect incoming status
+# status request must be separately
+# timeout raises exception
+collect_status
+	=> status list
+
+# send request and collect responses
+# sends request and waits for ack, no ack raises exception
+# then collects statuses
+# timeout raises exception
+fetch_status
+	=> status list
+
+SUBSCRIBE
+subscribe_to_status
+	wait for ack
+	wait for status update
+	=> status update
+	noack raises exception
+	timeout raises exception
+
+unsubscribe_to_status confirm:
+	wait for ack
+	=> nil
+	noack raises exception
+	timeout raises exception
+
+COMMAND
+request_command
+	wait for ack
+	wait for command responses 
+	=> responses
+	noack raises exception
+	timeout raises exception
+
+alarm?
+
+
+
+send
+wait for response

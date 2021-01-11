@@ -1,8 +1,12 @@
 RSpec.describe "RSMP site connection" do
 
   def check_connection_sequence versions, expected
-    TestSite.reconnected('rsmp_versions' => [versions].flatten) do |task,supervisor,site|
-      items = supervisor.archive.capture task, level: :log, with_message: true, num: expected.size, timeout: 1, earliest: :start
+    TestSite.reconnected(
+      'rsmp_versions' => versions,
+      'collect' => expected.size
+    ) do |task,supervisor,site|
+      site.collector.collect task, timeout: 1
+      items = site.collector.items
       got = items.map { |item| item[:message] }.map { |message| [message.direction.to_s, message.type] }
       expect(got).to eq(expected)
       expect(site.ready?).to be true
@@ -11,7 +15,7 @@ RSpec.describe "RSMP site connection" do
 
   context 'Version 3.1.1' do
     it 'exchanges correct connection sequence' do |example|
-        check_connection_sequence '3.1.1', [
+      check_connection_sequence '3.1.1', [
         ['in','Version'],
         ['out','MessageAck'],
         ['out','Version'],
@@ -26,7 +30,7 @@ RSpec.describe "RSMP site connection" do
 
   context 'Version 3.1.2' do
     it 'exchanges correct connection sequence' do |example|
-        check_connection_sequence '3.1.2', [
+      check_connection_sequence '3.1.2', [
         ['in','Version'],
         ['out','MessageAck'],
         ['out','Version'],
@@ -41,7 +45,7 @@ RSpec.describe "RSMP site connection" do
 
   context 'Version 3.1.3' do
     it 'exchanges correct connection sequence' do |example|
-        check_connection_sequence '3.1.3', [
+      check_connection_sequence '3.1.3', [
         ['in','Version'],
         ['out','MessageAck'],
         ['out','Version'],
@@ -58,7 +62,7 @@ RSpec.describe "RSMP site connection" do
 
   context 'Version 3.1.4' do
     it 'exchanges correct connection sequence' do |example|
-        check_connection_sequence '3.1.4', [
+      check_connection_sequence '3.1.4', [
         ['in','Version'],
         ['out','MessageAck'],
         ['out','Version'],

@@ -6,7 +6,7 @@ RSpec.describe "RSMP supervisor connection" do
       'send_after_connect' => true
     }
     TestSupervisor.reconnected(options) do |task,supervisor_proxy,site|
-      items = site.archive.capture task, level: :log, with_message: true, num: expected.size, timeout: 1, from: 0
+      items = site.archive.collect task, level: :log, with_message: true, num: expected.size, timeout: 1, from: 0
       got = items.map { |item| item[:message] }.map { |message| [message.direction.to_s, message.type] }
       expect(got).to eq(expected)
       expect(supervisor_proxy.ready?).to be true
