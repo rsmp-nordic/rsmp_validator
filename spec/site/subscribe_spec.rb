@@ -3,16 +3,10 @@ RSpec.describe "RSMP site status" do
     TestSite.connected do |task,supervisor,site|
       component = MAIN_COMPONENT
       status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus','uRt'=>'0'}]
-      site.wait_for_status_updates(site.task,{
-        component: component,
-        status_list: status_list,
+      site.subscribe_to_status component, status_list, collect: {
         timeout: SUPERVISOR_CONFIG['status_update_timeout']
-      }) do
-        message = site.subscribe_to_status component, status_list
-      end
-      unsubscribe_list = status_list.map do |item|
-        item.reject! { |k,v| k=='uRt' }
-      end
+      }
+      unsubscribe_list = status_list.map { |item| item.reject! { |k,v| k=='uRt' } }
       site.unsubscribe_to_status component, unsubscribe_list
     end
   end

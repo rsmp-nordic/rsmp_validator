@@ -64,7 +64,7 @@ RSpec.describe 'RSMP site commands' do
   it 'M0006 activate input' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      switch_input
+      SITE_CONFIG['inputs'].each { |input| switch_input input }
     end
   end
 

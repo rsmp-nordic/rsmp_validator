@@ -1,13 +1,9 @@
 module CommandHelpers
   def send_command_and_confirm parent_task, command_list, message, component=@component
     log_confirmation message do
-      result = @site.wait_for_command_responses parent_task, {
-        component: component,
-        command_list: command_list,
-        timeout: SUPERVISOR_CONFIG['command_response_timeout']
-      } do |m_id|
-        @site.send_command component, command_list, m_id: m_id
-      end
+      message, result = @site.send_command component, command_list, collect: {
+          timeout: SUPERVISOR_CONFIG['command_response_timeout']
+        }
     end
   end
 
@@ -58,6 +54,7 @@ module CommandHelpers
     @site.log "Switching to traffic situation #{plan}", level: :test
     command_list = build_command_list :M0002, :setPlan, {
       securityCode: SECRETS['security_codes'][2],
+      status: 'True',     # true = use plan nr in commone, false = use time table
       timeplan: plan
     }
     send_command_and_confirm @task, command_list, "intention to switch to plan #{plan}"
@@ -104,19 +101,30 @@ module CommandHelpers
     # so do not expect this
   end
 
-  def set_emergency_route status, route
+  def set_emergency_route route
     @site.log "Set emergency route #{route}", level: :test
     command_list = build_command_list :M0005, :setEmergency, {
       securityCode: SECRETS['security_codes'][2],
+      status: 'True',
       emergencyroute: route
     }
     send_command_and_confirm @task, command_list, "intention to switch to emergency route #{route}"
+  end
+
+  def disable_emergency_route
+    @site.log "Disable emergency route", level: :test
+    command_list = build_command_list :M0005, :setEmergency, {
+      securityCode: SECRETS['security_codes'][2],
+      status: 'False'
+    }
+    send_command_and_confirm @task, command_list, "intention to switch emergency off"
   end
 
   def set_input status, input
     @site.log "Set input #{input}", level: :test
     command_list = build_command_list :M0006, :setInput, {
       securityCode: SECRETS['security_codes'][2],
+      status: status,
       input: input
     }
     send_command_and_confirm @task, command_list, "intention to set input #{input}"
@@ -319,7 +327,7 @@ module CommandHelpers
   end
 
   def switch_emergency_route route
-    set_emergency_route 'True',route
+    set_emergency_route route
     verify_status(@task,
       "activate emergency route",
       [
@@ -328,19 +336,18 @@ module CommandHelpers
       ]
     )
 
-    set_emergency_route 'False',route
+    disable_emergency_route
     verify_status(@task,
       "deactivate emergency route",
       [{'sCI'=>'S0006','n'=>'status','s'=>'False'}]
     )
   end
 
-  def switch_input
-    indx = 0
+  def switch_input indx
     set_input 'True',indx.to_s
     verify_status(@task,
       "activate input #{indx}",
-      [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx}}1/}]
+      [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx-1}}1/}] # index is 1-based, convert to 0-based fo regex
     )
 
     set_input 'False',indx.to_s
