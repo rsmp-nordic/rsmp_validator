@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: e09f0902bb5319c4502099d132e18fd91a0f7004
-  tag: v0.1.21
+  revision: 86e9a763cd441f14ac51a95774a96a775ede2496
+  tag: v0.1.22
   submodules: true
   specs:
     rsmp (0.1.21)
@@ -14,6 +14,12 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (6.1.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
+      zeitwerk (~> 2.3)
     async (1.28.3)
       console (~> 1.10)
       nio4r (~> 2.3)
@@ -21,6 +27,7 @@ GEM
     async-io (1.30.1)
       async (~> 1.14)
     colorize (0.8.1)
+    concurrent-ruby (1.1.7)
     console (1.10.1)
       fiber-local
     diff-lcs (1.4.4)
@@ -28,11 +35,14 @@ GEM
       regexp_parser (~> 2.0)
     fiber-local (1.0.0)
     hana (1.3.7)
+    i18n (1.8.7)
+      concurrent-ruby (~> 1.0)
     json_schemer (0.2.17)
       ecma-re-validator (~> 0.3)
       hana (~> 1.3)
       regexp_parser (~> 2.0)
       uri_template (~> 0.7)
+    minitest (5.14.3)
     nio4r (2.5.4)
     regexp_parser (2.0.3)
     rspec (3.10.0)
@@ -50,12 +60,16 @@ GEM
     rspec-support (3.10.1)
     thor (1.0.1)
     timers (4.3.2)
+    tzinfo (2.0.4)
+      concurrent-ruby (~> 1.0)
     uri_template (0.7.0)
+    zeitwerk (2.4.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport
   rsmp!
   rspec
 
