@@ -34,4 +34,4 @@ status_update_rate: 0   # rsmp only allow integer update rates
 subscribe_timeout: 0.2
 alarm_timeout: 0.2
 shutdown_timeout: 0.2
-
+command_timeout: 0.2
