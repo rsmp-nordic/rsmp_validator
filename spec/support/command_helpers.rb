@@ -276,7 +276,7 @@ module CommandHelpers
     command_list = build_command_list :M0104, :setDate, {
       securityCode: SECRETS['security_codes'][1],
       year: 2020,
-      month: '09',
+      month: 9,
       day: 29,
       hour: 17,
       minute: 29,
