@@ -37,6 +37,7 @@ module StatusHelpers
           timeout: RSMP_CONFIG['command_timeout']
         }
       ensure
+        unsubscribe_list = convert_status_list(status_list).map { |item| item.slice('sCI','n') }
         @site.unsubscribe_to_status @component, status_list
       end
     end
