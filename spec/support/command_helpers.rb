@@ -353,7 +353,7 @@ module CommandHelpers
     set_input 'False',indx.to_s
     verify_status(@task,
       "deactivate input #{indx}",
-      [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx}}0/}]
+      [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx-1}}0/}]
     )
   end
 
