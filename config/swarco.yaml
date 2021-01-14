@@ -15,7 +15,7 @@ supervisor:
         main:
           KK+AG9998=001TC000:
         signal_group:
-          KK+AG9998=001SG001:
+          KK+AG9998=001SG1:
         detector_logic:
           KK+AG9998=001DL001:
   watchdog_interval: 60
@@ -35,3 +35,7 @@ status_update_rate: 1
 subscribe_timeout: 180
 alarm_timeout: 180
 shutdown_timeout: 180
+
+scripts:
+  activate_alarm: '/home/i0davla/activate_alarm.sh'
+  deactivate_alarm: '/home/i0davla/deactivate_alarm.sh'
