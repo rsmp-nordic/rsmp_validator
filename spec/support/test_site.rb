@@ -38,6 +38,7 @@ class TestSite
     unless @supervisor
       log_settings = {
         'active' => true,
+        'port' => true,
         'path' => LOG_PATH,
         'color' => true,
         'json' => true,
