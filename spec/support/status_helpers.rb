@@ -29,12 +29,12 @@ module StatusHelpers
     end
   end
 
-  def wait_for_status parent_task, description, status_list
+  def wait_for_status parent_task, description, status_list, update_rate: RSMP_CONFIG['status_update_rate']
     log_confirmation description do
-      subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>'0' }
+      subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
       begin
         message, result = @site.subscribe_to_status @component, subscribe_list, collect: {
-          timeout: SUPERVISOR_CONFIG['status_update_timeout']            
+          timeout: RSMP_CONFIG['command_timeout']
         }
       ensure
         @site.unsubscribe_to_status @component, status_list
