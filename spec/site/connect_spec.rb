@@ -5,7 +5,7 @@ RSpec.describe "RSMP site connection" do
       'rsmp_versions' => versions,
       'collect' => expected.size
     ) do |task,supervisor,site|
-      site.collector.collect task, timeout: 1
+      site.collector.collect task, timeout: RSMP_CONFIG['ready_timeout']
       items = site.collector.items
       got = items.map { |item| item[:message] }.map { |message| [message.direction.to_s, message.type] }
       expect(got).to eq(expected)
