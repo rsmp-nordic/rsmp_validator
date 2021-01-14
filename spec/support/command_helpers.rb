@@ -142,7 +142,7 @@ module CommandHelpers
 
   def switch_plan plan
     set_plan plan.to_s
-    verify_status(@task,
+    wait_for_status(@task,
       "switch to plan #{plan}",
       [{'sCI'=>'S0014','n'=>'status','s'=>plan.to_s}]
     )
@@ -158,7 +158,7 @@ module CommandHelpers
 
   def switch_yellow_flash
     set_functional_position 'YellowFlash'
-    verify_status(@task,
+    wait_for_status(@task,
       "switch to yellow flash",
       [{'sCI'=>'S0011','n'=>'status','s'=>/^True(,True)*$/}]
     )
@@ -166,7 +166,7 @@ module CommandHelpers
 
   def switch_dark_mode
     set_functional_position 'Dark'
-    verify_status(@task,
+    wait_for_status(@task,
       "switch to dark mode",
       [{'sCI'=>'S0007','n'=>'status','s'=>/^False(,False)*$/}]
     )
@@ -303,7 +303,7 @@ module CommandHelpers
     # 'switched on' to be true (dark mode false)
     #  yellow flash status to be false
     # for startup mode to be false
-    verify_status(@task,
+    wait_for_status(@task,
       "dark mode off, yellow flash off, start-up mode off",
       [
         {'sCI'=>'S0007','n'=>'status','s'=>/^True(,True)*$/},
@@ -320,7 +320,7 @@ module CommandHelpers
 
   def switch_fixed_time status
     set_fixed_time status
-    verify_status(@task,
+    wait_for_status(@task,
       "switch to fixed time #{status}",
       [{'sCI'=>'S0009','n'=>'status','s'=>/^#{status}(,#{status})*$/}]
     )

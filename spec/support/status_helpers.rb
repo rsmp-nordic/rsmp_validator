@@ -21,40 +21,23 @@ module StatusHelpers
     end.flatten
   end
 
-  def unsubscribe_from_all
-    @site.unsubscribe_to_status @component, [
-      {'sCI'=>'S0015','n'=>'status'},
-      {'sCI'=>'S0014','n'=>'status'},
-      {'sCI'=>'S0011','n'=>'status'},
-      {'sCI'=>'S0009','n'=>'status'},
-      {'sCI'=>'S0007','n'=>'status'},
-      {'sCI'=>'S0006','n'=>'status'},
-      {'sCI'=>'S0006','n'=>'emergencystage'},
-      {'sCI'=>'S0005','n'=>'status'},
-      {'sCI'=>'S0003','n'=>'inputstatus'},
-      {'sCI'=>'S0002','n'=>'detectorlogicstatus'},
-      {'sCI'=>'S0001','n'=>'signalgroupstatus'},
-      {'sCI'=>'S0001','n'=>'cyclecounter'},
-      {'sCI'=>'S0001','n'=>'basecyclecounter'},
-      {'sCI'=>'S0001','n'=>'stage'}
-    ]
-  end
-
-  def subscribe status_list, update_rate: RSMP_CONFIG['status_update_rate']
-    list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
-    expect do
-      message, result = @site.subscribe_to_status @component, list
-    end.to_not raise_error
-  end
-
   def verify_status parent_task, description, status_list
     log_confirmation description do
+      message, result = @site.request_status @component, convert_status_list(status_list), collect: {
+        timeout: SUPERVISOR_CONFIG['status_update_timeout']
+      }
+    end
+  end
+
+  def wait_for_status parent_task, description, status_list
+    log_confirmation description do
+      subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>'0' }
       begin
-        message, result = @site.request_status @component, convert_status_list(status_list), collect: {
+        message, result = @site.subscribe_to_status @component, subscribe_list, collect: {
           timeout: SUPERVISOR_CONFIG['status_update_timeout']            
         }
-      rescue RSMP::MessageRejected => e
-        expect { raise "Message was rejected, #{e.message}" }.not_to raise_error
+      ensure
+        @site.unsubscribe_to_status @component, status_list
       end
     end
   end
