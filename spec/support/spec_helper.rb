@@ -134,11 +134,12 @@ RSpec.configure do |config|
   # the sxl version defined in the site config is mathed against the sxl tag
   # Gem::Requirement and Gem::Version classed are used to do the version matching,
   # but this has nothing to do with Gems, we're using using the version match utilities
+  p SITE_CONFIG['sxl_version']
   if SITE_CONFIG['sxl_version']
-	  sxl_version = Gem::Version.new SITE_CONFIG['sxl_version']
-	  config.filter_run_excluding sxl: -> (v) {
+		sxl_version = Gem::Version.new SITE_CONFIG['sxl_version']
+		config.filter_run_excluding sxl: -> (v) {
 			!Gem::Requirement.new(v).satisfied_by?(sxl_version)
-	  }
+		}
 	end
 end
 
