@@ -29,7 +29,7 @@ RSpec.describe "RSMP site connection" do
   end
 
   context 'Version 3.1.2' do
-    it 'exchanges correct connection sequence' do |example|
+    it 'exchanges correct connection sequence', sxl: '1.0.7' do |example|
       check_connection_sequence '3.1.2', [
         ['in','Version'],
         ['out','MessageAck'],

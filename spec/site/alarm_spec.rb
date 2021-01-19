@@ -6,7 +6,7 @@ RSpec.describe 'RSMP site alarm' do
   end
 
 
-  it 'A0302 detector error (logic error)', script: true do |example|
+  it 'A0302 detector error (logic error)', :script, sxl: '>=1.0.7' do |example|
     check_scripts
     TestSite.connected do |task,supervisor,site|
       component = COMPONENT_CONFIG['detector_logic'].keys.first
@@ -37,7 +37,7 @@ RSpec.describe 'RSMP site alarm' do
     end
   end
 
-  it 'Acknowledge alarm', script: true do |example|
+  it 'Acknowledge alarm', :script do |example|
     check_scripts
     TestSite.connected do |task,supervisor,site|
       component = COMPONENT_CONFIG['detector_logic'].keys.first
