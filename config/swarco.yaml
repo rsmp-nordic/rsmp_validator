@@ -1,5 +1,6 @@
 supervisor:
   sites:
+    sxl_version: 1.0.7
     :any:
       plans:
         - 8
