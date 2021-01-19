@@ -133,7 +133,8 @@ RSpec.configure do |config|
   # enable filtering by sxl version using sxl: '>=1.0.7'
   # the sxl version defined in the site config is mathed against the sxl tag
   # Gem::Requirement and Gem::Version classed are used to do the version matching,
-  # but this has nothing to do with Gems, we're using using the version match utilities
+  # but this otherwise has nothing to do with Gems, we're just using 
+  # the version match utilities
   if SITE_CONFIG['sxl_version']
   sxl_version = Gem::Version.new SITE_CONFIG['sxl_version']
     config.filter_run_excluding sxl: -> (v) {
