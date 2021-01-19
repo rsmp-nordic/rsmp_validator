@@ -283,6 +283,17 @@ module CommandHelpers
       second: 51
     }
     send_command_and_confirm @task, command_list, "intention to set date"
+    @site.log "Reset date", level: :test
+    command_list = build_command_list :M0104, :setDate, {
+      securityCode: SECRETS['security_codes'][1],
+      year: Time.now.year,
+      month: Time.now.month,
+      day: Time.now.day,
+      hour: Time.now.hour,
+      minute: Time.now.min,
+      second: Time.now.sec
+    }
+    send_command_and_confirm @task, command_list, "intention to set date"
   end
 
   def wrong_security_code
