@@ -10,34 +10,34 @@ require_relative 'log_helpers'
 LOG_PATH = 'log/validation.log'
 
 def load_secrets path
-	secrets_path = 'config/secrets.yaml'
-	unless File.exist? secrets_path
-		puts "Secrets file #{secrets_path} not found. Please add it and try again."
-		exit
-	end
-	secrets = YAML.load_file(secrets_path)
+  secrets_path = 'config/secrets.yaml'
+  unless File.exist? secrets_path
+    puts "Secrets file #{secrets_path} not found. Please add it and try again."
+    exit
+  end
+  secrets = YAML.load_file(secrets_path)
 
-	required_keys = ['security_codes']
-	required_keys.each do |key|
-		unless secrets[key]
-			puts "The key '#{key}' is missing from #{secrets_path}. Please add it and try again."
-			exit
-		end
-	end
-	secrets
+  required_keys = ['security_codes']
+  required_keys.each do |key|
+    unless secrets[key]
+      puts "The key '#{key}' is missing from #{secrets_path}. Please add it and try again."
+      exit
+    end
+  end
+  secrets
 end
 
 def ask_user site, question, accept:''
-	pointing = "\u{1f449}"
-	print "#{pointing} " + question.colorize(:color => :light_magenta) + " "
-	site.log "Asking user for input: #{question}", level: :test
-	response = ASYNC_STDIN.gets.chomp
-	if response == accept
-		site.log "OK from user", level: :test
-	else
-		site.log "Test skipped by user", level: :test
-		expect(response).to eq(accept), "Test skipped by user"
-	end
+  pointing = "\u{1f449}"
+  print "#{pointing} " + question.colorize(:color => :light_magenta) + " "
+  site.log "Asking user for input: #{question}", level: :test
+  response = ASYNC_STDIN.gets.chomp
+  if response == accept
+    site.log "OK from user", level: :test
+  else
+    site.log "Test skipped by user", level: :test
+    expect(response).to eq(accept), "Test skipped by user"
+  end
 end
 
 ASYNC_STDIN = Async::IO::Stream.new( Async::IO::Generic.new($stdin) )
@@ -50,9 +50,9 @@ RSMP_CONFIG = YAML.load_file rsmp_config_path
 puts "Using test config #{rsmp_config_path}"
 
 if validator_config['log_config_path']
-	LOG_CONFIG = YAML.load_file validator_config['log_config_path'] 
+  LOG_CONFIG = YAML.load_file validator_config['log_config_path'] 
 else
-	LOG_CONFIG = {}
+  LOG_CONFIG = {}
 end
 
 SECRETS = load_secrets 'config/secrets.yaml'
@@ -74,36 +74,36 @@ puts "Warning: #{rsmp_config_path} main component settings is missing or empty" 
 
 SCRIPT_PATHS = RSMP_CONFIG['scripts']
 if SCRIPT_PATHS
-	puts "Warning: Script path for activating alarm is missing or empty" if SCRIPT_PATHS['activate_alarm'] == {}
-	unless File.exist? SCRIPT_PATHS['activate_alarm']
-		puts "Warning: Script at #{SCRIPT_PATHS['activate_alarm']} for activating alarm is missing"
-	end
-	puts "Warning: Script path for deactivating alarm is missing or empty" if SCRIPT_PATHS['deactivate_alarm'] == {}
-	unless File.exist? SCRIPT_PATHS['deactivate_alarm']
-		puts "Warning: Script at #{SCRIPT_PATHS['deactivate_alarm']} for deactivating alarm is missing"
-	end
+  puts "Warning: Script path for activating alarm is missing or empty" if SCRIPT_PATHS['activate_alarm'] == {}
+  unless File.exist? SCRIPT_PATHS['activate_alarm']
+    puts "Warning: Script at #{SCRIPT_PATHS['activate_alarm']} for activating alarm is missing"
+  end
+  puts "Warning: Script path for deactivating alarm is missing or empty" if SCRIPT_PATHS['deactivate_alarm'] == {}
+  unless File.exist? SCRIPT_PATHS['deactivate_alarm']
+    puts "Warning: Script at #{SCRIPT_PATHS['deactivate_alarm']} for deactivating alarm is missing"
+  end
 end
 
 # check recommended configs
 required = [
-	'scripts'
+  'scripts'
 ]
 required.each do |key|
-	puts "Warning: Config '#{key}' is missing from #{rsmp_config_path}" unless RSMP_CONFIG[key]
+  puts "Warning: Config '#{key}' is missing from #{rsmp_config_path}" unless RSMP_CONFIG[key]
 end
 
 
 # check required configs
 required = [
-	'connect_timeout',
-	'ready_timeout',
-	'subscribe_timeout',
-	'status_update_rate',
-	'alarm_timeout',
-	'shutdown_timeout'
+  'connect_timeout',
+  'ready_timeout',
+  'subscribe_timeout',
+  'status_update_rate',
+  'alarm_timeout',
+  'shutdown_timeout'
 ]
 required.each do |key|
-	raise "Config '#{key}'' is missing from #{rsmp_config_path}" unless RSMP_CONFIG[key]
+  raise "Config '#{key}'' is missing from #{rsmp_config_path}" unless RSMP_CONFIG[key]
 end
 
 
@@ -134,13 +134,12 @@ RSpec.configure do |config|
   # the sxl version defined in the site config is mathed against the sxl tag
   # Gem::Requirement and Gem::Version classed are used to do the version matching,
   # but this has nothing to do with Gems, we're using using the version match utilities
-  p SITE_CONFIG['sxl_version']
   if SITE_CONFIG['sxl_version']
-		sxl_version = Gem::Version.new SITE_CONFIG['sxl_version']
-		config.filter_run_excluding sxl: -> (v) {
-			!Gem::Requirement.new(v).satisfied_by?(sxl_version)
-		}
-	end
+  sxl_version = Gem::Version.new SITE_CONFIG['sxl_version']
+    config.filter_run_excluding sxl: -> (v) {
+      !Gem::Requirement.new(v).satisfied_by?(sxl_version)
+    }
+  end
 end
 
 include RSpec
