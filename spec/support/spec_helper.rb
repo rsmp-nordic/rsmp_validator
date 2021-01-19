@@ -9,28 +9,6 @@ require_relative 'log_helpers'
 
 LOG_PATH = 'log/validation.log'
 
-RSpec.configure do |config|
-  # Enable flags like --only-failures and --next-failure
-  config.example_status_persistence_file_path = ".rspec_status"
-
-  # Disable RSpec exposing methods globally on `Module` and `main`
-  config.disable_monkey_patching!
-
-  config.expect_with :rspec do |c|
-    c.syntax = :expect
-  end
-
-  config.before(:example) do |example|
-    File.open(LOG_PATH, 'a') do |file|
-      file.puts "\nRunning test #{example.metadata[:location]} - #{example.full_description}".colorize(:light_black)
-    end
-  end
-
-end
-
-include RSpec
-include LogHelpers
-
 def load_secrets path
 	secrets_path = 'config/secrets.yaml'
 	unless File.exist? secrets_path
@@ -131,3 +109,38 @@ end
 
 # create log folder if it doesn't exist
 FileUtils.mkdir_p 'log'
+
+
+RSpec.configure do |config|
+  # Enable flags like --only-failures and --next-failure
+  config.example_status_persistence_file_path = ".rspec_status"
+
+  # Disable RSpec exposing methods globally on `Module` and `main`
+  config.disable_monkey_patching!
+
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
+
+  # write to the validator log when each test start
+  config.before(:example) do |example|
+    File.open(LOG_PATH, 'a') do |file|
+      file.puts "\nRunning test #{example.metadata[:location]} - #{example.full_description}".colorize(:light_black)
+    end
+  end
+
+
+  # enable filtering by sxl version using sxl: '>=1.0.7'
+  # the sxl version defined in the site config is mathed against the sxl tag
+  # Gem::Requirement and Gem::Version classed are used to do the version matching,
+  # but this has nothing to do with Gems, we're using using the version match utilities
+  if SITE_CONFIG['sxl_version']
+	  sxl_version = Gem::Version.new SITE_CONFIG['sxl_version']
+	  config.filter_run_excluding sxl: -> (v) {
+			!Gem::Requirement.new(v).satisfied_by?(sxl_version)
+	  }
+	end
+end
+
+include RSpec
+include LogHelpers
