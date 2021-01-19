@@ -1,3 +1,4 @@
+# Config for testing swarco TLC simulator
 supervisor:
   sites:
     :any:
