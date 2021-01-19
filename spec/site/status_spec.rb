@@ -21,7 +21,7 @@ RSpec.describe "RSMP site status" do
       { S0004: [:outputstatus] }
  end
 
-  it 'S0005 traffic controller starting', sxl: '>=1.0.7'  do |example|
+  it 'S0005 traffic controller starting', sxl: '>=1.0.7' do |example|
     request_status_and_confirm "traffic controller starting (true/false)",
       { S0005: [:status] }
   end
@@ -71,7 +71,7 @@ RSpec.describe "RSMP site status" do
       { S0014: [:status] }
   end
 
-  it 'S0015 current traffic situation'  do |example|
+  it 'S0015 current traffic situation', sxl: '>=1.0.7' do |example|
     request_status_and_confirm "current traffic situation",
       { S0015: [:status] }
   end
@@ -106,7 +106,7 @@ RSpec.describe "RSMP site status" do
       { S0021: [:detectorlogics] }
   end
 
-  it 'S0022 list of time plans', sxl: '>=1.0.13'  do |example|
+  it 'S0022 list of time plans', sxl: '>=1.0.13' do |example|
     request_status_and_confirm "list of time plans",
       { S0022: [:status] }
   end
@@ -116,7 +116,7 @@ RSpec.describe "RSMP site status" do
       { S0023: [:status] }
   end
 
-  it 'S0024 offset time', sxl: '>=1.0.13'  do |example|
+  it 'S0024 offset time', sxl: '>=1.0.13' do |example|
     request_status_and_confirm "offset time",
       { S0024: [:status] }
   end
@@ -199,7 +199,7 @@ RSpec.describe "RSMP site status" do
 
   # S0098 missing
 
-  it 'S0201 traffic counting: number of vehicles'  do |example|
+  it 'S0201 traffic counting: number of vehicles', sxl: '>=1.0.7' do |example|
     request_status_and_confirm "traffic counting: number of vehicles",
       { S0201: [:starttime,:vehicles] },
       COMPONENT_CONFIG['detector_logic'].keys.first
@@ -211,7 +211,7 @@ RSpec.describe "RSMP site status" do
       COMPONENT_CONFIG['detector_logic'].keys.first
   end
 
-  it 'S0203 traffic counting: occupancy'  do |example|
+  it 'S0203 traffic counting: occupancy', sxl: '>=1.0.7' do |example|
     request_status_and_confirm "traffic counting: occupancy",
       { S0203: [:starttime,:occupancy] },
       COMPONENT_CONFIG['detector_logic'].keys.first
@@ -234,7 +234,7 @@ RSpec.describe "RSMP site status" do
       COMPONENT_CONFIG['detector_logic'].keys.first
   end
 
-  it 'S0205 traffic counting: number of vehicles', sxl: '>=1.0.14'  do |example|
+  it 'S0205 traffic counting: number of vehicles', sxl: '>=1.0.14' do |example|
     request_status_and_confirm "traffic counting: number of vehicles",
       { S0205: [:start,:vehicles] }
   end

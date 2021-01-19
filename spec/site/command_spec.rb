@@ -83,14 +83,14 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0010 start signal group', :important do |example|
+  it 'M0010 start signal group', :important, sxl: '>=1.0.8' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       set_signal_start 'True'
     end
   end
 
-  it 'M0011 stop signal group', :important do |example|
+  it 'M0011 stop signal group', :important, sxl: '>=1.0.8' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       set_signal_stop 'True'
@@ -185,7 +185,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0103 set security code' do |example|
+  it 'M0103 set security code', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       set_security_code 1
@@ -193,7 +193,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0104 set date' do |example|
+  it 'M0104 set date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       set_date
