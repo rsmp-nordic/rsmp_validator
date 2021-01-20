@@ -150,7 +150,7 @@ module CommandHelpers
 
   def switch_traffic_situation ts
     set_traffic_situation ts
-    verify_status(@task,
+    wait_for_status(@task,
       "switch to traffic situation #{ts}",
       [{'sCI'=>'S0015','n'=>'status','s'=>ts}]
     )
@@ -297,7 +297,7 @@ module CommandHelpers
   end
 
   def wrong_security_code
-    @site.log "Force detector logic", level: :test
+    @site.log "Try to force detector logic with wrong security code", level: :test
     command_list = build_command_list :M0008, :setForceDetectorLogic, {
       securityCode: '1111',
       status: 'True',
@@ -339,7 +339,7 @@ module CommandHelpers
 
   def switch_emergency_route route
     set_emergency_route route
-    verify_status(@task,
+    wait_for_status(@task,
       "activate emergency route",
       [
         {'sCI'=>'S0006','n'=>'status','s'=>'True'},
@@ -348,7 +348,7 @@ module CommandHelpers
     )
 
     disable_emergency_route
-    verify_status(@task,
+    wait_for_status(@task,
       "deactivate emergency route",
       [{'sCI'=>'S0006','n'=>'status','s'=>'False'}]
     )
