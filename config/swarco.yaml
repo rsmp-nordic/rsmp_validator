@@ -6,9 +6,6 @@ supervisor:
       plans:
         - 8
         - 9
-      traffic_situations:
-        - 1
-        - 2
       emergency_routes:
         - 1
       inputs:
