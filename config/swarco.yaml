@@ -6,6 +6,7 @@ supervisor:
       plans:
         - 8
         - 9
+      traffic_situations: []
       emergency_routes:
         - 1
       inputs:
