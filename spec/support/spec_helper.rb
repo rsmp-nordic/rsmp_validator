@@ -40,6 +40,16 @@ def ask_user site, question, accept:''
   end
 end
 
+def log str
+  File.open(LOG_PATH, 'a') do |file|
+    file.puts str
+  end
+end
+
+def cant_test err
+  raise "Cannot run test: #{err}"
+end
+
 ASYNC_STDIN = Async::IO::Stream.new( Async::IO::Generic.new($stdin) )
 
 validator_config = YAML.load_file 'config/validator.yaml'
@@ -124,9 +134,7 @@ RSpec.configure do |config|
 
   # write to the validator log when each test start
   config.before(:example) do |example|
-    File.open(LOG_PATH, 'a') do |file|
-      file.puts "\nRunning test #{example.metadata[:location]} - #{example.full_description}".colorize(:light_black)
-    end
+    log "\nRunning test #{example.metadata[:location]} - #{example.full_description}".colorize(:light_black)
   end
 
 

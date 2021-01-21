@@ -23,15 +23,19 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0002 set time plan', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
+      plans = SITE_CONFIG['plans']
+      cant_test("No time plans configured") if plans.nil? || plans.empty?
       prepare task, site
-      SITE_CONFIG['plans'].each { |plan| switch_plan plan }
+      plans.each { |plan| switch_plan plan }
     end
   end
 
   it 'M0003 set traffic situation', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
+      situations = SITE_CONFIG['traffic_situations']
+      cant_test("No traffic situations configured") if situations.nil? || situations.empty?
       prepare task, site
-      SITE_CONFIG['traffic_situations'].each { |ts| switch_traffic_situation ts.to_s }
+      situations.each { |traffic_situation| switch_traffic_situation traffic_situation.to_s }
     end
   end
 
@@ -56,15 +60,19 @@ RSpec.describe 'RSMP site commands' do
 
   it 'M0005 activate emergency route', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
+      emergency_routes = SITE_CONFIG['emergency_routes']
+      cant_test("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
       prepare task, site
-      SITE_CONFIG['emergency_routes'].each { |route| switch_emergency_route route.to_s }
+      emergency_routes.each { |emergency_route| switch_emergency_route emergency_route.to_s }
     end
   end
 
   it 'M0006 activate input', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
+      inputs = SITE_CONFIG['inputs']
+      cant_test("No inputs configured") if inputs.nil? || inputs.empty?
       prepare task, site
-      SITE_CONFIG['inputs'].each { |input| switch_input input }
+      inputs.each { |input| switch_input input }
     end
   end
 
