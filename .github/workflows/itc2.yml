@@ -19,6 +19,7 @@ jobs:
     runs-on: [ self-hosted, Linux, X64, itc2 ]
     steps:
     - name: Configure test
-      run: echo "rsmp_config_path: config/swarco.yaml" > config/validator.yaml
+      run: |
+        echo "rsmp_config_path: config/swarco.yaml" | tee config/validator.yaml
     - name: Run tests
       run: bundle exec rspec spec/site
