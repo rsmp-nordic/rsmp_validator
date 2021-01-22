@@ -17,9 +17,9 @@ class TestSite
     # use run() to continue the reactor. this will give as a new task,
     # which we run the rspec test inside
     more = @reactor.run do |task|
-      task.annotate 'test'
+      task.annotate 'rspec runner'
       yield task              # run block until it's finished
-    rescue StandardError => e
+    rescue StandardError, RSpec::Expectations::ExpectationNotMetError => e
       error = e               # catch and store errors
     ensure
       @reactor.interrupt      # interrupt reactor
@@ -55,7 +55,7 @@ class TestSite
         'command_response_timeout' => 10,
         'status_response_timeout' => 10,
         'status_update_timeout' => 10
-      }.merge(RSMP_CONFIG['supervisor'])
+      }.merge(RSMP_CONFIG['supervisor']).merge options
 
       supervisor_settings['sites'][:any]["collect"] = options['collect']
 
@@ -91,7 +91,7 @@ class TestSite
   def connected options={}, &block
     start options, 'Connecting'
     within_reactor do |task|
-      wait_for_site
+      wait_for_site task
       yield task, @supervisor, @remote_site
     end
   end
@@ -100,7 +100,7 @@ class TestSite
     stop 'Reconnecting'
     start options
     within_reactor do |task|
-      wait_for_site
+      wait_for_site task
       yield task, @supervisor, @remote_site
     end
   end
@@ -116,7 +116,7 @@ class TestSite
     stop 'Isolating'
     start options, 'Connecting'
     within_reactor do |task|
-      wait_for_site
+      wait_for_site task
       yield task, @supervisor, @remote_site
     end
     stop 'Isolating'
@@ -138,7 +138,7 @@ class TestSite
     instance.isolated options, &block
   end
 
-  def wait_for_site
+  def wait_for_site task
     @remote_site = @supervisor.find_site :any
     unless @remote_site
       @supervisor.log "Waiting for site to connect", level: :test
