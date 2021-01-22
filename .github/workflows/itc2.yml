@@ -24,7 +24,7 @@ jobs:
         tee config/validator.yaml
     - name: Set up secrets
       run: |
-        echo -e "security_code:\n\t1: ''\n\t2: ''" |
+        echo -e "security_code:\n    1: ''\n    2: ''" |
         tee config/secrets.yaml
     - name: Run tests
       run: bundle exec rspec spec/site
