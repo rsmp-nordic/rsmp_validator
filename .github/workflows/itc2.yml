@@ -17,7 +17,7 @@ on:
 jobs:
   test:
 
-    runs-on: [ self-hosted, itc2 ]
+    runs-on: [ self-hosted, Linux, X64, itc2 ]
     strategy:
       matrix:
         ruby-version: ['2.6', '2.7', '3.0']
