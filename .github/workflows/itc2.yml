@@ -28,5 +28,5 @@ jobs:
       run: bundle exec rspec spec/site
     - name: Print validation.log
       run: cat log/validation.log
-    - print: Print itc2 rsmp log
+    - name: Print itc2 rsmp log
       run: cat ~/simulator.log
