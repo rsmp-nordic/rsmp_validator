@@ -20,11 +20,13 @@ jobs:
     steps:
     - name: Configure test
       run: |
-        echo "rsmp_config_path: config/swarco.yaml" |
-        tee config/validator.yaml
+        echo "rsmp_config_path: config/swarco.yaml" > config/validator.yaml
     - name: Set up secrets
       run: |
-        echo -e "security_codes:\n    1: ''\n    2: ''" |
-        tee config/secrets.yaml
+        echo -e "security_codes:\n    1: ''\n    2: ''" > config/secrets.yaml
     - name: Run tests
       run: bundle exec rspec spec/site
+    - name: Print validation.log
+      run: cat log/validation.log
+    - print: Print itc2 rsmp log
+      run: cat ~/simulator.log
