@@ -48,5 +48,5 @@ jobs:
     - name: Upload itc2 rsmp log
       uses: actions/upload-artifact@v1
       with:
-        name: Upload itc2 rsmp log
+        name: itc2 rsmp log
         path: /tmp/simulator.log
