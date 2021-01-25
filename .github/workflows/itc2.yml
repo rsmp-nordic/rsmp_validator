@@ -18,15 +18,35 @@ jobs:
 
     runs-on: [ self-hosted, Linux, X64, itc2 ]
     steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
     - name: Configure test
+      shell: bash
       run: |
         echo "rsmp_config_path: config/swarco.yaml" > config/validator.yaml
     - name: Set up secrets
+      shell: bash
       run: |
         echo -e "security_codes:\n    1: ''\n    2: ''" > config/secrets.yaml
+    - name: Configure bundle
+      run: bundle config set path '~/rsmp_gems/bundle'
+    - name: Run bundle install
+      run: bundle install
     - name: Run tests
       run: bundle exec rspec spec/site
-    - name: Print validation.log
-      run: cat log/validation.log
-    - name: Print itc2 rsmp log
-      run: cat ~/simulator.log
+  log:
+
+    runs-on: [ self-hosted, Linux, X64, itc2 ]
+    needs: test
+    if: always()
+    steps:
+    - name: Upload validation.log
+      uses: actions/upload-artifact@v1
+      with:
+        name: rspec validation
+        path: log/validation.log
+    - name: Upload itc2 rsmp log
+      uses: actions/upload-artifact@v1
+      with:
+        name: itc2 rsmp log
+        path: /tmp/simulator.log
