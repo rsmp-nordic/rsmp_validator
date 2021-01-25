@@ -30,11 +30,11 @@ jobs:
       run: bundle exec rspec spec/site
     - name: Upload validation.log
       uses: actions/upload-artifact@v1
-        with:
-          name: rspec validation
-          path: log/validation.log
+      with:
+        name: rspec validation
+        path: log/validation.log
     - name: Upload itc2 rsmp log
       uses: actions/upload-artifact@v1
-        with:
-          name: itc2 rsmp log
-          path: ~/simulator.log
+      with:
+        name: itc2 rsmp log
+        path: ~/simulator.log
