@@ -38,6 +38,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: rspec validation
+        continue-on-error: true
         path: log/validation.log
     - name: Upload itc2 rsmp log
       uses: actions/upload-artifact@v1
