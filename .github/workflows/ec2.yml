@@ -19,12 +19,17 @@ jobs:
     runs-on: [ self-hosted, Linux, X64, ec2 ]
     steps:
     - name: Configure test
+      shell: bash
       run: |
         echo "rsmp_config_path: config/dynniq.yaml" > config/validator.yaml
     - name: Set up secrets
+      shell: bash
       run: |
         echo -e "security_codes:\n    1: ''\n    2: ''" > config/secrets.yaml
     - name: Run tests
       run: bundle exec rspec spec/site
-    - name: Print validation.log
-      run: cat log/validation.log
+    - name: Upload validation.log
+      uses: actions/upload-artifact@v1
+        with:
+          name: rspec validation
+          path: log/validation.log
