@@ -1,0 +1,51 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will run rspec
+
+name: Self-test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+
+    runs-on: [ self-hosted, Linux, X64 ]
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+    - name: Configure test
+      shell: bash
+      run: |
+        echo "rsmp_config_path: config/tlc.yaml" > config/validator.yaml
+    - name: Set up secrets
+      shell: bash
+      run: |
+        echo -e "security_codes:\n    1: ''\n    2: ''" > config/secrets.yaml
+    - name: Configure bundle
+      run: bundle config set path '~/rsmp_gems/bundle'
+    - name: Run bundle install
+      run: bundle install
+    - name: Run tests
+      shell: bash
+      run: |
+        bundle exec rsmp site --type tlc --json --config config/tlc.yaml > rsmp.log &
+        bundle exec rspec spec/site
+        kill %1
+  log:
+
+    runs-on: [ self-hosted, Linux, X64 ]
+    needs: test
+    if: always()
+    steps:
+    - name: Upload rsmp.log
+      uses: actions/upload-artifact@v1
+      with:
+        name: rsmp log
+        path: rsmp.log
