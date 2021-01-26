@@ -31,6 +31,10 @@ supervisor:
   status_response_timeout: 0.2
   status_update_timeout: 0.2
 
+scripts:
+  activate_alarm: /home/seguro/RSMP/scripts/activate_alarm.sh
+  deactivate_alarm: /home/seguro/RSMP/scripts/deactivate_alarm.sh
+
 connect_timeout: 0.2
 ready_timeout: 0.2
 status_update_rate: 0   # rsmp only allow integer update rates
@@ -38,3 +42,4 @@ subscribe_timeout: 0.2
 alarm_timeout: 0.2
 shutdown_timeout: 0.2
 command_timeout: 0.2
+

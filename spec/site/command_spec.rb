@@ -208,6 +208,13 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
+  it 'Test time synchronization', sxl: '>=1.0.7' do |example|
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      verify_synchronization
+    end
+  end
+
   it 'Send the wrong security code', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site

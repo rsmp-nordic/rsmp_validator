@@ -296,6 +296,40 @@ module CommandHelpers
     send_command_and_confirm @task, command_list, "intention to set date"
   end
 
+  def verify_synchronization
+    @site.log "Set date", level: :test
+    command_list = build_command_list :M0104, :setDate, {
+      securityCode: SECRETS['security_codes'][1],
+      year: "2020",
+      month: "9",
+      day: "29",
+      hour: "17",
+      minute: "29",
+      second: "51"
+    }
+    send_command_and_confirm @task, command_list, "intention to set date"
+    request_status_and_confirm "current date and time",
+      { S0096: [
+        :year,
+        :month,
+        :day,
+        :hour,
+        :minute,
+        :second,
+      ] }
+    @site.log "Reset date", level: :test
+    command_list = build_command_list :M0104, :setDate, {
+      securityCode: SECRETS['security_codes'][1],
+      year: Time.now.year,
+      month: Time.now.month,
+      day: Time.now.day,
+      hour: Time.now.hour,
+      minute: Time.now.min,
+      second: Time.now.sec
+    }
+    send_command_and_confirm @task, command_list, "intention to set date"
+  end
+
   def wrong_security_code
     @site.log "Try to force detector logic with wrong security code", level: :test
     command_list = build_command_list :M0008, :setForceDetectorLogic, {
