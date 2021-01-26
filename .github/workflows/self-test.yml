@@ -27,7 +27,7 @@ jobs:
     - name: Set up secrets
       shell: bash
       run: |
-        echo -e "security_codes:\n    1: ''\n    2: ''" > config/secrets.yaml
+        echo -e "security_codes:\n    1: '1111'\n    2: '2222'" > config/secrets.yaml
     - name: Configure bundle
       run: bundle config set path '~/rsmp_gems/bundle'
     - name: Run bundle install
