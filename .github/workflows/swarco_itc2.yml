@@ -33,7 +33,7 @@ jobs:
     - name: Run bundle install
       run: bundle install
     - name: Run tests
-      run: bundle exec rspec spec/site
+      run: bundle exec rspec --tag '~script' spec/site
     - name: Rename validation.log
       if: always()
       run: mv log/validation.log log/validation_itc2_$(date +%F_%H-%M-%S).log
