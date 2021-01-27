@@ -1,6 +1,9 @@
 supervisor:
   sites:
     :any:
+      rsmp_versions:
+        - 3.1.2
+      sxl_version: 1.0.7
       plans:
         - 3
         - 4
