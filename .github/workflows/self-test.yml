@@ -36,7 +36,7 @@ jobs:
       shell: bash
       run: |
         bundle exec rsmp site --type tlc --json --config config/tlc.yaml > rsmp.log &
-        bundle exec rspec spec/site
+        bundle exec rspec --tag '~script' spec/site
         kill %1
   log:
 
