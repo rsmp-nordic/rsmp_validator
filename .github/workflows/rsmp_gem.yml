@@ -23,7 +23,7 @@ jobs:
     - name: Configure test
       shell: bash
       run: |
-        echo "rsmp_config_path: config/ruby.yaml" > config/validator.yaml
+        echo "rsmp_config_path: config/ci/rsmp_gem.yaml" > config/validator.yaml
     - name: Set up secrets
       shell: bash
       run: |
@@ -35,7 +35,7 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
-        bundle exec rsmp site --type tlc --json --config config/tlc.yaml 2>&1 > simulator.log &
+        bundle exec rsmp site --type tlc --json --config config/ci/tlc.yaml 2>&1 > simulator.log &
         bundle exec rspec --tag '~script' spec/site
         kill %1
     - name: Rename validation.log

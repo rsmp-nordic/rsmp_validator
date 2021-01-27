@@ -23,7 +23,7 @@ jobs:
     - name: Configure test
       shell: bash
       run: |
-        echo "rsmp_config_path: config/swarco.yaml" > config/validator.yaml
+        echo "rsmp_config_path: config/ci/swarco_itc2.yaml" > config/validator.yaml
     - name: Set up secrets
       shell: bash
       run: |
