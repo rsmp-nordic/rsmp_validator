@@ -41,6 +41,7 @@ jobs:
         name: rspec validation
         path: log/validation.log
     - name: Upload itc2 rsmp log
+      if: always()
       uses: actions/upload-artifact@v1
       with:
         name: itc2 rsmp log
