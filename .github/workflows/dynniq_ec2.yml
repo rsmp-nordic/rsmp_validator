@@ -39,7 +39,7 @@ jobs:
       run: mv log/validation.log log/validation_ec2_$(date +%F_%H-%M-%S).log
     - name: Upload validation.log
       if: always()
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: rspec validation
         path: log/validation_ec2_*.log
@@ -52,7 +52,7 @@ jobs:
       run: ncftpget -C -u "$user" -p "$passwd" "$ip" /tmp/proxyapp.log simulator.log
     - name: Upload ec2 rsmp log
       if: always()
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: ec2 rsmp log
         path: simulator.log

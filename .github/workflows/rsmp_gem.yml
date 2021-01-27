@@ -43,13 +43,13 @@ jobs:
       run: mv log/validation.log log/validation_ruby_$(date +%F_%H-%M-%S).log
     - name: Upload validation.log
       if: always()
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: rspec validation
         path: log/validation_ruby_*.log
     - name: Upload simulator.log
       if: always()
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: simulator log
         path: simulator.log

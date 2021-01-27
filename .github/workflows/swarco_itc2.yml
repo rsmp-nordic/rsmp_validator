@@ -39,13 +39,13 @@ jobs:
       run: mv log/validation.log log/validation_itc2_$(date +%F_%H-%M-%S).log
     - name: Upload validation.log
       if: always()
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: rspec validation
         path: log/validation_itc2_*.log
     - name: Upload itc2 rsmp log
       if: always()
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: itc2 rsmp log
         path: /tmp/simulator.log
