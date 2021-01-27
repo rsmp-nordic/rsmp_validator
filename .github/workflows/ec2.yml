@@ -4,7 +4,7 @@
 # documentation.
 # This workflow will run rspec
 
-name: EC-2
+name: Dynniq EC-2
 
 on:
   push:

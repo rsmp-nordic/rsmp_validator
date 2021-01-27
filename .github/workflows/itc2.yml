@@ -4,7 +4,7 @@
 # documentation.
 # This workflow will run rspec
 
-name: ITC-2 simulator
+name: Swarco ITC-2
 
 on:
   push:
