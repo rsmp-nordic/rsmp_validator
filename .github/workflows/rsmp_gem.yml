@@ -4,7 +4,7 @@
 # documentation.
 # This workflow will run rspec
 
-name: Self-test
+name: rsmp gem
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
     - name: Configure test
       shell: bash
       run: |
-        echo "rsmp_config_path: config/ruby.yaml" > config/validator.yaml
+        echo "rsmp_config_path: config/ci/rsmp_gem.yaml" > config/validator.yaml
     - name: Set up secrets
       shell: bash
       run: |
@@ -35,17 +35,21 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
-        bundle exec rsmp site --type tlc --json --config config/tlc.yaml > rsmp.log &
-        bundle exec rspec spec/site
+        bundle exec rsmp site --type tlc --json --config config/ci/tlc.yaml 2>&1 > simulator.log &
+        bundle exec rspec --tag '~script' spec/site
         kill %1
-  log:
-
-    runs-on: [ self-hosted, Linux, X64 ]
-    needs: test
-    if: always()
-    steps:
-    - name: Upload rsmp.log
-      uses: actions/upload-artifact@v1
+    - name: Rename validation.log
+      if: always()
+      run: mv log/validation.log log/validation_ruby_$(date +%F_%H-%M-%S).log
+    - name: Upload validation.log
+      if: always()
+      uses: actions/upload-artifact@v2
       with:
-        name: rsmp log
-        path: rsmp.log
+        name: rspec validation
+        path: log/validation_ruby_*.log
+    - name: Upload simulator.log
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: simulator log
+        path: simulator.log

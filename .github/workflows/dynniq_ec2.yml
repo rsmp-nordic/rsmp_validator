@@ -4,7 +4,7 @@
 # documentation.
 # This workflow will run rspec
 
-name: EC-2
+name: Dynniq EC-2
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
     - name: Configure test
       shell: bash
       run: |
-        echo "rsmp_config_path: config/dynniq.yaml" > config/validator.yaml
+        echo "rsmp_config_path: config/ci/dynniq_ec2.yaml" > config/validator.yaml
     - name: Set up secrets
       shell: bash
       run: |
@@ -34,25 +34,25 @@ jobs:
       run: bundle install
     - name: Run tests
       run: bundle exec rspec spec/site
-  log:
-
-    runs-on: [ self-hosted, Linux, X64, ec2 ]
-    needs: test
-    if: always()
-    steps:
+    - name: Rename validation.log
+      if: always()
+      run: mv log/validation.log log/validation_ec2_$(date +%F_%H-%M-%S).log
     - name: Upload validation.log
-      uses: actions/upload-artifact@v1
+      if: always()
+      uses: actions/upload-artifact@v2
       with:
         name: rspec validation
-        path: log/validation.log
+        path: log/validation_ec2_*.log
     - name: Get ec2 rsmp log
+      if: always()
       env:
         user: ${{ secrets.EC2_USER }}
         passwd: ${{ secrets.EC2_PASSWD }}
         ip: ${{ secrets.EC2_IP }}
       run: ncftpget -C -u "$user" -p "$passwd" "$ip" /tmp/proxyapp.log simulator.log
     - name: Upload ec2 rsmp log
-      uses: actions/upload-artifact@v1
+      if: always()
+      uses: actions/upload-artifact@v2
       with:
         name: ec2 rsmp log
         path: simulator.log
