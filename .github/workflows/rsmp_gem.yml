@@ -38,13 +38,8 @@ jobs:
         bundle exec rsmp site --type tlc --json --config config/tlc.yaml 2>&1 > rsmp.log &
         bundle exec rspec --tag '~script' spec/site
         kill %1
-  log:
-
-    runs-on: [ self-hosted, Linux, X64 ]
-    needs: test
-    if: always()
-    steps:
     - name: Upload rsmp.log
+      if: always()
       uses: actions/upload-artifact@v1
       with:
         name: rsmp log

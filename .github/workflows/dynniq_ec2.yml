@@ -34,13 +34,8 @@ jobs:
       run: bundle install
     - name: Run tests
       run: bundle exec rspec spec/site
-  log:
-
-    runs-on: [ self-hosted, Linux, X64, ec2 ]
-    needs: test
-    if: always()
-    steps:
     - name: Upload validation.log
+      if: always()
       uses: actions/upload-artifact@v1
       with:
         name: rspec validation
