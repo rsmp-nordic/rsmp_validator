@@ -1,4 +1,5 @@
 supervisor:
+  port: 13111
   sites:
     :any:
       rsmp_versions:

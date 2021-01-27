@@ -1,7 +1,7 @@
 site_id: RN+SI0001
 supervisors:
   - ip: 127.0.0.1
-    port: 12111
+    port: 13111
 
 components:
   main:
