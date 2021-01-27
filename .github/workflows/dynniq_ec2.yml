@@ -34,12 +34,15 @@ jobs:
       run: bundle install
     - name: Run tests
       run: bundle exec rspec spec/site
+    - name: Rename validation.log
+      if: always()
+      run: mv log/validation.log log/validation_ec2_$(date +%F_%H-%M-%S).log
     - name: Upload validation.log
       if: always()
       uses: actions/upload-artifact@v1
       with:
         name: rspec validation
-        path: log/validation.log
+        path: log/validation_ec2_*.log
     - name: Get ec2 rsmp log
       if: always()
       env:

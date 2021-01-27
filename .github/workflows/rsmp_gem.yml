@@ -35,12 +35,21 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
-        bundle exec rsmp site --type tlc --json --config config/tlc.yaml 2>&1 > rsmp.log &
+        bundle exec rsmp site --type tlc --json --config config/tlc.yaml 2>&1 > simulator.log &
         bundle exec rspec --tag '~script' spec/site
         kill %1
-    - name: Upload rsmp.log
+    - name: Rename validation.log
+      if: always()
+      run: mv log/validation.log log/validation_ruby_$(date +%F_%H-%M-%S).log
+    - name: Upload validation.log
       if: always()
       uses: actions/upload-artifact@v1
       with:
-        name: rsmp log
-        path: rsmp.log
+        name: rspec validation
+        path: log/validation_ruby_*.log
+    - name: Upload simulator.log
+      if: always()
+      uses: actions/upload-artifact@v1
+      with:
+        name: simulator log
+        path: simulator.log
