@@ -68,29 +68,24 @@ RSpec.describe 'RSMP site alarm' do
   #  end
   #end
 
-  it 'Disruption test', :script, sxl: '>=1.0.7' do |example|
+  it 'buffers alarms during disconnects', :script, sxl: '>=1.0.7' do |example|
     check_scripts
     component = COMPONENT_CONFIG['detector_logic'].keys.first
-
     TestSite.isolated do |task,supervisor,site|
-      site.log "Checking connection", level: :test
-      # Is an explicit check needed?
-    end
-      
-    # Deactivate alarm 
+    end      
+    # Activate alarm 
     system(SCRIPT_PATHS['activate_alarm'])
 
     TestSite.isolated do |task,supervisor,site|
-      start_time = Time.now
-      site.log "Waiting for alarm", level: :test
-      message, response = nil,nil
-      expect do
-        response = site.wait_for_alarm task, component: component, aCId: 'A0302',
-          aSp: 'Issue', aS: 'Active', timeout: RSMP_CONFIG['alarm_timeout']
-      end.to_not raise_error, "Did not receive alarm"
+      @site = site
+      log_confirmation "Waiting for alarm" do
+        message, response = nil,nil
+        expect do
+          response = site.wait_for_alarm task, component: component, aCId: 'A0302',
+            aSp: 'Issue', aS: 'Active', timeout: RSMP_CONFIG['alarm_timeout']
+        end.to_not raise_error, "Did not receive alarm"
 
-      delay = Time.now - start_time
-      site.log "alarm confirmed after #{delay.to_i}s", level: :test
+      end
       system(SCRIPT_PATHS['deactivate_alarm'])
 
       alarm_time = Time.parse(response[:message].attributes["aTs"])

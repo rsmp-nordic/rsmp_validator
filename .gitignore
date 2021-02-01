@@ -3,6 +3,7 @@ log
 .DS_Store
 config/secrets.yaml
 config/validator.yaml
+config/ruby_gunnar.yaml
 /.bundle/
 /.yardoc
 /_yardoc/
