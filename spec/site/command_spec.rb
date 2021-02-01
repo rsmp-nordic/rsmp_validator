@@ -238,8 +238,6 @@ RSpec.describe 'RSMP site commands' do
       expect(result[{"sCI" => status, "n" => "month"}]["s"]).to be == "9"
       expect(result[{"sCI" => status, "n" => "day"}]["s"]).to be == "29"
       expect(result[{"sCI" => status, "n" => "hour"}]["s"]).to be == "17"
-      expect(result[{"sCI" => status, "n" => "minute"}]["s"]).to be == "29"
-      expect(result[{"sCI" => status, "n" => "second"}]["s"]).to be == "51"
     ensure
       reset_date
     end

@@ -283,6 +283,7 @@ module CommandHelpers
       second: 51
     }
     send_command_and_confirm @task, command_list, "intention to set date"
+  ensure
     reset_date
   end
 
