@@ -234,10 +234,17 @@ RSpec.describe 'RSMP site commands' do
         timeout: SUPERVISOR_CONFIG['status_update_timeout']
       }
       status = "S0096"
+
       expect(result[{"sCI" => status, "n" => "year"}]["s"]).to be == "2020"
       expect(result[{"sCI" => status, "n" => "month"}]["s"]).to be == "9"
       expect(result[{"sCI" => status, "n" => "day"}]["s"]).to be == "29"
       expect(result[{"sCI" => status, "n" => "hour"}]["s"]).to be == "17"
+
+      minutes = (result[{"sCI" => status, "n" => "minute"}]["s"].to_i - 29 + 60) % 60 # Modulo to take care of tests around the shift to a new hour etc.
+      seconds = (result[{"sCI" => status, "n" => "second"}]["s"].to_i - 51 + 60) % 60 # Same as above, but minutes.
+
+      expect(minutes * 60 + seconds).to be <= 300 # Five minutes
+      
     ensure
       reset_date
     end
