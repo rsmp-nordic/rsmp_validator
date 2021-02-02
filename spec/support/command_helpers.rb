@@ -361,13 +361,13 @@ module CommandHelpers
 
   def switch_input indx
     set_input 'True',indx.to_s
-    verify_status(@task,
+    wait_for_status(@task,
       "activate input #{indx}",
       [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx-1}}1/}] # index is 1-based, convert to 0-based fo regex
     )
 
     set_input 'False',indx.to_s
-    verify_status(@task,
+    wait_for_status(@task,
       "deactivate input #{indx}",
       [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx-1}}0/}]
     )
@@ -379,7 +379,7 @@ module CommandHelpers
 
     force_detector_logic component, 'True', 'True'
     @component = MAIN_COMPONENT
-    verify_status(@task,
+    wait_for_status(@task,
       "activate detector logic #{component}",
       [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}1/}]
     )
@@ -387,7 +387,7 @@ module CommandHelpers
 
     force_detector_logic component, 'False'
     @component = MAIN_COMPONENT
-    verify_status(@task,
+    wait_for_status(@task,
       "deactivate detector logic #{component}",
       [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}0/}]
     )
