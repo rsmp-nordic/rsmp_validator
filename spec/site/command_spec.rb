@@ -208,6 +208,41 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
+  it 'Test time synchronization', sxl: '>=1.0.7' do |example|
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      @site.log "Set date", level: :test
+      command_list = build_command_list :M0104, :setDate, {
+        securityCode: SECRETS['security_codes'][1],
+        year: "2020",
+        month: "9",
+        day: "29",
+        hour: "17",
+        minute: "29",
+        second: "51"
+      }
+      send_command_and_confirm @task, command_list, "intention to set date"
+      status_list = { S0096: [
+          :year,
+          :month,
+          :day,
+          :hour,
+          :minute,
+          :second,
+        ] }
+      message, result = @site.request_status @component, convert_status_list(status_list), collect: {
+        timeout: SUPERVISOR_CONFIG['status_update_timeout']
+      }
+      status = "S0096"
+      expect(result[{"sCI" => status, "n" => "year"}]["s"]).to be == "2020"
+      expect(result[{"sCI" => status, "n" => "month"}]["s"]).to be == "9"
+      expect(result[{"sCI" => status, "n" => "day"}]["s"]).to be == "29"
+      expect(result[{"sCI" => status, "n" => "hour"}]["s"]).to be == "17"
+    ensure
+      reset_date
+    end
+  end
+
   it 'Send the wrong security code', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
