@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: f27c993cb4dd2de984f756836719216ef074d719
-  ref: f27c993cb
+  revision: 34fc5cf89cc889c4350f2fd4b7361a2764a4e329
+  ref: 34fc5cf89cc889c
   submodules: true
   specs:
     rsmp (0.1.24)
@@ -20,7 +20,7 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
-    async (1.28.3)
+    async (1.28.5)
       console (~> 1.10)
       nio4r (~> 2.3)
       timers (~> 4.1)
