@@ -212,14 +212,15 @@ RSpec.describe 'RSMP site commands' do
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       @site.log "Set date", level: :test
+
+      sent = Time.new 2020,9,29,17,29,51,'UTC'
       command_list = build_command_list :M0104, :setDate, {
         securityCode: SECRETS['security_codes'][1],
-        year: "2020",
-        month: "9",
-        day: "29",
-        hour: "17",
-        minute: "29",
-        second: "51"
+        year: sent.year,
+        month: sent.month,
+        day: sent.day,
+        minute: sent.min,
+        second: sent.sec
       }
       send_command_and_confirm @task, command_list, "intention to set date"
       status_list = { S0096: [
@@ -235,15 +236,16 @@ RSpec.describe 'RSMP site commands' do
       }
       status = "S0096"
 
-      expect(result[{"sCI" => status, "n" => "year"}]["s"]).to be == "2020"
-      expect(result[{"sCI" => status, "n" => "month"}]["s"]).to be == "9"
-      expect(result[{"sCI" => status, "n" => "day"}]["s"]).to be == "29"
-      expect(result[{"sCI" => status, "n" => "hour"}]["s"]).to be == "17"
+      received = Time.new result[{"sCI" => status, "n" => "year"}]["s"],
+                          result[{"sCI" => status, "n" => "month"}]["s"],
+                          result[{"sCI" => status, "n" => "day"}]["s"],
+                          result[{"sCI" => status, "n" => "hour"}]["s"],
+                          result[{"sCI" => status, "n" => "minute"}]["s"],
+                          result[{"sCI" => status, "n" => "second"}]["s"],
+                          'UTC'
 
-      minutes = (result[{"sCI" => status, "n" => "minute"}]["s"].to_i - 29 + 60) % 60 # Modulo to take care of tests around the shift to a new hour etc.
-      seconds = (result[{"sCI" => status, "n" => "second"}]["s"].to_i - 51 + 60) % 60 # Same as above, but minutes.
-
-      expect(minutes * 60 + seconds).to be <= 300 # Five minutes
+      diff = received - sent
+      expect(diff).to be <= 60
       
     ensure
       reset_date
