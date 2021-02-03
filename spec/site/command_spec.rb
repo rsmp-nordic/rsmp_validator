@@ -219,9 +219,11 @@ RSpec.describe 'RSMP site commands' do
         year: sent.year,
         month: sent.month,
         day: sent.day,
+        hour: sent.hour,
         minute: sent.min,
         second: sent.sec
       }
+
       send_command_and_confirm @task, command_list, "intention to set date"
       status_list = { S0096: [
           :year,
@@ -231,6 +233,7 @@ RSpec.describe 'RSMP site commands' do
           :minute,
           :second,
         ] }
+
       message, result = @site.request_status @component, convert_status_list(status_list), collect: {
         timeout: SUPERVISOR_CONFIG['status_update_timeout']
       }
@@ -243,8 +246,8 @@ RSpec.describe 'RSMP site commands' do
       result[{"sCI" => status, "n" => "minute"}]["s"],
       result[{"sCI" => status, "n" => "second"}]["s"],
       'UTC'
-      
-      max_diff = RSMP_CONFIG['command_response_timeout'] + RSMP_CONFIG['status_response_timeout']
+
+      max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
       diff = received - sent
       expect(diff.abs).to be <= max_diff
       
