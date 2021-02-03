@@ -244,7 +244,7 @@ RSpec.describe 'RSMP site commands' do
       result[{"sCI" => status, "n" => "second"}]["s"],
       'UTC'
       
-      max_diff = RSMP_CONFIG['command_timeout'] + RSMP_CONFIG['status_response_timeout']
+      max_diff = RSMP_CONFIG['command_response_timeout'] + RSMP_CONFIG['status_response_timeout']
       diff = received - sent
       expect(diff.abs).to be <= max_diff
       
