@@ -212,15 +212,18 @@ RSpec.describe 'RSMP site commands' do
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       @site.log "Set date", level: :test
+
+      sent = Time.new 2020,9,29,17,29,51,'UTC'
       command_list = build_command_list :M0104, :setDate, {
         securityCode: SECRETS['security_codes'][1],
-        year: "2020",
-        month: "9",
-        day: "29",
-        hour: "17",
-        minute: "29",
-        second: "51"
+        year: sent.year,
+        month: sent.month,
+        day: sent.day,
+        hour: sent.hour,
+        minute: sent.min,
+        second: sent.sec
       }
+
       send_command_and_confirm @task, command_list, "intention to set date"
       status_list = { S0096: [
           :year,
@@ -230,14 +233,24 @@ RSpec.describe 'RSMP site commands' do
           :minute,
           :second,
         ] }
+
       message, result = @site.request_status @component, convert_status_list(status_list), collect: {
         timeout: SUPERVISOR_CONFIG['status_update_timeout']
       }
       status = "S0096"
-      expect(result[{"sCI" => status, "n" => "year"}]["s"]).to be == "2020"
-      expect(result[{"sCI" => status, "n" => "month"}]["s"]).to be == "9"
-      expect(result[{"sCI" => status, "n" => "day"}]["s"]).to be == "29"
-      expect(result[{"sCI" => status, "n" => "hour"}]["s"]).to be == "17"
+      
+      received = Time.new result[{"sCI" => status, "n" => "year"}]["s"],
+      result[{"sCI" => status, "n" => "month"}]["s"],
+      result[{"sCI" => status, "n" => "day"}]["s"],
+      result[{"sCI" => status, "n" => "hour"}]["s"],
+      result[{"sCI" => status, "n" => "minute"}]["s"],
+      result[{"sCI" => status, "n" => "second"}]["s"],
+      'UTC'
+
+      max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
+      diff = received - sent
+      expect(diff.abs).to be <= max_diff
+      
     ensure
       reset_date
     end
