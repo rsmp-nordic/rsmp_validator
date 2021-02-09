@@ -238,7 +238,7 @@ RSpec.describe 'RSMP site commands' do
         timeout: SUPERVISOR_CONFIG['status_update_timeout']
       }
       status = "S0096"
-      
+
       received = Time.new result[{"sCI" => status, "n" => "year"}]["s"],
       result[{"sCI" => status, "n" => "month"}]["s"],
       result[{"sCI" => status, "n" => "day"}]["s"],
@@ -250,6 +250,9 @@ RSpec.describe 'RSMP site commands' do
       max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
       diff = received - sent
       expect(diff.abs).to be <= max_diff
+
+      message_diff = message.timestamp - sent
+      expect(message_diff.abs).to be <= max_diff
       
     ensure
       reset_date
