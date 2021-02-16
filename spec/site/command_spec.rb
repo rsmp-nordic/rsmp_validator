@@ -201,64 +201,6 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'M0104 set date', sxl: '>=1.0.7' do |example|
-    TestSite.connected do |task,supervisor,site|
-      prepare task, site
-      set_date
-    end
-  end
-
-  it 'Test time synchronization', sxl: '>=1.0.7' do |example|
-    TestSite.connected do |task,supervisor,site|
-      prepare task, site
-      @site.log "Set date", level: :test
-
-      sent = Time.new 2020,9,29,17,29,51,'UTC'
-      command_list = build_command_list :M0104, :setDate, {
-        securityCode: SECRETS['security_codes'][1],
-        year: sent.year,
-        month: sent.month,
-        day: sent.day,
-        hour: sent.hour,
-        minute: sent.min,
-        second: sent.sec
-      }
-
-      send_command_and_confirm @task, command_list, "intention to set date"
-      status_list = { S0096: [
-          :year,
-          :month,
-          :day,
-          :hour,
-          :minute,
-          :second,
-        ] }
-
-      message, result = @site.request_status @component, convert_status_list(status_list), collect: {
-        timeout: SUPERVISOR_CONFIG['status_update_timeout']
-      }
-      status = "S0096"
-
-      received = Time.new result[{"sCI" => status, "n" => "year"}]["s"],
-      result[{"sCI" => status, "n" => "month"}]["s"],
-      result[{"sCI" => status, "n" => "day"}]["s"],
-      result[{"sCI" => status, "n" => "hour"}]["s"],
-      result[{"sCI" => status, "n" => "minute"}]["s"],
-      result[{"sCI" => status, "n" => "second"}]["s"],
-      'UTC'
-
-      max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
-      diff = received - sent
-      expect(diff.abs).to be <= max_diff
-
-      message_diff = message.timestamp - sent
-      expect(message_diff.abs).to be <= max_diff
-      
-    ensure
-      reset_date
-    end
-  end
-
   it 'Send the wrong security code', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
