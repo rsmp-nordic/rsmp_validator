@@ -16,8 +16,15 @@ class TestSite
 
     # use run() to continue the reactor. this will give as a new task,
     # which we run the rspec test inside
-    more = @reactor.run do |task|
+    @reactor.run do |task|
       task.annotate 'rspec runner'
+      task.async do |sentinel|
+        sentinel.annotate 'sentinel'
+        @supervisor.error_condition.wait  # if it's an exception, it will be raised
+      rescue => e
+        error = e
+        task.stop
+      end
       yield task              # run block until it's finished
     rescue StandardError, RSpec::Expectations::ExpectationNotMetError => e
       error = e               # catch and store errors
@@ -61,7 +68,7 @@ class TestSite
 
       # start the supervisor in a separe async task that will
       # persist across tests
-      @reactor.async do |task|
+      @supervisor_task = @reactor.async do |task|
         @supervisor = RSMP::Supervisor.new(
           task: task,
           supervisor_settings: supervisor_settings,
@@ -143,7 +150,6 @@ class TestSite
     unless @remote_site
       @supervisor.log "Waiting for site to connect", level: :test
       @remote_site = @supervisor.wait_for_site(:any, RSMP_CONFIG['connect_timeout'])
-      expect(@remote_site).not_to be_nil, "Site did not connect within #{RSMP_CONFIG['connect_timeout']}s"
     end
     @remote_site.wait_for_state :ready, RSMP_CONFIG['ready_timeout']
   end
