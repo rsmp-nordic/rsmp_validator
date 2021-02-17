@@ -1,4 +1,4 @@
-RSpec.describe 'RSMP site commands' do  
+RSpec.describe 'RSMP M0104 clock and timestamps' do
   include CommandHelpers
   include StatusHelpers
 
@@ -8,7 +8,7 @@ RSpec.describe 'RSMP site commands' do
     raise "Aborting test because script config is missing" unless SCRIPT_PATHS['deactivate_alarm']
   end
 
-  it 'M0104 set date', sxl: '>=1.0.7' do |example|
+  it 'accepts M0104 set date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       date = Time.new 2020,9,29,17,29,51,'UTC'
@@ -16,7 +16,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'Check status S0096', sxl: '>=1.0.7' do |example|
+  it 'status S0096 after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       date = Time.new 2020,9,29,17,29,51,'UTC'
@@ -50,7 +50,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'Check status response timestamp', sxl: '>=1.0.7' do |example|
+  it 'status response timestamp after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       date = Time.new 2020,9,29,17,29,51,'UTC'
@@ -79,7 +79,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'Check aggregated status response timestamp', sxl: '>=1.0.7' do |example|
+  it 'aggregated status response timestamp after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       date = Time.new 2020,9,29,17,29,51,'UTC'
@@ -94,7 +94,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'Check command response timestamp', sxl: '>=1.0.7' do |example|
+  it 'command response timestamp after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       date = Time.new 2020,9,29,17,29,51,'UTC'
@@ -105,7 +105,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'Check timestamp of M0104 command response', sxl: '>=1.0.7' do |example|
+  it 'timestamp of M0104 command response', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
       date = Time.new 2020,9,29,17,29,51,'UTC'
@@ -116,7 +116,7 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  it 'Check alarm timestamp', :script, sxl: '>=1.0.7' do |example|
+  it 'alarm timestamp after changing date', :script, sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       check_scripts
       prepare task, site
@@ -129,6 +129,19 @@ RSpec.describe 'RSMP site commands' do
 
         max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
         diff = Time.parse(response.attributes['sTs']) - date
+        expect(diff.abs).to be <= max_diff
+      end
+    end
+  end
+
+  it 'watchdog timestamp after changing date', sxl: '>=1.0.7' do |example|
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      date = Time.new 2020,9,29,17,29,51,'UTC'
+      with_date_set date do
+        response = site.collect task, type: "Watchdog", num: 1, timeout: SUPERVISOR_CONFIG['watchdog_timeout']
+        max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
+        diff = Time.parse(response.attributes['wTs']) - date
         expect(diff.abs).to be <= max_diff
       end
     end
