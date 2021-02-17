@@ -150,7 +150,6 @@ class TestSite
     unless @remote_site
       @supervisor.log "Waiting for site to connect", level: :test
       @remote_site = @supervisor.wait_for_site(:any, RSMP_CONFIG['connect_timeout'])
-      expect(@remote_site).not_to be_nil, "Site did not connect within #{RSMP_CONFIG['connect_timeout']}s"
     end
     @remote_site.wait_for_state :ready, RSMP_CONFIG['ready_timeout']
   end
