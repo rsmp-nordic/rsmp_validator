@@ -50,7 +50,9 @@ jobs:
         user: ${{ secrets.EC2_USER }}
         passwd: ${{ secrets.EC2_PASSWD }}
         ip: ${{ secrets.EC2_IP }}
-      run: ncftpget -C -u "$user" -p "$passwd" "$ip" /tmp/proxyapp.log simulator.log
+      run: |
+        Remove-Item Alias:curl
+        curl -u $user":"$passwd ftp://$ip/tmp/proxyapp.log -o simulator.log
     - name: Upload ec2 rsmp log
       if: always()
       uses: actions/upload-artifact@v2
