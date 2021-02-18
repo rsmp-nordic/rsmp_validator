@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 -e yard/extensions.rb
+=======
+-e yard/yard_extensions.rb
+>>>>>>> start work on yard extension for rspec tests
