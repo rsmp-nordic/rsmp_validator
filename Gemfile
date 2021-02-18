@@ -1,5 +1,5 @@
 source "https://rubygems.org"
 
-gem 'rsmp', :github => 'rsmp-nordic/rsmp', :ref => 'acfd2217af38b534c05', :submodules => true
+gem 'rsmp', :github => 'rsmp-nordic/rsmp', :ref => '8377da7', :submodules => true
 gem 'rspec'
 gem 'activesupport'
