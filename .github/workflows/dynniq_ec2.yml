@@ -25,7 +25,7 @@ jobs:
         echo "rsmp_config_path: config/ci/dynniq_ec2.yaml" > config/validator.yaml
     - name: Set up secrets
       run: |
-        echo -e "security_codes:\n    1: ''\n    2: ''" > config/secrets.yaml
+        echo "security_codes:`n    1: ''`n    2: ''" > config/secrets.yaml
     - name: Configure bundle
       run: bundle config set path '~/rsmp_gems/bundle'
     - name: Run bundle install
