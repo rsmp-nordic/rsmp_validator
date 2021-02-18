@@ -28,6 +28,8 @@ jobs:
         echo "security_codes:`n    1: ''`n    2: ''" > config/secrets.yaml
     - name: Set up ruby
       uses: ruby/setup-ruby@v1
+      env:
+        ImageOS: win19
       with:
         bundler-cache: true # runs 'bundle install' and caches installed gems
     - name: Run tests
