@@ -52,7 +52,7 @@ jobs:
         ip: ${{ secrets.EC2_IP }}
       run: |
         Remove-Item Alias:curl
-        curl -u $user":"$passwd ftp://$ip/tmp/proxyapp.log -o simulator.log
+        curl -u $user":"$passwd "ftp://$ip/tmp/proxyapp.log" -o simulator.log
     - name: Upload ec2 rsmp log
       if: always()
       uses: actions/upload-artifact@v2
