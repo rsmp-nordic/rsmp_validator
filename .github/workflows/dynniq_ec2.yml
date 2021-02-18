@@ -26,10 +26,10 @@ jobs:
     - name: Set up secrets
       run: |
         echo "security_codes:`n    1: ''`n    2: ''" > config/secrets.yaml
-    - name: Configure bundle
-      run: bundle config set path '~/rsmp_gems/bundle'
-    - name: Run bundle install
-      run: bundle install
+    - name: Set up ruby
+    - uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true # runs 'bundle install' and caches installed gems
     - name: Run tests
       run: bundle exec rspec spec/site
     - name: Rename validation.log
