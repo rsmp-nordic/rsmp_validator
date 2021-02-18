@@ -21,11 +21,9 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
     - name: Configure test
-      shell: bash
       run: |
         echo "rsmp_config_path: config/ci/dynniq_ec2.yaml" > config/validator.yaml
     - name: Set up secrets
-      shell: bash
       run: |
         echo -e "security_codes:\n    1: ''\n    2: ''" > config/secrets.yaml
     - name: Configure bundle
