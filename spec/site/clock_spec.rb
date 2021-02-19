@@ -2,6 +2,8 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
   include CommandHelpers
   include StatusHelpers
 
+  DATE = Time.new 2020,9,29,17,29,51,'UTC'
+
   def check_scripts
     raise "Aborting test because script config is missing" unless SCRIPT_PATHS
     raise "Aborting test because script config is missing" unless SCRIPT_PATHS['activate_alarm']
@@ -11,16 +13,14 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
   it 'accepts M0104 set date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      date = Time.new 2020,9,29,17,29,51,'UTC'
-      set_date date
+      set_date(DATE)
     end
   end
 
   it 'status S0096 after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      date = Time.new 2020,9,29,17,29,51,'UTC'
-      with_date_set date do
+      with_date_set DATE do
         status_list = { S0096: [
           :year,
           :month,
@@ -44,7 +44,7 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
 
         max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + 
                    SUPERVISOR_CONFIG['status_response_timeout']
-        diff = received - date
+        diff = received - DATE
         expect(diff.abs).to be <= max_diff
       end
     end
@@ -53,8 +53,7 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
   it 'status response timestamp after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      date = Time.new 2020,9,29,17,29,51,'UTC'
-      with_date_set date do
+      with_date_set DATE do
         status_list = { S0096: [
           :year,
           :month,
@@ -63,17 +62,16 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
           :minute,
           :second,
         ] }
-
-        # start collect
-        collect_task = @task.async do |task|
-          site.collect task, type: "StatusResponse", num: 1, timeout: SUPERVISOR_CONFIG['status_response_timeout']
-        end
         
-        site.request_status @component, convert_status_list(status_list) # request status
-        response = collect_task.wait # and wait for the first status response
+        request, response, messages = site.request_status @component,
+          convert_status_list(status_list),
+          collect: {
+            timeout: SUPERVISOR_CONFIG['status_response_timeout']
+          }
 
+        message = messages.first
         max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
-        diff = Time.parse(response.attributes['sTs']) - date
+        diff = Time.parse(message.attributes['sTs']) - DATE
         expect(diff.abs).to be <= max_diff
       end
     end
@@ -82,13 +80,12 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
   it 'aggregated status response timestamp after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      date = Time.new 2020,9,29,17,29,51,'UTC'
-      with_date_set date do
+      with_date_set DATE do
         request, response = site.request_aggregated_status MAIN_COMPONENT, collect: {
           timeout: SUPERVISOR_CONFIG['status_response_timeout']
         }
         max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
-        diff = Time.parse(response.attributes['aSTS']) - date
+        diff = Time.parse(response.attributes['aSTS']) - DATE
         expect(diff.abs).to be <= max_diff
       end
     end
@@ -97,10 +94,12 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
   it 'command response timestamp after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      date = Time.new 2020,9,29,17,29,51,'UTC'
-      with_date_set date do
-        # TODO
-        # need to send a command requeest and collect a response to check the timestamp
+      with_date_set DATE do
+        request, response, messages = set_functional_position 'NormalControl'
+        message = messages.first
+        max_diff = SUPERVISOR_CONFIG['command_response_timeout'] * 2
+        diff = Time.parse(message.attributes['cTS']) - DATE
+        expect(diff.abs).to be <= max_diff
       end
     end
   end
@@ -108,11 +107,13 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
   it 'timestamp of M0104 command response', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      date = Time.new 2020,9,29,17,29,51,'UTC'
-      with_date_set date do
-        # TODO
-        # need to collect the command response from the m0104 request and check the timestamp
-      end     
+      with_date_set DATE do
+        request, response, messages = set_functional_position 'NormalControl'
+        message = messages.first
+        max_diff = SUPERVISOR_CONFIG['command_response_timeout']
+        diff = Time.parse(message.attributes['cTS']) - DATE
+        expect(diff.abs).to be <= max_diff
+      end
     end
   end
 
@@ -120,15 +121,13 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
     TestSite.connected do |task,supervisor,site|
       check_scripts
       prepare task, site
-      date = Time.new 2020,9,29,17,29,51,'UTC'
-      with_date_set date do
+      with_date_set DATE do
         component = COMPONENT_CONFIG['detector_logic'].keys.first
         system(SCRIPT_PATHS['activate_alarm'])
         site.log "Waiting for alarm", level: :test
         response = site.wait_for_alarm task, timeout: RSMP_CONFIG['alarm_timeout']
-
         max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
-        diff = Time.parse(response.attributes['sTs']) - date
+        diff = Time.parse(response.attributes['sTs']) - DATE
         expect(diff.abs).to be <= max_diff
       end
     end
@@ -137,11 +136,10 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
   it 'watchdog timestamp after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
-      date = Time.new 2020,9,29,17,29,51,'UTC'
-      with_date_set date do
+      with_date_set DATE do
         response = site.collect task, type: "Watchdog", num: 1, timeout: SUPERVISOR_CONFIG['watchdog_timeout']
         max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
-        diff = Time.parse(response.attributes['wTs']) - date
+        diff = Time.parse(response.attributes['wTs']) - DATE
         expect(diff.abs).to be <= max_diff
       end
     end

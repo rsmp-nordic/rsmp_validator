@@ -1,12 +1,12 @@
 module CommandHelpers
   def send_command_and_confirm parent_task, command_list, message, component=@component
-    request, response = nil, nil
+    result = nil
     log_confirmation message do
-      request, response = @site.send_command component, command_list, collect: {
+      result = @site.send_command component, command_list, collect: {
           timeout: SUPERVISOR_CONFIG['command_response_timeout']
         }
     end
-    [request, response]
+    return *result   # use splat '*' operator
   end
 
   def build_command_list command_code_id, command_name, values
