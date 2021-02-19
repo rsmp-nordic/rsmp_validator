@@ -37,7 +37,9 @@ jobs:
       run: bundle exec rspec spec/site
     - name: Rename validation.log
       if: always()
-      run: mv log/validation.log log/validation_ec2_$(date +%F_%H-%M-%S).log
+      run: |
+        $date=Get-Date -Format 'yyyy-MM-dd_HH-mm'
+        mv log/validation.log log/validation_ec2_$date.log
     - name: Upload validation.log
       if: always()
       uses: actions/upload-artifact@v2
@@ -52,7 +54,8 @@ jobs:
         ip: ${{ secrets.EC2_IP }}
       run: |
         Remove-Item Alias:curl
-        curl -u $user":"$passwd "ftp://$ip/tmp/proxyapp.log" -o simulator.log
+        $remote_path='ftp://$ip/tmp/proxyapp.log'
+        curl -u $user":"$passwd $remote_path -o simulator.log
     - name: Upload ec2 rsmp log
       if: always()
       uses: actions/upload-artifact@v2
