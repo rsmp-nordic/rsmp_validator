@@ -25,7 +25,7 @@ jobs:
         "rsmp_config_path: config/ci/dynniq_ec2.yaml" | Out-File 'config/validator.yaml' -Encoding utf8
     - name: Set up secrets
       run: |
-        echo "security_codes:`n    1: ''`n    2: ''" > config/secrets.yaml
+        "security_codes:`n    1: ''`n    2: ''" | Out-File 'config/secrets.yaml' -Encoding utf8
     - name: Set up ruby
       uses: ruby/setup-ruby@v1
       env:
