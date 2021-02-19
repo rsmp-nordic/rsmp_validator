@@ -54,7 +54,7 @@ jobs:
         ip: ${{ secrets.EC2_IP }}
       run: |
         Remove-Item Alias:curl
-        $remote_path='ftp://$ip/tmp/proxyapp.log'
+        $remote_path='ftp://'+$ip+'/tmp/proxyapp.log'
         curl -u $user":"$passwd $remote_path -o simulator.log
     - name: Upload ec2 rsmp log
       if: always()
