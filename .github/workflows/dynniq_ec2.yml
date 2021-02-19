@@ -55,7 +55,7 @@ jobs:
       run: |
         Remove-Item Alias:curl
         $remote_path='ftp://'+$env:IP+'/tmp/proxyapp.log'
-        curl -u $env:USER+':'+$env:PASSWD $remote_path -o simulator.log
+        curl -u '$env:USER'+':'+'$env:PASSWD' $remote_path -o simulator.log
     - name: Upload ec2 rsmp log
       if: always()
       uses: actions/upload-artifact@v2
