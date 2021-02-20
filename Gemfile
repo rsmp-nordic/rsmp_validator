@@ -1,7 +1,9 @@
 source "https://rubygems.org"
 
 
-gem 'json_schemer', :github => 'emiltin/json_schemer'  # test 2
-gem 'rsmp', :github => 'rsmp-nordic/rsmp', :ref => '9383b3296fb7ee', :submodules => true
+# use forked version to work around path issue on windwos
+gem 'json_schemer', :github => 'emiltin/json_schemer'  
+
+gem 'rsmp', :github => 'rsmp-nordic/rsmp', :ref => '3f3973805303c044e', :submodules => true
 gem 'rspec'
 gem 'activesupport'
