@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: 9383b3296fb7eed6f64b60442f89c13bea8d7212
-  ref: 9383b32
+  revision: 3f3973805303c044ef43f08952f66274d4e8e158
+  ref: 3f39738
   submodules: true
   specs:
     rsmp (0.1.25)
