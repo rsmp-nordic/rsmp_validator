@@ -16,27 +16,30 @@ on:
 jobs:
   test:
 
-    runs-on: [ self-hosted, Linux, X64, ec2 ]
+    runs-on: [ self-hosted, Windows, X64, ec2 ]
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
     - name: Configure test
-      shell: bash
       run: |
-        echo "rsmp_config_path: config/ci/dynniq_ec2.yaml" > config/validator.yaml
+        "rsmp_config_path: config/ci/dynniq_ec2.yaml" | Out-File 'config/validator.yaml' -Encoding utf8
     - name: Set up secrets
-      shell: bash
       run: |
-        echo -e "security_codes:\n    1: ''\n    2: ''" > config/secrets.yaml
-    - name: Configure bundle
-      run: bundle config set path '~/rsmp_gems/bundle'
-    - name: Run bundle install
-      run: bundle install
+        "security_codes:`n    1: ''`n    2: ''" | Out-File 'config/secrets.yaml' -Encoding utf8
+    - name: Set up ruby
+      uses: ruby/setup-ruby@v1
+      env:
+        ImageOS: win19
+      with:
+        ruby-version: 3.0
+        bundler-cache: true # runs 'bundle install' and caches installed gems
     - name: Run tests
       run: bundle exec rspec spec/site
     - name: Rename validation.log
       if: always()
-      run: mv log/validation.log log/validation_ec2_$(date +%F_%H-%M-%S).log
+      run: |
+        $date=Get-Date -Format 'yyyy-MM-dd_HH-mm'
+        mv log/validation.log log/validation_ec2_$date.log
     - name: Upload validation.log
       if: always()
       uses: actions/upload-artifact@v2
@@ -46,10 +49,14 @@ jobs:
     - name: Get ec2 rsmp log
       if: always()
       env:
-        user: ${{ secrets.EC2_USER }}
-        passwd: ${{ secrets.EC2_PASSWD }}
-        ip: ${{ secrets.EC2_IP }}
-      run: ncftpget -C -u "$user" -p "$passwd" "$ip" /tmp/proxyapp.log simulator.log
+        USER: ${{ secrets.EC2_USER }}
+        PASSWD: ${{ secrets.EC2_PASSWD }}
+        IP: ${{ secrets.EC2_IP }}
+      run: |
+        Remove-Item Alias:curl
+        $remote_path='ftp://'+$env:IP+'/tmp/proxyapp.log'
+        $credentials=$env:USER+':'+$env:PASSWD
+        curl -u $credentials $remote_path -o simulator.log
     - name: Upload ec2 rsmp log
       if: always()
       uses: actions/upload-artifact@v2
