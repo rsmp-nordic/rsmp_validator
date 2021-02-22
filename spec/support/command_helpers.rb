@@ -1,10 +1,12 @@
 module CommandHelpers
   def send_command_and_confirm parent_task, command_list, message, component=@component
+    result = nil
     log_confirmation message do
-      message, result = @site.send_command component, command_list, collect: {
+      result = @site.send_command component, command_list, collect: {
           timeout: SUPERVISOR_CONFIG['command_response_timeout']
         }
     end
+    return *result   # use splat '*' operator
   end
 
   def build_command_list command_code_id, command_name, values
@@ -271,35 +273,42 @@ module CommandHelpers
     send_command_and_confirm @task, command_list, "intention to set security code"
   end
 
-  def set_date
-    @site.log "Set date", level: :test
+  def set_date date
+    @site.log "Set date to #{date}", level: :test
     command_list = build_command_list :M0104, :setDate, {
       securityCode: SECRETS['security_codes'][1],
-      year: 2020,
-      month: 9,
-      day: 29,
-      hour: 17,
-      minute: 29,
-      second: 51
+      year: date.year,
+      month: date.month,
+      day: date.day,
+      hour: date.hour,
+      minute: date.min,
+      second: date.sec
     }
     send_command_and_confirm @task, command_list, "intention to set date"
-  ensure
-    reset_date
   end
 
   def reset_date
     @site.log "Reset date", level: :test
+    now = Time.now.utc
     command_list = build_command_list :M0104, :setDate, {
       securityCode: SECRETS['security_codes'][1],
-      year: Time.now.year,
-      month: Time.now.month,
-      day: Time.now.day,
-      hour: Time.now.hour,
-      minute: Time.now.min,
-      second: Time.now.sec
+      year: now.year,
+      month: now.month,
+      day: now.day,
+      hour: now.hour,
+      minute: now.min,
+      second: now.sec
     }
     send_command_and_confirm @task, command_list, "intention to set date"
   end
+
+  def with_date_set date, &block
+    request, response = set_date date
+    yield request,response
+  ensure
+    reset_date
+  end
+
 
   def wrong_security_code
     @site.log "Try to force detector logic with wrong security code", level: :test
