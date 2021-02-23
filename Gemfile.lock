@@ -1,6 +1,7 @@
 GIT
-  remote: https://github.com/emiltin/json_schemer.git
-  revision: 20fdb83bf4d567ddaea7dcea914b7a9a2270e8e4
+  remote: https://github.com/davishmcclurg/json_schemer.git
+  revision: 106bfc27c031ea73132759f6d82c94b5676f216a
+  ref: 106bfc27c031ea73
   specs:
     json_schemer (0.2.17)
       ecma-re-validator (~> 0.3)
