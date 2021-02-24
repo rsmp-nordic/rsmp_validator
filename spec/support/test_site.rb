@@ -6,9 +6,22 @@ require 'rspec/expectations'
 class TestSite
   include Singleton
   include RSpec::Matchers
+  include RSMP::Logging
 
   def initialize
     @reactor = Async::Reactor.new
+
+    @logger = RSMP::Logger.new({
+      'active' => true,
+      'port' => true,
+      'path' => LOG_PATH,
+      'color' => true,
+      'json' => true,
+      'acknowledgements' => true,
+      'watchdogs' => true,
+      'test' => true
+    })
+    initialize_logging logger: @logger
   end
 
   def within_reactor &block
@@ -34,26 +47,15 @@ class TestSite
 
     # reraise errors outside task to surface them in rspec
     if error
-      @supervisor.log "Failed: #{error.class}: #{error}", level: :test
+      log "Failed: #{error.class}: #{error}", level: :test
       raise error
     else
-      @supervisor.log "OK", level: :test
+      log "OK", level: :test
     end
   end
 
   def start options={}, why=nil
     unless @supervisor
-      log_settings = {
-        'active' => true,
-        'port' => true,
-        'path' => LOG_PATH,
-        'color' => true,
-        'json' => true,
-        'acknowledgements' => true,
-        'watchdogs' => true,
-        'test' => true
-      }.merge(LOG_CONFIG)
-
       supervisor_settings = {
         'stop_after_first_session' => false,
         'watchdog_interval' => 5,
@@ -72,10 +74,10 @@ class TestSite
         @supervisor = RSMP::Supervisor.new(
           task: task,
           supervisor_settings: supervisor_settings,
-          log_settings: log_settings,
+          logger: @logger,
           collect: options['collect']
         )
-        @supervisor.log why, level: :test if why
+        log why, level: :test if why
         @supervisor.start  # keep running inside the async task, listening for sites
       end
     end
@@ -87,7 +89,7 @@ class TestSite
     # supervisor.stop uses wait(), which requires an async context
     Async do
       if @supervisor
-        @supervisor.log why, level: :test if @supervisor && why
+        log why, level: :test if why
         @supervisor.stop
       end
       @supervisor = nil
@@ -148,7 +150,7 @@ class TestSite
   def wait_for_site task
     @remote_site = @supervisor.find_site :any
     unless @remote_site
-      @supervisor.log "Waiting for site to connect", level: :test
+      log "Waiting for site to connect", level: :test
       @remote_site = @supervisor.wait_for_site(:any, RSMP_CONFIG['connect_timeout'])
     end
     @remote_site.wait_for_state :ready, RSMP_CONFIG['ready_timeout']
