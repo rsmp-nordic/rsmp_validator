@@ -44,7 +44,7 @@ RSpec.describe 'RSMP site commands' do
       prepare task, site
       #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
       set_restart
-      expect { site.wait_for_state :stopped, RSMP_CONFIG['shutdown_timeout'] }.to_not raise_error
+      site.wait_for_state :stopped, RSMP_CONFIG['shutdown_timeout']
     end
     # NOTE
     # when a remote site closes the connection, our site proxy object will stop.
@@ -53,7 +53,7 @@ RSpec.describe 'RSMP site commands' do
     # it also means we need a new TestSite.
     TestSite.isolated do |task,supervisor,site|
       prepare task, site
-      expect { site.wait_for_state :ready, RSMP_CONFIG['ready_timeout'] }.to_not raise_error
+      site.wait_for_state :ready, RSMP_CONFIG['ready_timeout']
       wait_normal_control
     end
   end
