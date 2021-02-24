@@ -29,6 +29,7 @@ supervisor:
   status_update_timeout: 20
 
 connect_timeout: 120
+disconnect_timeout: 120
 ready_timeout: 10
 
 command_timeout: 180

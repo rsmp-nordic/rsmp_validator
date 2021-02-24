@@ -1,18 +1,18 @@
 # Test how the site responds to various incorrect behaviour.
 #
 # The site object passed by TestSite a SiteProxy object. We can redefine methods
-# on this object to modify behaviour after connection is established
+# on this object to modify behaviour after the connection has been established.
 #
 # Note that we use TestSite.isolate, rather than TestSite.connect,
-# to ensure we get a fresh SiteProxy object each time, and that it's not reused in
-# later tests
+# to ensure we get a fresh SiteProxy object each time, so our deformed site proxy
+# is not reused later tests
 
 RSpec.describe "RSMP site disconnect" do
   it 'disconnects if watchdogs are not acknowledged', sxl: '>=1.0.7' do |example|
     TestSite.isolated do |task,supervisor,site|
       def site.acknowledge original
       end
-      #expect { site.wait_for_state :stopping, 60 }.to_not raise_error
+      site.wait_for_state :stopped, RSMP_CONFIG['disconnect_timeout']
     end
   end
 
@@ -20,7 +20,7 @@ RSpec.describe "RSMP site disconnect" do
     TestSite.isolated do |task,supervisor,site|
       def site.send_watchdog now=nil
       end
-      #expect { site.wait_for_state :stopping, 180 }.to_not raise_error
+      site.wait_for_state :stopped, RSMP_CONFIG['disconnect_timeout']
     end
   end
 
