@@ -32,6 +32,7 @@ supervisor:
   status_update_timeout: 1
 
 connect_timeout: 1
+disconnect_timeout: 1
 ready_timeout: 1
 status_update_rate: 0   # rsmp only allow integer update rates
 subscribe_timeout: 1
