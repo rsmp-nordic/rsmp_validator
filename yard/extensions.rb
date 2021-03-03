@@ -3,10 +3,21 @@
 #
 # To generate documentation for tests and support methods, run:
 #
-# yardoc -e yard/extensions.rb spec
+# % yardoc spec
+#
+# If you want to generate docs only for the test, not the support methods, run:
+#
+# %yarddoc spec/site
 #
 # The output will be located in the folder you are in when you run the command.
 # Use a browser to open the index.html file to view the generated documentation.
+#
+# Note that the file yard/extensions.rb must be included. This is done automatically
+# because the ./.yardopts includes it. Otherwise it can be done on the command line, e.g:
+#
+#
+# % yardoc -e yard/extensions.rb spec
+
 
 #YARD::Templates::Engine.register_template_path File.dirname(__FILE__) + '/../templates'
 
