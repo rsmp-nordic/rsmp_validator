@@ -1,28 +1,31 @@
-p :hey
-class RSpecSpecificationHandler < YARD::Handlers::Ruby::Base
-  handles method_call(:it)
+#YARD::Templates::Engine.register_template_path File.dirname(__FILE__) + '/../templates'
+
+class RSpecDescribeHandler < YARD::Handlers::Ruby::Base
+  handles method_call(:describe)
   
   def process
-    
-    name = statement.children[1].source
-    
-    p statement
-    # When the name of the specification is an empty string we will use the
-    # contents of block to represent what the specification is attempting to 
-    # describe about the context
+    describes = statement.parameters.first.jump(:string_content).source
 
-    name = statement.last.last.source.chomp if name == ""
-    
-    #if owner.is_a?(YARD::CodeObjects::RSpec::Context) or
-    #   owner.is_a?(YARD::CodeObjects::RSpec::SharedExample)
-    #   
-    #  owner.specifications << YARD::CodeObjects::RSpec::Specification.new(owner,name) do |spec|
-    #    spec.value = name
-    #    spec.source = statement.last.last.source.chomp
-    #    spec.add_file(statement.file,statement.line)
-    #  end
-    #  
-    #end
-    
+    unless owner.is_a?(Hash)
+      pwner = Hash[describes: describes, context: ""]
+      parse_block(statement.last.last, owner: pwner)
+    else
+      describes = owner[:describes] + describes
+      pwner = owner.merge(describes: describes)
+      parse_block(statement.last.last, owner: pwner)
+    end
+  end
+end
+
+class RSpecItHandler < YARD::Handlers::Ruby::Base
+  handles method_call(:site)
+  
+  def process
+    #p statement.docstring
+
+    name = statement.parameters.first.jump(:tstring_content, :ident).source
+    object = YARD::CodeObjects::MethodObject.new(namespace, name)
+    register(object)
+    got = parse_block(statement.last.last, :owner => object)
   end
 end

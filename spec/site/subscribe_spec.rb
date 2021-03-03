@@ -1,4 +1,14 @@
 RSpec.describe "RSMP site status" do
+  
+  # Check that we can *subscribe* to status messages.
+  # The test subscribes to S0001 (signal group status), but
+  # this is arbitrary as we simply want to check that
+  # the subscription mechanism works.
+  #
+  # 1. subscribe
+  # 1. check that we receive a status update with a predefined time
+  # 1. unsubscribe
+  
   it 'responds to valid status subscription' do |example|
     TestSite.connected do |task,supervisor,site|
       component = MAIN_COMPONENT
