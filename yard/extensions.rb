@@ -1,3 +1,13 @@
+#
+# Yard extensions to generate documentation for RSpec tests.
+#
+# To generate documentation for tests and support methods, run:
+#
+# yardoc -e yard/extensions.rb spec
+#
+# The output will be located in the folder you are in when you run the command.
+# Use a browser to open the index.html file to view the generated documentation.
+
 #YARD::Templates::Engine.register_template_path File.dirname(__FILE__) + '/../templates'
 
 class RSpecDescribeHandler < YARD::Handlers::Ruby::Base
@@ -18,7 +28,7 @@ class RSpecDescribeHandler < YARD::Handlers::Ruby::Base
 end
 
 class RSpecItHandler < YARD::Handlers::Ruby::Base
-  handles method_call(:site)
+  handles method_call(:it)
   
   def process
     #p statement.docstring
