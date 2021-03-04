@@ -13,7 +13,7 @@ def setup_filters config
     # so we get more useful display of the filter option when we
     # run rspec on the command line  
     def filter.inspect
-      "<not #{SITE_CONFIG['sxl_version'].to_s}>"
+      "[unless relevant for #{SITE_CONFIG['sxl_version'].to_s}]"
     end
     config.filter_run_excluding sxl: filter 
   end
@@ -39,7 +39,7 @@ def setup_filters config
     # so we get more useful display of the filter option when we
     # run rspec on the command line  
     def filter.inspect
-      "<not #{SITE_CONFIG['rsmp_versions'].to_s}>"
+      "[unless relevant for #{SITE_CONFIG['rsmp_versions'].join(', ')}]"
     end
     config.filter_run_excluding rsmp: filter
   end
