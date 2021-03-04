@@ -19,7 +19,8 @@
 # % yardoc -e yard/extensions.rb spec
 
 
-#YARD::Templates::Engine.register_template_path File.dirname(__FILE__) + '/../templates'
+templates_path = File.join(File.dirname(__FILE__),'templates')
+YARD::Templates::Engine.register_template_path templates_path
 
 class RSpecDescribeHandler < YARD::Handlers::Ruby::Base
   handles method_call(:describe)
@@ -38,6 +39,9 @@ class RSpecDescribeHandler < YARD::Handlers::Ruby::Base
   end
 end
 
+class YARD::CodeObjects::FeatureObject < YARD::CodeObjects::MethodObject
+end
+
 class RSpecItHandler < YARD::Handlers::Ruby::Base
   handles method_call(:it)
   
@@ -45,8 +49,8 @@ class RSpecItHandler < YARD::Handlers::Ruby::Base
     #p statement.docstring
 
     name = statement.parameters.first.jump(:tstring_content, :ident).source
-    object = YARD::CodeObjects::MethodObject.new(namespace, name)
+    object = YARD::CodeObjects::FeatureObject.new(namespace, name)
     register(object)
-    got = parse_block(statement.last.last, :owner => object)
+    #got = parse_block(statement.last.last, :owner => object)
   end
 end

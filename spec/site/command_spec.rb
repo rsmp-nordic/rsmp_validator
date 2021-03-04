@@ -5,6 +5,11 @@ RSpec.describe 'RSMP site commands' do
   include CommandHelpers
   include StatusHelpers
 
+  # Verify that we can activate yellow flash
+  #
+  # 1. Switch to yellow flash
+  # 1. Switch back to normal mode
+
   it 'M0001 set yellow flash', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -12,6 +17,11 @@ RSpec.describe 'RSMP site commands' do
       switch_normal_control
     end
   end
+
+  # Verify that we can activate dark mode
+  #
+  # 1. Switch to dark mode
+  # 1. Switch back to normal mode
 
   it 'M0001 set dark mode', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
@@ -21,6 +31,12 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
+  # Verify that we change time plan (signal program)
+  # We try switching all programs configured
+  #
+  # For each configured signal plan:
+  # 1. Switch plan
+
   it 'M0002 set time plan', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       plans = SITE_CONFIG['plans']
@@ -29,6 +45,11 @@ RSpec.describe 'RSMP site commands' do
       plans.each { |plan| switch_plan plan }
     end
   end
+
+  # Verify that we change traffic situtation
+  #
+  # For each configured traffic situation:
+  # 1. Switch traffic situation
 
   it 'M0003 set traffic situation', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
@@ -46,6 +67,7 @@ RSpec.describe 'RSMP site commands' do
       set_restart
       site.wait_for_state :stopped, RSMP_CONFIG['shutdown_timeout']
     end
+
     # NOTE
     # when a remote site closes the connection, our site proxy object will stop.
     # when the site reconnects, a new site proxy object will be created.
