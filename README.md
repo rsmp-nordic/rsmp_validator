@@ -26,7 +26,6 @@ The file config/secrets.yaml is gitignored and should not be added to the reposi
 The validator requires knowledge about the equipment tested. This is stored in the config files in config/.
 By default config/ruby.yaml is used. To use another config, copy config/validator_example.yaml into  config/validator.yaml, and edit it to point to the relevant config file. config/validator.yaml is gitignored.
 
-
 ## Testing an RSMP site
 A local RSMP supervisor will be started on 127.0.0.1:12111. The site is expected to connect to it. You might have to adjust network settings to enable the site to reach the supervisor.
 
@@ -36,16 +35,32 @@ Some tests specify that the connection is reestablished before the test is run. 
 
 To run test, cd to the root of this project, then:
 	
-~~~~
+```
 % rspec spec/site
 ............
 
 Finished in 1.28 seconds (files took 0.20949 seconds to load)
 12 examples, 0 failures
-	
-~~~~
+```	
 
-See https://rspec.info/ for more info about how to run specific tests, formatting output, etc.
+## Choosing which tests to run
+You can use rspec command line options to filter which tests to run. See https://rspec.info/ for more info.
+
+If you want to store you selection for easy reuse, add them to a file name .rspec-local, in the root of the project folder. RSpec will automatically use the options. Example:
+
+```
+--pattern spec/site/*   # run tests in spec/site/
+--exclude-pattern spec/site/unknown_status_spec.rb    # skip tests in this file
+--tag ~script           # exclude tests tagged with :script
+```
+
+ .rspec-local is git ignored, and will therefore not be added to the repo. 
+
+You can also keep diffferent configurations, and pick on when running tests, eg:
+
+```
+% rspec --options rspec_basic_tests
+```
 
 ### Running tests again a local Ruby TLC site
 For trying out the specs, you can run a local Ruby TLC site. You can configure short reconnect and timrout intervals, which will make the test quick to run:
@@ -89,19 +104,19 @@ Once it's running, you can run the validator site specs, and you will see the Ru
 
 See the rsmp gem documentation for details on how to run Ruby sites.
 
-
 ## Testing an RSMP supervisor
-A local RSMP site will be started. The site will try to connect to the remote supervisor at   127.0.0.1:12111. You might have to adjust network settings to enable the site to reach the supervisor.
+Note: Testing supervisors is still experimental.
+
+A local RSMP site will be started. The site will try to connect to the remote supervisor at 127.0.0.1:12111. You might have to adjust network settings to enable the site to reach the supervisor.
 
 To run tests, cd to the root of this project, then:
 	
-~~~~
+```
 % rspec spec/supervisor
 ............
 
 Finished in 1.28 seconds (files took 0.20949 seconds to load)
 12 examples, 0 failures
-	
-~~~~
+```
 
 
