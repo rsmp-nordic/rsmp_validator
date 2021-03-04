@@ -1,5 +1,6 @@
 log
 .rspec_status
+.rspec-local
 .DS_Store
 config/secrets.yaml
 config/validator.yaml
