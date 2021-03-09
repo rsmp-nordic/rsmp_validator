@@ -1,0 +1,34 @@
+<div class='context'>
+    <h1 class='title'>Context: <%= link_to_code_object context %></h1>
+  
+  <div style="clear: both;"></div>
+  
+  <% @row = 'odd' %>
+  
+  <ul class='context-specifications'>
+    <% context.specifications.each do |it| %>
+      <% @specification = it %>
+      <li class='context-specification'><%= erb :specification %></li>
+      
+      <% @row = (@row == 'odd' ? 'even' : 'odd') %>
+    <% end %>
+  </ul>
+  
+  <ul class='context-subcontext'>
+  <% context.subcontexts.each do |subcontext| %>
+    <% @context_saved = @context %>
+    <% @context = subcontext %>
+    
+    <li><%= erb :context %></li>
+    
+    <% @context = @context_saved %>
+    <% @row = (@row == 'odd' ? 'even' : 'odd') %>
+  <% end %>
+  </ul>
+
+  
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+  
+</div>

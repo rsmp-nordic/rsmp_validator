@@ -1,0 +1,42 @@
+<div class="specification">
+  <div class="heading <%= row %>">
+    <a name="<%= specification.unique_id %>"></a>
+    <span class="predicate">it</span>
+    <%= specification.value %>
+  </div>
+
+  <div class="details">
+    
+    <div class="docstring">
+      <%= html_markup_markdown(specification.docstring.to_s) %>
+    </div>
+
+    <!-- Source Code -->
+    <div style="float: left;">
+      <table class="source_code">
+        <tr>
+          <td>
+            <pre class="lines"><%= "" %><%= h format_lines(specification) %></pre>
+          </td>
+          <td>
+            <pre class="code"><%= "" %><%= html_syntax_highlight specification.source %></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+    <!-- Meta Information -->
+    <div class="meta">
+      <div class="file" style="margin-top: 5px;"><%= h specification.file %>:<%= specification.line %></div>
+    </div>
+    
+    <div style="clear: both;"></div>
+    
+  </div>
+
+  <!-- Captures the collapsed state -->
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+
+</div>
