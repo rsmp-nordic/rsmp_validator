@@ -10,11 +10,11 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
     raise "Aborting test because script config is missing" unless SCRIPT_PATHS['deactivate_alarm']
   end
 
-# 1: Verify connection
-# 2: Send control command to set_date
-# 3: Wait for status = true
-# 4: Send control command to set_date
-# 5: Wait for status = true  
+# 1. Given the site is connected
+# 2. Send control command to set_date
+# 3. Wait for status = true
+# 4. Send control command to set_date
+# 5. Wait for status = true  
   it 'accepts M0104 set date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -22,11 +22,11 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
     end
   end
 
-# 1: Verify connection
-# 2: Send control command to set_date
-# 3: Wait for status = true
-# 4: Send comand to get Current date 
-# 5: compare set_date and Current date Max_diff from site config  
+# 1. Given the site is connected
+# 2. Send control command to set_date
+# 3. Wait for status = true
+# 4. Send comand to get Current date 
+# 5. compare set_date and Current date Max_diff from site config  
   it 'status S0096 after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -60,11 +60,11 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
     end
   end
 
-# 1: Verify connection
-# 2: Send control command to set_date
-# 3: Wait for status = true
-# 4: Send command to get one ore more status
-# 5: compare set_date and Status_date Max_diff from site config  
+# 1. Given the site is connected
+# 2. Send control command to set_date
+# 3. Wait for status = true
+# 4. Send command to get one ore more status
+# 5. compare set_date and Status_date Max_diff from site config  
   it 'status response timestamp after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -92,11 +92,11 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
     end
   end
 
-# 1: Verify connection
-# 2: Send control command to set_date
-# 3: Wait for status = true
-# 4: Send comand to get agregated status
-# 5: compare set_date and Status_date  on all agregated status Max_diff from site config
+# 1. Given the site is connected
+# 2. Send control command to set_date
+# 3. Wait for status = true
+# 4. Send comand to get agregated status
+# 5. compare set_date and Status_date  on all agregated status Max_diff from site config
   it 'aggregated status response timestamp after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -111,11 +111,11 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
     end
   end
 
-# 1: Verify connection
-# 2: Send control command to setset_date
-# 3: Wait for status = true
-# 4: Send command
-# 5: compare set_date and comand response timestamp Max_diff from site config
+# 1. Given the site is connected
+# 2. Send control command to setset_date
+# 3. Wait for status = true
+# 4. Send command
+# 5. compare set_date and comand response timestamp Max_diff from site config
   it 'command response timestamp after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -129,11 +129,11 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
     end
   end
 
-# 1: Verify connection
-# 2: Send control command to setset_date
-# 3: compare set_date and response time stamp Max_diff from site config
-# 4: Send control command to setset_date
-# 5: Wait for status = true
+# 1. Given the site is connected
+# 2. Send control command to setset_date
+# 3. compare set_date and response time stamp Max_diff from site config
+# 4. Send control command to setset_date
+# 5. Wait for status = true
   it 'timestamp of M0104 command response', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -147,12 +147,12 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
     end
   end
 
-# 1: Verify connection
-# 2: Send control command to set_date
-# 3: Wait for status = true
-# 4: Trigger alarm from Script
-# 5: Wait for alarm
-# 6: compare set_date and alarm response timestamp Max_diff from site config
+# 1. Given the site is connected
+# 2. Send control command to set_date
+# 3. Wait for status = true
+# 4. Trigger alarm from Script
+# 5. Wait for alarm
+# 6. compare set_date and alarm response timestamp Max_diff from site config
   it 'alarm timestamp after changing date', :script, sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       check_scripts
@@ -169,10 +169,10 @@ RSpec.describe 'RSMP M0104 clock and timestamps' do
     end
   end
 
-# 1: Verify connection
-# 2: Send control command to setset_date
-# 3: Wait for Watchdog
-# 4: compare set_date and alarm response timestamp Max_diff from site config
+# 1. Given the site is connected
+# 2. Send control command to setset_date
+# 3. Wait for Watchdog
+# 4. compare set_date and alarm response timestamp Max_diff from site config
   it 'watchdog timestamp after changing date', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
