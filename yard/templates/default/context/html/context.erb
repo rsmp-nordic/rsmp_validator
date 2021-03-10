@@ -3,7 +3,7 @@
   <% if @path %>
     <%= @path.map { |context| link_to_code_object context }.join(' &raquo; ') %>
   <% else %>
-    <%= link_to_code_object @context %>
+    Specifications: <%= link_to_code_object @context %>
   <% end %>
 
   </h1>

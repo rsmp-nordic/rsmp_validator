@@ -12,12 +12,10 @@ def init
   # Generate pages for each of the specs, with the 'spec' template and then
   # generate the page which is the full list of specs
   #
-  #@contexts = Registry.all(:context)
-  @contexts = YARD::CodeObjects::RSpec::RSPEC_NAMESPACE.children.find_all {|child| child.is_a? YARD::CodeObjects::RSpec::Context }
-  # 
+  @contexts = Registry.all(:context)
   if @contexts
     @contexts.each {|context| serialize(context) }
-    generate_specification_list# @contexts.sort {|x,y| x.value.to_s <=> y.value.to_s }, :spec
+    generate_specification_list
   end
   
 end

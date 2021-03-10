@@ -1,3 +1,4 @@
+
 <% even_odd = 'odd'  %>
 <% @items.each do |item| %>
   <li class="<%= even_odd %> <%= item.has_tag?(:deprecated) ? 'deprecated' : '' %>">
