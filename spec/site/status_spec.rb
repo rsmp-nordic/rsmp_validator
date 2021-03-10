@@ -1,11 +1,13 @@
-RSpec.describe "RSMP site status" do
+RSpec.describe "Traffic Light Controller" do
   include StatusHelpers
-  # Verify status S0001 signal group status
+
+  # Verifty that the controller responds to S0001.
   #
-  # 1: Verify connection
-  # 2: Request status
-  # 3: Confirme status response
-  it 'S0001 signal group status', sxl: '>=1.0.7' do |example|
+  # 1. Given the site is connected
+  # 2. Request status
+  # 3. Expect status response before timeout
+
+  it 'responds to S0001 signal group status', sxl: '>=1.0.7' do |example|
     request_status_and_confirm "signal group status",
       { S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }
   end
