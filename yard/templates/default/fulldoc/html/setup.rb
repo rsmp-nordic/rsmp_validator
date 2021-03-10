@@ -25,7 +25,7 @@ end
 def generate_specification_list
 
   # load all the specifications from the Registry
-  @items = Registry.all(:specification)
+  @items = Registry.all(:specification).sort {|x,y| x.value.to_s <=> y.value.to_s }
   @list_title = "Specification List"
   @list_type = "specification"
   

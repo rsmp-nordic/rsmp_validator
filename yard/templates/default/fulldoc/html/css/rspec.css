@@ -3,18 +3,27 @@
   padding: 10px; padding-left: 0px; 
   margin: 20px 0px 10px 0px; 
   font-size: 24px; 
-  border-bottom: 1px solid #E3E3E3;
-  height: 25px;
   cursor: pointer;
 }
 
 .context .meta .file { color: gray; float: right; margin-right: 10px; }
 
-.context ul { list-style: none; margin: 0; padding: 0; }
+.context ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.context > .context-subcontext {
+  margin-left: 40px;
+}
+
+.context .docstring {
+  margin-bottom: 20px;
+}
  
 .context-subcontext .title {
   font-size: 1.3em;
-  font-weight: bold;
 }
 
 .file { margin-top: 5px; }
@@ -28,7 +37,8 @@
   padding: 6px 10px;
   margin-top: 18px;
   margin-bottom: 18px;
-  background: #EDF4FA; border: 1px solid #d8d8e5; -moz-border-radius: 3px; -webkit-border-radius: 3px;
+  background: #EDF4FA;
+  border: 1px solid #d8d8e5; border-radius: 3px;
   color: #3F3F3F;
 }
 
