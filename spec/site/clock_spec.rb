@@ -10,7 +10,7 @@ RSpec.describe "Traffic Light Controller" do
     raise "Aborting test because script config is missing" unless SCRIPT_PATHS['deactivate_alarm']
   end
   
-  RSpec.describe 'RSMP M0104 clock and timestamps' do
+  describe 'RSMP M0104 clock and timestamps' do
 
 # Verify that the controller responds to M0104
 #
