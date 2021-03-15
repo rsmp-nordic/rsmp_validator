@@ -1,14 +1,14 @@
 RSpec.describe "RSMP site connection" do
 
-  def check_connection_sequence version, Expected
+  def check_connection_sequence version, expected
     TestSite.isolated(
       'rsmp_versions' => [version],
-      'collect' => Expected.size
+      'collect' => expected.size
     ) do |task,supervisor,site|
       site.collector.collect task, timeout: RSMP_CONFIG['ready_timeout']
       got = site.collector.messages.map { |message| [message.direction.to_s, message.type] }
-      Expect(got).to eq(Expected)
-      Expect(site.ready?).to be true
+      expect(got).to eq(expected)
+      expect(site.ready?).to be true
     end
   end
 
