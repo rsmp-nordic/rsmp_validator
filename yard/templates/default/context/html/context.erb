@@ -1,0 +1,32 @@
+<div class='context'>
+  <h1 class='title'>
+  <% if @path %>
+    <%= @path.map { |context| link_to_code_object context }.join(' &raquo; ') %>
+  <% else %>
+    Specifications: <%= link_to_code_object @context %>
+  <% end %>
+
+  </h1>
+
+  <ul class='context-specifications'>
+    <% context.specifications.each do |it| %>
+      <% @specification = it %>
+      <li class='context-specification'><%= erb :specification %></li> 
+    <% end %>
+  </ul>
+  
+  <ul class='context-subcontext'>
+  <% @path ||= [] %>
+  <% context.subcontexts.each do |subcontext| %>
+    <% @context_saved = @context %>
+    <% @context = subcontext %>
+    
+    <% @path.push subcontext %>
+    <li><%= erb :context %></li>
+    <% @path.pop %>
+
+    <% @context = @context_saved %>
+  <% end %>
+  </ul>
+
+</div>
