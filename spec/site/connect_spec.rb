@@ -1,4 +1,4 @@
-RSpec.describe "RSMP site connection" do
+RSpec.describe "Traffic Light Controller" do
 
   def check_connection_sequence version, expected
     TestSite.isolated(

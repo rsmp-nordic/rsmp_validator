@@ -1,4 +1,4 @@
-RSpec.describe "RSMP site status" do
+RSpec.describe "Traffic Light Controller" do
   include StatusHelpers
 
   it 'responds with NotAck to invalid status request code' do |example|

@@ -10,6 +10,7 @@ require_relative 'support/log_helpers'
 require_relative 'support/secrets_helpers'
 require_relative 'support/filter_helpers'
 require_relative 'support/config_helpers'
+require_relative 'support/script_helpers'
 
 include RSpec
 include LogHelpers

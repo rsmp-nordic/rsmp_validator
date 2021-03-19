@@ -1,10 +1,9 @@
-RSpec.describe 'RSMP site alarm' do
+RSpec.describe 'Traffic Light Controller' do
   def check_scripts
     raise "Aborting test because script config is missing" unless SCRIPT_PATHS
     raise "Aborting test because script config is missing" unless SCRIPT_PATHS['activate_alarm']
     raise "Aborting test because script config is missing" unless SCRIPT_PATHS['deactivate_alarm']
   end
-
 
   it 'A0302 detector error (logic error)', :script, sxl: '>=1.0.7' do |example|
     check_scripts

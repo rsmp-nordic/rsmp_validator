@@ -1,4 +1,4 @@
-RSpec.describe "RSMP site status" do
+RSpec.describe "Traffic Light Controller" do
   
   # Check that we can *subscribe* to status messages.
   # The test subscribes to S0001 (signal group status), but
