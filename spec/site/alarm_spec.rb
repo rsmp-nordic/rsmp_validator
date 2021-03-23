@@ -1,4 +1,7 @@
 RSpec.describe 'Traffic Light Controller' do
+  include CommandHelpers
+  include StatusHelpers
+
   def check_scripts
     raise "Aborting test because script config is missing" unless SCRIPT_PATHS
     raise "Aborting test because script config is missing" unless SCRIPT_PATHS['activate_alarm']
