@@ -1,5 +1,6 @@
 RSpec.describe "Traffic Light Controller" do
   include StatusHelpers
+  include CommandHelpers
 
   describe "Operational Modes" do
     
