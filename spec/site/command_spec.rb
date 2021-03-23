@@ -5,13 +5,23 @@ RSpec.describe 'RSMP site commands' do
   include CommandHelpers
   include StatusHelpers
 
+  # Verify that we can activate normal control
+  #
+  # 1. Given the site is connected
+  # 2. When the command to switch to normal control is sent
+  # 3. Then the statuses is expected to be "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
+  it 'M0001 set normal control', sxl: '>=1.0.7' do |example|
+    TestSite.connected do |task,supervisor,site|
+      prepare task, site
+      switch_normal_control
+    end
+  end
+
   # Verify that we can activate yellow flash
   #
   # 1. Given the site is connected
-  # 2. Send the control command to switch to Yellow flash
-  # 3. Wait for status Yellow flash
-  # 4. Send command to switch to normal control
-  # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
+  # 2. When the command to switch to Yellow flash is sent
+  # 3. Then the Yellow flash status is expected to be true
   it 'M0001 set yellow flash', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -23,10 +33,8 @@ RSpec.describe 'RSMP site commands' do
   # Verify that we can activate dark mode
   #
   # 1. Given the site is connected
-  # 2. Send the control command to switch todarkmode
-  # 3. Wait for status"Controller on" = false
-  # 4. Send command to switch to normal control
-  # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
+  # 2. When the command to switch to dark mode is sent
+  # 3. Then the dark mode status is expected to be true
   it 'M0001 set dark mode', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -39,10 +47,9 @@ RSpec.describe 'RSMP site commands' do
   # Verify that we change time plan (signal program)
   # We try switching all programs configured
   #
-  # 1. Given the site is connected
-  # 2. Verify that there is a SITE_CONFIG with a time plan
-  # 3. Send command to switch time plan
-  # 4. Wait for status "Current timeplan" = requested time plan
+  # 1. Given the site is connected and there is a SITE_CONFIG with a time plan
+  # 2. When command to switch time plan is sent
+  # 3. Then the current timeplan status is expected to be the set timeplan
   it 'M0002 set time plan', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       plans = SITE_CONFIG['plans']
@@ -53,11 +60,11 @@ RSpec.describe 'RSMP site commands' do
   end
 
   # Verify that we change traffic situtation
+  # We try switching all traffic situations configured
   #
-  # 1. Given the site is connected
-  # 2. Verify that there is a SITE_CONFIG with a traffic situation
-  # 3. Send the control command to switch traffic situation for each traffic situation
-  # 4. Wait for status "Current traffic situatuon" = requested traffic situation
+  # 1. Given the site is connected and there is a SITE_CONFIG with one or more traffic situations
+  # 2. When the control command to switch traffic situation is sent
+  # 3. Then the current traffic situation status is expected to be the switched to traffic situation
   it 'M0003 set traffic situation', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       situations = SITE_CONFIG['traffic_situations']
@@ -67,17 +74,17 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection i Isolated_mode
-  # 2. Send the control command to restart, include security_code
-  # 3. Wait for status response= stopped
-  # 4. Reconnect as Isolated_mode
-  # 5. Wait for status= ready
-  # 6. Send command to switch to normal controll
-  # 7. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true
+  # Verify that restart command works
+  #
+  # 1. Given the site is connected
+  # 2. When the command to stop the controller is sent
+  # 3. Then site stopped is expected
+  # 4. When the site is connected and ready again, and a command to set normal control is sent
+  # 5. Then the normal control status is expected to be true.
   it 'M0004 restart', sxl: '>=1.0.7' do |example|
     TestSite.isolated do |task,supervisor,site|
       prepare task, site
-      #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
+      # if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
       set_restart
       site.wait_for_state :stopped, RSMP_CONFIG['shutdown_timeout']
     end
@@ -94,10 +101,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Verify that there is a SITE_CONFIG with a  emergency_route
-  # 3. Send control command to switch emergency_route
-  # 4. Wait for status "emergency_route" = requested  
+  # Verify that switch emergency route command works
+  #
+  # 1. Given the site is connected and SITE_CONFIG contains an emergency route
+  # 2. When command to switch emergency route is sent
+  # 3. Then emergency route status is expected to be the set emergency route  
   it 'M0005 activate emergency route', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       emergency_routes = SITE_CONFIG['emergency_routes']
@@ -107,10 +115,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Verify that there is a SITE_CONFIG with a input
-  # 3. Send control command to switch input
-  # 4. Wait for status "input" = requested  
+  # Verify that activate input command works
+  #
+  # 1. Given the site is connected and SITE_CONFIG contains an input
+  # 2. When command to activate input is sent
+  # 3. Then input status is expected to be the set input
   it 'M0006 activate input', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       inputs = SITE_CONFIG['inputs']
@@ -120,11 +129,13 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send the control command to switch to  fixed time= true
-  # 3. Wait for status = true
-  # 4. Send control command to switch "fixed time"= true
-  # 5. Wait for status = false
+  # Verify that set fixed time command works
+  #
+  # 1. Given the site is connected
+  # 2. When the command to switch on fixed time is sent
+  # 3. Then the fixed time status is expected to be true
+  # 4. When the command to switch off fixed time is sent
+  # 5. Then the fixed time status is expected to be false
   it 'M0007 set fixed time', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -133,9 +144,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to switch detector_logic= true
-  # 3. Wait for status = true
+  # Verify that activate detector logic command works
+  #
+  # 1. Given the site is connected
+  # 2. When the activate detector logic command is sent
+  # 3. Then the activate detector logic status is expected to be true
   it 'M0008 activate detector logic', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -143,9 +156,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to start signalgrup, set_signal_start= true, include security_code
-  # 3. Wait for status = true  
+  # Verify that start signal group command works
+  #
+  # 1. Given the site is connected
+  # 2. When the start signal group command is sent
+  # 3. Then a command response is expected before timeout
   it 'M0010 start signal group', :important, sxl: '>=1.0.8' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -153,9 +168,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to stop signalgrup, set_signal_start= false, include security_code
-  # 3. Wait for status = true  
+  # Verify that stop signal group command works
+  #
+  # 1. Given the site is connected
+  # 2. When the stop signal group command is sent
+  # 3. Then a command response is expected before timeout
   it 'M0011 stop signal group', :important, sxl: '>=1.0.8' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -163,9 +180,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to start or stop a  serie of signalgroups
-  # 3. Wait for status = true  
+  # Verify that start/stop of a series of signal groups command works
+  #
+  # 1. Given the site is connected
+  # 2. When the start/stop signal groups command is sent
+  # 3. Then a command response is expected before timeout
   it 'M0012 request start/stop of a series of signal groups', :important, sxl: '>=1.0.8' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -173,9 +192,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to set a serie of input
-  # 3. Wait for status = true  
+  # Verify that activate a series of inputs command works
+  #
+  # 1. Given the site is connected
+  # 2. When command to activate a series of inputs is sent
+  # 3. Then a command response is expected before timeout
   it 'M0013 activate a series of inputs', sxl: '>=1.0.8' do |example|
     TestSite.connected do |task,supervisor,site|
       status = "5,4134,65;511"
@@ -184,9 +205,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to set dynamic_bands
-  # 3. Wait for status = true
+  # Verify that set command table command works
+  #
+  # 1. Given the site is connected
+  # 2. When command to set command table is sent
+  # 3. Then a command response is expected before timeout
   it 'M0014 set command table', sxl: '>=1.0.13' do |example|
     TestSite.connected do |task,supervisor,site|
       plan = "1"
@@ -196,9 +219,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to set dynamic_bands
-  # 3. Wait for status = true  
+  # Verify that set offset command works
+  #
+  # 1. Given the site is connected
+  # 2. When command to set offset is sent
+  # 3. Then a command response is expected before timeout
   it 'M0015 set offset', sxl: '>=1.0.13' do |example|
     TestSite.connected do |task,supervisor,site|
       plan = 1
@@ -208,9 +233,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to set  week_table
-  # 3. Wait for status = true  
+  # Verify that set week table command works
+  #
+  # 1. Given the site is connected
+  # 2. When command to set week table is sent
+  # 3. Then a command response is expected before timeout
   it 'M0016 set week table', sxl: '>=1.0.13' do |example|
     TestSite.connected do |task,supervisor,site|
       status = "0-1,6-2"
@@ -219,9 +246,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to set time_table
-  # 3. Wait for status = true  
+  # Verify that set time table command works
+  #
+  # 1. Given the site is connected
+  # 2. When command to set time table is sent
+  # 3. Then a command response is expected before timeout
   it 'M0017 set time table', sxl: '>=1.0.13' do |example|
     TestSite.connected do |task,supervisor,site|
       status = "12-1-12-59,1-0-23-12"
@@ -230,9 +259,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to set cycle time
-  # 3. Wait for status = true  
+  # Verify that set cycle time command works
+  #
+  # 1. Given the site is connected
+  # 2. When command to set cycle time is sent
+  # 3. Then a command response is expected before timeout
   it 'M0018 set cycle time', sxl: '>=1.0.13' do |example|
     TestSite.connected do |task,supervisor,site|
       status = 5
@@ -242,9 +273,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to set force input
-  # 3. Wait for status = true  
+  # Verify that force input command works
+  #
+  # 1. Given the site is connected
+  # 2. When command to force input is sent
+  # 3. Then a command response is expected before timeout
   it 'M0019 force input', sxl: '>=1.0.13' do |example|
     TestSite.connected do |task,supervisor,site|
       status = 'False'
@@ -255,9 +288,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to set force ounput
-  # 3. Wait for status = true
+  # Verify that force output command works
+  #
+  # 1. Given the site is connected
+  # 2. When command to force output is sent
+  # 3. Then a command response is expected before timeout
   it 'M0020 force output', sxl: '>=1.0.15' do |example|
     TestSite.connected do |task,supervisor,site|
       status = 'False'
@@ -268,9 +303,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to set trigger level
-  # 3. Wait for status = true  
+  # Verify that set trigger sensitivity command works
+  #
+  # 1. Given the site is connected
+  # 2. When command to set trigger sensitivity is sent
+  # 3. Then a command response is expected before timeout
   it 'M0021 set trigger sensitivity', sxl: '>=1.0.15' do |example|
     TestSite.connected do |task,supervisor,site|
       status = 'False'
@@ -281,11 +318,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to set securitycode_level
-  # 3. Wait for status = true
-  # 4. Send control command to setsecuritycode_level
-  # 5. Wait for status = true
+  # Verify that set security code command works
+  #
+  # 1. Given the site is connected
+  # 2. When command to set security code is sent
+  # 3. Then a command response is expected before timeout
   it 'M0103 set security code', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -294,6 +331,11 @@ RSpec.describe 'RSMP site commands' do
     end
   end
 
+  # Verify that set security code command workswith wrong security codes
+  #
+  # 1. Given the site is connected
+  # 2. When command to set security code is sent
+  # 3. Then a command response is expected before timeout
   it 'Send the wrong security code', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site

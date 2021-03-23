@@ -15,8 +15,8 @@ RSpec.describe "Traffic Light Controller" do
 # Verify that the controller responds to M0104
 #
 # 1. Given the site is connected
-# 2. Send command
-# 3. Expect status response before timeout
+# 2. When command is sent
+# 3. Then a status response before timeout is expected
     it 'accepts M0104 set date', sxl: '>=1.0.7' do |example|
       TestSite.connected do |task,supervisor,site|
         prepare task, site
@@ -26,11 +26,9 @@ RSpec.describe "Traffic Light Controller" do
 
 # Verify status S0096 date after changing date
 #
-# 1. Given the site is connected
-# 2. Send control command to set_date
-# 3. Request status S0096
-# 4. Compare set_date and status timestamp
-# 5. Expect the difference to be within max_diff
+# 1. Given the site is connected and the set_date command is sent
+# 2. When the status S0096 is requested
+# 3. Then the difference between the received status timestamp and the set date is expected to be lower than the max allowed difference.
     it 'status S0096 after changing date', sxl: '>=1.0.7' do |example|
       TestSite.connected do |task,supervisor,site|
         prepare task, site
@@ -66,11 +64,9 @@ RSpec.describe "Traffic Light Controller" do
 
 # Verify status response timestamp after changing date
 #
-# 1. Given the site is connected
-# 2. Send control command to set_date
-# 3. Request status S0096
-# 4. Compare set_date and response timestamp
-# 5. Expect the difference to be within max_diff
+# 1. Given the site is connected and the set_date command is sent
+# 2. When the status S0096 is requested
+# 3. Then the difference between the received status message timestamp and the set date is expected to be lower than the max allowed difference.
     it 'status response timestamp after changing date', sxl: '>=1.0.7' do |example|
       TestSite.connected do |task,supervisor,site|
         prepare task, site
@@ -101,12 +97,9 @@ RSpec.describe "Traffic Light Controller" do
 
 # Verify aggregated status response timestamp after changing date
 #
-# 1. Given the site is connected
-# 2. Send control command to set date
-# 3. Wait for status = true
-# 4. Request aggregated status
-# 5. Compare set_date and response timestamp
-# 6. Expect the difference to be within max_diff
+# 1. Given the site is connected and the set_date command is sent
+# 2. When an aggregated status is requested
+# 3. Then the difference between the received aggregated status message timestamp and the set date is expected to be lower than the max allowed difference.
     it 'aggregated status response timestamp after changing date', sxl: '>=1.0.7' do |example|
       TestSite.connected do |task,supervisor,site|
         prepare task, site
@@ -123,11 +116,9 @@ RSpec.describe "Traffic Light Controller" do
 
 # Verify command response timestamp after changing date
 #
-# 1. Given the site is connected
-# 2. Send control command to set date
-# 3. Send command to set functional position
-# 4. Compare set_date and response timestamp
-# 5. Expect the difference to be within max_diff
+# 1. Given the site is connected and the set_date command is sent
+# 2. When a command is sent
+# 3. Then the difference between the received command response message timestamp and the set date is expected to be lower than the max allowed difference.
     it 'command response timestamp after changing date', sxl: '>=1.0.7' do |example|
       TestSite.connected do |task,supervisor,site|
         prepare task, site
@@ -143,11 +134,9 @@ RSpec.describe "Traffic Light Controller" do
 
 # Verify command response timestamp after changing date
 #
-# 1. Given the site is connected
-# 2. Send control command to set date
-# 3. Send command to set functional position
-# 4. Compare set_date and response timestamp
-# 5. Expect the difference to be within max_diff
+# 1. Given the site is connected and the set_date command is sent
+# 2. When a command is sent
+# 3. Then the difference between the received command response message timestamp and the set date is expected to be lower than the max allowed difference.
     it 'timestamp of M0104 command response', sxl: '>=1.0.7' do |example|
       TestSite.connected do |task,supervisor,site|
         prepare task, site
@@ -163,13 +152,9 @@ RSpec.describe "Traffic Light Controller" do
 
 # Verify timestamp of alarm after changing date
 #
-# 1. Given the site is connected
-# 2. Send control command to set_date
-# 3. Wait for status = true
-# 4. Trigger alarm from Script
-# 5. Wait for alarm
-# 6. Compare set_date and alarm response timestamp
-# 7. Expect the difference to be within max_diff
+# 1. Given the site is connected, the set_date command is sent and an alarm is triggered
+# 2. When an alarm message is received
+# 3. Then the difference between the received alarm message timestamp and the set date is expected to be lower than the max allowed difference.
     it 'alarm timestamp after changing date', :script, sxl: '>=1.0.7' do |example|
       TestSite.connected do |task,supervisor,site|
         check_scripts
@@ -188,11 +173,9 @@ RSpec.describe "Traffic Light Controller" do
 
 # Verify timestamp of watchdog after changing date
 #
-# 1. Given the site is connected
-# 2. Send control command to setset_date
-# 3. Wait for Watchdog
-# 4. Compare set_date and alarm response timestamp
-# 5. Expect the difference to be within max_diff
+# 1. Given the site is connected and the set_date command is sent
+# 2. When a watchdog message is received
+# 3. Then the difference between the received message timestamp and the set date is expected to be lower than the max allowed difference.
     it 'watchdog timestamp after changing date', sxl: '>=1.0.7' do |example|
       TestSite.connected do |task,supervisor,site|
         prepare task, site
