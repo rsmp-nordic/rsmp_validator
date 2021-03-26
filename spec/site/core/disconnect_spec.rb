@@ -7,7 +7,7 @@
 # to ensure we get a fresh SiteProxy object each time, so our deformed site proxy
 # is not reused later tests
 
-RSpec.describe "RSMP site disconnect" do
+RSpec.describe "Traffic Light Controller" do
 
   # 1. Given the site is new and connected
   # 2. Change site watchdog acknowledgement method to do nothing
