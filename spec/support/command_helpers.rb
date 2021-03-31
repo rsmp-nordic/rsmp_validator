@@ -53,7 +53,7 @@ module CommandHelpers
   end
 
   def set_plan plan
-    @site.log "Switching to traffic situation #{plan}", level: :test
+    @site.log "Switching to plan #{plan}", level: :test
     command_list = build_command_list :M0002, :setPlan, {
       securityCode: SECRETS['security_codes'][2],
       status: 'True',     # true = use plan nr in commone, false = use time table
