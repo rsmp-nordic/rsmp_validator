@@ -6,8 +6,9 @@ supervisor:
         - 3.1.2
       sxl_version: 1.0.7
       plans:
-        - 8
-        - 9
+        - 1
+        - 2
+        - 3
       traffic_situations: []
       emergency_routes:
         - 1
