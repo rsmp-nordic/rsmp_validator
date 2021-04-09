@@ -8,7 +8,6 @@ RSpec.describe "Traffic Light Controller" do
     # 1. Given the site is connected
     # 2. When the status is requested
     # 3. Then a status response is expected before timeout
-
     it 'responds to S0001 signal group status', sxl: '>=1.0.7' do |example|
       request_status_and_confirm "signal group status",
         { S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }

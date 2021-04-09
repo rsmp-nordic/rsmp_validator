@@ -9,7 +9,9 @@ RSpec.describe 'RSMP site commands' do
   #
   # 1. Given the site is connected
   # 2. When the command to switch to normal control is sent
-  # 3. Then the statuses is expected to be "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
+  # 3. And the yellow flash, controller starting and controller on statuses are requested
+  # 4. Then the yellow flash and controller starting should be false
+  # 5. And the controller on status should be true
   it 'M0001 set normal control', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -21,7 +23,8 @@ RSpec.describe 'RSMP site commands' do
   #
   # 1. Given the site is connected
   # 2. When the command to switch to Yellow flash is sent
-  # 3. Then the Yellow flash status is expected to be true
+  # 3. And the yellow flash status is requested
+  # 4. Then the yellow flash status should be true
   it 'M0001 set yellow flash', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -34,7 +37,8 @@ RSpec.describe 'RSMP site commands' do
   #
   # 1. Given the site is connected
   # 2. When the command to switch to dark mode is sent
-  # 3. Then the dark mode status is expected to be true
+  # 3. And the dark mode status is requested
+  # 4. Then the dark mode status should be true
   it 'M0001 set dark mode', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -47,9 +51,11 @@ RSpec.describe 'RSMP site commands' do
   # Verify that we change time plan (signal program)
   # We try switching all programs configured
   #
-  # 1. Given the site is connected and there is a SITE_CONFIG with a time plan
-  # 2. When command to switch time plan is sent
-  # 3. Then the current timeplan status is expected to be the set timeplan
+  # 1. Given the site is connected
+  # 2. And there is a SITE_CONFIG with a time plan
+  # 3. When command to switch time plan is sent
+  # 4. And the current timeplan status is requested
+  # 5. Then the current timeplan status should be the set timeplan
   it 'M0002 set time plan', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       plans = SITE_CONFIG['plans']
@@ -62,9 +68,11 @@ RSpec.describe 'RSMP site commands' do
   # Verify that we change traffic situtation
   # We try switching all traffic situations configured
   #
-  # 1. Given the site is connected and there is a SITE_CONFIG with one or more traffic situations
-  # 2. When the control command to switch traffic situation is sent
-  # 3. Then the current traffic situation status is expected to be the switched to traffic situation
+  # 1. Given the site is connected
+  # 2. And there is a SITE_CONFIG with one or more traffic situations
+  # 3. When the control command to switch traffic situation is sent
+  # 4. And the current traffic situation status is requested
+  # 5. Then the current traffic situation status should be the switched to traffic situation
   it 'M0003 set traffic situation', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       situations = SITE_CONFIG['traffic_situations']
@@ -79,8 +87,9 @@ RSpec.describe 'RSMP site commands' do
   # 1. Given the site is connected
   # 2. When the command to stop the controller is sent
   # 3. Then site stopped is expected
-  # 4. When the site is connected and ready again, and a command to set normal control is sent
-  # 5. Then the normal control status is expected to be true.
+  # 4. When the site is connected and ready again
+  # 5. And a command to set normal control is sent
+  # 6. Then the normal control status should be true.
   it 'M0004 restart', sxl: '>=1.0.7' do |example|
     TestSite.isolated do |task,supervisor,site|
       prepare task, site
@@ -103,9 +112,11 @@ RSpec.describe 'RSMP site commands' do
 
   # Verify that switch emergency route command works
   #
-  # 1. Given the site is connected and SITE_CONFIG contains an emergency route
-  # 2. When command to switch emergency route is sent
-  # 3. Then emergency route status is expected to be the set emergency route  
+  # 1. Given the site is connected
+  # 2. And SITE_CONFIG contains an emergency route
+  # 3. When command to switch emergency route is sent
+  # 4. And the emergency route status is requested
+  # 5. Then emergency route status should be the set emergency route  
   it 'M0005 activate emergency route', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       emergency_routes = SITE_CONFIG['emergency_routes']
@@ -117,9 +128,11 @@ RSpec.describe 'RSMP site commands' do
 
   # Verify that activate input command works
   #
-  # 1. Given the site is connected and SITE_CONFIG contains an input
-  # 2. When command to activate input is sent
-  # 3. Then input status is expected to be the set input
+  # 1. Given the site is connected 
+  # 2. And SITE_CONFIG contains an input
+  # 3. When command to activate input is sent
+  # 4. And the input status is requested
+  # 5. Then input status should be the set input
   it 'M0006 activate input', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       inputs = SITE_CONFIG['inputs']
@@ -133,9 +146,9 @@ RSpec.describe 'RSMP site commands' do
   #
   # 1. Given the site is connected
   # 2. When the command to switch on fixed time is sent
-  # 3. Then the fixed time status is expected to be true
+  # 3. Then the fixed time status should be true
   # 4. When the command to switch off fixed time is sent
-  # 5. Then the fixed time status is expected to be false
+  # 5. Then the fixed time status should be false
   it 'M0007 set fixed time', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site
@@ -148,7 +161,8 @@ RSpec.describe 'RSMP site commands' do
   #
   # 1. Given the site is connected
   # 2. When the activate detector logic command is sent
-  # 3. Then the activate detector logic status is expected to be true
+  # 3. And the activate detector logic status is requested
+  # 4. Then the activate detector logic status should be true
   it 'M0008 activate detector logic', sxl: '>=1.0.7' do |example|
     TestSite.connected do |task,supervisor,site|
       prepare task, site

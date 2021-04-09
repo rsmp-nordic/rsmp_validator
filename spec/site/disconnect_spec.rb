@@ -11,7 +11,7 @@ RSpec.describe "RSMP site disconnect" do
 
   # 1. Given the site is new and connected
   # 2. When site watchdog acknowledgement method is changed to do nothing
-  # 3. Then the site is expected to disconnect
+  # 3. Then the site should disconnect
   it 'disconnects if watchdogs are not acknowledged', sxl: '>=1.0.7' do |example|
     TestSite.isolated do |task,supervisor,site|
       def site.acknowledge original
@@ -22,7 +22,7 @@ RSpec.describe "RSMP site disconnect" do
 
   # 1. Given the site is new and connected
   # 2. When site watchdog sending method is changed to do nothing
-  # 3. Then the supervisor is expected to disconnect
+  # 3. Then the supervisor should disconnect
   it 'disconnects if no watchdogs are send', sxl: '>=1.0.7' do |example|
     TestSite.isolated do |task,supervisor,site|
       def site.send_watchdog now=nil
