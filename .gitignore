@@ -1,0 +1,16 @@
+log
+.rspec_status
+.rspec-local
+.DS_Store
+config/secrets.yaml
+config/validator.yaml
+config/private/
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/pkg/
+/spec/reports/
+/tmp/
+/yard/
+
