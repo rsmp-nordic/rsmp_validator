@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  File: README
+  
+    &mdash; Documentation by YARD 0.9.26
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" />
+
+  <link rel="stylesheet" href="css/rspec.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "README";
+  relpath = '';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="file_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><div id='filecontents'>
+<h1 id="label-About">About</h1>
+
+<p>rsmp-validator is a tool written in Ruby for testing RSMP equipment or software with RSpec.</p>
+
+<p>It uses the rsmp gem to handle RSMP communication.</p>
+
+<h2 id="label-Installation">Installation</h2>
+
+<p>Make sure you have Ruby installed. Then ensure you have the &#39;bundler&#39; gem installed.</p>
+
+<p>Now run this to install gems:</p>
+
+<pre class="code ruby"><code class="ruby">% bundle
+</code></pre>
+
+<p>Some tests require security codes to run. Place these in config/secrets.yaml, in this format:</p>
+
+<pre class="code ruby"><code class="ruby">security_codes:
+  1: &#39;0000&#39;
+  2: &#39;0000&#39;
+</code></pre>
+
+<p>The file config/secrets.yaml is gitignored and should not be added to the repository.</p>
+
+<h3 id="label-Choosing+the+type+of+equipment+you+test">Choosing the type of equipment you test</h3>
+
+<p>The validator requires knowledge about the equipment tested. This is stored in the config files in config/. By default config/ruby.yaml is used. To use another config, copy config/validator_example.yaml into config/validator.yaml, and edit it to point to the relevant config file. config/validator.yaml is gitignored.</p>
+
+<h2 id="label-Testing+an+RSMP+site">Testing an RSMP site</h2>
+
+<p>A local RSMP supervisor will be started on 127.0.0.1:12111. The site is expected to connect to it. You might have to adjust network settings to enable the site to reach the supervisor.</p>
+
+<p>Once the site has connected, tests will be run to validate aspects like connection sequence, commmands, alarms, etc.</p>
+
+<p>Some tests specify that the connection is reestablished before the test is run. This is useful when testing connection sequence, etc. Otherwise the connection will be kept open between tests, which will speed up execution.</p>
+
+<p>To run test, cd to the root of this project, then:</p>
+
+<pre class="code ruby"><code class="ruby">% rspec spec/site
+............
+
+Finished in 1.28 seconds (files took 0.20949 seconds to load)
+12 examples, 0 failures
+</code></pre>
+
+<h2 id="label-Choosing+which+tests+to+run">Choosing which tests to run</h2>
+
+<p>You can use rspec command line options to filter which tests to run. See <a href="https://rspec.info">rspec.info</a>/ for more info.</p>
+
+<p>If you want to store you selection for easy reuse, add them to a file name .rspec-local, in the root of the project folder. RSpec will automatically use the options. Example:</p>
+
+<pre class="code ruby"><code class="ruby">--pattern spec/site/*   # run tests in spec/site/
+--exclude-pattern spec/site/unknown_status_spec.rb    # skip tests in this file
+--tag ~script           # exclude tests tagged with :script
+</code></pre>
+
+<p>.rspec-local is git ignored, and will therefore not be added to the repo.</p>
+
+<p>You can also keep diffferent configurations, and pick on when running tests, eg:</p>
+
+<pre class="code ruby"><code class="ruby">% rspec --options rspec_basic_tests
+</code></pre>
+
+<h3 id="label-Running+tests+again+a+local+Ruby+TLC+site">Running tests again a local Ruby TLC site</h3>
+
+<p>For trying out the specs, you can run a local Ruby TLC site. You can configure short reconnect and timrout intervals, which will make the test quick to run:</p>
+
+<pre class="code ruby"><code class="ruby">% cd rmsp
+% cat config/tlc.yaml
+supervisors:
+  - ip: 127.0.0.1
+    port: 12111
+
+components:
+  TC:
+    type: main
+    cycle_time: 10
+
+watchdog_interval: 1
+watchdog_timeout: 2
+acknowledgement_timeout: 1
+command_response_timeout: 1
+status_response_timeout: 1
+status_update_timeout: 1
+reconnect_interval: 0.1
+
+log:
+  active: true
+
+% bundle exec rsmp site --type tlc --json --config config/tlc.yaml
+2020-01-01 23:38:48 UTC                           Starting site RN+SI0001
+2020-01-01 23:38:48 UTC                           Connecting to superviser at 127.0.0.1:12111
+2020-01-01 23:38:48 UTC                           No connection to supervisor at 127.0.0.1:12111
+2020-01-01 23:38:48 UTC                           Will try to reconnect again every 0.1 seconds..
+</code></pre>
+
+<p>Once it&#39;s running, you can run the validator site specs, and you will see the Ruby TLC site respond to e.g. request to switch signal plan:</p>
+
+<pre class="code ruby"><code class="ruby">2020-01-01 23:38:54 UTC  6697976b5     --&gt;  c776  Received CommandRequest {&quot;mType&quot;:&quot;rSMsg&quot;,&quot;type&quot;:&quot;CommandRequest&quot;,&quot;ntsOId&quot;:&quot;&quot;,&quot;xNId&quot;:&quot;&quot;,&quot;cId&quot;:&quot;TC&quot;,&quot;arg&quot;:[{&quot;cCI&quot;:&quot;M0002&quot;,&quot;cO&quot;:&quot;setPlan&quot;,&quot;n&quot;:&quot;status&quot;,&quot;v&quot;:&quot;True&quot;},{&quot;cCI&quot;:&quot;M0002&quot;,&quot;cO&quot;:&quot;setPlan&quot;,&quot;n&quot;:&quot;securityCode&quot;,&quot;v&quot;:&quot;0000&quot;},{&quot;cCI&quot;:&quot;M0002&quot;,&quot;cO&quot;:&quot;setPlan&quot;,&quot;n&quot;:&quot;timeplan&quot;,&quot;v&quot;:&quot;2&quot;}],&quot;mId&quot;:&quot;c77665c1-f7cc-4488-8bcb-f809939e0e20&quot;}
+2020-01-01 23:38:54 UTC                           Switching to plan 2
+</code></pre>
+
+<p>See the rsmp gem documentation for details on how to run Ruby sites.</p>
+
+<h2 id="label-Testing+an+RSMP+supervisor">Testing an RSMP supervisor</h2>
+
+<p>Note: Testing supervisors is still experimental.</p>
+
+<p>A local RSMP site will be started. The site will try to connect to the remote supervisor at 127.0.0.1:12111. You might have to adjust network settings to enable the site to reach the supervisor.</p>
+
+<p>To run tests, cd to the root of this project, then:</p>
+
+<pre class="code ruby"><code class="ruby">% rspec spec/supervisor
+............
+
+Finished in 1.28 seconds (files took 0.20949 seconds to load)
+12 examples, 0 failures
+</code></pre>
+</div></div>
+
+      <div id="footer">
+  Generated on Fri Apr 16 22:46:24 2021 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.26 (ruby-3.0.0).
+</div>
+
+    </div>
+  </body>
+</html>

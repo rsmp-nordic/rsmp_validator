@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Specs: Specifications
+  
+    &mdash; Documentation by YARD 0.9.26
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" />
+
+  <link rel="stylesheet" href="css/rspec.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "Specifications";
+  relpath = '';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="_index.html">Index (S)</a> &raquo;
+    
+    
+    <span class="title">Specifications</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><div>
+  <div>Contexts</div>
+  
+    
+    <div class='context'>
+  <div class='title'>Traffic Light Controller</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    A0302 detector error (logic error)
+  </div>
+  <!-- <div>check_scripts
+    TestSite.connected do |task,supervisor,site|
+      component = COMPONENT_CONFIG['detector_logic'].keys.first
+      system(SCRIPT_PATHS['activate_alarm'])
+      site.log "Waiting for alarm", level: :test
+      start_time = Time.now
+      message, response = nil,nil
+      expect do
+        response = site.wait_for_alarm task, component: component, aCId: 'A0302',
+          aSp: 'Issue', aS: 'Active', timeout: RSMP_CONFIG['alarm_timeout']
+      end.to_not raise_error, "Did not receive alarm"
+
+      delay = Time.now - start_time
+      site.log "alarm confirmed after #{delay.to_i}s", level: :test
+      system(SCRIPT_PATHS['deactivate_alarm'])
+
+      alarm_time = Time.parse(response[:message].attributes["aTs"])
+      expect(alarm_time).to be_within(1.minute).of Time.now.utc
+      expect(response[:message].attributes['rvs']).to eq([{
+        "n":"detector","v":"1"},
+        {"n":"type","v":"loop"},
+        {"n":"errormode","v":"on"},
+        {"n":"manual","v":"True"},
+        {"n":"logicerror","v":"always_off"}
+      ])
+    ensure
+      system(SCRIPT_PATHS['deactivate_alarm'])
+    end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    buffers alarms during disconnects
+  </div>
+  <!-- <div>check_scripts
+    component = COMPONENT_CONFIG['detector_logic'].keys.first
+    TestSite.isolated do |task,supervisor,site|
+    end      
+    # Activate alarm 
+    system(SCRIPT_PATHS['activate_alarm'])
+
+    TestSite.isolated do |task,supervisor,site|
+      @site = site
+      log_confirmation "Waiting for alarm" do
+        message, response = nil,nil
+        expect do
+          response = site.wait_for_alarm task, component: component, aCId: 'A0302',
+            aSp: 'Issue', aS: 'Active', timeout: RSMP_CONFIG['alarm_timeout']
+        end.to_not raise_error, "Did not receive alarm"
+
+      end
+      system(SCRIPT_PATHS['deactivate_alarm'])
+
+      alarm_time = Time.parse(response[:message].attributes["aTs"])
+      expect(alarm_time).to be_within(1.minute).of Time.now.utc
+      expect(response[:message].attributes['rvs']).to eq([{
+        "n":"detector","v":"1"},
+        {"n":"type","v":"loop"},
+        {"n":"errormode","v":"on"},
+        {"n":"manual","v":"True"},
+        {"n":"logicerror","v":"always_off"}
+      ])
+    ensure
+      system(SCRIPT_PATHS['deactivate_alarm'])
+    end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    responds to valid status subscription
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+      component = MAIN_COMPONENT
+      status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus','uRt'=>RSMP_CONFIG['status_update_rate'].to_s }]
+      site.subscribe_to_status component, status_list, collect: {
+        timeout: SUPERVISOR_CONFIG['status_update_timeout']
+      }
+    ensure
+      unsubscribe_list = status_list.map { |item| item.slice('sCI','n') }
+      site.unsubscribe_to_status component, unsubscribe_list
+    end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    exchanges correct connection sequence of rsmp version 3.1.1
+  </div>
+  <!-- <div>check_sequence '3.1.1'</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    exchanges correct connection sequence of rsmp version 3.1.2
+  </div>
+  <!-- <div>check_sequence '3.1.2'</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    exchanges correct connection sequence of rsmp version 3.1.3
+  </div>
+  <!-- <div>check_sequence '3.1.3'</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    exchanges correct connection sequence of rsmp version 3.1.4
+  </div>
+  <!-- <div>check_sequence '3.1.4'</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    exchanges correct connection sequence of rsmp version 3.1.5
+  </div>
+  <!-- <div>check_sequence '3.1.5'</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    responds with NotAck to invalid status request code
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+      site.log "Requesting non-existing status S0000", level: :test
+      expect {
+        status_list = convert_status_list( S0000:[:status] )
+        site.request_status MAIN_COMPONENT, status_list, collect: {
+          timeout: SUPERVISOR_CONFIG['command_response_timeout']
+        }
+      }.to raise_error(RSMP::MessageRejected)
+    end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    responds with NotAck to invalid status request name
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+      site.log "Requesting non-existing status S0001 name", level: :test
+      expect {
+        status_list = convert_status_list( S0001:[:bad] )
+        site.request_status MAIN_COMPONENT, status_list, collect: {
+          timeout: SUPERVISOR_CONFIG['command_response_timeout']
+        }
+      }.to raise_error(RSMP::MessageRejected)
+    end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    disconnects if watchdogs are not acknowledged
+  </div>
+  <!-- <div>TestSite.isolated do |task,supervisor,site|
+      def site.acknowledge original
+      end
+      site.wait_for_state :stopped, RSMP_CONFIG['disconnect_timeout']
+    end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    disconnects if no watchdogs are send
+  </div>
+  <!-- <div>TestSite.isolated do |task,supervisor,site|
+      def site.send_watchdog now=nil
+      end
+      site.wait_for_state :stopped, RSMP_CONFIG['disconnect_timeout']
+    end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>Input/Output</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0029 forced input status
+  </div>
+  <!-- <div>request_status_and_confirm "forced input status",
+        { S0029: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0030 forced output status
+  </div>
+  <!-- <div>request_status_and_confirm "forced output status",
+        { S0030: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0006 activate input
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+	      inputs = SITE_CONFIG['inputs']
+	      cant_test("No inputs configured") if inputs.nil? || inputs.empty?
+	      prepare task, site
+	      inputs.each { |input| switch_input input }
+	    end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    M0013 activate a series of inputs
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+	      status = "5,4134,65;511"
+	      prepare task, site
+	      set_series_of_inputs status
+	    end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0019 force input
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+	      status = 'False'
+	      input = 1
+	      inputValue = 'True'
+	      prepare task, site
+	      force_input status, input, inputValue
+	    end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    M0020 force output
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+	      status = 'False'
+	      output = 1
+	      outputValue = 'True'
+	      prepare task, site
+	      force_output status, output, outputValue
+	    end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0021 set trigger sensitivity
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+	      status = 'False'
+	      output = 1
+	      outputValue = 'True'
+	      prepare task, site
+	      set_trigger_level status
+	    end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>Clock</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0096 current date and time
+  </div>
+  <!-- <div>request_status_and_confirm "current date and time",
+        { S0096: [
+          :year,
+          :month,
+          :day,
+          :hour,
+          :minute,
+          :second,
+        ] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    sets clock with M0104
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        set_date(DATE)
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    reports adjusted clock in S0096
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        with_date_set DATE do
+          status_list = { S0096: [
+            :year,
+            :month,
+            :day,
+            :hour,
+            :minute,
+            :second,
+          ] }
+          request, response = @site.request_status @component, convert_status_list(status_list), collect: {
+            timeout: SUPERVISOR_CONFIG['status_update_timeout']
+          }
+          status = "S0096"
+
+          received = Time.new response[{"sCI" => status, "n" => "year"}]["s"],
+          response[{"sCI" => status, "n" => "month"}]["s"],
+          response[{"sCI" => status, "n" => "day"}]["s"],
+          response[{"sCI" => status, "n" => "hour"}]["s"],
+          response[{"sCI" => status, "n" => "minute"}]["s"],
+          response[{"sCI" => status, "n" => "second"}]["s"],
+          'UTC'
+
+          max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + 
+                    SUPERVISOR_CONFIG['status_response_timeout']
+          diff = received - DATE
+          expect(diff.abs).to be <= max_diff
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    timestamps S0096 with adjusted clock
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        with_date_set DATE do
+          status_list = { S0096: [
+            :year,
+            :month,
+            :day,
+            :hour,
+            :minute,
+            :second,
+          ] }
+          
+          request, response, messages = site.request_status @component,
+            convert_status_list(status_list),
+            collect: {
+              timeout: SUPERVISOR_CONFIG['status_response_timeout']
+            }
+
+          message = messages.first
+          max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
+          diff = Time.parse(message.attributes['sTs']) - DATE
+          expect(diff.abs).to be <= max_diff
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    timestamps aggregated status response with adjusted clock
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        with_date_set DATE do
+          request, response = site.request_aggregated_status MAIN_COMPONENT, collect: {
+            timeout: SUPERVISOR_CONFIG['status_response_timeout']
+          }
+          max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
+          diff = Time.parse(response.attributes['aSTS']) - DATE
+          expect(diff.abs).to be <= max_diff
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    timestamps command response with adjusted clock
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        with_date_set DATE do
+          request, response, messages = set_functional_position 'NormalControl'
+          message = messages.first
+          max_diff = SUPERVISOR_CONFIG['command_response_timeout'] * 2
+          diff = Time.parse(message.attributes['cTS']) - DATE
+          expect(diff.abs).to be <= max_diff
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    timestamps M0104 command response with adjusted clock
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        with_date_set DATE do
+          request, response, messages = set_functional_position 'NormalControl'
+          message = messages.first
+          max_diff = SUPERVISOR_CONFIG['command_response_timeout']
+          diff = Time.parse(message.attributes['cTS']) - DATE
+          expect(diff.abs).to be <= max_diff
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    timestamps alarm with adjusted clock
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        check_scripts
+        prepare task, site
+        with_date_set DATE do
+          component = COMPONENT_CONFIG['detector_logic'].keys.first
+          system(SCRIPT_PATHS['activate_alarm'])
+          site.log "Waiting for alarm", level: :test
+          response = site.wait_for_alarm task, timeout: RSMP_CONFIG['alarm_timeout']
+          max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
+          diff = Time.parse(response.attributes['sTs']) - DATE
+          expect(diff.abs).to be <= max_diff
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    timestamps watchdog messages with adjusted clock
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        with_date_set DATE do
+          response = site.collect task, type: "Watchdog", num: 1, timeout: SUPERVISOR_CONFIG['watchdog_timeout']
+          max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
+          diff = Time.parse(response.attributes['wTs']) - DATE
+          expect(diff.abs).to be <= max_diff
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>Operational Modes</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0020 control mode
+  </div>
+  <!-- <div>request_status_and_confirm "control mode",
+        { S0020: [:controlmode,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0005 traffic controller starting
+  </div>
+  <!-- <div>request_status_and_confirm "traffic controller starting (true/false)",
+        { S0005: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0006 emergency stage
+  </div>
+  <!-- <div>request_status_and_confirm "emergency stage status",
+        { S0006: [:status,:emergencystage] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0007 controller switched on (dark mode=off)
+  </div>
+  <!-- <div>request_status_and_confirm "controller switch on (dark mode=off)",
+        { S0007: [:status,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0008 manual control
+  </div>
+  <!-- <div>request_status_and_confirm "manual control status",
+        { S0008: [:status,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0009 fixed time control
+  </div>
+  <!-- <div>request_status_and_confirm "fixed time control status",
+        { S0009: [:status,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0010 isolated control
+  </div>
+  <!-- <div>request_status_and_confirm "isolated control status",
+        { S0010: [:status,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0011 yellow flash
+  </div>
+  <!-- <div>request_status_and_confirm "yellow flash status",
+        { S0011: [:status,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0012 all red
+  </div>
+  <!-- <div>request_status_and_confirm "all-red status",
+        { S0012: [:status,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0013 police key
+  </div>
+  <!-- <div>request_status_and_confirm "police key",
+        { S0013: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0001 set yellow flash
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        switch_yellow_flash
+        switch_normal_control
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    M0001 set dark mode
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        switch_dark_mode
+        switch_normal_control
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0007 set fixed time
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        switch_fixed_time 'True'
+        switch_fixed_time 'False'
+      end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>System</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0091 operator logged in/out OP-panel
+  </div>
+  <!-- <div>request_status_and_confirm "operator logged in/out OP-panel",
+        { S0091: [:status, :user] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0092 operator logged in/out web-interface
+  </div>
+  <!-- <div>request_status_and_confirm "operator logged in/out web-interface",
+        { S0092: [:status, :user] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0095 version of traffic controller
+  </div>
+  <!-- <div>request_status_and_confirm "version of traffic controller",
+        { S0095: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    M0004 restart
+  </div>
+  <!-- <div>TestSite.isolated do |task,supervisor,site|
+        prepare task, site
+        #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
+        set_restart
+        site.wait_for_state :stopped, RSMP_CONFIG['shutdown_timeout']
+      end
+
+      # NOTE
+      # when a remote site closes the connection, our site proxy object will stop.
+      # when the site reconnects, a new site proxy object will be created.
+      # this means we can't wait for the old site to become ready
+      # it also means we need a new TestSite.
+      TestSite.isolated do |task,supervisor,site|
+        prepare task, site
+        site.wait_for_state :ready, RSMP_CONFIG['ready_timeout']
+        wait_normal_control
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0103 set security code
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        set_security_code 1
+        set_security_code 2
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    Send the wrong security code
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        wrong_security_code 
+      end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>Signal Plans</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0026 week time table
+  </div>
+  <!-- <div>request_status_and_confirm "week time table",
+        { S0026: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0027 time tables
+  </div>
+  <!-- <div>request_status_and_confirm "command table",
+        { S0027: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    responds to S0001 signal group status
+  </div>
+  <!-- <div>request_status_and_confirm "signal group status",
+        { S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0014 current time plan
+  </div>
+  <!-- <div>request_status_and_confirm "current time plan",
+        { S0014: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0018 number of time plans
+  </div>
+  <!-- <div>request_status_and_confirm "number of time plans",
+        { S0018: [:number] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0022 list of time plans
+  </div>
+  <!-- <div>request_status_and_confirm "list of time plans",
+        { S0022: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0097 version of traffic program
+  </div>
+  <!-- <div>request_status_and_confirm "version of traffic program",
+        { S0097: [:version,:hash] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    M0002 set time plan
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        plans = SITE_CONFIG['plans']
+        cant_test("No time plans configured") if plans.nil? || plans.empty?
+        prepare task, site
+        plans.each { |plan| switch_plan plan }
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0014 set command table
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        plan = "1"
+        status = "10,10"
+        prepare task, site
+        set_dynamic_bands status, plan
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    M0015 set offset
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        plan = 1
+        status = 255
+        prepare task, site
+        set_offset status, plan
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0016 set week table
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        status = "0-1,6-2"
+        prepare task, site
+        set_week_table status
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    M0017 set time table
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        status = "12-1-12-59,1-0-23-12"
+        prepare task, site
+        set_time_table status
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0018 set cycle time
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        status = 5
+        plan = 0
+        prepare task, site
+        set_cycle_time status, plan
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0023 command table
+  </div>
+  <!-- <div>request_status_and_confirm "command table",
+        { S0023: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0024 offset time
+  </div>
+  <!-- <div>request_status_and_confirm "offset time",
+        { S0024: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0025 time-of-green/time-of-red
+  </div>
+  <!-- <div>request_status_and_confirm "time-of-green/time-of-red",
+        { S0025: [
+            :minToGEstimate,
+            :maxToGEstimate,
+            :likelyToGEstimate,
+            :ToGConfidence,
+            :minToREstimate,
+            :maxToREstimate,
+            :likelyToREstimate
+        ] },
+        COMPONENT_CONFIG['signal_group'].keys.first</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0028 cycle time
+  </div>
+  <!-- <div>request_status_and_confirm "cycle time",
+        { S0028: [:status] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>Signal Groups</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0017 number of signal groups
+  </div>
+  <!-- <div>request_status_and_confirm "number of signal groups",
+  	    { S0017: [:number] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    M0010 start signal group
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+  	    prepare task, site
+  	    set_signal_start 'True'
+  	  end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0011 stop signal group
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+  	    prepare task, site
+  	    set_signal_stop 'True'
+  	  end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    M0012 request start/stop of a series of signal groups
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+  	    prepare task, site
+  	    set_signal_start_or_stop '5,4134,65;5,11'
+  	  end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>Detector Logics</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0002 detector logic status
+  </div>
+  <!-- <div>request_status_and_confirm "detector logic status",
+  	    { S0002: [:detectorlogicstatus] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0016 number of detector logics
+  </div>
+  <!-- <div>request_status_and_confirm "number of detector logics",
+  	    { S0016: [:number] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0021 manually set detector logic
+  </div>
+  <!-- <div>request_status_and_confirm "manually set detector logics",
+  	    { S0021: [:detectorlogics] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0031 trigger level sensitivity for loop detector
+  </div>
+  <!-- <div>request_status_and_confirm "trigger level sensitivity for loop detector",
+  	    { S0031: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0008 activate detector logic
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+  	    prepare task, site
+  	    switch_detector_logic
+  	  end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    A0302 detector error (logic error)
+  </div>
+  <!-- <div>check_scripts
+  	  TestSite.connected do |task,supervisor,site|
+  	    component = COMPONENT_CONFIG['detector_logic'].keys.first
+  	    system(SCRIPT_PATHS['activate_alarm'])
+  	    site.log "Waiting for alarm", level: :test
+  	    start_time = Time.now
+  	    message, response = nil,nil
+  	    expect do
+  	      response = site.wait_for_alarm task, component: component, aCId: 'A0302',
+  	        aSp: 'Issue', aS: 'Active', timeout: RSMP_CONFIG['alarm_timeout']
+  	    end.to_not raise_error, "Did not receive alarm"
+
+  	    delay = Time.now - start_time
+  	    site.log "alarm confirmed after #{delay.to_i}s", level: :test
+  	    system(SCRIPT_PATHS['deactivate_alarm'])
+
+  	    alarm_time = Time.parse(response[:message].attributes["aTs"])
+  	    expect(alarm_time).to be_within(1.minute).of Time.now.utc
+  	    expect(response[:message].attributes['rvs']).to eq([{
+  	      "n":"detector","v":"1"},
+  	      {"n":"type","v":"loop"},
+  	      {"n":"errormode","v":"on"},
+  	      {"n":"manual","v":"True"},
+  	      {"n":"logicerror","v":"always_off"}
+  	    ])
+  	  ensure
+  	    system(SCRIPT_PATHS['deactivate_alarm'])
+  	  end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>Emergency Routes</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0005 activate emergency route
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        emergency_routes = SITE_CONFIG['emergency_routes']
+        cant_test("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
+        prepare task, site
+        emergency_routes.each { |emergency_route| switch_emergency_route emergency_route.to_s }
+      end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>Traffic Counting</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0201 traffic counting: number of vehicles
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: number of vehicles",
+        { S0201: [:starttime,:vehicles] },
+        COMPONENT_CONFIG['detector_logic'].keys.first</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0202 traffic counting: vehicle speed
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: vehicle speed",
+        { S0202: [:starttime,:speed] },
+        COMPONENT_CONFIG['detector_logic'].keys.first</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0203 traffic counting: occupancy
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: occupancy",
+        { S0203: [:starttime,:occupancy] },
+        COMPONENT_CONFIG['detector_logic'].keys.first</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0204 traffic counting: classification
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: classification",
+        { S0204: [
+            :starttime,
+            :P,
+            :PS,
+            :L,
+            :LS,
+            :B,
+            :SP,
+            :MC,
+            :C,
+            :F
+        ] },
+        COMPONENT_CONFIG['detector_logic'].keys.first</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0205 traffic counting: number of vehicles
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: number of vehicles",
+        { S0205: [:start,:vehicles] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0206 traffic counting: vehicle speed
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: vehicle speed",
+        { S0206: [:start,:speed] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0207 traffic counting: occupancy
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: occupancy",
+        { S0207: [:start,:occupancy] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0208 traffic counting: classification
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: classification",
+        { S0208: [
+            :start,
+            :P,
+            :PS,
+            :L,
+            :LS,
+            :B,
+            :SP,
+            :MC,
+            :C,
+            :F
+        ] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>Traffic Situations</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    S0015 current traffic situation
+  </div>
+  <!-- <div>request_status_and_confirm "current traffic situation",
+        { S0015: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    S0019 number of traffic situations
+  </div>
+  <!-- <div>request_status_and_confirm "number of traffic situations",
+        { S0019: [:number] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    M0003 set traffic situation
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        situations = SITE_CONFIG['traffic_situations']
+        cant_test("No traffic situations configured") if situations.nil? || situations.empty?
+        prepare task, site
+        situations.each { |traffic_situation| switch_traffic_situation traffic_situation.to_s }
+      end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>Aggregated Status</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    responds to aggregated status request
+  </div>
+  <!-- <div>TestSite.connected do |task,supervisor,site|
+        prepare task, site
+        log_confirmation "request aggregated status" do
+          site.request_aggregated_status MAIN_COMPONENT, collect: {
+            timeout: SUPERVISOR_CONFIG['status_response_timeout']
+          }
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div>
+  
+</div></div>
+
+      <div id="footer">
+  Generated on Fri Apr 16 22:46:24 2021 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.26 (ruby-3.0.0).
+</div>
+
+    </div>
+  </body>
+</html>
