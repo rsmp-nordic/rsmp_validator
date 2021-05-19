@@ -72,7 +72,7 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Expect status response before timeout
     it 'S0097 version of traffic program', sxl: '>=1.0.15' do |example|
       request_status_and_confirm "version of traffic program",
-        { S0097: [:version,:hash] }
+        { S0097: [:timestamp,:checksum] }
     end
 
     # Verify that we change time plan (signal program)
