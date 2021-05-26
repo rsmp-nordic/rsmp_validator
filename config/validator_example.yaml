@@ -1,1 +1,4 @@
+# copy this to config/validator.yaml and point to
+# the config for the system you're testing
+
 rsmp_config_path: config/ci/rsmp_gem.yaml
