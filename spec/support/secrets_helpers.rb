@@ -1,6 +1,5 @@
 
-def load_secrets path
-  secrets_path = 'config/secrets.yaml'
+def load_secrets secrets_path
   unless File.exist? secrets_path
     puts "Secrets file #{secrets_path} not found. Please add it and try again."
     exit
