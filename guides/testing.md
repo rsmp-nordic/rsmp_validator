@@ -1,7 +1,26 @@
 # Running tests
-## Basics
-To run test, cd to the root of this project, then use the `rspec`command:
-	
+## Where are test Located?
+Tests are located in the spec/ folder. They are organized into subfolders and files, according to equipment types and functional areas.
+
+```sh
+code/rsmp_validator (guides) % tree spec -d                          
+spec
+├── site
+│   ├── core
+│   └── tlc
+├── supervisor
+└── support
+```
+
+The folder spec/support includes [helper classes and utilities](implementation.md). 
+
+The file `spec/spec_helper.rb` will be included automatically, and will in turn include the required helpers, including the rsmp gem and the TestSite helper class, so they are available in tests.
+
+## Running Test
+Note: Before running tests, be sure to set up your test [configuration](configuring.md).
+
+The RSMP Validator is based on the RSpec testing tool, so you use the `rspec` command to run tests. You should be located in the root of the project folder when running test.
+
 ```sh
 % bundle exec rspec spec/site
 ............
@@ -10,7 +29,7 @@ Finished in 1.28 seconds (files took 0.20949 seconds to load)
 12 examples, 0 failures
 ```
 
-## Selecting Tests
+## Filtering Tests
 You can use rspec command line options to filter which tests to run. See https://rspec.info/ for more info.
 
 If you want to store you selection for easy reuse, add them to a file name .rspec-local, in the root of the project folder. RSpec will automatically use the options. Example:
