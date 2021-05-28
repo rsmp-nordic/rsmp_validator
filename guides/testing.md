@@ -1,9 +1,9 @@
 # Running tests
-## Where are test Located?
+## Organization
 Tests are located in the spec/ folder. They are organized into subfolders and files, according to equipment types and functional areas.
 
 ```sh
-code/rsmp_validator (guides) % tree spec -d                          
+% tree spec -d                          
 spec
 ├── site
 │   ├── core
