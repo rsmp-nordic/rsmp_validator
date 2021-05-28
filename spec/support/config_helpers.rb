@@ -17,10 +17,7 @@ end
 secrets_name = File.basename(rsmp_config_path,'.yaml')
 secrets_path = "config/secrets_#{secrets_name}.yaml"
 secrets_path = 'config/secrets.yaml' unless File.exist?(secrets_path)
-p secrets_path
 SECRETS = load_secrets(secrets_path)
-
-p SECRETS
 
 #sugar
 SUPERVISOR_CONFIG = RSMP_CONFIG['supervisor'] rescue {}
