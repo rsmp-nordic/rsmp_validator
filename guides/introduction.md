@@ -13,9 +13,9 @@ When you run tests, the validator waits for the equipment to connect. The valida
 IMPORTANT: During testing, the validator will send many different commands to the equipment. For traffic light controllers this include commands to change signal plans, force detector logics, restart the controller, etc. For this reason you should **not** use the validator to test equipment that is in use on street.
 
 ## Guides
-The first step is to [install the validator](installation.md)
+The first step is to [install the validator](installing.md)
 
-You should then [setup configurations](configuration.md)
+You should then [setup configurations](configuring.md)
 
 Now you're ready to [run tests](testing.md)
 
