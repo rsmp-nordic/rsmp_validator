@@ -3,28 +3,24 @@ rsmp-validator is a tool written in Ruby for testing RSMP equipment or software 
 
 It uses the rsmp gem to handle RSMP communication.
 
-## Installation
-Make sure you have Ruby installed. Then ensure you have the 'bundler' gem installed.
+# Quick Start
 
-Now run this to install gems:
+```sh
+% cat config/validator.yaml 
+rsmp_config_path: config/my_tlc.yaml   # config for eqiupment to be tested
 
+% bundle exec rspec spec/site/core spec/site/tlc
+Using test config config/ci/rsmp_gem.yaml
+Warning: Config 'scripts' is missing from config/ci/rsmp_gem.yaml
+Run options: exclude {:rsmp=>[unless relevant for 3.1.5], :script=>true}
+...............................................................................
+
+Finished in 6.22 seconds (files took 0.60681 seconds to load)
+79 examples, 0 failures
 ```
-% bundle
-```
 
-Some tests require security codes to run. Place these in config/secrets.yaml, in this format:
-
-```yaml
-security_codes:
-  1: '0000'
-  2: '0000'
-```
-
-The file config/secrets.yaml is gitignored and should not be added to the repository.
-
-### Choosing the type of equipment you test
-The validator requires knowledge about the equipment tested. This is stored in the config files in config/.
-By default config/ruby.yaml is used. To use another config, copy config/validator_example.yaml into  config/validator.yaml, and edit it to point to the relevant config file. config/validator.yaml is gitignored.
+# Documentation
+Please see the [guides](guides/introction.md) for more information.
 
 ## Testing an RSMP site
 A local RSMP supervisor will be started on 127.0.0.1:12111. The site is expected to connect to it. You might have to adjust network settings to enable the site to reach the supervisor.
@@ -41,7 +37,7 @@ To run test, cd to the root of this project, then:
 
 Finished in 1.28 seconds (files took 0.20949 seconds to load)
 12 examples, 0 failures
-```	
+```
 
 ## Choosing which tests to run
 You can use rspec command line options to filter which tests to run. See https://rspec.info/ for more info.

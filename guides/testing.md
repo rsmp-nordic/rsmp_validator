@@ -5,29 +5,36 @@ Tests are located in the spec/ folder. They are organized into subfolders and fi
 ```sh
 % tree spec -d                          
 spec
-├── site
-│   ├── core
-│   └── tlc
-├── supervisor
-└── support
+├── site          # tests for sites (equipment)
+│   ├── core      # tests covering core specification
+│   └── tlc       # tests for traffic light controllers
+├── supervisor    # tests for supervisor systems (experimental)
+└── support       # helper classes and other support files 
 ```
 
-The folder spec/support includes [helper classes and utilities](implementation.md). 
-
-The file `spec/spec_helper.rb` will be included automatically, and will in turn include the required helpers, including the rsmp gem and the TestSite helper class, so they are available in tests.
+The file `spec/spec_helper.rb` will be included automatically by RSpec, and will in turn include the required dependencies, including the rsmp gem and the TestSite helper class, so they are available in tests.
 
 ## Running Test
 Note: Before running tests, be sure to set up your test [configuration](configuring.md).
 
 The RSMP Validator is based on the RSpec testing tool, so you use the `rspec` command to run tests. You should be located in the root of the project folder when running test.
 
-```sh
-% bundle exec rspec spec/site
-............
+Test a site, by running all tests covering the core specification:
 
-Finished in 1.28 seconds (files took 0.20949 seconds to load)
-12 examples, 0 failures
+```sh
+% bundle exec rspec spec/site/core
+Using test config config/ci/rsmp_gem.yaml
+Run options: exclude {:rsmp=>[unless relevant for 3.1.5], :script=>true}
+....
+
+Finished in 1.01 seconds (files took 0.64491 seconds to load)
+4 examples, 0 failures
 ```
+
+In this exampple, the tests are running against a TLC emulator from the rsmp gem, running on the local machine, which is why the tests run in just about 1 second.
+
+To rn 
+
 
 ## Filtering Tests
 You can use rspec command line options to filter which tests to run. See https://rspec.info/ for more info.
@@ -68,3 +75,10 @@ Once it's running, you can run the validator site specs, and you will see the Ru
 ```
 
 See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) documentation for details on how to run Ruby sites and supervisors.
+
+### Testing Alarms
+Testing alarms require some way to trigger them.
+
+There's not yet any way to trigger alarms via RSMP, so some other way is required. Some equipment provide other interfaces that makes it possible to trigger alarms. If you can provide a script that can trigger the relevant alarms, you can use this in tests. Otherwise you should probably skip the test.
+
+
