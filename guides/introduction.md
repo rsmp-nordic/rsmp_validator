@@ -20,7 +20,7 @@ The validator can be used to test all types of RSMP equipment. Traffic Light Con
 
 You will typically use the validator in a lab/office setup. The validator will send many diffrent commands to the equipment during tests. For traffic light controllers test will attempt to change signal plans, force detector logics, restart the controller, etc. It is therefore **not** recommended to test euqipment while in use on street.
 
-# Do I need to learn the Ruby langauge?
+## Do I need to learn the Ruby langauge?
 No. You can use the validator without writing any Ruby code. Ruby is only needed if you want to modify or add tests, or you want runderstand more in-depth how specific tests work.
 
 ## How does it work?
