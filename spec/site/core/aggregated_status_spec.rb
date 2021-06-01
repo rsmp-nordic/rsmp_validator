@@ -12,7 +12,7 @@ RSpec.describe "Traffic Light Controller" do
         prepare task, site
         log_confirmation "request aggregated status" do
           site.request_aggregated_status MAIN_COMPONENT, collect: {
-            timeout: SUPERVISOR_CONFIG['status_response_timeout']
+            timeout: TIMEOUTS_CONFIG['status_response']
           }
         end
       end

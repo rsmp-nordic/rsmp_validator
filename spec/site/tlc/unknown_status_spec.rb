@@ -7,7 +7,7 @@ RSpec.describe "Traffic Light Controller" do
       expect {
         status_list = convert_status_list( S0000:[:status] )
         site.request_status MAIN_COMPONENT, status_list, collect: {
-          timeout: SUPERVISOR_CONFIG['command_response_timeout']
+          timeout: TIMEOUTS_CONFIG['command_response']
         },
         validate: false
       }.to raise_error(RSMP::MessageRejected)
@@ -20,7 +20,7 @@ RSpec.describe "Traffic Light Controller" do
       expect {
         status_list = convert_status_list( S0001:[:bad] )
         site.request_status MAIN_COMPONENT, status_list, collect: {
-          timeout: SUPERVISOR_CONFIG['command_response_timeout']
+          timeout: TIMEOUTS_CONFIG['command_response']
         },
         validate: false
       }.to raise_error(RSMP::MessageRejected)

@@ -1,6 +1,6 @@
 # Running tests
 ## Organization
-Tests are located in the spec/ folder. They are organized into subfolders and files, according to equipment types and functional areas.
+Tests are located in the `spec/` folder. They are organized into subfolders and files, according to system type, specification and functional areas.
 
 ```sh
 % tree spec -d                          
@@ -11,8 +11,6 @@ spec
 ├── supervisor    # tests for supervisor systems (experimental)
 └── support       # helper classes and other support files 
 ```
-
-The file `spec/spec_helper.rb` will be included automatically by RSpec, and will in turn include the required dependencies, including the rsmp gem and the TestSite helper class, so they are available in tests.
 
 ## Running Test
 Note: Before running tests, be sure to set up your test [configuration](configuring.md).

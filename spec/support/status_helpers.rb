@@ -43,17 +43,18 @@ module StatusHelpers
   def verify_status parent_task, description, status_list
     log_confirmation description do
       message, result = @site.request_status @component, convert_status_list(status_list), collect: {
-        timeout: SUPERVISOR_CONFIG['status_update_timeout']
+        timeout: TIMEOUTS_CONFIG['status_update']
       }
     end
   end
 
-  def wait_for_status parent_task, description, status_list, update_rate: RSMP_CONFIG['status_update_rate']
+  def wait_for_status parent_task, description, status_list, update_rate: VALIDATOR_CONFIG['status_update_rate']
+    update_rate = 1 unless update_rate
     log_confirmation description do
       subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
       begin
         message, result = @site.subscribe_to_status @component, subscribe_list, collect: {
-          timeout: RSMP_CONFIG['command_timeout']
+          timeout: TIMEOUTS_CONFIG['command']
         }
       ensure
         unsubscribe_list = convert_status_list(status_list).map { |item| item.slice('sCI','n') }
@@ -67,7 +68,7 @@ module StatusHelpers
       @site = site
       log_confirmation "request of #{description}" do
         site.request_status component, convert_status_list(status_list), collect: {
-          timeout: SUPERVISOR_CONFIG['status_response_timeout']
+          timeout: TIMEOUTS_CONFIG['status_response']
         }
       end
     end

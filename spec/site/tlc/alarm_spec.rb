@@ -18,7 +18,7 @@ RSpec.describe 'Traffic Light Controller' do
       message, response = nil,nil
       expect do
         response = site.wait_for_alarm task, component: component, aCId: 'A0302',
-          aSp: 'Issue', aS: 'Active', timeout: RSMP_CONFIG['alarm_timeout']
+          aSp: 'Issue', aS: 'Active', timeout: TIMEOUTS_CONFIG['alarm']
       end.to_not raise_error, "Did not receive alarm"
 
       delay = Time.now - start_time
@@ -49,7 +49,7 @@ RSpec.describe 'Traffic Light Controller' do
       message, response = nil,nil
       expect do
         response = site.wait_for_alarm task, component: component, aCId: 'A0302',
-          aSp: 'Issue', aS: 'Active', timeout: RSMP_CONFIG['alarm_timeout']
+          aSp: 'Issue', aS: 'Active', timeout: TIMEOUTS_CONFIG['alarm']
       end.to_not raise_error, "Did not receive alarm"
   
       alarm_code_id = 'A0302'
@@ -59,7 +59,7 @@ RSpec.describe 'Traffic Light Controller' do
       site.log "alarm confirmed after #{delay.to_i}s", level: :test
       
       expect do
-        response = @site.wait_for_alarm_acknowledged_response message: message, component: @component, timeout: RSMP_CONFIG['alarm_timeout']
+        response = @site.wait_for_alarm_acknowledged_response message: message, component: @component, timeout: TIMEOUTS_CONFIG['alarm']
       end.to_not raise_error
       
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
@@ -84,7 +84,7 @@ RSpec.describe 'Traffic Light Controller' do
         message, response = nil,nil
         expect do
           response = site.wait_for_alarm task, component: component, aCId: 'A0302',
-            aSp: 'Issue', aS: 'Active', timeout: RSMP_CONFIG['alarm_timeout']
+            aSp: 'Issue', aS: 'Active', timeout: TIMEOUTS_CONFIG['alarm']
         end.to_not raise_error, "Did not receive alarm"
 
       end

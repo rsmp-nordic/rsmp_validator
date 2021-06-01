@@ -26,12 +26,12 @@ RSpec.describe 'Traffic Light Controller' do
 
 
 	  # 1. Verify connection
-	  # 2. Verify that there is a SITE_CONFIG with a input
+	  # 2. Verify that there is a VALIDATOR_CONFIG with a input
 	  # 3. Send control command to switch input
 	  # 4. Wait for status "input" = requested  
 	  it 'M0006 activate input', sxl: '>=1.0.7' do |example|
 	    TestSite.connected do |task,supervisor,site|
-	      inputs = SITE_CONFIG['inputs']
+	      inputs = ITEMS_CONFIG['inputs']
 	      cant_test("No inputs configured") if inputs.nil? || inputs.empty?
 	      prepare task, site
 	      inputs.each { |input| switch_input input }

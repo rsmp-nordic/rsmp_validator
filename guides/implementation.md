@@ -15,3 +15,17 @@ More about:
 TestSite
 async
 etc
+
+
+## RSpec Helpers and Options
+The file `spec/spec_helper.rb` will be included automatically by RSpec, because the file `.rspec` has the following options:
+
+```yaml
+--require spec_helper
+```
+ 
+The file `spec/spec_helper.rb`and will in turn include the required dependencies, including the rsmp gem and files in `spec/support/`, which defines helper classes and methods.
+
+## Git Ignores
+The file .gitignore is setup to ignore files and folders that typically use used for private configurations, including `config/private/` and all secrets*.yaml files in `config/`.
+`

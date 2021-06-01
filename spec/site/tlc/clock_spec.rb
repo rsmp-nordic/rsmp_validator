@@ -60,7 +60,7 @@ RSpec.describe "Traffic Light Controller" do
             :second,
           ] }
           request, response = @site.request_status @component, convert_status_list(status_list), collect: {
-            timeout: SUPERVISOR_CONFIG['status_update_timeout']
+            timeout: TIMEOUTS_CONFIG['status_update']
           }
           status = "S0096"
 
@@ -72,8 +72,8 @@ RSpec.describe "Traffic Light Controller" do
           response[{"sCI" => status, "n" => "second"}]["s"],
           'UTC'
 
-          max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + 
-                    SUPERVISOR_CONFIG['status_response_timeout']
+          max_diff = TIMEOUTS_CONFIG['command_response'] + 
+                    TIMEOUTS_CONFIG['status_response']
           diff = received - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -103,11 +103,11 @@ RSpec.describe "Traffic Light Controller" do
           request, response, messages = site.request_status @component,
             convert_status_list(status_list),
             collect: {
-              timeout: SUPERVISOR_CONFIG['status_response_timeout']
+              timeout: TIMEOUTS_CONFIG['status_response']
             }
 
           message = messages.first
-          max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
+          max_diff = TIMEOUTS_CONFIG['command_response'] + TIMEOUTS_CONFIG['status_response']
           diff = Time.parse(message.attributes['sTs']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -127,9 +127,9 @@ RSpec.describe "Traffic Light Controller" do
         prepare task, site
         with_date_set DATE do
           request, response = site.request_aggregated_status MAIN_COMPONENT, collect: {
-            timeout: SUPERVISOR_CONFIG['status_response_timeout']
+            timeout: TIMEOUTS_CONFIG['status_response']
           }
-          max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
+          max_diff = TIMEOUTS_CONFIG['command_response'] + TIMEOUTS_CONFIG['status_response']
           diff = Time.parse(response.attributes['aSTS']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -149,7 +149,7 @@ RSpec.describe "Traffic Light Controller" do
         with_date_set DATE do
           request, response, messages = set_functional_position 'NormalControl'
           message = messages.first
-          max_diff = SUPERVISOR_CONFIG['command_response_timeout'] * 2
+          max_diff = TIMEOUTS_CONFIG['command_response'] * 2
           diff = Time.parse(message.attributes['cTS']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -169,7 +169,7 @@ RSpec.describe "Traffic Light Controller" do
         with_date_set DATE do
           request, response, messages = set_functional_position 'NormalControl'
           message = messages.first
-          max_diff = SUPERVISOR_CONFIG['command_response_timeout']
+          max_diff = TIMEOUTS_CONFIG['command_response']
           diff = Time.parse(message.attributes['cTS']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -193,8 +193,8 @@ RSpec.describe "Traffic Light Controller" do
           component = COMPONENT_CONFIG['detector_logic'].keys.first
           system(SCRIPT_PATHS['activate_alarm'])
           site.log "Waiting for alarm", level: :test
-          response = site.wait_for_alarm task, timeout: RSMP_CONFIG['alarm_timeout']
-          max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
+          response = site.wait_for_alarm task, timeout: TIMEOUTS_CONFIG['alarm']
+          max_diff = TIMEOUTS_CONFIG['command_response'] + TIMEOUTS_CONFIG['status_response']
           diff = Time.parse(response.attributes['sTs']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -212,8 +212,8 @@ RSpec.describe "Traffic Light Controller" do
       TestSite.connected do |task,supervisor,site|
         prepare task, site
         with_date_set DATE do
-          response = site.collect task, type: "Watchdog", num: 1, timeout: SUPERVISOR_CONFIG['watchdog_timeout']
-          max_diff = SUPERVISOR_CONFIG['command_response_timeout'] + SUPERVISOR_CONFIG['status_response_timeout']
+          response = site.collect task, type: "Watchdog", num: 1, timeout: TIMEOUTS_CONFIG['watchdog']
+          max_diff = TIMEOUTS_CONFIG['command_response'] + TIMEOUTS_CONFIG['status_response']
           diff = Time.parse(response.attributes['wTs']) - DATE
           expect(diff.abs).to be <= max_diff
         end

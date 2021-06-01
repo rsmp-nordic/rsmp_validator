@@ -56,24 +56,12 @@ class TestSite
 
   def start options={}, why=nil
     unless @supervisor
-      supervisor_settings = {
-        'stop_after_first_session' => false,
-        'watchdog_interval' => 5,
-        'watchdog_timeout' => 10,
-        'acknowledgement_timeout' => 10,
-        'command_response_timeout' => 10,
-        'status_response_timeout' => 10,
-        'status_update_timeout' => 10
-      }.merge(RSMP_CONFIG['supervisor']).merge options
-
-      supervisor_settings['sites'][:any]["collect"] = options['collect']
-
       # start the supervisor in a separe async task that will
       # persist across tests
       @supervisor_task = @reactor.async do |task|
         @supervisor = RSMP::Supervisor.new(
           task: task,
-          supervisor_settings: supervisor_settings,
+          supervisor_settings: SUPERVISOR_CONFIG.merge(options),
           logger: @logger,
           collect: options['collect']
         )
@@ -148,11 +136,11 @@ class TestSite
   end
 
   def wait_for_site task
-    @remote_site = @supervisor.find_site :any
+    @remote_site = @supervisor.proxies.first
     unless @remote_site
       log "Waiting for site to connect", level: :test
-      @remote_site = @supervisor.wait_for_site(:any, RSMP_CONFIG['connect_timeout'])
+      @remote_site = @supervisor.wait_for_site(:any, TIMEOUTS_CONFIG['connect'])
     end
-    @remote_site.wait_for_state :ready, RSMP_CONFIG['ready_timeout']
+    @remote_site.wait_for_state :ready, TIMEOUTS_CONFIG['ready']
   end
 end

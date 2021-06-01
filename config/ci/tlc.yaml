@@ -2,7 +2,8 @@ site_id: RN+SI0001
 supervisors:
   - ip: 127.0.0.1
     port: 13111
-
+sxl: tlc
+sxl_version: 1.0.15
 components:
   main:
     TC:
@@ -18,15 +19,16 @@ components:
       plan: 'BBB1NB'
   detector_logic:
     DL1:
-watchdog_interval: 0.1
-watchdog_timeout: 0.2
-acknowledgement_timeout: 0.2
-reconnect_interval: 0.1
-
+intervals:
+  timer: 0.1
+  watchdog: 0.1
+  reconnect: 0.1
+timeouts:
+  watchdog: 0.2
+  acknowledgement: 0.2
 security_codes:
   1: '1111'
   2: '2222'
-
 log:
   active: true
   color: true
@@ -41,4 +43,3 @@ log:
   json: true
   acknowledgements: false
   watchdogs: false
-

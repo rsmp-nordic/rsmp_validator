@@ -3,7 +3,7 @@ module CommandHelpers
     result = nil
     log_confirmation message do
       result = @site.send_command component, command_list, collect: {
-          timeout: SUPERVISOR_CONFIG['command_response_timeout']
+          timeout: TIMEOUTS_CONFIG['command_response']
         }
     end
     return *result   # use splat '*' operator

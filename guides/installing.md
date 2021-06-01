@@ -20,6 +20,8 @@ Bundler version 2.2.15
 ```
 
 ## Installing
+Install by cloning the Git repository, and then running Bundler:
+
 ```sh
 # clone the rsmp_validator git repository to you local machine
 % git clone https://github.com/rsmp-nordic/rsmp_validator.git
@@ -39,6 +41,6 @@ Bundle complete! 4 Gemfile dependencies, 28 gems now installed.
 Use `bundle info [gemname]` to see where a bundled gem is installed.
 ```
 
-You will now have RSpec and all other dependencies installed.
+You will now have RSpec, the rsmp gem and all other dependencies installed.
 
-It's recommended to use `bundle exec` to run `rspec` and other commands from gems, to ensure you're using the correct version of the gems. See https://bundler.io/man/bundle-exec.1.html
+It's recommended to use [bundle exec](https://bundler.io/man/bundle-exec.1.html) to run `rspec` and other commands that come from gems, to ensure that you're using the correct version of the gems.
