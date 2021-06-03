@@ -1,5 +1,5 @@
 # Configuring
-Before you run test, you must setup a configuration for the equipment you want to tests. 
+Before you run tests, you must setup a configuration for the equipment you want to tests. 
 
 For example, the validator needs to know the SXL (type of equipment), because the SXL is not send by the equipment when connecting.
 
@@ -13,73 +13,68 @@ The validator will read the file `config/validator.yaml` to choose what config t
 To use another config, copy `config/validator_example.yaml` into a new file file `config/validator.yaml`, and edit it to point to the relevant config file, e.g.:
 
 ```yaml
-rsmp_config_path: config/ci/my_equipment.yaml
+rsmp_config_path: config/my_equipment.yaml
 ```
 
 Note: The file `config/validator.yaml` is ignored by git.
 
-## Content of config files
+## Configuration files
+The configuration describes the equipment/system that you want to test. Timeouts should be set as low as possible while, still giving the site time to respond correctly before tests times out and report errors.
 
-supervisor: # config used by the rsmp supervisor started by the validator
-  sites:      # settings for sites that connect to the supervisor
-     # a supervisor can have different settings for different connecting site, but
-     # settings under the :anykey will be used for any site that connect.
-     # in a test setup, we usually only expect single site to connect, so using
-     # :any is easier that specifying an ip address
-    :any:
-      # the rsmp core versions that we accept. here we accept only 3.1.2. if the site
-      # does not support 3.1.2 the connection will fail, so you need to make sure
-      # you're using configs that match the site
-      rsmp_versions:
-        - 3.1.2
-      # list of plans available in the tlc
-      # when testing signal plan commands, the validator will try to switch to each of these in turn
-      plans:           
-        - 3
-        - 4
-      traffic_situations:  # list of traffic situations available in the tlc
-        - 1
-        - 2
-      emergency_routes:  # list of emergency routes available in the tlc
-        - 1
-      # list of components. the ids must match what's present in the site,
-      # because they are used when sending commands to the site
-      # main, signal_group and detector_logic are predefined types, and the only types
-      # allowed here in the config
-      components:
-        main:   # type
-          KK+AG9998=001TC000:   # id
-        signal_group:
-          KK+AG9998=001SG001:
-        detector_logic:
-          KK+AG9998=001DL001:
-  
-  # timeouts and intervals in seconds
-  # set this as low as possible to make tests run faster,
-  # while still giving the equipment reasonable time to respond
-  watchdog_interval: 60      # how often to send a watchdog
-  watchdog_timeout: 120   # expect a watchdog within this duration
-  acknowledgement_timeout: 20
-  command_response_timeout: 20
-  status_response_timeout: 20
-  status_update_timeout: 20
+Test configurations are written in the YAML format and have the following structure and default values. All settings except `components` and `items` can be left out, in which case the default values will be used.
 
-connect_timeout: 60
-disconnect_timeout: 60
-ready_timeout: 60
+```yaml
+port: 13111             # port to listen on
+ips: all                # allow ip addresses. either 'all' or a list
+rsmp_versions: all      # allowed core version(s). either 'all' or a list
+sxl: tlc                # sxl of the connecting site
+intervals:
+  timer: 1              # main timer interval (resolution)
+  watchdog: 1           # how often to send watchdog messages
+timeouts:
+  watchdog: 2           # max time bewteen incoming watchdogs
+  acknowledgement: 2    # max time until acknowledgement is received
+  connect: 1            # max time until site connects
+  ready: 1              # max time until site completes connecton sequence
+  status_response: 1    # max time until site responds to a status request
+  status_update: 1      # max time until site sends a status update
+  subscribe: 1          # max time until site sends a status update
+  command: 1            # max time until a command results in a status update
+  command_response: 1   # max time until site responds to a command request
+  alarm: 1              # max time until site raises an alarm
+  disconnect: 1         # max time until site disconnects
+  shutdown: 1           # max time until site shuts down for a restart
+components:             # list of rsmp components, organized by type and name
+  main:                 # type
+    TC:                 # name. note that this is an (empty) options hash
+  signal_group:
+    A1:
+    A2:
+    B1:
+    B2:
+  detector_logic:       
+    DL1:
+items:                  # other configurations that should be tested
+  plans: [1,2]                # list of plans
+  traffic_situations: [1,2]   # list of traffic situations
+  emergency_routes: [1]       # list of emergency route
+  inputs: [1]                 # list of emergency inputs (I/O)
+```
 
-command_timeout: 180
-status_timeout: 180
-status_update_rate: 1  # when subscribing to status messages, use rate of a message per 1 second
-subscribe_timeout: 180
-alarm_timeout: 180
-shutdown_timeout: 180
+Certain settings will be copied into a configuration for the RSMP supervisor started by the validator, including: port, sxl, intervals, timeouts, components, rsmp_versions. See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) for more details about these settings.
 
+The supervisor config will additionaly have `max_sites: 1` and `ips: all` meaning it will allow connections from any ip and with any RSMP site id, but will only allow one site to be connected at a time. Multiple connections will be flagged as an error.
 
+## Configuring the site
+You should make sure that the site configuration matches the validator configuration file, ie. that the components match and intervals and timeouts are compatible.
 
-## Configuting the equipment
-Modify the configuration in the equipment, so that it connect to the validator. This typically includes setting an IP address and port. If the site and the validator is running in the same machine, the IP adress will typically be `localhost`. The port defaults to 12111, although you can use another port if you like, just be sure to configure the equipment and the validator to use the same port.
+## Configuring network
+You need to configure the site to connect to the validator.
+This typically includes setting an ip address and port. If the site and the validator is running in the same machine, the ip adress will typically be `localhost` or `127.0.0.1.
 
+RSMP Traffic Light Controllers be default communicate on port 12111, but to avoid interferring with real installations, the validator uses port 13111 by default. You can use another port if you like, just be sure to configure the equipment and the validator to use the same port.
+
+If the site cannot connect to the validator, check the ip and port, and make sure firewalls, etc are not blocking the connection.
 
 ## Security Codes
 Some tests require security codes to run. Place these in config/secrets.yaml, in this format:

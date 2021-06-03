@@ -24,7 +24,7 @@ SECRETS = load_secrets(secrets_path)
 # rsmp supervisor config
 # pick certains elements from the validator config
 # 
-want = ['sxl','intervals','timeouts','components']
+want = ['sxl','intervals','timeouts','components','rsmp_versions']
 guest_settings = VALIDATOR_CONFIG.select { |key| want.include? key }
 SUPERVISOR_CONFIG = {
   'port' => VALIDATOR_CONFIG['port'],
