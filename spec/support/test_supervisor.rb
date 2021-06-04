@@ -1,3 +1,6 @@
+# Experimental:
+# Helper class for testing RSMP s.upervisors. 
+
 require 'rsmp'
 require 'singleton'
 require 'colorize'

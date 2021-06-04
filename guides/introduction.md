@@ -29,6 +29,8 @@ No. You can use the validator without writing any Ruby code. Ruby is only needed
 ## How does it work?
 When you run tests, the validator starts an local RSMP supervisor and waits for the equipment to connect. The validator then sends message to the equipment and wait for responses. A number of checks will be performed on the exchanged messages to ensure that the equipment implements the RSMP specification correctly.
 
+The validator performs integration tests. Because you're testing external systems, the equipment is not guaranteed to be in the same state every time you run a test.
+
 Each test is written in Ruby as a RSpec specification. A number of helpers are available to make it easy to write tests.
 
 For example, this test verifies that a traffic light controller can be put into yellow flash, and afterwards be but back to normal control:

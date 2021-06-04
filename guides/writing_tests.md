@@ -28,3 +28,14 @@ RSpec.describe "Traffic Light Controller" do
   end
 ```
 
+The [TestSite](testsite.md) handles the connection to the site, and will pass a `RSMP::SiteProxy` object in the `site` argument, which can be used to communicate with the site. 
+
+For example, you can request statuses ,subscribe to statuses and send commands. Many of the methods allow you to wait for response.
+
+See the `rsmp`(https://github.com/rsmp-nordic/rsmp) for more documenation.
+
+## Working with Exceptions and Timeouts
+Timeouts an essential when testing external systems. When you send a command or request, you expect a respons within a certain amount of time. These timeouts must be defined in the test [configuration](configurin.md).
+
+The `rsmp` gem will raise exceptions if a timeout is reached. Normally, you will not need to do any specific execption handling in your test code. You test will be aborted and RSpec will catch the error and report the error as failed.
+

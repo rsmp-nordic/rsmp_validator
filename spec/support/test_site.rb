@@ -1,16 +1,109 @@
+# Helper class for testing RSMP sites
+#
+# The class is a singleton g class, meaning there will only ever be 
+# one instance.
+#
+# The class runs an RSMP supervisor (which the site connects to)
+# inside an Async reactor. To avoid waiting for the site to connect
+# for every test, the supervisor and the connection to the site
+# is maintained across test.
+#
+# However, the reactor is paused between tests, to give RSpec a chance
+# 
+# Only one site is expected to connect to the supervisor. The first
+# site connecting will be the one that tests communicate with.
+# 
+# to run.
+#
+# Each RSpec test is run inside a separate Async task.
+# Exceptions in you test code will be cause the test task to stop,
+# and re-raise the exception ourside the reactor so that RSpec
+# sees it.
+#
+# The class provides a few methods to wait for the site to connect.
+# These methods all take a block, which is where you should put
+# you test code.
+# 
+# RSpec.describe "Traffic Light Controller" do
+#   it 'my test' do |example|
+#     TestSite.connected do |task,supervisor,site|
+#       # your test code goes here
+#     end
+#   end
+# end
+
+# The block will pass an RSMP::SiteProxy object,
+# which can be used to communicate with the site. For example
+# you can send commands, wait for responses, subscribe to statuses, etc.
+
 require 'rsmp'
 require 'singleton'
 require 'colorize'
 require 'rspec/expectations'
+
 
 class TestSite
   include Singleton
   include RSpec::Matchers
   include RSMP::Logging
 
+  def connected options={}, &block
+    start options, 'Connecting'
+    within_reactor do |task|
+      wait_for_site task
+      yield task, @supervisor, @remote_site
+    end
+  end
+
+  def reconnected options={}, &block
+    stop 'Reconnecting'
+    start options
+    within_reactor do |task|
+      wait_for_site task
+      yield task, @supervisor, @remote_site
+    end
+  end
+
+  def isolated options={}, &block
+    stop 'Isolating'
+    start options, 'Connecting'
+    within_reactor do |task|
+      wait_for_site task
+      yield task, @supervisor, @remote_site
+    end
+    stop 'Isolating'
+  end
+
+
+  def disconnected &block
+    stop 'Disconnecting'
+    within_reactor do |task|
+      yield task
+    end
+  end
+
+  def self.connected options={}, &block
+    instance.connected options, &block
+  end
+
+  def self.reconnected options={}, &block
+    instance.reconnected options, &block
+  end
+
+  def self.disconnected &block
+    instance.disconnected &block
+  end
+
+  def self.isolated options={}, &block
+    instance.isolated options, &block
+  end
+
+
+
+  private
+
   def initialize
     @reactor = Async::Reactor.new
-
     @logger = RSMP::Logger.new({
       'active' => true,
       'port' => true,
@@ -23,6 +116,7 @@ class TestSite
     })
     initialize_logging logger: @logger
   end
+
 
   def within_reactor &block
     error = nil
@@ -83,56 +177,6 @@ class TestSite
       @supervisor = nil
       @remote_site = nil
     end
-  end
-
-  def connected options={}, &block
-    start options, 'Connecting'
-    within_reactor do |task|
-      wait_for_site task
-      yield task, @supervisor, @remote_site
-    end
-  end
-
-  def reconnected options={}, &block
-    stop 'Reconnecting'
-    start options
-    within_reactor do |task|
-      wait_for_site task
-      yield task, @supervisor, @remote_site
-    end
-  end
-
-  def disconnected &block
-    stop 'Disconnecting'
-    within_reactor do |task|
-      yield task
-    end
-  end
-
-  def isolated options={}, &block
-    stop 'Isolating'
-    start options, 'Connecting'
-    within_reactor do |task|
-      wait_for_site task
-      yield task, @supervisor, @remote_site
-    end
-    stop 'Isolating'
-  end
-
-  def self.connected options={}, &block
-    instance.connected options, &block
-  end
-
-  def self.reconnected options={}, &block
-    instance.reconnected options, &block
-  end
-
-  def self.disconnected &block
-    instance.disconnected &block
-  end
-
-  def self.isolated options={}, &block
-    instance.isolated options, &block
   end
 
   def wait_for_site task

@@ -18,7 +18,7 @@ rsmp_config_path: config/my_equipment.yaml
 
 Note: The file `config/validator.yaml` is ignored by git.
 
-## Configuration files
+## Options
 The configuration describes the equipment/system that you want to test. Timeouts should be set as low as possible while, still giving the site time to respond correctly before tests times out and report errors.
 
 Test configurations are written in the YAML format and have the following structure and default values. All settings except `components` and `items` can be left out, in which case the default values will be used.
