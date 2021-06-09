@@ -1,10 +1,13 @@
 RSpec.describe 'RSMP supervisor' do
   it 'receives aggretated status' do
-    TestSupervisor.connected do |task,supervisor_proxy,site|
-      component = site.components.first[1]   # value of first key/value pair, ie. first component
-      component.set_aggregated_status :high_priority_alarm
-      supervisor_proxy.wait_for_acknowledgements 1
-      # TODO should have a way to easily check that what we send is acknowledged
+    TestSupervisor.connected do |task,site,supervisor_proxy|
+      component = site.find_component TestSupervisor.config['main_component']
+
+      # setting ':collect' will cause set_aggregated_status() to wait for the
+      # outgoing aggregated status is acknowledged
+      component.set_aggregated_status :high_priority_alarm, collect: {
+        timeout: TestSupervisor.config['timeouts']['acknowledgement']
+      }
     end
   end
 end

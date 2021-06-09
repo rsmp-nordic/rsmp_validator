@@ -46,7 +46,7 @@ RSpec.describe 'Traffic Light Controller' do
         prepare task, site
         #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
         set_restart
-        site.wait_for_state :stopped, TIMEOUTS_CONFIG['shutdown']
+        site.wait_for_state :stopped, TestSite.config['timeouts']['shutdown']
       end
 
       # NOTE
@@ -56,7 +56,7 @@ RSpec.describe 'Traffic Light Controller' do
       # it also means we need a new TestSite.
       TestSite.isolated do |task,supervisor,site|
         prepare task, site
-        site.wait_for_state :ready, TIMEOUTS_CONFIG['ready']
+        site.wait_for_state :ready, TestSite.config['timeouts']['ready']
         wait_normal_control
       end
     end

@@ -11,14 +11,14 @@ RSpec.describe 'Traffic Light Controller' do
   it 'A0302 detector error (logic error)', :script, sxl: '>=1.0.7' do |example|
     check_scripts
     TestSite.connected do |task,supervisor,site|
-      component = COMPONENT_CONFIG['detector_logic'].keys.first
+      component = TestSite.config['component']['detector_logic'].keys.first
       system(SCRIPT_PATHS['activate_alarm'])
       site.log "Waiting for alarm", level: :test
       start_time = Time.now
       message, response = nil,nil
       expect do
         response = site.wait_for_alarm task, component: component, aCId: 'A0302',
-          aSp: 'Issue', aS: 'Active', timeout: TIMEOUTS_CONFIG['alarm']
+          aSp: 'Issue', aS: 'Active', timeout: TestSite.config['timeouts']['alarm']
       end.to_not raise_error, "Did not receive alarm"
 
       delay = Time.now - start_time
@@ -42,29 +42,29 @@ RSpec.describe 'Traffic Light Controller' do
   skip 'Acknowledge alarm', :script do |example|
     check_scripts
     TestSite.connected do |task,supervisor,site|
-      component = COMPONENT_CONFIG['detector_logic'].keys.first
+      component = TestSite.config['component']['detector_logic'].keys.first
       system(SCRIPT_PATHS['activate_alarm'])
       site.log "Waiting for alarm", level: :test
       start_time = Time.now
       message, response = nil,nil
       expect do
         response = site.wait_for_alarm task, component: component, aCId: 'A0302',
-          aSp: 'Issue', aS: 'Active', timeout: TIMEOUTS_CONFIG['alarm']
+          aSp: 'Issue', aS: 'Active', timeout: TestSite.config['timeouts']['alarm']
       end.to_not raise_error, "Did not receive alarm"
   
       alarm_code_id = 'A0302'
-      message = @site.send_alarm_acknowledgement @component, alarm_code_id
+      message = site.send_alarm_acknowledgement TestSite.config['main_component'], alarm_code_id
   
       delay = Time.now - start_time
       site.log "alarm confirmed after #{delay.to_i}s", level: :test
       
       expect do
-        response = @site.wait_for_alarm_acknowledged_response message: message, component: @component, timeout: TIMEOUTS_CONFIG['alarm']
+        response = @site.wait_for_alarm_acknowledged_response message: message, component: TestSite.config['main_component'], timeout: TestSite.config['timeouts']['alarm']
       end.to_not raise_error
       
       expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
       expect(response).to be_a(RSMP::AlarmAcknowledgedResponse)
-      expect(response.attributes['cId']).to eq(@component)
+      expect(response.attributes['cId']).to eq(TestSite.config['main_component'])
     ensure 
       system(SCRIPT_PATHS['deactivate_alarm'])
     end
@@ -72,19 +72,19 @@ RSpec.describe 'Traffic Light Controller' do
 
   it 'buffers alarms during disconnects', :script, sxl: '>=1.0.7' do |example|
     check_scripts
-    component = COMPONENT_CONFIG['detector_logic'].keys.first
+    component = TestSite.config['component']['detector_logic'].keys.first
     TestSite.isolated do |task,supervisor,site|
     end      
     # Activate alarm 
     system(SCRIPT_PATHS['activate_alarm'])
 
     TestSite.isolated do |task,supervisor,site|
-      @site = site
+      site = site
       log_confirmation "Waiting for alarm" do
         message, response = nil,nil
         expect do
           response = site.wait_for_alarm task, component: component, aCId: 'A0302',
-            aSp: 'Issue', aS: 'Active', timeout: TIMEOUTS_CONFIG['alarm']
+            aSp: 'Issue', aS: 'Active', timeout: TestSite.config['timeouts']['alarm']
         end.to_not raise_error, "Did not receive alarm"
 
       end

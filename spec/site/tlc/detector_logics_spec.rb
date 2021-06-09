@@ -57,14 +57,14 @@ RSpec.describe 'Traffic Light Controller' do
   	it 'A0302 detector error (logic error)', :script, sxl: '>=1.0.7' do |example|
   	  check_scripts
   	  TestSite.connected do |task,supervisor,site|
-  	    component = COMPONENT_CONFIG['detector_logic'].keys.first
+  	    component = TestSite.config['component']['detector_logic'].keys.first
   	    system(SCRIPT_PATHS['activate_alarm'])
   	    site.log "Waiting for alarm", level: :test
   	    start_time = Time.now
   	    message, response = nil,nil
   	    expect do
   	      response = site.wait_for_alarm task, component: component, aCId: 'A0302',
-  	        aSp: 'Issue', aS: 'Active', timeout: TIMEOUTS_CONFIG['alarm']
+  	        aSp: 'Issue', aS: 'Active', timeout: TestSite.config['timeouts']['alarm']
   	    end.to_not raise_error, "Did not receive alarm"
 
   	    delay = Time.now - start_time

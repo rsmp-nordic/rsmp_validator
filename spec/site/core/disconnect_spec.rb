@@ -16,7 +16,7 @@ RSpec.describe "Traffic Light Controller" do
     TestSite.isolated do |task,supervisor,site|
       def site.acknowledge original
       end
-      site.wait_for_state :stopped, TIMEOUTS_CONFIG['disconnect']
+      site.wait_for_state :stopped, TestSite.config['timeouts']['disconnect']
     end
   end
 
@@ -27,7 +27,7 @@ RSpec.describe "Traffic Light Controller" do
     TestSite.isolated do |task,supervisor,site|
       def site.send_watchdog now=nil
       end
-      site.wait_for_state :stopped, TIMEOUTS_CONFIG['disconnect']
+      site.wait_for_state :stopped, TestSite.config['timeouts']['disconnect']
     end
   end
 

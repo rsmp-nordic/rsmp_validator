@@ -11,8 +11,8 @@ RSpec.describe "Traffic Light Controller" do
       TestSite.connected do |task,supervisor,site|
         prepare task, site
         log_confirmation "request aggregated status" do
-          site.request_aggregated_status MAIN_COMPONENT, collect: {
-            timeout: TIMEOUTS_CONFIG['status_response']
+          site.request_aggregated_status TestSite.config['main_component'], collect: {
+            timeout: TestSite.config['timeouts']['status_response']
           }
         end
       end

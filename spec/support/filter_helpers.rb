@@ -4,8 +4,8 @@ def setup_filters config
   # Gem::Requirement and Gem::Version classed are used to do the version matching,
   # but this otherwise has nothing to do with Gems, we're just using 
   # the version match utilities
-  if VALIDATOR_CONFIG['sxl_version']
-    sxl_version = Gem::Version.new VALIDATOR_CONFIG['sxl_version']
+  if TestSite.config['validator']['sxl_version']
+    sxl_version = Gem::Version.new TestSite.config['validator']['sxl_version']
     filter = -> (v) {
       !Gem::Requirement.new(v).satisfied_by?(sxl_version)
     }
@@ -13,7 +13,7 @@ def setup_filters config
     # so we get more useful display of the filter option when we
     # run rspec on the command line  
     def filter.inspect
-      "[unless relevant for #{VALIDATOR_CONFIG['sxl_version'].to_s}]"
+      "[unless relevant for #{TestSite.config['validator']['sxl_version'].to_s}]"
     end
     config.filter_run_excluding sxl: filter 
   end
@@ -23,8 +23,8 @@ def setup_filters config
   # Gem::Requirement and Gem::Version classed are used to do the version matching,
   # but this otherwise has nothing to do with Gems, we're just using
   # the version match utilities
-  if SUPERVISOR_CONFIG['rsmp_versions']
-    rsmp_versions = SUPERVISOR_CONFIG['rsmp_versions'].map {|version| Gem::Version.new version }
+  if TestSite.config['supervisor']['rsmp_versions']
+    rsmp_versions = TestSite.config['supervisor']['rsmp_versions'].map {|version| Gem::Version.new version }
     filter = -> (v) {
       exclude = true
       rsmp_versions.each do |version|
@@ -39,7 +39,7 @@ def setup_filters config
     # so we get more useful display of the filter option when we
     # run rspec on the command line  
     def filter.inspect
-      "[unless relevant for #{SUPERVISOR_CONFIG['rsmp_versions'].join(', ')}]"
+      "[unless relevant for #{TestSite.config['supervisor']['rsmp_versions'].join(', ')}]"
     end
     config.filter_run_excluding rsmp: filter
   end

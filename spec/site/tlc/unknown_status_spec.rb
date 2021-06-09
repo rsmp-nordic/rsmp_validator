@@ -6,8 +6,8 @@ RSpec.describe "Traffic Light Controller" do
       site.log "Requesting non-existing status S0000", level: :test
       expect {
         status_list = convert_status_list( S0000:[:status] )
-        site.request_status MAIN_COMPONENT, status_list, collect: {
-          timeout: TIMEOUTS_CONFIG['command_response']
+        site.request_status TestSite.config['main_component'], status_list, collect: {
+          timeout: TestSite.config['timeouts']['command_response']
         },
         validate: false
       }.to raise_error(RSMP::MessageRejected)
@@ -19,8 +19,8 @@ RSpec.describe "Traffic Light Controller" do
       site.log "Requesting non-existing status S0001 name", level: :test
       expect {
         status_list = convert_status_list( S0001:[:bad] )
-        site.request_status MAIN_COMPONENT, status_list, collect: {
-          timeout: TIMEOUTS_CONFIG['command_response']
+        site.request_status TestSite.config['main_component'], status_list, collect: {
+          timeout: TestSite.config['timeouts']['command_response']
         },
         validate: false
       }.to raise_error(RSMP::MessageRejected)

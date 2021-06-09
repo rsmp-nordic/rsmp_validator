@@ -59,8 +59,8 @@ RSpec.describe "Traffic Light Controller" do
             :minute,
             :second,
           ] }
-          request, response = @site.request_status @component, convert_status_list(status_list), collect: {
-            timeout: TIMEOUTS_CONFIG['status_update']
+          request, response = site.request_status TestSite.config['main_component'], convert_status_list(status_list), collect: {
+            timeout: TestSite.config['timeouts']['status_update']
           }
           status = "S0096"
 
@@ -72,8 +72,8 @@ RSpec.describe "Traffic Light Controller" do
           response[{"sCI" => status, "n" => "second"}]["s"],
           'UTC'
 
-          max_diff = TIMEOUTS_CONFIG['command_response'] + 
-                    TIMEOUTS_CONFIG['status_response']
+          max_diff = TestSite.config['timeouts']['command_response'] + 
+                    TestSite.config['timeouts']['status_response']
           diff = received - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -100,14 +100,14 @@ RSpec.describe "Traffic Light Controller" do
             :second,
           ] }
           
-          request, response, messages = site.request_status @component,
+          request, response, messages = site.request_status TestSite.config['main_component'],
             convert_status_list(status_list),
             collect: {
-              timeout: TIMEOUTS_CONFIG['status_response']
+              timeout: TestSite.config['timeouts']['status_response']
             }
 
           message = messages.first
-          max_diff = TIMEOUTS_CONFIG['command_response'] + TIMEOUTS_CONFIG['status_response']
+          max_diff = TestSite.config['timeouts']['command_response'] + TestSite.config['timeouts']['status_response']
           diff = Time.parse(message.attributes['sTs']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -126,10 +126,10 @@ RSpec.describe "Traffic Light Controller" do
       TestSite.connected do |task,supervisor,site|
         prepare task, site
         with_date_set DATE do
-          request, response = site.request_aggregated_status MAIN_COMPONENT, collect: {
-            timeout: TIMEOUTS_CONFIG['status_response']
+          request, response = site.request_aggregated_status TestSite.config['main_component'], collect: {
+            timeout: TestSite.config['timeouts']['status_response']
           }
-          max_diff = TIMEOUTS_CONFIG['command_response'] + TIMEOUTS_CONFIG['status_response']
+          max_diff = TestSite.config['timeouts']['command_response'] + TestSite.config['timeouts']['status_response']
           diff = Time.parse(response.attributes['aSTS']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -149,7 +149,7 @@ RSpec.describe "Traffic Light Controller" do
         with_date_set DATE do
           request, response, messages = set_functional_position 'NormalControl'
           message = messages.first
-          max_diff = TIMEOUTS_CONFIG['command_response'] * 2
+          max_diff = TestSite.config['timeouts']['command_response'] * 2
           diff = Time.parse(message.attributes['cTS']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -169,7 +169,7 @@ RSpec.describe "Traffic Light Controller" do
         with_date_set DATE do
           request, response, messages = set_functional_position 'NormalControl'
           message = messages.first
-          max_diff = TIMEOUTS_CONFIG['command_response']
+          max_diff = TestSite.config['timeouts']['command_response']
           diff = Time.parse(message.attributes['cTS']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -190,11 +190,11 @@ RSpec.describe "Traffic Light Controller" do
         check_scripts
         prepare task, site
         with_date_set DATE do
-          component = COMPONENT_CONFIG['detector_logic'].keys.first
+          component = TestSite.config['component']['detector_logic'].keys.first
           system(SCRIPT_PATHS['activate_alarm'])
           site.log "Waiting for alarm", level: :test
-          response = site.wait_for_alarm task, timeout: TIMEOUTS_CONFIG['alarm']
-          max_diff = TIMEOUTS_CONFIG['command_response'] + TIMEOUTS_CONFIG['status_response']
+          response = site.wait_for_alarm task, timeout: TestSite.config['timeouts']['alarm']
+          max_diff = TestSite.config['timeouts']['command_response'] + TestSite.config['timeouts']['status_response']
           diff = Time.parse(response.attributes['sTs']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -212,8 +212,8 @@ RSpec.describe "Traffic Light Controller" do
       TestSite.connected do |task,supervisor,site|
         prepare task, site
         with_date_set DATE do
-          response = site.collect task, type: "Watchdog", num: 1, timeout: TIMEOUTS_CONFIG['watchdog']
-          max_diff = TIMEOUTS_CONFIG['command_response'] + TIMEOUTS_CONFIG['status_response']
+          response = site.collect task, type: "Watchdog", num: 1, timeout: TestSite.config['timeouts']['watchdog']
+          max_diff = TestSite.config['timeouts']['command_response'] + TestSite.config['timeouts']['status_response']
           diff = Time.parse(response.attributes['wTs']) - DATE
           expect(diff.abs).to be <= max_diff
         end

@@ -11,10 +11,10 @@ RSpec.describe "Traffic Light Controller" do
   
   it 'responds to valid status subscription' do |example|
     TestSite.connected do |task,supervisor,site|
-      component = MAIN_COMPONENT
+      component = TestSite.config['main_component']
       status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus','uRt'=>'1' }]
       site.subscribe_to_status component, status_list, collect: {
-        timeout: TIMEOUTS_CONFIG['status_update']
+        timeout: TestSite.config['timeouts']['status_update']
       }
     ensure
       unsubscribe_list = status_list.map { |item| item.slice('sCI','n') }

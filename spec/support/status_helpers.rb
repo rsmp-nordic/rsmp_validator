@@ -22,7 +22,7 @@ module StatusHelpers
   end
 
   def unsubscribe_from_all
-    @site.unsubscribe_to_status @component, [
+    @site.unsubscribe_to_status TestSite.config['main_component'], [
       {'sCI'=>'S0015','n'=>'status'},
       {'sCI'=>'S0014','n'=>'status'},
       {'sCI'=>'S0011','n'=>'status'},
@@ -42,33 +42,33 @@ module StatusHelpers
 
   def verify_status parent_task, description, status_list
     log_confirmation description do
-      message, result = @site.request_status @component, convert_status_list(status_list), collect: {
-        timeout: TIMEOUTS_CONFIG['status_update']
+      message, result = @site.request_status TestSite.config['main_component'], convert_status_list(status_list), collect: {
+        timeout: TestSite.config['timeouts']['status_update']
       }
     end
   end
 
-  def wait_for_status parent_task, description, status_list, update_rate: VALIDATOR_CONFIG['status_update_rate']
-    update_rate = 1 unless update_rate
+  def wait_for_status parent_task, description, status_list, update_rate: TestSite.config['intervals']['status_update']
+    update_rate = 0 unless update_rate
     log_confirmation description do
       subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
       begin
-        message, result = @site.subscribe_to_status @component, subscribe_list, collect: {
-          timeout: TIMEOUTS_CONFIG['command']
+        message, result = @site.subscribe_to_status TestSite.config['main_component'], subscribe_list, collect: {
+          timeout: TestSite.config['timeouts']['command']
         }
       ensure
         unsubscribe_list = convert_status_list(status_list).map { |item| item.slice('sCI','n') }
-        @site.unsubscribe_to_status @component, unsubscribe_list
+        @site.unsubscribe_to_status TestSite.config['main_component'], unsubscribe_list
       end
     end
   end
 
-  def request_status_and_confirm description, status_list, component=MAIN_COMPONENT
+  def request_status_and_confirm description, status_list, component=TestSite.config['main_component']
     TestSite.connected do |task,supervisor,site|
       @site = site
       log_confirmation "request of #{description}" do
         site.request_status component, convert_status_list(status_list), collect: {
-          timeout: TIMEOUTS_CONFIG['status_response']
+          timeout: TestSite.config['timeouts']['status_response']
         }
       end
     end
