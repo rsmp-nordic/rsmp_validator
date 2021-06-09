@@ -2,7 +2,8 @@ log
 .rspec_status
 .rspec-local
 .DS_Store
-config/secrets.yaml
+config/secrets*.yaml
+!config/secrets_example.yaml
 config/validator.yaml
 config/private/
 /.bundle/

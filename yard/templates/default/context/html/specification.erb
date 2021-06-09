@@ -1,0 +1,39 @@
+<div class="specification">
+  <div class="heading <%= row %>">
+    <a name="<%= specification.unique_id %>"></a>
+    <%= specification.value %>
+  </div>
+
+  <div class="details method_details_list">
+    
+    <div class="docstring">
+      <%= html_markup_rdoc(specification.docstring) %>
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <!-- Source Code -->
+    <div style="float: left;">
+      <table class="source_code">
+        <tr>
+          <td>
+            <pre class="lines"><%= "\n\n\n" %><%= h format_lines(specification) %></pre>
+          </td>
+          <td>
+            <pre class="code"><span class="info file"># File '<%= h specification.file %>'<% if specification.line %>, line <%= specification.line %><% end %></span><%= "\n\n" %><%= html_syntax_highlight specification.source %></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+
+    <div style="clear: both;"></div>
+    
+  </div>
+
+  <!-- Captures the collapsed state -->
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+
+</div>

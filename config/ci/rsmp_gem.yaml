@@ -2,6 +2,7 @@ supervisor:
   port: 13111
   sites:
     :any:
+      sxl: tlc
       rsmp_versions:
         - 3.1.5
       plans:

@@ -1,4 +1,4 @@
-RSpec.describe "RSMP site status" do
+RSpec.describe "Traffic Light Controller" do
   include StatusHelpers
 
   it 'responds with NotAck to invalid status request code' do |example|
@@ -8,7 +8,8 @@ RSpec.describe "RSMP site status" do
         status_list = convert_status_list( S0000:[:status] )
         site.request_status MAIN_COMPONENT, status_list, collect: {
           timeout: SUPERVISOR_CONFIG['command_response_timeout']
-        }
+        },
+        validate: false
       }.to raise_error(RSMP::MessageRejected)
     end
   end
@@ -20,7 +21,8 @@ RSpec.describe "RSMP site status" do
         status_list = convert_status_list( S0001:[:bad] )
         site.request_status MAIN_COMPONENT, status_list, collect: {
           timeout: SUPERVISOR_CONFIG['command_response_timeout']
-        }
+        },
+        validate: false
       }.to raise_error(RSMP::MessageRejected)
     end
   end

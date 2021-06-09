@@ -32,6 +32,8 @@ jobs:
       run: bundle config set path '~/rsmp_gems/bundle'
     - name: Run bundle install
       run: bundle install
+    - name: Set the time of the controller
+      run: /home/i0davla/set_date.sh
     - name: Run tests
       run: bundle exec rspec spec/site
     - name: Rename validation.log
