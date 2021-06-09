@@ -32,8 +32,6 @@ jobs:
       run: bundle config set path '~/rsmp_gems/bundle'
     - name: Run bundle install
       run: bundle install
-    - name: Restart rsmp service and clear buffer
-      run: killall rsmpd
     - name: Set the time of the controller
       run: /home/i0davla/set_date.sh
     - name: Run tests
