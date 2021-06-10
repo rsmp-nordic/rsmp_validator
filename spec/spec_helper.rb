@@ -3,6 +3,7 @@ require 'fileutils'
 require 'rsmp'
 
 require_relative 'support/validator'
+require_relative 'support/testee'
 require_relative 'support/test_site'
 require_relative 'support/test_supervisor'
 require_relative 'support/command_helpers'
@@ -10,11 +11,13 @@ require_relative 'support/status_helpers'
 require_relative 'support/log_helpers'
 require_relative 'support/secrets_helpers'
 require_relative 'support/script_helpers'
-require_relative 'support/config_helpers'
 #require_relative 'support/filter_helpers'
 
 include RSpec
 include LogHelpers
+
+
+Validator.load_config
 
 # configure RSpec
 RSpec.configure do |config|

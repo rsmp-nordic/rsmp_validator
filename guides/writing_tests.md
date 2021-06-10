@@ -9,7 +9,7 @@ RSpec.describe "Traffic Light Controller" do
 
   it 'responds with NotAck to invalid status request code' do |example|
     # wait for the site to be connected
-    TestSite.connected do |task,supervisor,site|
+    Validator::Site.connected do |task,supervisor,site|
       # write to the validator log file
       site.log "Requesting non-existing status S0000", level: :test
       
@@ -17,8 +17,8 @@ RSpec.describe "Traffic Light Controller" do
       expect {
         # request a non-existing status
         status_list = convert_status_list( S0000:[:status] )
-        site.request_status TestSite.config['main_component'], status_list, collect: {
-          timeout: TestSite.config['timeouts']['command_response']
+        site.request_status Validator.config['main_component'], status_list, collect: {
+          timeout: Validator.config['timeouts']['command_response']
         },
         # normally we can't send S0000 because JSON Schema validation
         # will prevent it, but we can disable it for testing purposes
@@ -28,7 +28,7 @@ RSpec.describe "Traffic Light Controller" do
   end
 ```
 
-The [TestSite](testsite.md) handles the connection to the site, and will pass a `RSMP::SiteProxy` object in the `site` argument, which can be used to communicate with the site. 
+The [TestSite](Validator::Site.md) handles the connection to the site, and will pass a `RSMP::SiteProxy` object in the `site` argument, which can be used to communicate with the site. 
 
 For example, you can request statuses ,subscribe to statuses and send commands. Many of the methods allow you to wait for response.
 

@@ -34,7 +34,7 @@ RSpec.describe "Traffic Light Controller" do
     # 2. Send command
     # 3. Expect status response before timeout
     it 'sets clock with M0104', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         set_date(DATE)
       end
@@ -48,7 +48,7 @@ RSpec.describe "Traffic Light Controller" do
     # 4. Compare set_date and status timestamp
     # 5. Expect the difference to be within max_diff
     it 'reports adjusted clock in S0096', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_date_set DATE do
           status_list = { S0096: [
@@ -59,8 +59,8 @@ RSpec.describe "Traffic Light Controller" do
             :minute,
             :second,
           ] }
-          request, response = site.request_status TestSite.config['main_component'], convert_status_list(status_list), collect: {
-            timeout: TestSite.config['timeouts']['status_update']
+          request, response = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
+            timeout: Validator.config['timeouts']['status_update']
           }
           status = "S0096"
 
@@ -72,8 +72,8 @@ RSpec.describe "Traffic Light Controller" do
           response[{"sCI" => status, "n" => "second"}]["s"],
           'UTC'
 
-          max_diff = TestSite.config['timeouts']['command_response'] + 
-                    TestSite.config['timeouts']['status_response']
+          max_diff = Validator.config['timeouts']['command_response'] + 
+                    Validator.config['timeouts']['status_response']
           diff = received - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -88,7 +88,7 @@ RSpec.describe "Traffic Light Controller" do
     # 4. Compare set_date and response timestamp
     # 5. Expect the difference to be within max_diff
     it 'timestamps S0096 with adjusted clock', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_date_set DATE do
           status_list = { S0096: [
@@ -100,14 +100,14 @@ RSpec.describe "Traffic Light Controller" do
             :second,
           ] }
           
-          request, response, messages = site.request_status TestSite.config['main_component'],
+          request, response, messages = site.request_status Validator.config['main_component'],
             convert_status_list(status_list),
             collect: {
-              timeout: TestSite.config['timeouts']['status_response']
+              timeout: Validator.config['timeouts']['status_response']
             }
 
           message = messages.first
-          max_diff = TestSite.config['timeouts']['command_response'] + TestSite.config['timeouts']['status_response']
+          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(message.attributes['sTs']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -123,13 +123,13 @@ RSpec.describe "Traffic Light Controller" do
     # 5. Compare set_date and response timestamp
     # 6. Expect the difference to be within max_diff
     it 'timestamps aggregated status response with adjusted clock', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_date_set DATE do
-          request, response = site.request_aggregated_status TestSite.config['main_component'], collect: {
-            timeout: TestSite.config['timeouts']['status_response']
+          request, response = site.request_aggregated_status Validator.config['main_component'], collect: {
+            timeout: Validator.config['timeouts']['status_response']
           }
-          max_diff = TestSite.config['timeouts']['command_response'] + TestSite.config['timeouts']['status_response']
+          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(response.attributes['aSTS']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -144,12 +144,12 @@ RSpec.describe "Traffic Light Controller" do
     # 4. Compare set_date and response timestamp
     # 5. Expect the difference to be within max_diff
     it 'timestamps command response with adjusted clock', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_date_set DATE do
           request, response, messages = set_functional_position 'NormalControl'
           message = messages.first
-          max_diff = TestSite.config['timeouts']['command_response'] * 2
+          max_diff = Validator.config['timeouts']['command_response'] * 2
           diff = Time.parse(message.attributes['cTS']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -164,12 +164,12 @@ RSpec.describe "Traffic Light Controller" do
     # 4. Compare set_date and response timestamp
     # 5. Expect the difference to be within max_diff
     it 'timestamps M0104 command response with adjusted clock', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_date_set DATE do
           request, response, messages = set_functional_position 'NormalControl'
           message = messages.first
-          max_diff = TestSite.config['timeouts']['command_response']
+          max_diff = Validator.config['timeouts']['command_response']
           diff = Time.parse(message.attributes['cTS']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -186,15 +186,15 @@ RSpec.describe "Traffic Light Controller" do
     # 6. Compare set_date and alarm response timestamp
     # 7. Expect the difference to be within max_diff
     it 'timestamps alarm with adjusted clock', :script, sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         check_scripts
         prepare task, site
         with_date_set DATE do
-          component = TestSite.config['component']['detector_logic'].keys.first
+          component = Validator.config['components']['detector_logic'].keys.first
           system(SCRIPT_PATHS['activate_alarm'])
           site.log "Waiting for alarm", level: :test
-          response = site.wait_for_alarm task, timeout: TestSite.config['timeouts']['alarm']
-          max_diff = TestSite.config['timeouts']['command_response'] + TestSite.config['timeouts']['status_response']
+          response = site.wait_for_alarm task, timeout: Validator.config['timeouts']['alarm']
+          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(response.attributes['sTs']) - DATE
           expect(diff.abs).to be <= max_diff
         end
@@ -209,11 +209,11 @@ RSpec.describe "Traffic Light Controller" do
     # 4. Compare set_date and alarm response timestamp
     # 5. Expect the difference to be within max_diff
     it 'timestamps watchdog messages with adjusted clock', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_date_set DATE do
-          response = site.collect task, type: "Watchdog", num: 1, timeout: TestSite.config['timeouts']['watchdog']
-          max_diff = TestSite.config['timeouts']['command_response'] + TestSite.config['timeouts']['status_response']
+          response = site.collect task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
+          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(response.attributes['wTs']) - DATE
           expect(diff.abs).to be <= max_diff
         end

@@ -12,7 +12,7 @@ spec
 └── support       # helper classes and other support files 
 ```
 
-## Running Test
+## Running Tests
 Note: Before running tests, be sure to set up your test [configuration](configuring.md).
 
 The RSMP Validator is based on the RSpec testing tool, so you use the `rspec` command to run tests. You should be located in the root of the project folder when running test.

@@ -29,14 +29,14 @@ Exceptions can be caused by timeouts or otherwise be related to your test code.
 However, they can also be raised at other times, due to things like RSMP message that do not conform to expected format. Errors like this will cause the current test to abort and report an error.
 
 # Usage
-The class provides a few methods to wait for the site to connect, like `TestSite.connected`
+The class provides a few methods to wait for the site to connect, like `Validator::Site.connected`
 
 Most of these methods take a block of code containing you test code. Once the site is connected, the block will be called:
 
 ```ruby
 RSpec.describe "Traffic Light Controller" do
   it 'My RSMP test' do |example|
-    TestSite.connected do |task,supervisor,site|
+    Validator::Site.connected do |task,supervisor,site|
       # your test code goes here
     end
   end
@@ -51,24 +51,24 @@ Three arguments will be passed to your block:
 
 The `site`object is used to communicate with the site using the interface provided by the `rsmp` gem. For example you can send commands, wait for responses, subscribe to statuses, etc.
 
-Note that these objects all run inside the Async reactor used by the TestSite. Therefore you cannot use these objects outside the block, because the reactor is paused.
+Note that these objects all run inside the Async reactor used by the Validator::Site. Therefore you cannot use these objects outside the block, because the reactor is paused.
 
-## TestSite.connected
+## Validator::Site.connected
 Ensures that the site is connected. If the site is already connected, the block will be called immediately. Otherwise waits until the site is connected before calling the block.
 
 Use this unless there's a specific reason to use one of the other methods. A sequence of test using `connected` will  maintain the current connection to the site without disconnecting/reconnecting, leading to faster testing.
 
-## TestSite.reconnected
+## Validator::Site.reconnected
 Disconnects the site if connected, then waits until the site is connected before calling the block.
 
 Use this if your test specifically needs to start with a fresh connection. But be aware that a fresh connection does not guarantee that the equipment will be in a pristine state. The equipment is not restart or otherwise be reset.
 
-## TestSite.isolated
+## Validator::Site.isolated
 Like `connected`, except that the connection is is closed after the test, before the next test is run.
 
 Use this if you somehow modify the RSMP::SiteProxy or otherwise make the current connection unstable or unusable. Because `isolated` closes the connection after the test, you ensure that the modified RSMP::SiteProxy object is discarted and following tests use a new object.
 
-## TestSite.disconnected
+## Validator::Site.disconnected
 Disconnects the site if connected before calling the block with a single argument `task`, which is an an Async::Task.
 
 ## Configurations

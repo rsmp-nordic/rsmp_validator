@@ -48,7 +48,7 @@ RSpec.describe 'Traffic Light Controller' do
   	# 2. Send control command to switch detector_logic= true
   	# 3. Wait for status = true
   	it 'M0008 activate detector logic', sxl: '>=1.0.7' do |example|
-  	  TestSite.connected do |task,supervisor,site|
+  	  Validator::Site.connected do |task,supervisor,site|
   	    prepare task, site
   	    switch_detector_logic
   	  end
@@ -56,15 +56,15 @@ RSpec.describe 'Traffic Light Controller' do
 
   	it 'A0302 detector error (logic error)', :script, sxl: '>=1.0.7' do |example|
   	  check_scripts
-  	  TestSite.connected do |task,supervisor,site|
-  	    component = TestSite.config['component']['detector_logic'].keys.first
+  	  Validator::Site.connected do |task,supervisor,site|
+  	    component = Validator.config['components']['detector_logic'].keys.first
   	    system(SCRIPT_PATHS['activate_alarm'])
   	    site.log "Waiting for alarm", level: :test
   	    start_time = Time.now
   	    message, response = nil,nil
   	    expect do
   	      response = site.wait_for_alarm task, component: component, aCId: 'A0302',
-  	        aSp: 'Issue', aS: 'Active', timeout: TestSite.config['timeouts']['alarm']
+  	        aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
   	    end.to_not raise_error, "Did not receive alarm"
 
   	    delay = Time.now - start_time

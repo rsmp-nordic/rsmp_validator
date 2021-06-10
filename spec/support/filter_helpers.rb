@@ -1,11 +1,11 @@
-def setup_filters config
+def setup_filters rspec_config, rmsp_version, sxl_version
   # enable filtering by sxl version using e.g. sxl: '>=1.0.7'
   # the sxl version defined in the site config is mathed against the sxl tag
   # Gem::Requirement and Gem::Version classed are used to do the version matching,
   # but this otherwise has nothing to do with Gems, we're just using 
   # the version match utilities
-  if TestSite.config['validator']['sxl_version']
-    sxl_version = Gem::Version.new TestSite.config['validator']['sxl_version']
+  if sxl_version
+    sxl_version = Gem::Version.new sxl_version
     filter = -> (v) {
       !Gem::Requirement.new(v).satisfied_by?(sxl_version)
     }
@@ -13,9 +13,9 @@ def setup_filters config
     # so we get more useful display of the filter option when we
     # run rspec on the command line  
     def filter.inspect
-      "[unless relevant for #{TestSite.config['validator']['sxl_version'].to_s}]"
+      "[unless relevant for #{sxl_version.to_s}]"
     end
-    config.filter_run_excluding sxl: filter 
+    rspec_config.filter_run_excluding sxl: filter 
   end
 
   # enable filtering by rsmp core version using e.g. rsmp: '>=3.1.2'
@@ -23,8 +23,8 @@ def setup_filters config
   # Gem::Requirement and Gem::Version classed are used to do the version matching,
   # but this otherwise has nothing to do with Gems, we're just using
   # the version match utilities
-  if TestSite.config['supervisor']['rsmp_versions']
-    rsmp_versions = TestSite.config['supervisor']['rsmp_versions'].map {|version| Gem::Version.new version }
+  if rsmp_version
+    rsmp_versions = rsmp_version.map {|version| Gem::Version.new version }
     filter = -> (v) {
       exclude = true
       rsmp_versions.each do |version|
@@ -39,8 +39,8 @@ def setup_filters config
     # so we get more useful display of the filter option when we
     # run rspec on the command line  
     def filter.inspect
-      "[unless relevant for #{TestSite.config['supervisor']['rsmp_versions'].join(', ')}]"
+      "[unless relevant for #{rsmp_version.join(', ')}]"
     end
-    config.filter_run_excluding rsmp: filter
+    rspec_config.filter_run_excluding rsmp: filter
   end
 end

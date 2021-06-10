@@ -1,0 +1,2 @@
+config: config/ci/rsmp_gem.yaml  # testing a site
+#config: config/ci/rsmp_supervisor.yaml   # testing a supervisor

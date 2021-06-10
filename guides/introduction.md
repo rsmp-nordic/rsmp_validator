@@ -38,7 +38,7 @@ For example, this test verifies that a traffic light controller can be put into 
 ```ruby
 # Verify that we can activate yellow flash
 it 'M0001 set dark mode', sxl: '>=1.0.7' do |example|
-  TestSite.connected do |task,supervisor,site|
+  Validator::Site.connected do |task,supervisor,site|
     prepare task, site
     switch_yellow_flash
     switch_normal_control
@@ -57,7 +57,7 @@ More detailed guides on how to use the validator:
 - You should then [setup configurations](configuring.md)
 - Now you're ready to [run tests](testing.md)
 - Read about [documenting results](reporting.md)
-- Read about [customizing or adding tests](customizing.md)
+- Read about [customizing or adding tests](writing_tests.md)
 - Learn about [how it works](implementation.md)
 
 ## Other Resources

@@ -2,11 +2,11 @@ RSpec.describe "Supervisor" do
 
   def get_connection_message core_version, length
     got = nil
-    TestSupervisor.isolated(
+    Validator::Supervisor.isolated(
       'rsmp_versions' => [core_version],
       'collect' => length
     ) do |task,site,supervisor_proxy|
-      supervisor_proxy.collector.collect task, timeout: TestSupervisor.config['timeouts']['ready']
+      supervisor_proxy.collector.collect task, timeout: Validator.config['timeouts']['ready']
       expect(supervisor_proxy.ready?).to be true
       got = supervisor_proxy.collector.messages.map { |message| [message.direction.to_s, message.type] }
     end

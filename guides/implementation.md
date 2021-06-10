@@ -13,7 +13,7 @@ All messages are checked against the RSMP JSON Schema to check that they have th
 ## Concurrency, Async and the TestSite helper
 The validator uses the `rsmp` gem to handle RSMP communication. The gem uses the `async` library to handle concurrent connections.
 
-This TestSite class handles running the RSMP supervisor that that site connects to, and provides a few methods that that can be used in tests to wait for the site to be connected (or disconnected).
+This [TestSite](test_site.md) class handles running the RSMP supervisor that that site connects to, and provides a few methods that that can be used in tests to wait for the site to be connected (or disconnected).
 
 The supervisor runs inside an Async event-reactor. The reactor must be stopped between test, to give RSpec an option to run and move on to the next test. The TestSite handles pausing and resuming the event reactor between tests.
 

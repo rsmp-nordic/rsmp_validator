@@ -1,179 +1,67 @@
 require 'rsmp'
-require 'singleton'
 require 'colorize'
 require 'rspec/expectations'
 
-class Validator
-  include Singleton
+module Validator
   include RSpec::Matchers
   include RSMP::Logging
 
-  attr_reader :config
-
-  # Ensures that the site is connected.
-  # If the site is already connected, the block will be called immediately.
-  # Otherwise waits until the site is connected before calling the block.
-  # Use this unless there's a specific reason to use one of the other methods.
-  # A sequence of test using `connected` will  maintain the current connection
-  # to the site without disconnecting/reconnecting, leading to faster testing.
-  def connected options={}, &block
-    start options, 'Connecting'
-    within_reactor do |task|
-      wait_for_connection
-      yield task, @node, @proxy
-    end
+  class << self
+    attr_accessor :config, :testee
   end
 
-  # Disconnects the site if connected, then waits until the site is connected
-  # before calling the block.
-  #U se this if your test specifically needs to start with a fresh connection.
-  # But be aware that a fresh connection does not guarantee that the equipment
-  # will be in a pristine state. The equipment is not restart or otherwise be
-  # reset.
-  def reconnected options={}, &block
-    stop 'Reconnecting'
-    start options
-    within_reactor do |task|
-      wait_for_connection
-      yield task, @node, @proxy
-    end
-  end
-
-  # Like `connected`, except that the connection is is closed after the test,
-  # before the next test is run.
-  # Use this if you somehow modify the RSMP::SiteProxy or otherwise make the
-  # current connection unstable or unusable. Because `isolated` closes the
-  # connection after the test, you ensure that the modified RSMP::SiteProxy
-  # object is discarted and following tests use a new object.
-  def isolated options={}, &block
-    stop 'Isolating'
-    start options, 'Connecting'
-    within_reactor do |task|
-      wait_for_connection
-      yield task, @node, @proxy
-    end
-    stop 'Isolating'
-  end
-
-  # Disconnects the site if connected before calling the block with a single
-  # argument `task`, which is an an Async::Task.
-  def disconnected &block
-    stop 'Disconnecting'
-    within_reactor do |task|
-      yield task
-    end
-  end
-
-  # class method that just calls the instance attribute
-  def self.config
-    instance.config
-  end
-  
-  # class method that just calls the instance
-  def self.connected options={}, &block
-    instance.connected options, &block
-  end
-
-  # class method that just calls the instance
-  def self.reconnected options={}, &block
-    instance.reconnected options, &block
-  end
-
-  # class method that just calls the instance
-  def self.disconnected &block
-    instance.disconnected &block
-  end
-
-  # class method that just calls the instance
-  def self.isolated options={}, &block
-    instance.isolated options, &block
-  end
-
-
-  private
-
-  def initialize
-    load_config
-    @reactor = Async::Reactor.new
-    @logger = RSMP::Logger.new({
-      'active' => true,
-      'port' => true,
-      'path' => LOG_PATH,    # from log_helpers.rb
-      'color' => true,
-      'json' => true,
-      'acknowledgements' => true,
-      'watchdogs' => true,
-      'test' => true
-    })
-    initialize_logging logger: @logger
-  end
-
-  def load_config
-  end
-
-  # Resume the reactor and run a block in an async task.
-  # A separate sentinel task is used be receive error
-  # notifications that should abort the block
-  def within_reactor &block
-    error = nil
-
-    # use run() to continue the reactor. this will give as a new task,
-    # which we run the rspec test inside
-    @reactor.run do |task|
-      task.annotate 'rspec runner'
-      task.async do |sentinel|
-        sentinel.annotate 'sentinel'
-        @node.error_condition.wait  # if it's an exception, it will be raised
-      rescue => e
-        error = e
-        task.stop
-      end
-      yield task              # run block until it's finished
-    rescue StandardError, RSpec::Expectations::ExpectationNotMetError => e
-      error = e               # catch and store errors
-    ensure
-      @reactor.interrupt      # interrupt reactor
-    end
-
-    # reraise errors outside task to surface them in rspec
-    if error
-      log "Failed: #{error.class}: #{error}", level: :test
-      raise error
+  def self.load_config    
+    # get config path
+    if ENV['CONFIG']
+      config_path = ENV['CONFIG']
     else
-      log "OK", level: :test
-    end
-  end
-
-  # Start the rsmp supervisor
-  def start options={}, why=nil
-    unless @node
-      # start the supervisor in a separe async task that will
-      # persist across tests
-      @reactor.async do |task|
-        @task = task
-        @node = build_node task, options
-        @node.start  # keep running inside the async task, listening for sites
+      ref_path = '.validator.yaml'
+      if File.exist? ref_path
+        # get config path
+        config_ref = YAML.load_file ref_path
+        config_path = config_ref['config']
+      else
+        raise "Error: Neither #{ref_path} nor ENV['CONFIG'] is present" unless config_path
       end
     end
 
-  end
+     raise "Error: Config path #{config_path} is empty" unless config_path
 
-  # Stop the rsmp supervisor
-  def stop why=nil
-    # will be called outside within_reactor
-    # but stop() requires an async context
-    # so run inside an Async block
-    Async do
-      if @node
-        log why, level: :test if why
-        @node.stop
-      end
-      @node = nil
-      @proxy = nil
+    # load config
+    if File.exist? config_path
+      self.config = YAML.load_file config_path
+    else
+      raise "Config file #{config_path} is missing"
     end
+
+    # components
+    raise "Warning: config 'components' settings is missing or empty" if config['components'] == {}
+
+    config['main_component'] = config['components']['main'].keys.first rescue {}
+    raise "Warning: config 'main' component settings is missing or empty" if config['main_component'] == {}
+
+    # timeouts
+    raise "Warning: config 'timeouts' settings is missing or empty" if config['timeouts'] == {}
+
+    # secrets
+    # first look for secrets specific to config_path, e.g.
+    # if config_path is 'rsmp_gem.yaml', look for 'secrets_rsmp_gem.yaml'
+    # if not found, use the generic 'secrets.yaml'
+    secrets_name = File.basename(config_path,'.yaml')
+    secrets_path = "config/secrets_#{secrets_name}.yaml"
+    secrets_path = 'config/secrets.yaml' unless File.exist?(secrets_path)
+    self.config['secrets'] = load_secrets(secrets_path)
+
+    self.build_testee
   end
 
-  # Wait for peer to be ready
-  def wait_for_connection
+  def self.build_testee
+    # a config for a local site will have a config for what supervisor to connect to
+    # a local site means we're testing a supervisor
+    if self.config['supervisors']
+      self.testee = Validator::Supervisor.new
+    else
+      self.testee = Validator::Site.new
+    end
   end
 end

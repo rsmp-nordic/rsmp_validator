@@ -113,7 +113,7 @@ RSpec.describe "Traffic Light Controller" do
     # 4. Send command to switch to normal control
     # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
     it 'M0001 set yellow flash', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         switch_yellow_flash
         switch_normal_control
@@ -128,7 +128,7 @@ RSpec.describe "Traffic Light Controller" do
     # 4. Send command to switch to normal control
     # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
     it 'M0001 set dark mode', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         switch_dark_mode
         switch_normal_control
@@ -141,7 +141,7 @@ RSpec.describe "Traffic Light Controller" do
     # 4. Send control command to switch "fixed time"= true
     # 5. Wait for status = false
     it 'M0007 set fixed time', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         switch_fixed_time 'True'
         switch_fixed_time 'False'

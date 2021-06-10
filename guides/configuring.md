@@ -31,6 +31,7 @@ sxl: tlc                # sxl of the connecting site
 intervals:
   timer: 1              # main timer interval (resolution)
   watchdog: 1           # how often to send watchdog messages
+  update_date: 0        # requested update rate when subscribing to statuses
 timeouts:
   watchdog: 2           # max time bewteen incoming watchdogs
   acknowledgement: 2    # max time until acknowledgement is received

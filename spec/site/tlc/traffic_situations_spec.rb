@@ -27,12 +27,12 @@ RSpec.describe 'Traffic Light Controller' do
     # Verify that we change traffic situtation
     #
     # 1. Given the site is connected
-    # 2. Verify that there is a TestSite.config['validator'] with a traffic situation
+    # 2. Verify that there is a Validator.config['validator'] with a traffic situation
     # 3. Send the control command to switch traffic situation for each traffic situation
     # 4. Wait for status "Current traffic situatuon" = requested traffic situation
     it 'M0003 set traffic situation', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
-        situations = TestSite.config[:items]['traffic_situations']
+      Validator::Site.connected do |task,supervisor,site|
+        situations = Validator.config['items']['traffic_situations']
         cant_test("No traffic situations configured") if situations.nil? || situations.empty?
         prepare task, site
         situations.each { |traffic_situation| switch_traffic_situation traffic_situation.to_s }

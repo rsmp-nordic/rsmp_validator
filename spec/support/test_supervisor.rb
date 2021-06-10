@@ -5,39 +5,13 @@ require 'rsmp'
 require 'singleton'
 require 'colorize'
 
-class TestSupervisor < Validator
+class Validator::Supervisor < Validator::Testee
 
-  private
-
-  # load configurations from YAML file
-  def load_config 
-    # get config path
-    validator_config = YAML.load_file '.validator'
-    raise "Error: Options file .validator is missing" unless validator_config
-
-    # load config
-    rsmp_config_path = validator_config['test_supervisor_config']
-    @config = YAML.load_file rsmp_config_path
-
-    puts "Using supervisor test config #{rsmp_config_path}"
-
-    # secrets
-    # first look for secrets specific to rsmp_config_path, e.g.
-    # if rsmp_config_path is 'rsmp_gem.yaml', look for 'secrets_rsmp_gem.yaml'
-    # if not found, use the generic 'secrets.yaml'
-    secrets_name = File.basename(rsmp_config_path,'.yaml')
-    secrets_path = "config/secrets_#{secrets_name}.yaml"
-    secrets_path = 'config/secrets.yaml' unless File.exist?(secrets_path)
-    @config['secrets'] = load_secrets(secrets_path)
-
-    # components
-    puts "Warning: #{rsmp_config_path} 'components' settings is missing or empty" if @config['components'] == {}
-
-    @config['main_component'] = @config['components']['main'].keys.first rescue {}
-    puts "Warning: #{rsmp_config_path} 'main' component settings is missing or empty" if @config['main_component'] == {}
-
-    # timeouts
-    puts "Warning: #{rsmp_config_path} 'timeouts' settings is missing or empty" if @config['timeouts'] == {}
+  def parse_config 
+    # setup rspec filters
+    #core =TestSupervisor.config['supervisor']['rsmp_versions']
+    #sxl = TestSupervisor.config['validator']['sxl_version']
+    #setup_filters core, sxl
   end
 
 
@@ -76,7 +50,7 @@ class TestSupervisor < Validator
 
   # build local site
   def build_node task, options
-    klass = case @config['type']
+    klass = case config['type']
     when 'tlc'
       RSMP::Tlc
     else
@@ -84,7 +58,7 @@ class TestSupervisor < Validator
     end
     @site = klass.new(
       task: task,
-      site_settings: @config.deep_merge(options),
+      site_settings: config.deep_merge(options),
       logger: @logger,
       collect: options['collect']
     )
@@ -94,9 +68,9 @@ class TestSupervisor < Validator
     @proxy = @node.proxies.first
     unless @proxy
       log "Waiting for connection to supervisor", level: :test
-      @proxy = @node.wait_for_supervisor(:any, @config['timeouts']['connect'])
+      @proxy = @node.wait_for_supervisor(:any, config['timeouts']['connect'])
     end
-    @proxy.wait_for_state :ready, @config['timeouts']['ready']
+    @proxy.wait_for_state :ready, config['timeouts']['ready']
   end
 
 

@@ -26,7 +26,7 @@
 # 
 # RSpec.describe "Traffic Light Controller" do
 #   it 'my test' do |example|
-#     TestSite.connected do |task,supervisor,site|
+#     Validator::Site.connected do |task,supervisor,site|
 #       # your test code goes here
 #     end
 #   end
@@ -36,54 +36,19 @@
 # which can be used to communicate with the site. For example
 # you can send commands, wait for responses, subscribe to statuses, etc.
 
-class TestSite < Validator
-
-  private
-
-  def load_config    
-    # get config path
-    validator_config = YAML.load_file '.validator'
-    raise "Error: Options file .validator is missing" unless validator_config
-
-    # load config
-    rsmp_config_path = validator_config['test_site_config']
-    @config = YAML.load_file rsmp_config_path
-
-    # log path
-    @config['log'] = @config['log_config_path'] rescue {}
-
-
-    # secrets
-    # first look for secrets specific to rsmp_config_path, e.g.
-    # if rsmp_config_path is 'rsmp_gem.yaml', look for 'secrets_rsmp_gem.yaml'
-    # if not found, use the generic 'secrets.yaml'
-    secrets_name = File.basename(rsmp_config_path,'.yaml')
-    secrets_path = "config/secrets_#{secrets_name}.yaml"
-    secrets_path = 'config/secrets.yaml' unless File.exist?(secrets_path)
-    @config['secrets'] = load_secrets(secrets_path)
-
-
-    # rsmp supervisor config
-    # pick certains elements from the validator @config
-    # 
+class Validator::Site < Validator::Testee
+  
+    def parse_config 
+    # build rsmp supervisor config by
+    # picking elements from the config
     want = ['sxl','intervals','timeouts','components','rsmp_versions']
-    guest_settings = @config.select { |key| want.include? key }
-    @config['supervisor'] = {
-      'port' => @config['port'],
+    guest_settings = config.select { |key| want.include? key }
+    @supervisor_config = {
+      'port' => config['port'],
       'max_sites' => 1,
       'guest' => guest_settings
     }
 
-    # components
-    @config['component'] = @config['components'] rescue {}
-    puts "Warning: #{rsmp_config_path} 'components' settings is missing or empty" if @config['component'] == {}
-
-    @config['main_component'] = @config['component']['main'].keys.first rescue {}
-    puts "Warning: #{rsmp_config_path} 'main' component settings is missing or empty" if @config['main_component'] == {}
-
-    # timeouts
-    @config['timeouts'] = @config['timeouts'] rescue {}
-    puts "Warning: #{rsmp_config_path} 'timeouts' settings is missing or empty" if @config['timeouts'] == {}
 
     [
       'connect',
@@ -97,31 +62,33 @@ class TestSite < Validator
       'disconnect',
       'shutdown'
     ].each do |key|
-      raise "@config 'timeouts/#{key}' is missing from #{rsmp_config_path}" unless @config['timeouts'][key]
+      raise "config 'timeouts/#{key}' is missing" unless config['timeouts'][key]
     end
 
-    # timeouts
-    @config[:items] = @config['items'] rescue {}
 
     # scripts
-    @config[:script_paths] = @config['supervisor']['scripts']
-    if @config[:script_paths]
-      puts "Warning: Script path for activating alarm is missing or empty" if @config[:script_paths]['activate_alarm'] == {}
-      unless File.exist? @config[:script_paths]['activate_alarm']
-        puts "Warning: Script at #{@config[:script_paths]['activate_alarm']} for activating alarm is missing"
+    if config['scripts']
+      puts "Warning: Script path for activating alarm is missing or empty" if config['scripts']['activate_alarm'] == {}
+      unless File.exist? config['scripts']['activate_alarm']
+        puts "Warning: Script at #{config['scripts']['activate_alarm']} for activating alarm is missing"
       end
-      puts "Warning: Script path for deactivating alarm is missing or empty" if @config[:script_paths]['deactivate_alarm'] == {}
-      unless File.exist? @config[:script_paths]['deactivate_alarm']
-        puts "Warning: Script at #{@config[:script_paths]['deactivate_alarm']} for deactivating alarm is missing"
+      puts "Warning: Script path for deactivating alarm is missing or empty" if config['scripts']['deactivate_alarm'] == {}
+      unless File.exist? config['scripts']['deactivate_alarm']
+        puts "Warning: Script at #{config['scripts']['deactivate_alarm']} for deactivating alarm is missing"
       end
     end
+
+    # setup rspec filters
+#    core = @config['supervisor']['rsmp_versions']
+#    sxl = @config['validator']['sxl_version']
+#    setup_filters core, sxl
   end
 
   # build local supervisor
   def build_node task, options
     RSMP::Supervisor.new(
       task: task,
-      supervisor_settings: @config['supervisor'].deep_merge(options),
+      supervisor_settings: @supervisor_config.deep_merge(options),
       logger: @logger,
       collect: options['collect']
     )
@@ -132,8 +99,8 @@ class TestSite < Validator
     @proxy = @node.proxies.first
     unless @proxy
       log "Waiting for site to connect", level: :test
-      @proxy = @node.wait_for_site(:any, @config['timeouts']['connect'])
+      @proxy = @node.wait_for_site(:any, config['timeouts']['connect'])
     end
-    @proxy.wait_for_state :ready, @config['timeouts']['ready']
+    @proxy.wait_for_state :ready, config['timeouts']['ready']
   end
 end

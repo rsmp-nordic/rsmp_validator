@@ -1,2 +1,0 @@
-test_site_config: config/ci/rsmp_gem.yaml
-test_supervisor_config: config/ci/tlc.yaml

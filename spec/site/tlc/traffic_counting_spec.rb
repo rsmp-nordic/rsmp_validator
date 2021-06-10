@@ -10,7 +10,7 @@ RSpec.describe "Traffic Light Controller" do
     it 'S0201 traffic counting: number of vehicles', sxl: '>=1.0.7' do |example|
       request_status_and_confirm "traffic counting: number of vehicles",
         { S0201: [:starttime,:vehicles] },
-        TestSite.config['component']['detector_logic'].keys.first
+        Validator.config['components']['detector_logic'].keys.first
     end
 
     # Verify status S0202 traffic counting: vehicle speed
@@ -21,7 +21,7 @@ RSpec.describe "Traffic Light Controller" do
     it 'S0202 traffic counting: vehicle speed', sxl: '>=1.0.7' do |example|
       request_status_and_confirm "traffic counting: vehicle speed",
         { S0202: [:starttime,:speed] },
-        TestSite.config['component']['detector_logic'].keys.first
+        Validator.config['components']['detector_logic'].keys.first
     end
 
     # Verify status S0203 traffic counting: occupancy
@@ -32,7 +32,7 @@ RSpec.describe "Traffic Light Controller" do
     it 'S0203 traffic counting: occupancy', sxl: '>=1.0.7' do |example|
       request_status_and_confirm "traffic counting: occupancy",
         { S0203: [:starttime,:occupancy] },
-        TestSite.config['component']['detector_logic'].keys.first
+        Validator.config['components']['detector_logic'].keys.first
     end
 
     # Verify status S0204 traffic counting: classification
@@ -54,7 +54,7 @@ RSpec.describe "Traffic Light Controller" do
             :C,
             :F
         ] },
-        TestSite.config['component']['detector_logic'].keys.first
+        Validator.config['components']['detector_logic'].keys.first
     end
 
     # Verify status S0205 traffic counting: number of vehicles
