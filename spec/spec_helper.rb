@@ -11,7 +11,7 @@ require_relative 'support/status_helpers'
 require_relative 'support/log_helpers'
 require_relative 'support/secrets_helpers'
 require_relative 'support/script_helpers'
-#require_relative 'support/filter_helpers'
+require_relative 'support/filter_helpers'
 
 include RSpec
 include LogHelpers
@@ -37,5 +37,5 @@ RSpec.configure do |config|
   end
 
   # filtering by core/sxl version
-  #setup_filters config
+  setup_filters config
 end

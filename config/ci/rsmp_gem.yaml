@@ -1,3 +1,5 @@
+# Config for testing a site running on localhost (e.g. from the rsmp gem)
+# The settings are used for starting a local supervisor listening for the site tested
 port: 13111
 sxl: tlc
 intervals:
@@ -31,6 +33,8 @@ items:
   traffic_situations: [1,2]
   emergency_routes: [1]
   inputs: [1]
-filter:
-  core_version: 1.0.7
-  #sxl_version: 
+
+# additional validator settings
+restrict_testing:
+  core_version: 3.1.2
+  sxl_version: 1.0.15

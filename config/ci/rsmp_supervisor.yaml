@@ -1,3 +1,5 @@
+# Config for testing a supervisor running on localhost (e.g. one from the rsmp gem)
+# The settings are used for starting a local site connecting to the supervisor tested
 type: tlc
 site_id: RN+SI0001
 supervisors:
