@@ -48,12 +48,14 @@ module StatusHelpers
     end
   end
 
-  def wait_for_status parent_task, description, status_list, update_rate: RSMP_CONFIG['status_update_rate']
+  def wait_for_status parent_task, description, status_list,
+        update_rate: RSMP_CONFIG['status_update_rate'],
+        timeout: RSMP_CONFIG['command_timeout']
     log_confirmation description do
       subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
       begin
         message, result = @site.subscribe_to_status @component, subscribe_list, collect: {
-          timeout: RSMP_CONFIG['command_timeout']
+          timeout: timeout
         }
       ensure
         unsubscribe_list = convert_status_list(status_list).map { |item| item.slice('sCI','n') }
@@ -61,6 +63,17 @@ module StatusHelpers
       end
     end
   end
+
+def wait_for_groups state, timeout:
+  timeout = 10
+  regex = /^#{state}+$/
+  wait_for_status(@task,
+    "Wait for all groups to go to yellow flash",
+    [{'sCI'=>'S0001','n'=>'signalgroupstatus','s'=>regex}],
+    update_rate: 0,
+    timeout: timeout
+  )
+end
 
   def request_status_and_confirm description, status_list, component=MAIN_COMPONENT
     TestSite.connected do |task,supervisor,site|
