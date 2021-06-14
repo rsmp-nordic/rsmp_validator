@@ -1,2 +1,5 @@
-config: config/ci/rsmp_gem.yaml                # path to config for testing a site
-#supervisor: config/ci/rsmp_supervisor.yaml   # path to config testing a supervisor
+# when testing a site, config describes the local supervisor
+config:       config/ci/rsmp_gem.yaml
+
+# when testing a supervisor, config describes the local site
+#config: config/ci/rsmp_supervisor.yaml

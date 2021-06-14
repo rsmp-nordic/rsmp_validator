@@ -17,7 +17,7 @@ include RSpec
 include LogHelpers
 
 
-Validator.load_config
+Validator.setup
 
 # configure RSpec
 RSpec.configure do |config|

@@ -10,8 +10,15 @@ module Validator
     attr_accessor :config, :testee
   end
 
-  def self.load_config    
-    # get config path
+  def self.setup
+    load_config
+    build_testee
+  end
+
+
+  private
+
+  def self.get_config_path
     if ENV['CONFIG']
       config_path = ENV['CONFIG']
     else
@@ -25,7 +32,12 @@ module Validator
       end
     end
 
-     raise "Error: Config path #{config_path} is empty" unless config_path
+    raise "Error: Config path #{config_path} is empty" unless config_path
+    config_path
+  end
+
+  def self.load_config
+    config_path = get_config_path
 
     # load config
     if File.exist? config_path
@@ -51,16 +63,16 @@ module Validator
     secrets_path = "config/secrets_#{secrets_name}.yaml"
     secrets_path = 'config/secrets.yaml' unless File.exist?(secrets_path)
     self.config['secrets'] = load_secrets(secrets_path)
-
-    self.build_testee
   end
 
   def self.build_testee
     # a config for a local site will have a config for what supervisor to connect to
     # a local site means we're testing a supervisor
     if self.config['supervisors']
+      log "Switching to supervisor testing"
       self.testee = Validator::Supervisor.new
     else
+      log "Switching to site testing"
       self.testee = Validator::Site.new
     end
   end

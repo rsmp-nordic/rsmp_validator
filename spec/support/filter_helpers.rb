@@ -22,16 +22,16 @@ def setup_filters rspec_config
   # the version match utilities
   if sxl_version
     sxl_version = Gem::Version.new sxl_version
-    filter = -> (v) {
+    sxl_filter = -> (v) {
       !Gem::Requirement.new(v).satisfied_by?(sxl_version)
     }
     # redefine the inspect method on our proc object,
     # so we get more useful display of the filter option when we
     # run rspec on the command line  
-    def filter.inspect
+    def sxl_filter.inspect
       "[unless relevant for #{Validator::Restrict.versions['sxl']}]"
     end
-    rspec_config.filter_run_excluding sxl: filter 
+    rspec_config.filter_run_excluding sxl: sxl_filter
   end
 
   # enable filtering by rsmp core version using e.g. rsmp: '>=3.1.2'
@@ -41,15 +41,15 @@ def setup_filters rspec_config
   # the version match utilities
   if core_version
     core_version = Gem::Version.new core_version
-    filter = -> (v) {
+    core_filter = -> (v) {
       !Gem::Requirement.new(v).satisfied_by?(core_version)
     }
     # redefine the inspect method on our proc object,
     # so we get more useful display of the filter option when we
     # run rspec on the command line  
-    def filter.inspect
+    def core_filter.inspect
       "[unless relevant for #{Validator::Restrict.versions['core']}]"
     end
-    rspec_config.filter_run_excluding rsmp: filter
+    rspec_config.filter_run_excluding rsmp: core_filter
   end
 end
