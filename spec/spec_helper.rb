@@ -36,5 +36,5 @@ RSpec.configure do |config|
   end
 
   # filtering by core/sxl version
-  #setup_filters config
+  setup_filters config
 end

@@ -15,39 +15,42 @@ module Validator
   def self.set_mode mode
     if self.mode
       if self.mode != mode
-        raise "Cannot test run specs for both site and supervisor. Please adjust the list of files/folders"
+        LogHelpers.abort_with_error "Cannot test run specs in both spec/site/ and spec/supervisor/"
       end
     else
       if mode == :site
-        log "Starting site testing"
         self.mode = mode
       elsif mode == :supervisor
-        log "Starting supervisor testing"
         self.mode = mode
       else
-        raise "Unknown test mode: #{mode}"
+        LogHelpers.abort_with_error "Unknown test mode: #{mode}"
       end
+
+      message = "Based on the input files, we're testing a #{mode}"
+      puts message
+      log message
     end
   end
 
   private
 
   def self.get_config_path
-    key = 'RSMP_VALIDATOR_CONFIG'
+    key = "#{self.mode.to_s.upcase}_CONFIG"
     if ENV[key]
       config_path = ENV[key]
     else
-      ref_path = '.validator.yaml'
+      ref_path = 'config/validator.yaml'
       if File.exist? ref_path
         # get config path
         config_ref = YAML.load_file ref_path
-        config_path = config_ref[self.mode.to_s]
+        config_path = config_ref[self.mode.to_s].strip
+        LogHelpers.abort_with_error "Error: #{ref_path} has no :#{self.mode.to_s} key" unless config_path 
       else
-        raise "Error: Neither #{ref_path} nor ENV['#{key}'] is present" unless config_path
+        LogHelpers.abort_with_error "Error: Neither #{ref_path} nor #{key} is present" unless config_path
       end
     end
 
-    raise "Error: Config path #{config_path} is empty" unless config_path
+    LogHelpers.abort_with_error "Error: Config path is empty" unless config_path && config_path != ''
     config_path
   end
 
@@ -56,28 +59,75 @@ module Validator
 
     # load config
     if File.exist? config_path
+      puts "Loading config from #{config_path}"
       self.config = YAML.load_file config_path
     else
-      raise "Config file #{config_path} is missing"
+      LogHelpers.abort_with_error "Config file #{config_path} is missing"
     end
 
+    # check that the config looks right for the current mode
+    if self.mode == :supervisor
+      if config['port']
+        LogHelpers.abort_with_error <<~HEREDOC
+        Error:
+        The config file at #{config_path} has a 'port' element, which is not expected when testing a supervisor.
+        For supervisor testing, the config should describe the local site used during testing.
+        Check that you're using the right config file, or fix the config.
+        HEREDOC
+      end
+    elsif self.mode == :site
+      if config['supervisors']
+        LogHelpers.abort_with_error <<~HEREDOC
+        Error:
+        The config file at #{config_path} has a 'supervisors' element, which is not expected when testing a site.
+        For site testing, the config should describe the local supervisor used during testing.
+        Check that you're using the right config file, or fix the config.
+        HEREDOC
+      end
+    end
+
+
+
     # components
-    raise "Warning: config 'components' settings is missing or empty" if config['components'] == {}
+    LogHelpers.abort_with_error "Error: config 'components' settings is missing or empty" if config['components'] == {}
 
     config['main_component'] = config['components']['main'].keys.first rescue {}
-    raise "Warning: config 'main' component settings is missing or empty" if config['main_component'] == {}
+    LogHelpers.abort_with_error "Error: config 'main' component settings is missing or empty" if config['main_component'] == {}
 
     # timeouts
-    raise "Warning: config 'timeouts' settings is missing or empty" if config['timeouts'] == {}
+    LogHelpers.abort_with_error "Error: config 'timeouts' settings is missing or empty" if config['timeouts'] == {}
 
-    # secrets
-    # first look for secrets specific to config_path, e.g.
-    # if config_path is 'rsmp_gem.yaml', look for 'secrets_rsmp_gem.yaml'
-    # if not found, use the generic 'secrets.yaml'
-    secrets_name = File.basename(config_path,'.yaml')
-    secrets_path = "config/secrets_#{secrets_name}.yaml"
-    secrets_path = 'config/secrets.yaml' unless File.exist?(secrets_path)
-    self.config['secrets'] = load_secrets(secrets_path)
+    self.load_secrets config_path
+  end
+
+  # load secrets
+  # secrets can be added directly to the config file in which
+  # case no file needs to be loaded.
+  # otherwise  look for a path relative to config_path, e.g.
+  # if config_path is 'gem_site.yaml', look for 'gem_site_secrets.yaml'
+  # if not found, try the the generic path 'secrets.yaml'
+  def self.load_secrets config_path
+    unless config['secrets']
+      basename = File.basename(config_path,'.yaml')
+      folder = File.dirname(config_path)
+      secrets_path = File.join folder, "#{basename}_secrets.yaml"
+
+      if File.exist?(secrets_path)
+        secrets = YAML.load_file(secrets_path)
+        config['secrets'] = secrets
+      end
+    end
+
+    unless self.config.dig 'secrets','security_codes'
+      puts "Warning: No security code configured".colorize(:yellow)
+    else
+      unless self.config.dig 'secrets','security_codes',1
+        puts "Warning: Security code 1 is not configured".colorize(:yellow)
+      end
+      unless self.config.dig 'secrets','security_codes',2
+        puts "Warning: Security code 2 is not configured".colorize(:yellow)
+      end
+    end
   end
 
   def self.setup files_to_run
@@ -99,7 +149,7 @@ module Validator
       elsif path.fnmatch?(File.join(supervisor_folder_full_path,'**'))
         self.set_mode :supervisor
       else
-        raise "Spec #{path_str} is neither a site nor supervisor test"
+        LogHelpers.abort_with_error "Spec #{path_str} is neither a site nor supervisor test"
       end
     end
   end
@@ -113,4 +163,5 @@ module Validator
       raise "Unknown test mode: #{self.mode}"
     end
   end
+
 end

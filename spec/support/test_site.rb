@@ -69,7 +69,7 @@ class Validator::Site < Validator::Testee
       'max_sites' => 1,
       'guest' => guest_settings
     }
-
+    @log_settings = config['log']
 
     [
       'connect',
@@ -89,20 +89,16 @@ class Validator::Site < Validator::Testee
 
     # scripts
     if config['scripts']
-      puts "Warning: Script path for activating alarm is missing or empty" if config['scripts']['activate_alarm'] == {}
+      puts "Warning: Script path for activating alarm is missing or empty".colorize(:yellow) if config['scripts']['activate_alarm'] == {}
       unless File.exist? config['scripts']['activate_alarm']
-        puts "Warning: Script at #{config['scripts']['activate_alarm']} for activating alarm is missing"
+        puts "Warning: Script at #{config['scripts']['activate_alarm']} for activating alarm is missing".colorize(:yellow)
       end
-      puts "Warning: Script path for deactivating alarm is missing or empty" if config['scripts']['deactivate_alarm'] == {}
+      puts "Warning: Script path for deactivating alarm is missing or empty".colorize(:yellow) if config['scripts']['deactivate_alarm'] == {}
       unless File.exist? config['scripts']['deactivate_alarm']
-        puts "Warning: Script at #{config['scripts']['deactivate_alarm']} for deactivating alarm is missing"
+        puts "Warning: Script at #{config['scripts']['deactivate_alarm']} for deactivating alarm is missing".colorize(:yellow)
       end
     end
 
-    # setup rspec filters
-#    core = @config['supervisor']['rsmp_versions']
-#    sxl = @config['validator']['sxl_version']
-#    setup_filters core, sxl
   end
 
   # build local supervisor

@@ -9,7 +9,7 @@ require 'rspec/expectations'
 class Validator::Testee 
   include RSpec::Matchers
   include RSMP::Logging
-  
+
   def config
     Validator.config
   end
@@ -73,7 +73,7 @@ class Validator::Testee
   def initialize
     parse_config
     @reactor = Async::Reactor.new
-    @logger = RSMP::Logger.new({
+    settings = {
       'active' => true,
       'port' => true,
       'path' => LOG_PATH,    # from log_helpers.rb
@@ -82,7 +82,9 @@ class Validator::Testee
       'acknowledgements' => true,
       'watchdogs' => true,
       'test' => true
-    })
+    }
+    settings.merge!( config['log'] ) if config['log']
+    @logger = RSMP::Logger.new settings
     initialize_logging logger: @logger
   end
 

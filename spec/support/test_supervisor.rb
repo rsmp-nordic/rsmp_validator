@@ -28,12 +28,7 @@ class Validator::Supervisor < Validator::Testee
   end
 
   def parse_config 
-    # setup rspec filters
-    #core =TestSupervisor.config['supervisor']['rsmp_versions']
-    #sxl = TestSupervisor.config['validator']['sxl_version']
-    #setup_filters core, sxl
   end
-
 
   # Resume the reactor and run a block in an async task.
   # A separate sentinel task is used be receive error

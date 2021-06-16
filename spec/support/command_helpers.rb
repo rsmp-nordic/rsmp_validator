@@ -21,6 +21,7 @@ module CommandHelpers
   end
 
   def set_signal_start status
+    require_security_codes
     @site.log "Start of signal group. Orders a signal group to green.", level: :test
     command_list = build_command_list :M0010, :setStart, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -32,6 +33,7 @@ module CommandHelpers
   end
 
   def set_signal_stop status
+    require_security_codes
     @site.log "Stop of signal group. Orders a signal group to red.", level: :test
     command_list = build_command_list :M0011, :setStop, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -53,6 +55,7 @@ module CommandHelpers
   end
 
   def set_plan plan
+    require_security_codes
     @site.log "Switching to plan #{plan}", level: :test
     command_list = build_command_list :M0002, :setPlan, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -63,6 +66,7 @@ module CommandHelpers
   end
 
   def set_traffic_situation ts
+    require_security_codes
     @site.log "Switching to traffic situation #{ts}", level: :test
     command_list = build_command_list :M0003, :setTrafficSituation, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -73,6 +77,7 @@ module CommandHelpers
   end
 
   def set_functional_position status
+    require_security_codes
     @site.log "Switching to #{status}", level: :test
     command_list = build_command_list :M0001, :setValue, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -84,6 +89,7 @@ module CommandHelpers
   end
 
   def set_fixed_time status
+    require_security_codes
     @site.log "Switching to fixed time #{status}", level: :test
     command_list = build_command_list :M0007, :setFixedTime, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -93,6 +99,7 @@ module CommandHelpers
   end
 
   def set_restart
+    require_security_codes
     @site.log "Restarting traffic controller", level: :test
     command_list = build_command_list :M0004, :setRestart, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -104,6 +111,7 @@ module CommandHelpers
   end
 
   def set_emergency_route route
+    require_security_codes
     @site.log "Set emergency route #{route}", level: :test
     command_list = build_command_list :M0005, :setEmergency, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -114,6 +122,7 @@ module CommandHelpers
   end
 
   def disable_emergency_route
+    require_security_codes
     @site.log "Disable emergency route", level: :test
     command_list = build_command_list :M0005, :setEmergency, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -123,6 +132,7 @@ module CommandHelpers
   end
 
   def set_input status, input
+    require_security_codes
     @site.log "Set input #{input}", level: :test
     command_list = build_command_list :M0006, :setInput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -133,6 +143,7 @@ module CommandHelpers
   end
 
   def force_detector_logic component, status, mode='True'
+    require_security_codes
     @site.log "Force detector logic", level: :test
     command_list = build_command_list :M0008, :setForceDetectorLogic, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -175,6 +186,7 @@ module CommandHelpers
   end
 
   def set_series_of_inputs status
+    require_security_codes
     @site.log "Activate a series of inputs", level: :test
     command_list = build_command_list :M0013, :setInput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -184,6 +196,7 @@ module CommandHelpers
   end
 
   def set_dynamic_bands status, plan
+    require_security_codes
     @site.log "Set dynamic bands", level: :test
     command_list = build_command_list :M0014, :setCommands, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -194,6 +207,7 @@ module CommandHelpers
   end
 
   def set_offset status, plan
+    require_security_codes
     @site.log "Set dynamic bands", level: :test
     command_list = build_command_list :M0015, :setOffset, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -204,6 +218,7 @@ module CommandHelpers
   end
 
   def set_week_table status
+    require_security_codes
     @site.log "Set week table", level: :test
     command_list = build_command_list :M0016, :setWeekTable, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -213,6 +228,7 @@ module CommandHelpers
   end
 
   def set_time_table status
+    require_security_codes
     @site.log "Set time table", level: :test
     command_list = build_command_list :M0017, :setTimeTable, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -222,6 +238,7 @@ module CommandHelpers
   end
 
   def set_cycle_time status, plan
+    require_security_codes
     @site.log "Set cycle time", level: :test
     command_list = build_command_list :M0018, :setCycleTime, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -232,6 +249,7 @@ module CommandHelpers
   end
 
   def force_input status, input, value
+    require_security_codes
     @site.log "Force input", level: :test
     command_list = build_command_list :M0019, :setInput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -243,6 +261,7 @@ module CommandHelpers
   end
 
   def force_output status, output, value
+    require_security_codes
     @site.log "Force output", level: :test
     command_list = build_command_list :M0020, :setOutput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -254,6 +273,7 @@ module CommandHelpers
   end
 
   def set_trigger_level status
+    require_security_codes
     @site.log "Set trigger level sensitivity for loop detector", level: :test
     command_list = build_command_list :M0021, :setLevel, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -263,6 +283,7 @@ module CommandHelpers
   end
 
   def set_security_code level
+    require_security_codes
     status = "Level#{level}"
     @site.log "Set security code", level: :test
     command_list = build_command_list :M0103, :setSecurityCode, {
@@ -273,7 +294,15 @@ module CommandHelpers
     send_command_and_confirm @task, command_list, "intention to set security code"
   end
 
+  def require_security_codes
+    unless Validator.config.dig 'secrets', 'security_codes' 
+      raise "Cannot run test, because security codes are not configured"
+    end
+  end
+
+
   def set_date date
+    require_security_codes
     @site.log "Set date to #{date}", level: :test
     command_list = build_command_list :M0104, :setDate, {
       securityCode: Validator.config['secrets']['security_codes'][1],
@@ -288,6 +317,7 @@ module CommandHelpers
   end
 
   def reset_date
+    require_security_codes
     @site.log "Reset date", level: :test
     now = Time.now.utc
     command_list = build_command_list :M0104, :setDate, {

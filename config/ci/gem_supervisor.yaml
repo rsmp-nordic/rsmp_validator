@@ -31,20 +31,10 @@ timeouts:
   ready: 1
   watchdog: 0.2
   acknowledgement: 0.2
-security_codes:
-  1: '1111'
-  2: '2222'
-log:
-  active: true
-  color: true
-  timestamp: true
-  id: true
-  component: true
-  ip: false
-  site_id: true
-  level: false
-  text: true
-  direction: true
-  json: true
-  acknowledgements: false
-  watchdogs: false
+restrict_testing:
+  core_version: 3.1.5
+  sxl_version: 1.0.15
+secrets:
+  security_codes:
+    1: '1111'
+    2: '2222'

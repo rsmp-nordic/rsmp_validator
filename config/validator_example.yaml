@@ -1,4 +1,12 @@
-# copy this to config/validator.yaml and point to
-# the config for the system you're testing
+# This file is template.
+# Copy it to config/validator.yaml and edit the copy to
+# point to the config for the system you're testing
+# You only need either a site or a supervisor key. The right
+# one will be picked depending on what specs you run.
+# But you can leave both, the unused key will just be ignored.
 
-rsmp_config_path: config/ci/rsmp_gem.yaml
+# when testing a site, the config describes the local supervisor
+site: config/ci/gem_site.yaml
+
+# when testing a supervisor, the config describes the local site
+supervisor: config/ci/gem_supervisor.yaml

@@ -33,8 +33,10 @@ items:
   traffic_situations: [1,2]
   emergency_routes: [1]
   inputs: [1]
-
-# additional validator settings
 restrict_testing:
   core_version: 3.1.5
-  sxl_version: 1.0.15
+  sxl_version: 1.0.13
+secrets:
+  security_codes:
+    1: '1111'
+    2: '2222'
