@@ -20,10 +20,6 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
-    - name: Configure test
-      shell: bash
-      run: |
-        echo "site: config/ci/gem_site.yaml" > config/validator.yaml
     - name: Configure bundle
       run: bundle config set path '~/rsmp_gems/bundle'
     - name: Run bundle install
@@ -32,7 +28,7 @@ jobs:
       shell: bash
       run: |
         bundle exec rsmp site --type tlc --json --config config/ci/tlc.yaml 2>&1 > simulator.log &
-        bundle exec rspec --tag '~script' spec/site
+        SITE_CONFIG=config/ci/gem_site.yaml bundle exec rspec --tag '~script' spec/site
         kill %1
     - name: Rename validation.log
       if: always()
