@@ -7,28 +7,43 @@ module Validator
   include RSMP::Logging
 
   class << self
-    attr_accessor :config, :testee
+    attr_accessor :config, :mode
+    attr_accessor :site_validator, :supervisor_validator
   end
 
-  def self.setup
-    load_config
-    build_testee
-  end
 
+  def self.set_mode mode
+    if self.mode
+      if self.mode != mode
+        raise "Cannot test run specs for both site and supervisor. Please adjust the list of files/folders"
+      end
+    else
+      if mode == :site
+        log "Starting site testing"
+        self.mode = mode
+      elsif mode == :supervisor
+        log "Starting supervisor testing"
+        self.mode = mode
+      else
+        raise "Unknown test mode: #{mode}"
+      end
+    end
+  end
 
   private
 
   def self.get_config_path
-    if ENV['CONFIG']
-      config_path = ENV['CONFIG']
+    key = 'RSMP_VALIDATOR_CONFIG'
+    if ENV[key]
+      config_path = ENV[key]
     else
       ref_path = '.validator.yaml'
       if File.exist? ref_path
         # get config path
         config_ref = YAML.load_file ref_path
-        config_path = config_ref['config']
+        config_path = config_ref[self.mode.to_s]
       else
-        raise "Error: Neither #{ref_path} nor ENV['CONFIG'] is present" unless config_path
+        raise "Error: Neither #{ref_path} nor ENV['#{key}'] is present" unless config_path
       end
     end
 
@@ -65,15 +80,37 @@ module Validator
     self.config['secrets'] = load_secrets(secrets_path)
   end
 
+  def self.setup files_to_run
+    determine_mode files_to_run
+    load_config
+    build_testee
+  end
+
+  def self.determine_mode files_to_run
+    site_folder = './spec/site'
+    supervisor_folder = './spec/supervisor'
+    site_folder_full_path = File.expand_path(site_folder)
+    supervisor_folder_full_path = File.expand_path(supervisor_folder)
+
+    files_to_run.each do |path_str|
+      path = Pathname.new(path_str)
+      if path.fnmatch?(File.join(site_folder_full_path,'**'))
+        self.set_mode :site
+      elsif path.fnmatch?(File.join(supervisor_folder_full_path,'**'))
+        self.set_mode :supervisor
+      else
+        raise "Spec #{path_str} is neither a site nor supervisor test"
+      end
+    end
+  end
+
   def self.build_testee
-    # a config for a local site will have a config for what supervisor to connect to
-    # a local site means we're testing a supervisor
-    if self.config['supervisors']
-      log "Switching to supervisor testing"
-      self.testee = Validator::Supervisor.new
+    if self.mode == :site
+      Validator::Site.testee = Validator::Site.new
+    elsif self.mode == :supervisor
+      Validator::Supervisor.testee = Validator::Supervisor.new
     else
-      log "Switching to site testing"
-      self.testee = Validator::Site.new
+      raise "Unknown test mode: #{self.mode}"
     end
   end
 end

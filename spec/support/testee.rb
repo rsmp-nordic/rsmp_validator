@@ -9,27 +9,9 @@ require 'rspec/expectations'
 class Validator::Testee 
   include RSpec::Matchers
   include RSMP::Logging
+  
   def config
     Validator.config
-  end
-
-  # class methods that just calls the instance stored in Validator
-  class << self
-    def connected options={}, &block
-      Validator.testee.connected options, &block
-    end
-
-    def reconnected options={}, &block
-      Validator.testee.reconnected options, &block
-    end
-
-    def disconnected &block
-      Validator.testee.disconnected &block
-    end
-
-    def isolated options={}, &block
-      Validator.testee.isolated options, &block
-    end
   end
 
   # Ensures that the site is connected.

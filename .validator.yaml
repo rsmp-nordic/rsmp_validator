@@ -1,5 +1,5 @@
-# when testing a site, config describes the local supervisor
-config:       config/ci/rsmp_gem.yaml
+# when testing a site, the config is used by the local supervisor
+site: config/ci/rsmp_gem.yaml
 
-# when testing a supervisor, config describes the local site
-#config: config/ci/rsmp_supervisor.yaml
+# when testing a supervisor, the config is used by the local site
+supervisor: config/ci/rsmp_supervisor.yaml

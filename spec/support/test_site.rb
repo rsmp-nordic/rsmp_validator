@@ -37,8 +37,29 @@
 # you can send commands, wait for responses, subscribe to statuses, etc.
 
 class Validator::Site < Validator::Testee
-  
-    def parse_config 
+
+   # class methods that just calls the instance stored in Validator
+  class << self
+    attr_accessor :testee
+
+    def connected options={}, &block
+      testee.connected options, &block
+    end
+
+    def reconnected options={}, &block
+      testee.reconnected options, &block
+    end
+
+    def disconnected &block
+      testee.disconnected &block
+    end
+
+    def isolated options={}, &block
+      testee.isolated options, &block
+    end
+  end
+
+  def parse_config
     # build rsmp supervisor config by
     # picking elements from the config
     want = ['sxl','intervals','timeouts','components','rsmp_versions']

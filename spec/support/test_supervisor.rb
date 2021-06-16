@@ -7,6 +7,26 @@ require 'colorize'
 
 class Validator::Supervisor < Validator::Testee
 
+  class << self
+    attr_accessor :testee
+
+    def connected options={}, &block
+      testee.connected options, &block
+    end
+
+    def reconnected options={}, &block
+      testee.reconnected options, &block
+    end
+
+    def disconnected &block
+      testee.disconnected &block
+    end
+
+    def isolated options={}, &block
+      testee.isolated options, &block
+    end
+  end
+
   def parse_config 
     # setup rspec filters
     #core =TestSupervisor.config['supervisor']['rsmp_versions']
