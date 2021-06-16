@@ -23,11 +23,7 @@ jobs:
     - name: Configure test
       shell: bash
       run: |
-        echo "rsmp_config_path: config/ci/rsmp_gem.yaml" > config/validator.yaml
-    - name: Set up secrets
-      shell: bash
-      run: |
-        echo -e "security_codes:\n    1: '1111'\n    2: '2222'" > config/secrets.yaml
+        echo "site: config/ci/gem_site.yaml" > config/validator.yaml
     - name: Configure bundle
       run: bundle config set path '~/rsmp_gems/bundle'
     - name: Run bundle install

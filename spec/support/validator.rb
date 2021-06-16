@@ -43,7 +43,7 @@ module Validator
       if File.exist? ref_path
         # get config path
         config_ref = YAML.load_file ref_path
-        config_path = config_ref[self.mode.to_s].strip
+        config_path = config_ref[self.mode.to_s].to_s.strip
         LogHelpers.abort_with_error "Error: #{ref_path} has no :#{self.mode.to_s} key" unless config_path 
       else
         LogHelpers.abort_with_error "Error: Neither #{ref_path} nor #{key} is present" unless config_path

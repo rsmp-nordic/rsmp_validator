@@ -31,3 +31,7 @@ items:
 scripts:
   activate_alarm: '/home/i0davla/activate_alarm.sh'
   deactivate_alarm: '/home/i0davla/deactivate_alarm.sh'
+secrets:
+  security_codes:
+    1: ''
+    2: ''

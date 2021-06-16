@@ -28,3 +28,7 @@ items:
   traffic_situations: [1,2]
   emergency_routes: [1]
   inputs: [1]
+secrets:
+  security_codes:
+    1: ''
+    2: ''
