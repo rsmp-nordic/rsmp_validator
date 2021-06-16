@@ -1,4 +1,3 @@
-port: 13111
 sxl: tlc
 intervals:
   timer: 1
