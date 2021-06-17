@@ -25,10 +25,4 @@ module LogHelpers
     raise "Cannot run test: #{err}"
   end
 
-
-  def abort_with_error error
-    puts error.colorize(:red)
-    exit
-  end
-
 end

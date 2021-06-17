@@ -11,11 +11,15 @@ module Validator
     attr_accessor :site_validator, :supervisor_validator
   end
 
+  def self.abort_with_error error
+    STDERR.puts "Error: #{error}".colorize(:red)
+    exit 1
+  end
 
   def self.set_mode mode
     if self.mode
       if self.mode != mode
-        LogHelpers.abort_with_error "Cannot test run specs in both spec/site/ and spec/supervisor/"
+        self.abort_with_error "Cannot test run specs in both spec/site/ and spec/supervisor/"
       end
     else
       if mode == :site
@@ -23,7 +27,7 @@ module Validator
       elsif mode == :supervisor
         self.mode = mode
       else
-        LogHelpers.abort_with_error "Unknown test mode: #{mode}"
+        self.abort_with_error "Unknown test mode: #{mode}"
       end
 
       message = "Based on the input files, we're testing a #{mode}"
@@ -44,13 +48,13 @@ module Validator
         # get config path
         config_ref = YAML.load_file ref_path
         config_path = config_ref[self.mode.to_s].to_s.strip
-        LogHelpers.abort_with_error "Error: #{ref_path} has no :#{self.mode.to_s} key" unless config_path 
+        self.abort_with_error "Error: #{ref_path} has no :#{self.mode.to_s} key" unless config_path 
       else
-        LogHelpers.abort_with_error "Error: Neither #{ref_path} nor #{key} is present" unless config_path
+        self.abort_with_error "Error: Neither #{ref_path} nor #{key} is present" unless config_path
       end
     end
 
-    LogHelpers.abort_with_error "Error: Config path is empty" unless config_path && config_path != ''
+    self.abort_with_error "Error: Config path is empty" unless config_path && config_path != ''
     config_path
   end
 
@@ -62,13 +66,13 @@ module Validator
       puts "Loading config from #{config_path}"
       self.config = YAML.load_file config_path
     else
-      LogHelpers.abort_with_error "Config file #{config_path} is missing"
+      self.abort_with_error "Config file #{config_path} is missing"
     end
 
     # check that the config looks right for the current mode
     if self.mode == :supervisor
       if config['port']
-        LogHelpers.abort_with_error <<~HEREDOC
+        self.abort_with_error <<~HEREDOC
         Error:
         The config file at #{config_path} has a 'port' element, which is not expected when testing a supervisor.
         For supervisor testing, the config should describe the local site used during testing.
@@ -77,7 +81,7 @@ module Validator
       end
     elsif self.mode == :site
       if config['supervisors']
-        LogHelpers.abort_with_error <<~HEREDOC
+        self.abort_with_error <<~HEREDOC
         Error:
         The config file at #{config_path} has a 'supervisors' element, which is not expected when testing a site.
         For site testing, the config should describe the local supervisor used during testing.
@@ -89,13 +93,13 @@ module Validator
 
 
     # components
-    LogHelpers.abort_with_error "Error: config 'components' settings is missing or empty" if config['components'] == {}
+    self.abort_with_error "Error: config 'components' settings is missing or empty" if config['components'] == {}
 
     config['main_component'] = config['components']['main'].keys.first rescue {}
-    LogHelpers.abort_with_error "Error: config 'main' component settings is missing or empty" if config['main_component'] == {}
+    self.abort_with_error "Error: config 'main' component settings is missing or empty" if config['main_component'] == {}
 
     # timeouts
-    LogHelpers.abort_with_error "Error: config 'timeouts' settings is missing or empty" if config['timeouts'] == {}
+    self.abort_with_error "Error: config 'timeouts' settings is missing or empty" if config['timeouts'] == {}
 
     self.load_secrets config_path
   end
@@ -149,7 +153,7 @@ module Validator
       elsif path.fnmatch?(File.join(supervisor_folder_full_path,'**'))
         self.set_mode :supervisor
       else
-        LogHelpers.abort_with_error "Spec #{path_str} is neither a site nor supervisor test"
+        self.abort_with_error "Spec #{path_str} is neither a site nor supervisor test"
       end
     end
   end
