@@ -28,7 +28,7 @@ RSpec.describe "Traffic Light Controller" do
   end
 ```
 
-The [TestSite](Validator::Site.md) handles the connection to the site, and will pass a `RSMP::SiteProxy` object in the `site` argument, which can be used to communicate with the site. 
+The [Validator::Site](Validator::Site.md) handles the connection to the site, and will pass a `RSMP::SiteProxy` object in the `site` argument, which can be used to communicate with the site. 
 
 For example, you can request statuses ,subscribe to statuses and send commands. Many of the methods allow you to wait for response.
 
