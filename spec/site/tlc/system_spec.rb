@@ -42,21 +42,21 @@ RSpec.describe 'Traffic Light Controller' do
     # 6. Send command to switch to normal controll
     # 7. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true
     it 'M0004 restart', sxl: '>=1.0.7' do |example|
-      TestSite.isolated do |task,supervisor,site|
+      Validator::Site.isolated do |task,supervisor,site|
         prepare task, site
         #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
         set_restart
-        site.wait_for_state :stopped, RSMP_CONFIG['shutdown_timeout']
+        site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
       end
 
       # NOTE
       # when a remote site closes the connection, our site proxy object will stop.
       # when the site reconnects, a new site proxy object will be created.
       # this means we can't wait for the old site to become ready
-      # it also means we need a new TestSite.
-      TestSite.isolated do |task,supervisor,site|
+      # it also means we need a new Validator::Site.
+      Validator::Site.isolated do |task,supervisor,site|
         prepare task, site
-        site.wait_for_state :ready, RSMP_CONFIG['ready_timeout']
+        site.wait_for_state :ready, Validator.config['timeouts']['ready']
         wait_normal_control
       end
     end
@@ -67,7 +67,7 @@ RSpec.describe 'Traffic Light Controller' do
     # 4. Send control command to setsecuritycode_level
     # 5. Wait for status = true
     it 'M0103 set security code', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         set_security_code 1
         set_security_code 2
@@ -75,7 +75,7 @@ RSpec.describe 'Traffic Light Controller' do
     end
 
     it 'Send the wrong security code', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         wrong_security_code 
       end

@@ -22,10 +22,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Configure test
       run: |
-        "rsmp_config_path: config/ci/dynniq_ec2.yaml" | Out-File 'config/validator.yaml' -Encoding utf8
-    - name: Set up secrets
-      run: |
-        "security_codes:`n    1: ''`n    2: ''" | Out-File 'config/secrets.yaml' -Encoding utf8
+        "site: config/ci/dynniq_ec2.yaml" | Out-File 'config/validator.yaml' -Encoding utf8
     - name: Set up ruby
       uses: ruby/setup-ruby@v1
       env:

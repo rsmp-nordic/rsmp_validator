@@ -1,158 +1,123 @@
-require 'rsmp'
-require 'singleton'
-require 'colorize'
-require 'rspec/expectations'
+# Helper class for testing RSMP sites
+#
+# The class is a singleton g class, meaning there will only ever be 
+# one instance.
+#
+# The class runs an RSMP supervisor (which the site connects to)
+# inside an Async reactor. To avoid waiting for the site to connect
+# for every test, the supervisor and the connection to the site
+# is maintained across test.
+#
+# However, the reactor is paused between tests, to give RSpec a chance
+# 
+# Only one site is expected to connect to the supervisor. The first
+# site connecting will be the one that tests communicate with.
+# 
+# to run.
+#
+# Each RSpec test is run inside a separate Async task.
+# Exceptions in you test code will be cause the test task to stop,
+# and re-raise the exception ourside the reactor so that RSpec
+# sees it.
+#
+# The class provides a few methods to wait for the site to connect.
+# These methods all take a block, which is where you should put
+# you test code.
+# 
+# RSpec.describe "Traffic Light Controller" do
+#   it 'my test' do |example|
+#     Validator::Site.connected do |task,supervisor,site|
+#       # your test code goes here
+#     end
+#   end
+# end
 
-class TestSite
-  include Singleton
-  include RSpec::Matchers
-  include RSMP::Logging
+# The block will pass an RSMP::SiteProxy object,
+# which can be used to communicate with the site. For example
+# you can send commands, wait for responses, subscribe to statuses, etc.
 
-  def initialize
-    @reactor = Async::Reactor.new
+class Validator::Site < Validator::Testee
 
-    @logger = RSMP::Logger.new({
-      'active' => true,
-      'port' => true,
-      'path' => LOG_PATH,
-      'color' => true,
-      'json' => true,
-      'acknowledgements' => true,
-      'watchdogs' => true,
-      'test' => true
-    })
-    initialize_logging logger: @logger
+   # class methods that just calls the instance stored in Validator
+  class << self
+    attr_accessor :testee
+
+    def connected options={}, &block
+      testee.connected options, &block
+    end
+
+    def reconnected options={}, &block
+      testee.reconnected options, &block
+    end
+
+    def disconnected &block
+      testee.disconnected &block
+    end
+
+    def isolated options={}, &block
+      testee.isolated options, &block
+    end
   end
 
-  def within_reactor &block
-    error = nil
+  def parse_config
+    # build rsmp supervisor config by
+    # picking elements from the config
+    want = ['sxl','intervals','timeouts','components','rsmp_versions']
+    guest_settings = config.select { |key| want.include? key }
+    @supervisor_config = {
+      'port' => config['port'],
+      'max_sites' => 1,
+      'guest' => guest_settings
+    }
+    @log_settings = config['log']
 
-    # use run() to continue the reactor. this will give as a new task,
-    # which we run the rspec test inside
-    @reactor.run do |task|
-      task.annotate 'rspec runner'
-      task.async do |sentinel|
-        sentinel.annotate 'sentinel'
-        @supervisor.error_condition.wait  # if it's an exception, it will be raised
-      rescue => e
-        error = e
-        task.stop
+    [
+      'connect',
+      'ready',
+      'status_response',
+      'status_update',
+      'subscribe',
+      'command',
+      'command_response',
+      'alarm',
+      'disconnect',
+      'shutdown'
+    ].each do |key|
+      raise "config 'timeouts/#{key}' is missing" unless config['timeouts'][key]
+    end
+
+
+    # scripts
+    if config['scripts']
+      puts "Warning: Script path for activating alarm is missing or empty".colorize(:yellow) if config['scripts']['activate_alarm'] == {}
+      unless File.exist? config['scripts']['activate_alarm']
+        puts "Warning: Script at #{config['scripts']['activate_alarm']} for activating alarm is missing".colorize(:yellow)
       end
-      yield task              # run block until it's finished
-    rescue StandardError, RSpec::Expectations::ExpectationNotMetError => e
-      error = e               # catch and store errors
-    ensure
-      @reactor.interrupt      # interrupt reactor
-    end
-
-    # reraise errors outside task to surface them in rspec
-    if error
-      log "Failed: #{error.class}: #{error}", level: :test
-      raise error
-    else
-      log "OK", level: :test
-    end
-  end
-
-  def start options={}, why=nil
-    unless @supervisor
-      supervisor_settings = {
-        'stop_after_first_session' => false,
-        'watchdog_interval' => 5,
-        'watchdog_timeout' => 10,
-        'acknowledgement_timeout' => 10,
-        'command_response_timeout' => 10,
-        'status_response_timeout' => 10,
-        'status_update_timeout' => 10
-      }.merge(RSMP_CONFIG['supervisor']).merge options
-
-      supervisor_settings['sites'][:any]["collect"] = options['collect']
-
-      # start the supervisor in a separe async task that will
-      # persist across tests
-      @supervisor_task = @reactor.async do |task|
-        @supervisor = RSMP::Supervisor.new(
-          task: task,
-          supervisor_settings: supervisor_settings,
-          logger: @logger,
-          collect: options['collect']
-        )
-        log why, level: :test if why
-        @supervisor.start  # keep running inside the async task, listening for sites
+      puts "Warning: Script path for deactivating alarm is missing or empty".colorize(:yellow) if config['scripts']['deactivate_alarm'] == {}
+      unless File.exist? config['scripts']['deactivate_alarm']
+        puts "Warning: Script at #{config['scripts']['deactivate_alarm']} for deactivating alarm is missing".colorize(:yellow)
       end
     end
 
   end
 
-  def stop why=nil
-    # will be called outside within_reactor
-    # supervisor.stop uses wait(), which requires an async context
-    Async do
-      if @supervisor
-        log why, level: :test if why
-        @supervisor.stop
-      end
-      @supervisor = nil
-      @remote_site = nil
-    end
+  # build local supervisor
+  def build_node task, options
+    RSMP::Supervisor.new(
+      task: task,
+      supervisor_settings: @supervisor_config.deep_merge(options),
+      logger: @logger,
+      collect: options['collect']
+    )
   end
 
-  def connected options={}, &block
-    start options, 'Connecting'
-    within_reactor do |task|
-      wait_for_site task
-      yield task, @supervisor, @remote_site
-    end
-  end
-
-  def reconnected options={}, &block
-    stop 'Reconnecting'
-    start options
-    within_reactor do |task|
-      wait_for_site task
-      yield task, @supervisor, @remote_site
-    end
-  end
-
-  def disconnected &block
-    stop 'Disconnecting'
-    within_reactor do |task|
-      yield task
-    end
-  end
-
-  def isolated options={}, &block
-    stop 'Isolating'
-    start options, 'Connecting'
-    within_reactor do |task|
-      wait_for_site task
-      yield task, @supervisor, @remote_site
-    end
-    stop 'Isolating'
-  end
-
-  def self.connected options={}, &block
-    instance.connected options, &block
-  end
-
-  def self.reconnected options={}, &block
-    instance.reconnected options, &block
-  end
-
-  def self.disconnected &block
-    instance.disconnected &block
-  end
-
-  def self.isolated options={}, &block
-    instance.isolated options, &block
-  end
-
-  def wait_for_site task
-    @remote_site = @supervisor.find_site :any
-    unless @remote_site
+  # Wait for an rsmp site to connect to the supervisor
+  def wait_for_connection
+    @proxy = @node.proxies.first
+    unless @proxy
       log "Waiting for site to connect", level: :test
-      @remote_site = @supervisor.wait_for_site(:any, RSMP_CONFIG['connect_timeout'])
+      @proxy = @node.wait_for_site(:any, config['timeouts']['connect'])
     end
-    @remote_site.wait_for_state :ready, RSMP_CONFIG['ready_timeout']
+    @proxy.wait_for_state :ready, config['timeouts']['ready']
   end
 end

@@ -1,0 +1,39 @@
+# Config for testing a site running on localhost (e.g. from the rsmp gem)
+# The settings are used for starting a local supervisor listening for the site tested
+port: 13111
+sxl: tlc
+intervals:
+  timer: 0.1
+  watchdog: 0.1
+timeouts:
+  watchdog: 1
+  acknowledgement: 1
+  connect: 1
+  ready: 1
+  status_response: 1
+  status_update: 1
+  subscribe: 1
+  command: 1
+  command_response: 1
+  alarm: 1
+  disconnect: 1
+  shutdown: 1
+components:
+  main:
+    TC:
+  signal_group:
+    A1:
+    A2:
+    B1:
+    B2:
+  detector_logic:
+    DL1:
+items:
+  plans: [1,2]
+  traffic_situations: [1,2]
+  emergency_routes: [1]
+  inputs: [1]
+secrets:
+  security_codes:
+    1: '1111'
+    2: '2222'

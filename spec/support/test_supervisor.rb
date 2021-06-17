@@ -1,103 +1,92 @@
+# Experimental:
+# Helper class for testing RSMP supervisors 
+
 require 'rsmp'
 require 'singleton'
 require 'colorize'
 
-class TestSupervisor
-  include Singleton
-  include ::RSpec::Matchers
+class Validator::Supervisor < Validator::Testee
 
-  READY_TIMEOUT = 5
+  class << self
+    attr_accessor :testee
 
-  def initialize
-    @reactor = Async::Reactor.new
+    def connected options={}, &block
+      testee.connected options, &block
+    end
+
+    def reconnected options={}, &block
+      testee.reconnected options, &block
+    end
+
+    def disconnected &block
+      testee.disconnected &block
+    end
+
+    def isolated options={}, &block
+      testee.isolated options, &block
+    end
   end
 
+  def parse_config 
+  end
+
+  # Resume the reactor and run a block in an async task.
+  # A separate sentinel task is used be receive error
+  # notifications that should abort the block
   def within_reactor &block
-    task = @reactor.run do |task|
-      yield task
+    error = nil
+
+    # use run() to continue the reactor. this will give as a new task,
+    # which we run the rspec test inside
+    @reactor.run do |task|
+      task.annotate 'rspec runner'
+      task.async do |sentinel|
+        sentinel.annotate 'sentinel'
+        @site.error_condition.wait  # if it's an exception, it will be raised
+      rescue => e
+        error = e
+        task.stop
+      end
+      yield task              # run block until it's finished
+    rescue StandardError, RSpec::Expectations::ExpectationNotMetError => e
+      error = e               # catch and store errors
     ensure
-      # It's much faster to use @site.task.stop,
-      # but unfortunately that will kills the task after which
-      # it does not work anymore. Trying to use the supervisor will
-      # result in closed stream errors.
-      @reactor.stop
-    end
-  end
-
-  def start options={}
-    unless @site
-      defaults = {
-        'log' => {
-          'active' => false,
-          'color' => true
-        },
-        'reconnect_interval' => :no,
-        'send_after_connect' => false
-      }
-
-      site_settings = defaults.merge(options)
-      @site = RSMP::Site.new site_settings: site_settings
-      @site.start
+      @reactor.interrupt      # interrupt reactor
     end
 
-    unless @remote_supervisor
-      @remote_supervisor = @site.proxies.first
-      remote_supervisor_state = @remote_supervisor.wait_for_state [:ready,:cannot_connect], READY_TIMEOUT
-      expect(remote_supervisor_state).to eq(:ready)
-      @remote_supervisor
-    end
-  end
-
-  def stop
-    if @site
-      @site.stop
-    end
-    @site = nil
-    @remote_supervisor = nil
-  end
-
-  def connected options={}, &block
-    within_reactor do |task|
-      start options
-      yield task, @remote_supervisor, @site
-    end
-  end
-
-  def reconnected options={}, &block
-    within_reactor do |task|
-      stop
-      start options
-      yield task, @remote_supervisor, @site
-    end
-  end
-
-  def disconnected &block
-    within_reactor do |task|
-      stop
-      yield task
-    end
-  end
-
-  def self.connected options={}, &block
-    instance.connected options, &block
-  end
-
-  def self.reconnected options={}, &block
-    instance.reconnected options, &block
-  end
-
-  def self.disconnected &block
-    instance.disconnected &block
-  end
-
-  def connect_to_supervisor site
-    remote_supervisor = site.connect_to_supervisor(10)
-    if remote_supervisor
-      remote_supervisor.wait_for_state :ready, 3
-      from = "#{remote_supervisor.connection_info[:ip]}:#{remote_supervisor.connection_info[:port]}"
-      remote_supervisor
+    # reraise errors outside task to surface them in rspec
+    if error
+      log "Failed: #{error.class}: #{error}", level: :test
+      raise error
     else
-      raise "Timeout while trýing to connect to supervisor".colorize(:red)
+      log "OK", level: :test
     end
   end
+
+  # build local site
+  def build_node task, options
+    klass = case config['type']
+    when 'tlc'
+      RSMP::Tlc
+    else
+      RSMP::Site
+    end
+    @site = klass.new(
+      task: task,
+      site_settings: config.deep_merge(options),
+      logger: @logger,
+      collect: options['collect']
+    )
+  end
+
+  def wait_for_connection
+    @proxy = @node.proxies.first
+    unless @proxy
+      log "Waiting for connection to supervisor", level: :test
+      @proxy = @node.wait_for_supervisor(:any, config['timeouts']['connect'])
+    end
+    @proxy.wait_for_state :ready, config['timeouts']['ready']
+  end
+
+
 end

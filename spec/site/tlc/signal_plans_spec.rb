@@ -79,12 +79,12 @@ RSpec.describe "Traffic Light Controller" do
     # We try switching all programs configured
     #
     # 1. Given the site is connected
-    # 2. Verify that there is a SITE_CONFIG with a time plan
+    # 2. Verify that there is a Validator.config['validator'] with a time plan
     # 3. Send command to switch time plan
     # 4. Wait for status "Current timeplan" = requested time plan
     it 'M0002 set time plan', sxl: '>=1.0.7' do |example|
-      TestSite.connected do |task,supervisor,site|
-        plans = SITE_CONFIG['plans']
+      Validator::Site.connected do |task,supervisor,site|
+        plans = Validator.config['items']['plans']
         cant_test("No time plans configured") if plans.nil? || plans.empty?
         prepare task, site
         plans.each { |plan| switch_plan plan }
@@ -95,7 +95,7 @@ RSpec.describe "Traffic Light Controller" do
     # 2. Send control command to set dynamic_bands
     # 3. Wait for status = true
     it 'M0014 set command table', sxl: '>=1.0.13' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         plan = "1"
         status = "10,10"
         prepare task, site
@@ -107,7 +107,7 @@ RSpec.describe "Traffic Light Controller" do
     # 2. Send control command to set dynamic_bands
     # 3. Wait for status = true  
     it 'M0015 set offset', sxl: '>=1.0.13' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         plan = 1
         status = 255
         prepare task, site
@@ -119,7 +119,7 @@ RSpec.describe "Traffic Light Controller" do
     # 2. Send control command to set  week_table
     # 3. Wait for status = true  
     it 'M0016 set week table', sxl: '>=1.0.13' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         status = "0-1,6-2"
         prepare task, site
         set_week_table status
@@ -130,7 +130,7 @@ RSpec.describe "Traffic Light Controller" do
     # 2. Send control command to set time_table
     # 3. Wait for status = true  
     it 'M0017 set time table', sxl: '>=1.0.13' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         status = "12-1-12-59,1-0-23-12"
         prepare task, site
         set_time_table status
@@ -141,7 +141,7 @@ RSpec.describe "Traffic Light Controller" do
     # 2. Send control command to set cycle time
     # 3. Wait for status = true  
     it 'M0018 set cycle time', sxl: '>=1.0.13' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         status = 5
         plan = 0
         prepare task, site
@@ -185,7 +185,7 @@ RSpec.describe "Traffic Light Controller" do
             :maxToREstimate,
             :likelyToREstimate
         ] },
-        COMPONENT_CONFIG['signal_group'].keys.first
+        Validator.config['components']['signal_group'].keys.first
     end
 
     # Verify status S0028 cycle time

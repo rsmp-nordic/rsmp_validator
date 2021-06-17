@@ -2,11 +2,11 @@ RSpec.describe "Traffic Light Controller" do
 
   def get_connection_message core_version, length
     got = nil
-    TestSite.isolated(
+    Validator::Site.isolated(
       'rsmp_versions' => [core_version],
       'collect' => length
     ) do |task,supervisor,site|
-      site.collector.collect task, timeout: RSMP_CONFIG['ready_timeout']
+      site.collector.collect task, timeout: Validator.config['timeouts']['ready']
       expect(site.ready?).to be true
       got = site.collector.messages.map { |message| [message.direction.to_s, message.type] }
     end

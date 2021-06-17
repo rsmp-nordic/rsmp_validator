@@ -1,3 +1,5 @@
+# Config for testing a supervisor running on localhost (e.g. one from the rsmp gem)
+# The settings are used for starting a local site connecting to the supervisor tested
 type: tlc
 site_id: RN+SI0001
 supervisors:
@@ -29,20 +31,7 @@ timeouts:
   ready: 1
   watchdog: 0.2
   acknowledgement: 0.2
-security_codes:
-  1: '1111'
-  2: '2222'
-log:
-  active: true
-  color: true
-  timestamp: true
-  id: true
-  component: true
-  ip: false
-  site_id: true
-  level: false
-  text: true
-  direction: true
-  json: true
-  acknowledgements: false
-  watchdogs: false
+secrets:
+  security_codes:
+    1: '1111'
+    2: '2222'

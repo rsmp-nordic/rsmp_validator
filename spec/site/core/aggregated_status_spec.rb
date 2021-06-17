@@ -8,11 +8,11 @@ RSpec.describe "Traffic Light Controller" do
     # 2. Request aggregated status 
     # 3. Expect aggregated status response before timeout
     it 'responds to aggregated status request', rsmp: '>=3.1.5' do |example|
-      TestSite.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         log_confirmation "request aggregated status" do
-          site.request_aggregated_status MAIN_COMPONENT, collect: {
-            timeout: SUPERVISOR_CONFIG['status_response_timeout']
+          site.request_aggregated_status Validator.config['main_component'], collect: {
+            timeout: Validator.config['timeouts']['status_response']
           }
         end
       end

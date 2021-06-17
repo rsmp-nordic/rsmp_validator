@@ -20,14 +20,6 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
-    - name: Configure test
-      shell: bash
-      run: |
-        echo "rsmp_config_path: config/ci/swarco_itc2.yaml" > config/validator.yaml
-    - name: Set up secrets
-      shell: bash
-      run: |
-        echo -e "security_codes:\n    1: ''\n    2: ''" > config/secrets.yaml
     - name: Configure bundle
       run: bundle config set path '~/rsmp_gems/bundle'
     - name: Run bundle install
@@ -35,7 +27,7 @@ jobs:
     - name: Set the time of the controller
       run: /home/i0davla/set_date.sh
     - name: Run tests
-      run: bundle exec rspec spec/site
+      run: SITE_CONFIG=config/ci/swarco_itc2.yaml bundle exec rspec spec/site
     - name: Rename validation.log
       if: always()
       run: mv log/validation.log log/validation_itc2_$(date +%F_%H-%M-%S).log
