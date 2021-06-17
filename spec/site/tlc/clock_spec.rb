@@ -4,13 +4,7 @@ RSpec.describe "Traffic Light Controller" do
   
   describe 'Clock' do
     DATE = Time.new 2020,9,29,17,29,51,'UTC'
-    
-    def check_scripts
-      raise "Aborting test because script config is missing" unless SCRIPT_PATHS
-      raise "Aborting test because script config is missing" unless SCRIPT_PATHS['activate_alarm']
-      raise "Aborting test because script config is missing" unless SCRIPT_PATHS['deactivate_alarm']
-    end
-  
+ 
     # Verify status 0096 current date and time
     #
     # 1. Given the site is connected
@@ -187,11 +181,11 @@ RSpec.describe "Traffic Light Controller" do
     # 7. Expect the difference to be within max_diff
     it 'timestamps alarm with adjusted clock', :script, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        check_scripts
+        Validator.require_scripts
         prepare task, site
         with_date_set DATE do
           component = Validator.config['components']['detector_logic'].keys.first
-          system(SCRIPT_PATHS['activate_alarm'])
+          system(Validator.config['scripts']['activate_alarm'])
           site.log "Waiting for alarm", level: :test
           response = site.wait_for_alarm task, timeout: Validator.config['timeouts']['alarm']
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']

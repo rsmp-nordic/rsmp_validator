@@ -11,6 +11,15 @@ module Validator
     attr_accessor :site_validator, :supervisor_validator
   end
 
+  def self.setup rspec_config
+    determine_mode rspec_config.files_to_run
+    load_config
+    build_testee
+    setup_filters rspec_config
+  end
+
+  private
+
   def self.abort_with_error error
     STDERR.puts "Error: #{error}".colorize(:red)
     exit 1
@@ -30,13 +39,11 @@ module Validator
         self.abort_with_error "Unknown test mode: #{mode}"
       end
 
-      message = "Based on the input files, we're testing a #{mode}"
+      message = "We're testing a #{mode}"
       puts message
       log message
     end
   end
-
-  private
 
   def self.get_config_path
     key = "#{self.mode.to_s.upcase}_CONFIG"
@@ -134,12 +141,6 @@ module Validator
     end
   end
 
-  def self.setup files_to_run
-    determine_mode files_to_run
-    load_config
-    build_testee
-  end
-
   def self.determine_mode files_to_run
     site_folder = './spec/site'
     supervisor_folder = './spec/supervisor'
@@ -165,6 +166,51 @@ module Validator
       Validator::Supervisor.testee = Validator::Supervisor.new
     else
       raise "Unknown test mode: #{self.mode}"
+    end
+  end
+
+  def self.require_scripts
+    raise "Scripts are not configured" unless Validator.config['scripts']
+    raise "Scripts to activate alarm is not configured" unless Validator.config['scripts']['activate_alarm']
+    raise "Script to deactivate alarm is not configured" unless Validator.config['scripts']['deactivate_alarm']
+  end
+
+  def self.setup_filters rspec_config
+    core_version = Validator.config.dig('restrict_testing','core_version')
+    sxl_version = Validator.config.dig('restrict_testing','sxl_version')
+
+    # enable filtering by rsmp core version tags like '>=3.1.2'
+    # Gem::Requirement and Gem::Version classed are used to do the version matching,
+    # but this otherwise has nothing to do with Gems
+    if core_version
+      core_version = Gem::Version.new core_version
+      core_filter = -> (v) {
+        !Gem::Requirement.new(v).satisfied_by?(core_version)
+      }
+      # redefine the inspect method on our proc object,
+      # so we get more useful display of the filter option when we
+      # run rspec on the command line
+      def core_filter.inspect
+        "[unless relevant for #{Validator.config.dig('restrict_testing','core_version')}]"
+      end
+      rspec_config.filter_run_excluding rsmp: core_filter
+    end
+
+    # enable filtering by sxl version tags like '>=1.0.7'
+    # Gem::Requirement and Gem::Version classed are used to do the version matching,
+    # but this otherwise has nothing to do with Gems
+    if sxl_version
+      sxl_version = Gem::Version.new sxl_version
+      sxl_filter = -> (v) {
+        !Gem::Requirement.new(v).satisfied_by?(sxl_version)
+      }
+      # redefine the inspect method on our proc object,
+      # so we get more useful display of the filter option when we
+      # run rspec on the command line
+      def sxl_filter.inspect
+        "[unless relevant for #{Validator.config.dig('restrict_testing','sxl_version')}]"
+      end
+      rspec_config.filter_run_excluding sxl: sxl_filter
     end
   end
 

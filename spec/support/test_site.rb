@@ -91,11 +91,11 @@ class Validator::Site < Validator::Testee
     if config['scripts']
       puts "Warning: Script path for activating alarm is missing or empty".colorize(:yellow) if config['scripts']['activate_alarm'] == {}
       unless File.exist? config['scripts']['activate_alarm']
-        puts "Warning: Script at #{config['scripts']['activate_alarm']} for activating alarm is missing".colorize(:yellow)
+        Validator.abort_with_error "Script at #{config['scripts']['activate_alarm']} for activating alarm is missing".colorize(:yellow)
       end
       puts "Warning: Script path for deactivating alarm is missing or empty".colorize(:yellow) if config['scripts']['deactivate_alarm'] == {}
       unless File.exist? config['scripts']['deactivate_alarm']
-        puts "Warning: Script at #{config['scripts']['deactivate_alarm']} for deactivating alarm is missing".colorize(:yellow)
+        Validator.abort_with_error "Script at #{config['scripts']['deactivate_alarm']} for deactivating alarm is missing".colorize(:yellow)
       end
     end
 

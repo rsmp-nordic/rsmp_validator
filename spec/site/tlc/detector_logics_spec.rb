@@ -55,10 +55,10 @@ RSpec.describe 'Traffic Light Controller' do
   	end
 
   	it 'A0302 detector error (logic error)', :script, sxl: '>=1.0.7' do |example|
-  	  check_scripts
+  	  Validator.require_scripts
   	  Validator::Site.connected do |task,supervisor,site|
   	    component = Validator.config['components']['detector_logic'].keys.first
-  	    system(SCRIPT_PATHS['activate_alarm'])
+  	    system(Validator.config['scripts']['activate_alarm'])
   	    site.log "Waiting for alarm", level: :test
   	    start_time = Time.now
   	    message, response = nil,nil
@@ -69,7 +69,7 @@ RSpec.describe 'Traffic Light Controller' do
 
   	    delay = Time.now - start_time
   	    site.log "alarm confirmed after #{delay.to_i}s", level: :test
-  	    system(SCRIPT_PATHS['deactivate_alarm'])
+  	    system(Validator.config['scripts']['deactivate_alarm'])
 
   	    alarm_time = Time.parse(response[:message].attributes["aTs"])
   	    expect(alarm_time).to be_within(1.minute).of Time.now.utc
@@ -81,7 +81,7 @@ RSpec.describe 'Traffic Light Controller' do
   	      {"n":"logicerror","v":"always_off"}
   	    ])
   	  ensure
-  	    system(SCRIPT_PATHS['deactivate_alarm'])
+  	    system(Validator.config['scripts']['deactivate_alarm'])
   	  end
   	end
   end

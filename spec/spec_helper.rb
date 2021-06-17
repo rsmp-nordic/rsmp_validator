@@ -10,7 +10,6 @@ require_relative 'support/command_helpers'
 require_relative 'support/status_helpers'
 require_relative 'support/log_helpers'
 require_relative 'support/secrets_helpers'
-require_relative 'support/script_helpers'
 require_relative 'support/filter_helpers'
 
 include RSpec
@@ -19,7 +18,9 @@ include LogHelpers
 
 # configure RSpec
 RSpec.configure do |config|
-  Validator.setup config.files_to_run
+  # setup the RSMP Validator
+  Validator.setup config
+
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
 
@@ -34,7 +35,4 @@ RSpec.configure do |config|
   config.before(:example) do |example|
     log "\nRunning test #{example.metadata[:location]} - #{example.full_description}".colorize(:light_black)
   end
-
-  # filtering by core/sxl version
-  setup_filters config
 end
