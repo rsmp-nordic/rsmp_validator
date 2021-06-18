@@ -181,7 +181,7 @@ RSpec.describe "Traffic Light Controller" do
     # 7. Expect the difference to be within max_diff
     it 'timestamps alarm with adjusted clock', :script, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        Validator.require_scripts
+        require_scripts
         prepare task, site
         with_date_set DATE do
           component = Validator.config['components']['detector_logic'].keys.first
