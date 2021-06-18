@@ -21,8 +21,4 @@ module LogHelpers
     end
   end
 
-  def cant_test err
-    raise "Cannot run test: #{err}"
-  end
-
 end

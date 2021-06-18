@@ -83,9 +83,9 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Send command to switch time plan
     # 4. Wait for status "Current timeplan" = requested time plan
     it 'M0002 set time plan', sxl: '>=1.0.7' do |example|
+      plans = Validator.config['items']['plans']
+      skip("No time plans configured") if plans.nil? || plans.empty?
       Validator::Site.connected do |task,supervisor,site|
-        plans = Validator.config['items']['plans']
-        cant_test("No time plans configured") if plans.nil? || plans.empty?
         prepare task, site
         plans.each { |plan| switch_plan plan }
       end

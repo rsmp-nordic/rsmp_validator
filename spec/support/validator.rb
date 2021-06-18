@@ -170,9 +170,9 @@ module Validator
   end
 
   def self.require_scripts
-    raise "Scripts are not configured" unless Validator.config['scripts']
-    raise "Scripts to activate alarm is not configured" unless Validator.config['scripts']['activate_alarm']
-    raise "Script to deactivate alarm is not configured" unless Validator.config['scripts']['deactivate_alarm']
+    skip "Skipping test: Scripts are not configured" unless Validator.config['scripts']
+    skip "Skipping test: Script to activate alarm is not configured" unless Validator.config['scripts']['activate_alarm']
+    skip "Skipping test: Script to deactivate alarm is not configured" unless Validator.config['scripts']['deactivate_alarm']
   end
 
   def self.setup_filters rspec_config

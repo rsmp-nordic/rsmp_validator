@@ -296,7 +296,7 @@ module CommandHelpers
 
   def require_security_codes
     unless Validator.config.dig 'secrets', 'security_codes' 
-      raise "Cannot run test, because security codes are not configured"
+      skip "Cannot run test, because security codes are not configured"
     end
   end
 

@@ -30,9 +30,9 @@ RSpec.describe 'Traffic Light Controller' do
 	  # 3. Send control command to switch input
 	  # 4. Wait for status "input" = requested  
 	  it 'M0006 activate input', sxl: '>=1.0.7' do |example|
+      inputs = Validator.config['items']['inputs']
+      skip("No inputs configured") if inputs.nil? || inputs.empty?
 	    Validator::Site.connected do |task,supervisor,site|
-	      inputs = Validator.config['items']['inputs']
-	      cant_test("No inputs configured") if inputs.nil? || inputs.empty?
 	      prepare task, site
 	      inputs.each { |input| switch_input input }
 	    end
