@@ -32,3 +32,6 @@ secrets:
   security_codes:
     1: ''
     2: ''
+restrict_testing:
+  core_version: 3.1.2
+  sxl_version: 1.0.7 
