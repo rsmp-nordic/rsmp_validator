@@ -296,10 +296,15 @@ module CommandHelpers
 
   def require_security_codes
     unless Validator.config.dig 'secrets', 'security_codes' 
-      skip "Cannot run test, because security codes are not configured"
+      skip "Skipping test: Security codes are not configured"
     end
   end
 
+  def require_scripts
+    skip "Skipping test: Scripts are not configured" unless Validator.config['scripts']
+    skip "Skipping test: Script to activate alarm is not configured" unless Validator.config.dig 'scripts', 'activate_alarm'
+    skip "Skipping test: Script to deactivate alarm is not configured" unless Validator.config.dig 'scripts','deactivate_alarm'
+  end
 
   def set_date date
     require_security_codes

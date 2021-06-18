@@ -169,12 +169,6 @@ module Validator
     end
   end
 
-  def self.require_scripts
-    skip "Skipping test: Scripts are not configured" unless Validator.config['scripts']
-    skip "Skipping test: Script to activate alarm is not configured" unless Validator.config['scripts']['activate_alarm']
-    skip "Skipping test: Script to deactivate alarm is not configured" unless Validator.config['scripts']['deactivate_alarm']
-  end
-
   def self.setup_filters rspec_config
     core_version = Validator.config.dig('restrict_testing','core_version')
     sxl_version = Validator.config.dig('restrict_testing','sxl_version')

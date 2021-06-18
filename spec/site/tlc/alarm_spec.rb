@@ -33,7 +33,8 @@ RSpec.describe 'Traffic Light Controller' do
     end
   end
 
-  skip 'Acknowledge alarm', :script do |example|
+  it 'Acknowledge alarm', :script do |example|
+    skip "Don't yet have a way to trigger alarms on the equipment"
     Validator.require_scripts
     Validator::Site.connected do |task,supervisor,site|
       component = Validator.config['components']['detector_logic'].keys.first
