@@ -27,9 +27,7 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
-        bundle exec rsmp supervisor --json --config config/ci/simulator/supervisor.yaml 2>&1 > simulator.log &
         SUPERVISOR_CONFIG=config/ci/gem_supervisor.yaml bundle exec rspec --tag '~script' spec/supervisor
-        kill %1
     - name: Rename validation.log
       if: always()
       run: mv log/validation.log log/validation_ruby_$(date +%F_%H-%M-%S).log
