@@ -1,0 +1,47 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will run rspec
+
+name: rsmp gem
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+
+    runs-on: [ self-hosted, Linux, X64 ]
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+    - name: Configure bundle
+      run: bundle config set path '~/rsmp_gems/bundle'
+    - name: Run bundle install
+      run: bundle install
+    - name: Run tests
+      shell: bash
+      run: |
+        be rsmp supervisor --json --config config/ci/gem_supervisor.yaml 2>&1 > simulator.log &
+        SUPERVISOR_CONFIG=config/ci/rsmp_gem_supervisor.yaml bundle exec rspec --tag '~script' spec/supervisor
+        kill %1
+    - name: Rename validation.log
+      if: always()
+      run: mv log/validation.log log/validation_ruby_$(date +%F_%H-%M-%S).log
+    - name: Upload validation.log
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: rspec validation
+        path: log/validation_ruby_*.log
+    - name: Upload simulator.log
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: simulator log
+        path: simulator.log
