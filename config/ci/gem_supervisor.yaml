@@ -29,8 +29,8 @@ intervals:
 timeouts:
   connect: 1
   ready: 1
-  watchdog: 0.2
-  acknowledgement: 0.2
+  watchdog: 1
+  acknowledgement: 1
 secrets:
   security_codes:
     1: '1111'

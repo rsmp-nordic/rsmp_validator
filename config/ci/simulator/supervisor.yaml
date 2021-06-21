@@ -5,8 +5,8 @@ guest:
     timer: 0.1
     watchdog: 0.1
   timeouts:
-    watchdog: 0.2
-    acknowledgement: 0.2
+    watchdog: 1
+    acknowledgement: 1
 log:
   active: true
   color: true
