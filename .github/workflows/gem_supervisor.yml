@@ -4,7 +4,7 @@
 # documentation.
 # This workflow will run rspec
 
-name: rsmp gem
+name: Gem supervisor
 
 on:
   push:
@@ -27,8 +27,8 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
-        be rsmp supervisor --json --config config/ci/gem_supervisor.yaml 2>&1 > simulator.log &
-        SUPERVISOR_CONFIG=config/ci/rsmp_gem_supervisor.yaml bundle exec rspec --tag '~script' spec/supervisor
+        be rsmp supervisor --json --config config/ci/simulator/supervisor.yaml 2>&1 > simulator.log &
+        SUPERVISOR_CONFIG=config/ci/gem_supervisor.yaml bundle exec rspec --tag '~script' spec/supervisor
         kill %1
     - name: Rename validation.log
       if: always()

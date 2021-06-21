@@ -1,0 +1,24 @@
+port: 12111
+guest:
+  sxl: tlc
+  intervals:
+    timer: 0.1
+    watchdog: 0.1
+  timeouts:
+    watchdog: 0.2
+    acknowledgement: 0.2
+log:
+  active: true
+  color: true
+  timestamp: true
+  id: true
+  component: true
+  ip: false
+  port: true
+  site_id: true
+  text: true
+  direction: true
+  level: false
+  json: true
+  acknowledgements: false
+  watchdogs: false

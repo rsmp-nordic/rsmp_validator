@@ -4,7 +4,7 @@
 # documentation.
 # This workflow will run rspec
 
-name: rsmp gem
+name: Gem site
 
 on:
   push:
@@ -27,8 +27,8 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
-        bundle exec rsmp site --type tlc --json --config config/ci/tlc.yaml 2>&1 > simulator.log &
-        SITE_CONFIG=config/ci/gem_site.yaml bundle exec rspec --tag '~script' spec/site
+        bundle exec rsmp site --type tlc --json --config config/ci/simulator/tlc.yaml 2>&1 > simulator.log &
+        SITE_CONFIG=config/ci/gem.yaml bundle exec rspec --tag '~script' spec/site
         kill %1
     - name: Rename validation.log
       if: always()
