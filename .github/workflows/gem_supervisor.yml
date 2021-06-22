@@ -26,7 +26,9 @@ jobs:
       run: bundle install
     - name: Start supervisor
       shell: bash
-      run: bundle exec rsmp supervisor --json --config config/ci/simulator/supervisor.yaml 2>&1 > simulator.log &
+      run: |
+        ps aux | grep rsmp
+        bundle exec rsmp supervisor --json --config config/ci/simulator/supervisor.yaml 2>&1 > simulator.log &
     - name: Run tests
       shell: bash
       run: bundle exec rspec --tag '~script' spec/supervisor
