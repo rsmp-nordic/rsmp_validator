@@ -30,7 +30,7 @@ jobs:
       shell: bash
       run: bundle exec rspec --tag '~script' spec/site
       env:
-        SITE_CONFIG: config/gem_tcl.yaml
+        SITE_CONFIG: config/gem_tlc.yaml
     - name: Rename validation.log
       if: always()
       run: mv log/validation.log log/validation_ruby_$(date +%F_%H-%M-%S).log
