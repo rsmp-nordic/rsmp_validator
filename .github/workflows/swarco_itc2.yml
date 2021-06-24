@@ -26,6 +26,8 @@ jobs:
       run: bundle install
     - name: Start ITC-2 simulator
       run: virsh -c qemu:///system start ts1001
+    - name: Wait for ITC-2 simulator to start
+      run: sleep 30s
     - name: Set the time of the controller
       run: ssh 192.168.103.205 /home/i0davla/set_date.sh
     - name: Run tests
