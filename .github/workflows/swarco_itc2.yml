@@ -36,6 +36,7 @@ jobs:
       if: always()
       run: mv log/validation.log log/validation_itc2_$(date +%F_%H-%M-%S).log
     - name: Stop ITC-2 simulator
+      if: always()
       run: virsh shutdown ts1001
     - name: Upload validation.log
       if: always()
