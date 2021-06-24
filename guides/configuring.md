@@ -32,7 +32,7 @@ Note: The file `config/validator.yaml` is ignored by git.
 The other option is to set either SITE_CONFIG or SUPERVISOR_CONFIG to the path to your config, depending on whether you're testing a site or a supervisor. For example, if you're testing a site, you can run all site test with:
 
 ```sh
-SITE_CONFIG=config/ci/my_site_validation_config.yaml bundle exec spec/site
+SITE_CONFIG=config/my_site_validation_config.yaml bundle exec spec/site
 ```
 
 If the relevant environment variable is set, the file `config/validator.yaml` will not be read.
@@ -167,4 +167,5 @@ security_codes:
   1: '0000'
   2: '0000'
 ```
+
 
