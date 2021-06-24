@@ -27,7 +27,7 @@ jobs:
     - name: Start ITC-2 simulator
       run: virsh -c qemu:///system start ts1001
     - name: Set the time of the controller
-      run: /home/i0davla/set_date.sh
+      run: ssh 192.168.103.205 /home/i0davla/set_date.sh
     - name: Run tests
       run: bundle exec rspec spec/site
       env:
