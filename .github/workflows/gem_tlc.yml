@@ -4,7 +4,7 @@
 # documentation.
 # This workflow will run rspec
 
-name: Swarco ITC-2
+name: Gem TLC
 
 on:
   push:
@@ -15,8 +15,7 @@ on:
 
 jobs:
   test:
-
-    runs-on: [ self-hosted, Linux, X64, itc2 ]
+    runs-on: [ self-hosted, Linux, X64 ]
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
@@ -24,24 +23,26 @@ jobs:
       run: bundle config set path '~/rsmp_gems/bundle'
     - name: Run bundle install
       run: bundle install
-    - name: Set the time of the controller
-      run: /home/i0davla/set_date.sh
+    - name: Start TLC in background
+      shell: bash
+      run: bundle exec rsmp site --type tlc --config config/simulator/tlc.yaml 2>&1 > simulator.log &
     - name: Run tests
-      run: bundle exec rspec spec/site
+      shell: bash
+      run: bundle exec rspec --tag '~script' spec/site
       env:
-        SITE_CONFIG: config/swarco_itc2.yaml
+        SITE_CONFIG: config/gem_tlc.yaml
     - name: Rename validation.log
       if: always()
-      run: mv log/validation.log log/validation_itc2_$(date +%F_%H-%M-%S).log
+      run: mv log/validation.log log/validation_ruby_$(date +%F_%H-%M-%S).log
     - name: Upload validation.log
       if: always()
       uses: actions/upload-artifact@v2
       with:
         name: rspec validation
-        path: log/validation_itc2_*.log
-    - name: Upload itc2 rsmp log
+        path: log/validation_ruby_*.log
+    - name: Upload simulator.log
       if: always()
       uses: actions/upload-artifact@v2
       with:
-        name: itc2 rsmp log
-        path: /tmp/simulator.log
+        name: simulator log
+        path: simulator.log

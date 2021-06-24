@@ -4,7 +4,7 @@ type: tlc
 site_id: RN+SI0001
 supervisors:
   - ip: 127.0.0.1
-    port: 13111
+    port: 14111
 sxl: tlc
 sxl_version: 1.0.15
 components:
@@ -29,8 +29,8 @@ intervals:
 timeouts:
   connect: 1
   ready: 1
-  watchdog: 0.2
-  acknowledgement: 0.2
+  watchdog: 1
+  acknowledgement: 1
 secrets:
   security_codes:
     1: '1111'

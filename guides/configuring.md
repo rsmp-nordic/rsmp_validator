@@ -22,7 +22,7 @@ One option is is to use the `config/validator.yaml` file. It's a YAML file, with
 For example, if you're testing a site, your `.validator.yaml` file might look like this:
 
 ```yaml
-site: config/ci/my_site_validation_config.yaml
+site: config/my_site_validation_config.yaml
 ```
 
 You can use the file `config/validator_example.yaml` as a template.

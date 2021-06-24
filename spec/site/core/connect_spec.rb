@@ -1,16 +1,19 @@
 RSpec.describe "Traffic Light Controller" do
 
   def get_connection_message core_version, length
+    timeout = Validator.config['timeouts']['ready']
     got = nil
     Validator::Site.isolated(
       'rsmp_versions' => [core_version],
       'collect' => length
     ) do |task,supervisor,site|
-      site.collector.collect task, timeout: Validator.config['timeouts']['ready']
+      site.collector.collect task, timeout: timeout
       expect(site.ready?).to be true
       got = site.collector.messages.map { |message| [message.direction.to_s, message.type] }
     end
     got
+  rescue Async::TimeoutError => e
+    raise "Did not collect #{length} messages within #{timeout}s"
   end
 
   def check_sequence_3_1_1 core_version

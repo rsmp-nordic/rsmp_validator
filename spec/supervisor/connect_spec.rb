@@ -11,6 +11,8 @@ RSpec.describe "Supervisor" do
       got = supervisor_proxy.collector.messages.map { |message| [message.direction.to_s, message.type] }
     end
     got
+  rescue Async::TimeoutError => e
+    raise "Did not collect #{length} messages within #{timeout}s"
   end
 
   def check_sequence_3_1_1 core_version

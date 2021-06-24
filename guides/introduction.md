@@ -5,7 +5,7 @@ When you run tests, the validator will communicate with equipment via RSMP and g
 
 ```sh
 % bundle exec rspec spec/site/core spec/site/tlc
-Using test config config/ci/rsmp_gem.yaml
+Using test config config/gem_tlc.yaml
 Run options: exclude {:rsmp=>[unless relevant for 3.1.5], :script=>true}
 ...............................................................................
 
