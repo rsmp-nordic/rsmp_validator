@@ -25,7 +25,7 @@ jobs:
     - name: Run bundle install
       run: bundle install
     - name: Start ITC-2 simulator
-      run: virsh start ts1001
+      run: virsh -c qemu:///system start ts1001
     - name: Set the time of the controller
       run: /home/i0davla/set_date.sh
     - name: Run tests
