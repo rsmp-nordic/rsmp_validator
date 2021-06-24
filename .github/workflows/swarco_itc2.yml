@@ -29,7 +29,7 @@ jobs:
     - name: Wait for ITC-2 simulator to start
       run: sleep 30s
     - name: Set the time of the controller
-      run: ssh 192.168.103.205 /home/i0davla/set_date.sh
+      run: ssh 192.168.103.205 ./set_date.sh
     - name: Run tests
       run: bundle exec rspec spec/site
       env:
@@ -46,6 +46,9 @@ jobs:
       with:
         name: rspec validation
         path: log/validation_itc2_*.log
+    - name: Fetch itc2 rsmp log
+      if: always()
+      run: scp 192.168.103.205:/tmp/simulator.log /tmp/simulator.log
     - name: Upload itc2 rsmp log
       if: always()
       uses: actions/upload-artifact@v2
