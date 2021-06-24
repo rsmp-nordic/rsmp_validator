@@ -24,6 +24,8 @@ jobs:
       run: bundle config set path '~/rsmp_gems/bundle'
     - name: Run bundle install
       run: bundle install
+    - name: Start ITC-2 simulator
+      run: virsh start ts1001
     - name: Set the time of the controller
       run: /home/i0davla/set_date.sh
     - name: Run tests
@@ -33,6 +35,8 @@ jobs:
     - name: Rename validation.log
       if: always()
       run: mv log/validation.log log/validation_itc2_$(date +%F_%H-%M-%S).log
+    - name: Stop ITC-2 simulator
+      run: virsh shutdown ts1001
     - name: Upload validation.log
       if: always()
       uses: actions/upload-artifact@v2
