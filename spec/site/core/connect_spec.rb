@@ -1,5 +1,4 @@
 RSpec.describe "Traffic Light Controller" do
-  skip "intermitten fails during message collection"
 
   def get_connection_message core_version, length
     timeout = Validator.config['timeouts']['ready']
@@ -14,7 +13,7 @@ RSpec.describe "Traffic Light Controller" do
     end
     got
   rescue Async::TimeoutError => e
-    raise "Did not collect #{length} messages within #{timeout}"
+    raise "Did not collect #{length} messages within #{timeout}s"
   end
 
   def check_sequence_3_1_1 core_version
