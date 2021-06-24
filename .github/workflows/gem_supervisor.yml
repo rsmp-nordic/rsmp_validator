@@ -15,7 +15,6 @@ on:
 
 jobs:
   test:
-
     runs-on: [ self-hosted, Linux, X64 ]
     steps:
     - name: Check out repository
@@ -24,15 +23,14 @@ jobs:
       run: bundle config set path '~/rsmp_gems/bundle'
     - name: Run bundle install
       run: bundle install
-    - name: Start supervisor
+    - name: Start supervisor in background
       shell: bash
-      run: |
-        bundle exec rsmp supervisor --json --config config/ci/simulator/supervisor.yaml 2>&1 > simulator.log &
+      run: bundle exec rsmp supervisor --config config/simulator/supervisor.yaml 2>&1 > simulator.log &
     - name: Run tests
       shell: bash
       run: bundle exec rspec --tag '~script' spec/supervisor
       env:
-        SUPERVISOR_CONFIG: config/ci/gem_supervisor.yaml
+        SUPERVISOR_CONFIG: config/gem_supervisor.yaml
     - name: Rename validation.log
       if: always()
       run: mv log/validation.log log/validation_ruby_$(date +%F_%H-%M-%S).log

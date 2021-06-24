@@ -6,7 +6,7 @@
 # But you can leave both, the unused key will just be ignored.
 
 # when testing a site, the config describes the local supervisor
-site: config/ci/gem_site.yaml
+site: config/gem_site.yaml
 
 # when testing a supervisor, the config describes the local site
-supervisor: config/ci/gem_supervisor.yaml
+supervisor: config/gem_supervisor.yaml

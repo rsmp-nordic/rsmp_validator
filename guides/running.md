@@ -21,7 +21,7 @@ Test a site, by running tests covering the core specification:
 
 ```sh
 % bundle exec rspec spec/site/core
-Using test config config/ci/rsmp_gem.yaml
+Using test config config/gem_tlc.yaml
 Run options: exclude {:rsmp=>[unless relevant for 3.1.5], :script=>true}
 ....
 
