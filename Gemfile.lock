@@ -32,7 +32,7 @@ GEM
     minitest (5.14.4)
     nio4r (2.5.7)
     regexp_parser (2.1.1)
-    rsmp (0.1.38)
+    rsmp (0.1.39)
       async (~> 1.28.7)
       async-io (~> 1.30.2)
       colorize (~> 0.8.1)
