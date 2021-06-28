@@ -26,8 +26,9 @@ jobs:
       run: bundle install
     - name: Start ITC-2 simulator
       run: virsh -c qemu:///system start ts1001
-    - name: Wait for ITC-2 simulator to start
-      run: sleep 30s
+    - name: Wait for ITC-2 simulator to start and completes startup sequence
+      timeout-minutes: 5
+      run: until `echo -e "ITC\nEXIT" | nc 192.168.103.205 10002 | grep -q -a "3-light"`; do echo Waiting...; sleep 5; done
     - name: Set the time of the controller
       run: ssh 192.168.103.205 ./set_date.sh
     - name: Run tests
