@@ -17,6 +17,7 @@ include LogHelpers
 
 # configure RSpec
 RSpec.configure do |config|
+  Validator.setup config
 
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
@@ -30,7 +31,6 @@ RSpec.configure do |config|
 
   config.before(:suite) do |example|
     log "Testing started at #{Time.now}".colorize(:light_black)
-    Validator.setup config
   end
 
   # write to the validator log when each test start
