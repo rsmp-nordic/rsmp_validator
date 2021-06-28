@@ -25,7 +25,7 @@ module Validator
       e = Validator::Testee.sentinel_errors.first
       str << "#{num_errors} sentinel warnings. First warning: #{e.class}: #{e}".colorize(:yellow)
     else
-      str << "No sentinel warning.".colorize(:light_black)
+      str << "No sentinel warnings.".colorize(:light_black)
     end
     puts str
     log str
