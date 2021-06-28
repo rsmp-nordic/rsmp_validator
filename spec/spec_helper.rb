@@ -17,7 +17,6 @@ include LogHelpers
 
 # configure RSpec
 RSpec.configure do |config|
-  # setup the RSMP Validator
   Validator.setup config
 
   # Enable flags like --only-failures and --next-failure
@@ -30,8 +29,18 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  config.before(:suite) do |example|
+    log "Testing started at #{Time.now}".colorize(:light_black)
+  end
+
   # write to the validator log when each test start
   config.before(:example) do |example|
     log "\nRunning test #{example.metadata[:location]} - #{example.full_description}".colorize(:light_black)
   end
+
+  config.after(:suite) do
+    Validator.after
+    log "Testing ended at #{Time.now}\n".colorize(:light_black)
+  end
+
 end

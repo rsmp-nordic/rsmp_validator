@@ -10,6 +10,12 @@ class Validator::Testee
   include RSpec::Matchers
   include RSMP::Logging
 
+  @@sentinel_errors = []
+
+  def self.sentinel_errors
+    @@sentinel_errors
+  end
+
   def config
     Validator.config
   end
@@ -100,10 +106,14 @@ class Validator::Testee
       task.annotate 'rspec runner'
       task.async do |sentinel|
         sentinel.annotate 'sentinel'
-        @node.error_condition.wait  # if it's an exception, it will be raised
-      rescue => e
-        error = e
-        task.stop
+        loop do
+          @node.error_condition.wait  # if it's an exception, it will be raised
+        rescue => e
+          log "Sentinel warning: #{e.class}: #{e}", level: :test
+          @@sentinel_errors << e
+          #error = e
+          #task.stop
+        end
       end
       yield task              # run block until it's finished
     rescue StandardError, RSpec::Expectations::ExpectationNotMetError => e
