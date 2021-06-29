@@ -56,10 +56,10 @@ class Validator::Supervisor < Validator::Testee
 
     # reraise errors outside task to surface them in rspec
     if error
-      log "Failed: #{error.class}: #{error}", level: :test
+      Validator.log "Failed: #{error.class}: #{error}", level: :test
       raise error
     else
-      log "OK", level: :test
+      Validator.log "OK", level: :test
     end
   end
 
@@ -74,7 +74,7 @@ class Validator::Supervisor < Validator::Testee
     @site = klass.new(
       task: task,
       site_settings: config.deep_merge(options),
-      logger: @logger,
+      logger: Validator.logger,
       collect: options['collect']
     )
   end
@@ -82,7 +82,7 @@ class Validator::Supervisor < Validator::Testee
   def wait_for_connection
     @proxy = @node.proxies.first
     unless @proxy
-      log "Waiting for connection to supervisor", level: :test
+      Validator.log "Waiting for connection to supervisor", level: :test
       @proxy = @node.wait_for_supervisor(:any, config['timeouts']['connect'])
     end
     @proxy.wait_for_state :ready, config['timeouts']['ready']

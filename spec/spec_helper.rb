@@ -10,13 +10,15 @@ require_relative 'support/command_helpers'
 require_relative 'support/status_helpers'
 require_relative 'support/log_helpers'
 require_relative 'support/secrets_helpers'
+require_relative 'support/formatter.rb'
 
 include RSpec
 include LogHelpers
 
-
 # configure RSpec
 RSpec.configure do |config|
+  
+  #config.reporter.message "configure"
   Validator.setup config
 
   # Enable flags like --only-failures and --next-failure
@@ -30,17 +32,18 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do |example|
-    log "Testing started at #{Time.now}".colorize(:light_black)
+    #example.reporter.message "before suite!"
+    #log "Testing started at #{Time.now}".colorize(:light_black)
   end
 
   # write to the validator log when each test start
   config.before(:example) do |example|
-    log "\nRunning test #{example.metadata[:location]} - #{example.full_description}".colorize(:light_black)
+    #log "\nRunning test #{example.metadata[:location]} - #{example.full_description}".colorize(:light_black)
   end
 
-  config.after(:suite) do
-    Validator.after
-    log "Testing ended at #{Time.now}\n".colorize(:light_black)
+  config.after(:suite) do |example|
+    Validator.after example
+    #example.reporter.message "Testing ended at #{Time.now}\n".colorize(:light_black)
   end
 
 end
