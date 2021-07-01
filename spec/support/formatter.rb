@@ -1,14 +1,28 @@
 require 'rspec/core/formatters/console_codes'
 
-#class Extra
-#  RSpec::Core::Formatters.register self, :message
-#  def initialize output
-#    @output = output
-#  end
-#  def message notification # ExampleNotification
-#    @output << "Extra: #{notification.message}\n"
-#  end
-#end
+module Validator
+  # Class used as a stream by the RSMP::Logger.
+  # When RSMP::Logger writes to it, the data
+  # is passed to an RSpec reporter, which
+  # will in turn distribute it to the active
+  # formatters, which can each write to a separate
+  # file, or to the console.
+
+  class ReportStream
+    def initialize rspec_reporter
+      @reporter = rspec_reporter
+    end
+
+    def puts str
+      @reporter.publish :log, message: str
+    end
+
+    def flush
+    end
+  end
+end
+
+
 
 class Details
   RSpec::Core::Formatters.register self, :start, :dump_pending, :dump_failures, :close,
@@ -28,7 +42,7 @@ class Details
   end
 
   def step notification # ExampleNotification
-    @output << "  #{notification.message}\n"
+    @output << "  #{notification.message}\n".colorize(:white)
   end
 
   def message notification # ExampleNotification
