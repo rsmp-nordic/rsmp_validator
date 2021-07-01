@@ -101,7 +101,7 @@ class Details
     if Validator::Testee.sentinel_errors.any?
       max = 5
       warnings = Validator::Testee.sentinel_errors.first(max)
-      if warnings > max
+      if Validator::Testee.sentinel_errors.count > max
         @output << "\n\nSentinel warnings (showing first #{warnings.count}):\n\n"
       else
         @output << "\n\nSentinel warnings:\n\n"
