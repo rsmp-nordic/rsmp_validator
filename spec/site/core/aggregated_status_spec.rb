@@ -1,7 +1,7 @@
-RSpec.describe "Traffic Light Controller" do
+RSpec.describe 'Core' do
   include CommandHelpers
 
-  describe "Aggregated Status" do
+  describe 'Aggregated Status' do
     # Verify that the controller responds to an aggregated status request.
     #
     # 1. Given the site is connected
