@@ -18,7 +18,10 @@ RSpec.describe 'Core' do
       Validator::Site.isolated do |task,supervisor,site|
         def site.acknowledge original
         end
-        site.wait_for_state :stopped, Validator.config['timeouts']['disconnect']
+        timeout = Validator.config['timeouts']['disconnect']
+        site.wait_for_state :stopped, timeout
+      rescue RSMP::TimeoutError
+        raise "Site did not disconnect within #{timeout}s"
       end
     end
 
@@ -29,7 +32,10 @@ RSpec.describe 'Core' do
       Validator::Site.isolated do |task,supervisor,site|
         def site.send_watchdog now=nil
         end
-        site.wait_for_state :stopped, Validator.config['timeouts']['disconnect']
+        timeout = Validator.config['timeouts']['disconnect']
+        site.wait_for_state :stopped, timeout
+      rescue RSMP::TimeoutError
+        raise "Site did not disconnect within #{timeout}s"
       end
     end
   end
