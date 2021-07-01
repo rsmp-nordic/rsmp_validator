@@ -50,18 +50,18 @@ class Details
     presenter = RSpec::Core::Formatters::ExceptionPresenter.new(notification.example.execution_result.exception, notification.example, :indentation => 0)
     
     error = presenter.message_lines.map do |line|
-      "  #{line}"
-    end.join("\n").colorize(:red)
-    @output << error << "\n\n"
+      "  #{line}\n".colorize(:red)
+    end.join
+    @output << error << "\n"
 
     backtrace = presenter.formatted_backtrace.map do |line|
-      "  # #{line}"
-    end.join("\n").colorize(:light_blue)
-    @output << backtrace << "\n\n"
+      "  # #{line}\n".colorize(:light_blue)
+    end.join
+    @output << backtrace << "\n"
   end
 
   def example_pending notification # ExampleNotification
-    @output << RSpec::Core::Formatters::ConsoleCodes.wrap("Pending\n\n", :pending)
+    @output << RSpec::Core::Formatters::ConsoleCodes.wrap("  Pending\n\n", :pending)
   end
 
   def dump_pending notification # ExamplesNotification
