@@ -28,7 +28,7 @@ class Details
   end
 
   def step notification # ExampleNotification
-    @output << "  #{notification.message.colorize(:white)}\n"
+    @output << "  #{notification.message}\n"
   end
 
   def message notification # ExampleNotification
@@ -36,7 +36,7 @@ class Details
   end
 
   def example_started notification # ExampleNotification
-    @output <<  "#{notification.example.full_description}\n"
+    @output <<  "#{notification.example.full_description}\n".bold
   end
 
   def example_passed notification # ExampleNotification
@@ -65,78 +65,55 @@ class Details
   end
 
   def dump_pending notification # ExamplesNotification
-    if notification.pending_examples.length > 0
-      @output << "\n\n#{RSpec::Core::Formatters::ConsoleCodes.wrap("PENDING:", :pending)}\n\t"
-      @output << notification.pending_examples.map {|example| example.full_description + " - " + example.location }.join("\n\t")
-    end
+    #if notification.pending_examples.length > 0
+    #  @output << "\n\n#{RSpec::Core::Formatters::ConsoleCodes.wrap("Pending:", :pending)}\n\n"
+    #  @output << notification.pending_examples.map do |example|
+    #    "  #{example.full_description } - #{example.location}\n"
+    #  end.join
+    #end
   end
 
   def dump_failures notification # ExamplesNotification
-    return
-    return if notification.failed_examples.empty?
-  
-    @output << "\n" << "Failures:" << "\n\n"
+    #return if notification.failed_examples.empty?
+    #@output << "\n" << "Failures:" << "\n\n"
+    #notification.failed_examples.each_with_index do |example, index|
+    #  presenter = RSpec::Core::Formatters::ExceptionPresenter.new(example.execution_result.exception, example, :indentation => 0)
+    #  @output << "  " << presenter.fully_formatted(nil) << "\n\n"
+    #end
+  end
 
-    notification.failed_examples.each_with_index do |example, index|
-      presenter = RSpec::Core::Formatters::ExceptionPresenter.new(example.execution_result.exception, example, :indentation => 0)
-      @output << "  " << presenter.fully_formatted(nil) << "\n\n"
-
-      #@output << "#{index}) #{example.full_description}\n"
-      #@output << "#{index}) #{example.full_description}\n"
-      #@output << "\n"
+  def colorized_sentinel_warnings
+    num_warnings = Validator::Testee.sentinel_errors.size
+    if num_warnings > 0
+      "#{num_warnings} sentinel warnings.".colorize(:yellow)
+    else
+      "0 sentinel warnings."
     end
   end
 
   def dump_summary notification # SummaryNotification
-    @output << "\n\nFinished in #{RSpec::Core::Formatters::Helpers.format_duration(notification.duration)}.\n\n"
+    colorizer = RSpec::Core::Formatters::ConsoleCodes
+    @output << "\nFinished in #{notification.formatted_duration} " \
+                "(files took #{notification.formatted_load_time} to load)\n" \
+                "#{colorized_sentinel_warnings}\n" \
+                "#{notification.colorized_totals_line(colorizer)}"
 
-
-    str = "\n"
-    num_errors = Validator::Testee.sentinel_errors.size
-    if num_errors > 0
-      e = Validator::Testee.sentinel_errors.first
-      @output << "#{num_errors} sentinel warnings. First warning:\n#{e.class}: #{e}".colorize(:yellow)
-    else
-      @output << "No sentinel warnings."
+    if Validator::Testee.sentinel_errors.any?
+      warnings = Validator::Testee.sentinel_errors.first(5)
+      @output << "\nSentinel warnings: (showing #{warnings.count} of #{Validator::Testee.sentinel_errors.count}\n\n"
+      warnings.each do |warning|
+        @output << "#{warning.class}: #{warning}\n".colorize(:yellow)
+      end
     end
-    @output << "\n\n"
 
-    @output << "Failed examples:\n\n"
-
-    notification.failed_examples.each do |example|
-      @output << "#{example.location.colorize(:red)} " << 
-        "# #{example.full_description}".colorize(:light_blue) << "\n"
+    if notification.failed_examples.any?
+      @output << "\n" << notification.colorized_rerun_commands(colorizer)
     end
+
+    @output << "\n"
   end
 
   def close notification # NullNotification
     @output << "\n"
   end
-
-  private
-
-
-  # Joins all exception messages
-  def build_examples_output output
-    output.join("\n\n")
-  end
-
-  # Extracts the full_description, location and formats the message of each example exception
-  def failed_example_output example
-    full_description = example.full_description
-    location = example.location
-    formatted_message = strip_message_from_whitespace(example.execution_result.exception.message)
-
-    "#{full_description} - #{location} \n  #{formatted_message}"
-  end
-
-  # Removes whitespace from each of the exception message lines and reformats it
-  def strip_message_from_whitespace msg
-    msg.split("\n").map(&:strip).join("\n#{add_spaces(10)}")
-  end
-
-  def add_spaces n
-    " " * n
-  end
-
 end

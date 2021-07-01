@@ -49,6 +49,7 @@ module Validator
       'port' => true,
       'stream' => ReportStream.new(rspec_config.reporter),
       'color' => {
+        'info' => 'white',
         'log' => 'light_black',
         'test' => 'white'
       },
