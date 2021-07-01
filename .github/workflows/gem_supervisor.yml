@@ -31,6 +31,9 @@ jobs:
       run: bundle exec rspec --tag '~script' spec/supervisor
       env:
         SUPERVISOR_CONFIG: config/gem_supervisor.yaml
+    - name: Show validation.log
+      if: always()
+      run: cat log/validation.log
     - name: Rename validation.log
       if: always()
       run: mv log/validation.log log/validation_ruby_$(date +%F_%H-%M-%S).log
