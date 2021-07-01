@@ -85,9 +85,9 @@ class Details
   def colorized_sentinel_warnings
     num_warnings = Validator::Testee.sentinel_errors.size
     if num_warnings > 0
-      "#{num_warnings} sentinel warnings.".colorize(:yellow)
+      "#{num_warnings} sentinel warnings".colorize(:yellow)
     else
-      "0 sentinel warnings."
+      "0 sentinel warnings"
     end
   end
 
@@ -99,8 +99,13 @@ class Details
                 "#{notification.colorized_totals_line(colorizer)}"
 
     if Validator::Testee.sentinel_errors.any?
-      warnings = Validator::Testee.sentinel_errors.first(5)
-      @output << "\nSentinel warnings: (showing #{warnings.count} of #{Validator::Testee.sentinel_errors.count}\n\n"
+      max = 5
+      warnings = Validator::Testee.sentinel_errors.first(max)
+      if warnings > max
+        @output << "\n\nSentinel warnings (showing first #{warnings.count}):\n\n"
+      else
+        @output << "\n\nSentinel warnings:\n\n"
+      end
       warnings.each do |warning|
         @output << "#{warning.class}: #{warning}\n".colorize(:yellow)
       end
