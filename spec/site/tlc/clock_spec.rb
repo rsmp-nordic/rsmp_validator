@@ -3,7 +3,7 @@ RSpec.describe "Traffic Light Controller" do
   include StatusHelpers
   
   describe 'Clock' do
-    CLOCK = Time.new 2020,9,29,17,29,51,'UTC'
+    CLOCK = Time.new 2020,9,29,17,29,51,'+00:00'
  
     # Verify status 0096 current date and time
     #
