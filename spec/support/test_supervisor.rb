@@ -27,42 +27,6 @@ class Validator::Supervisor < Validator::Testee
     end
   end
 
-  def parse_config 
-  end
-
-  # Resume the reactor and run a block in an async task.
-  # A separate sentinel task is used be receive error
-  # notifications that should abort the block
-  def within_reactor &block
-    error = nil
-
-    # use run() to continue the reactor. this will give as a new task,
-    # which we run the rspec test inside
-    @reactor.run do |task|
-      task.annotate 'rspec runner'
-      task.async do |sentinel|
-        sentinel.annotate 'sentinel'
-        @site.error_condition.wait  # if it's an exception, it will be raised
-      rescue => e
-        error = e
-        task.stop
-      end
-      yield task              # run block until it's finished
-    rescue StandardError, RSpec::Expectations::ExpectationNotMetError => e
-      error = e               # catch and store errors
-    ensure
-      @reactor.interrupt      # interrupt reactor
-    end
-
-    # reraise errors outside task to surface them in rspec
-    if error
-      Validator.log "Failed: #{error.class}: #{error}", level: :test
-      raise error
-    else
-      Validator.log "OK", level: :test
-    end
-  end
-
   # build local site
   def build_node task, options
     klass = case config['type']
@@ -87,6 +51,5 @@ class Validator::Supervisor < Validator::Testee
     end
     @proxy.wait_for_state :ready, config['timeouts']['ready']
   end
-
 
 end

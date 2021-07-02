@@ -125,8 +125,16 @@ class Details
       end
     end
 
+    if notification.pending_examples.any?
+      @output << "\n\nPending: (Failures listed here are expected and do not affect your suite's status):\n\n"
+      notification.pending_examples.each_with_index do |pending,i|
+        @output << "  #{i}) #{pending.full_description}\n".colorize(:yellow)
+        @output << "    # #{pending.location}\n\n".colorize(:cyan)
+      end
+    end
+
     if notification.failed_examples.any?
-      @output << "\n" << notification.colorized_rerun_commands(colorizer)
+      @output << "\n\n" << notification.colorized_rerun_commands(colorizer)
     end
 
     @output << "\n"

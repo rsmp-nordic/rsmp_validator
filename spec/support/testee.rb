@@ -147,4 +147,8 @@ class Validator::Testee
   # Wait for peer to be ready
   def wait_for_connection
   end
+
+  def parse_config
+  end
+  
 end
