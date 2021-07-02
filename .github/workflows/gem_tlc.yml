@@ -28,12 +28,7 @@ jobs:
       run: bundle exec rsmp site --type tlc --config config/simulator/tlc.yaml 2>&1 > simulator.log &
     - name: Run tests
       shell: bash
-      run: |
-        bundle exec rspec \
-        --tag '~script' \
-        --format documentation \
-        --format Details --out log/validation.log \
-        spec/site
+      run: bundle exec rspec --format documentation --format Details --out log/validation.log --tag '~script' spec/site
       env:
         SITE_CONFIG: config/gem_tlc.yaml
     - name: Show validation.log
