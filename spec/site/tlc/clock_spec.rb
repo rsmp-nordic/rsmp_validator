@@ -124,7 +124,7 @@ RSpec.describe "Traffic Light Controller" do
     # 4. Request aggregated status
     # 5. Compare set_clock and response timestamp
     # 6. Expect the difference to be within max_diff
-    it 'timestamps aggregated status response with adjusted clock', sxl: '>=1.0.7' do |example|
+    it 'timestamps aggregated status response with adjusted clock', core: '>=3.1.5', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
