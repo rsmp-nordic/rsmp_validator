@@ -94,12 +94,9 @@ class Validator::Testee
       task.async do |sentinel|
         sentinel.annotate 'sentinel'
         loop do
-          @node.error_condition.wait  # if it's an exception, it will be raised
-        rescue => e
+          e = @node.error_queue.dequeue
           Validator.log "Sentinel warning: #{e.class}: #{e}", level: :test
           @@sentinel_errors << e
-          #error = e
-          #task.stop
         end
       end
       yield task              # run block until it's finished
