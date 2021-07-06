@@ -1,84 +1,79 @@
 require 'rspec/core/formatters/console_codes'
 
-module Validator
-  # Class used as a stream by the RSMP::Logger.
-  # When RSMP::Logger writes to it, the data
-  # is passed to an RSpec reporter, which
-  # will in turn distribute it to the active
-  # formatters, which can each write to a separate
-  # file, or to the console.
-
-  class ReportStream
-    def initialize rspec_reporter
-      @reporter = rspec_reporter
-    end
-
-    def puts str
-      @reporter.publish :log, message: str
-    end
-
-    def flush
-    end
-  end
-end
-
-
-
-class Details
+class Brief
   RSpec::Core::Formatters.register self, :start, :dump_pending, :dump_failures, :close,
     :dump_summary, :example_started, :example_passed, :example_failed, :example_pending,
-    :message, :log, :step
+    :message, :log, :step, :example_group_started, :example_group_finished
 
   def initialize output
     @output = output
+    @level = 0
   end
 
-  def start notification # StartNotification
+  def indent
+    ' '*(@level*2)
+  end
+
+  def start notification
     @output << "\n"
   end
 
-  def log notification # ExampleNotification
-    @output << "    #{notification.message}\n"
+  def log notification
+    #@output << "    #{notification.message}\n"
   end
 
-  def step notification # ExampleNotification
-    @output << "  #{notification.message}\n".colorize(:white)
+  def step notification
+    #@output << "  #{notification.message}\n".colorize(:white)
   end
 
-  def message notification # ExampleNotification
-    @output << "  #{notification.message}\n"
+  def message notification
+    #@output << "  #{notification.message}\n"
   end
 
-  def example_started notification # ExampleNotification
-    @output <<  "#{notification.example.full_description}\n".bold
+  def example_group_started notification
+    @output <<  "#{indent}#{notification.group.description}\n"
+    @level += 1
   end
 
-  def example_passed notification # ExampleNotification
-    @output << "  Passed\n\n".colorize(:green)
+  def example_group_finished notification
+    @level -= 1
+    @output << "\n" if @level == 0
   end
 
-  def example_failed notification # FailedExampleNotification   
+  def example_started notification
+#    @output <<  "#{notification.example.full_description}\n".bold
+  end
+
+  def example_passed notification
+    @output <<  "#{indent}#{notification.example.description}\n".colorize(:green)
+  end
+
+  def example_failed notification   
     # RSpec::Core::Formatters::ExceptionPresenter is a private class which
     # should really be used by us, but the snippet extraction and backtrace
     # processing seems rather cumbersome to reimplement
-    presenter = RSpec::Core::Formatters::ExceptionPresenter.new(notification.example.execution_result.exception, notification.example, :indentation => 0)
+    #presenter = RSpec::Core::Formatters::ExceptionPresenter.new(notification.example.execution_result.exception, notification.example, :indentation => 0)
+    #
+    #error = presenter.message_lines.map do |line|
+    #  "  #{line}\n".colorize(:red)
+    #end.join
+    #@output << error << "\n"
+
+    #backtrace = presenter.formatted_backtrace.map do |line|
+    #  "  # #{line}\n".colorize(:light_blue)
+    #end.join
+    #@output << backtrace << "\n"
+
+    @output << "#{indent}#{notification.example.description}".colorize(:red)
+    @output << " - #{notification.example.execution_result.exception}\n".colorize(:light_black)
     
-    error = presenter.message_lines.map do |line|
-      "  #{line}\n".colorize(:red)
-    end.join
-    @output << error << "\n"
-
-    backtrace = presenter.formatted_backtrace.map do |line|
-      "  # #{line}\n".colorize(:light_blue)
-    end.join
-    @output << backtrace << "\n"
   end
 
-  def example_pending notification # ExampleNotification
-    @output << RSpec::Core::Formatters::ConsoleCodes.wrap("  Pending\n\n", :pending)
+  def example_pending notification
+    @output << "#{indent}#{notification.example.description} - Pending\n".colorize(:yellow)
   end
 
-  def dump_pending notification # ExamplesNotification
+  def dump_pending notification
     #if notification.pending_examples.length > 0
     #  @output << "\n\n#{RSpec::Core::Formatters::ConsoleCodes.wrap("Pending:", :pending)}\n\n"
     #  @output << notification.pending_examples.map do |example|
@@ -87,7 +82,7 @@ class Details
     #end
   end
 
-  def dump_failures notification # ExamplesNotification
+  def dump_failures notification
     #return if notification.failed_examples.empty?
     #@output << "\n" << "Failures:" << "\n\n"
     #notification.failed_examples.each_with_index do |example, index|
@@ -105,7 +100,7 @@ class Details
     end
   end
 
-  def dump_summary notification # SummaryNotification
+  def dump_summary notification
     colorizer = RSpec::Core::Formatters::ConsoleCodes
     @output << "\nFinished in #{notification.formatted_duration} " \
                 "(files took #{notification.formatted_load_time} to load)\n" \
@@ -140,7 +135,7 @@ class Details
     @output << "\n"
   end
 
-  def close notification # NullNotification
+  def close notification
     @output << "\n"
   end
 end

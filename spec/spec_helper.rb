@@ -10,7 +10,9 @@ require_relative 'support/command_helpers'
 require_relative 'support/status_helpers'
 require_relative 'support/log_helpers'
 require_relative 'support/secrets_helpers'
-require_relative 'support/formatter.rb'
+require_relative 'support/formatters/report_stream.rb'
+require_relative 'support/formatters/brief.rb'
+require_relative 'support/formatters/details.rb'
 
 include RSpec
 include LogHelpers

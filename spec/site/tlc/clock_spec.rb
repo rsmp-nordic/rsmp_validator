@@ -73,7 +73,7 @@ RSpec.describe "Traffic Light Controller" do
             Validator.config['timeouts']['status_response']
 
           diff = received - CLOCK
-
+          diff = diff.round
           expect(diff.abs).to be <= max_diff, 
             "Clock reported by S0096 is off by #{diff}s, expected it to be within #{max_diff}s"
         end
@@ -109,7 +109,7 @@ RSpec.describe "Traffic Light Controller" do
           message = messages.first
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(message.attributes['sTs']) - CLOCK
-          
+          diff = diff.round          
           expect(diff.abs).to be <= max_diff,
             "Timestamp of S0096 is off by #{diff}s, expected it to be within #{max_diff}s"
         end
@@ -133,6 +133,7 @@ RSpec.describe "Traffic Light Controller" do
           }
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(response.attributes['aSTS']) - CLOCK
+          diff = diff.round
           expect(diff.abs).to be <= max_diff,
             "Timestamp of aggregated status is off by #{diff}s, expected it to be within #{max_diff}s"
         end
@@ -154,6 +155,7 @@ RSpec.describe "Traffic Light Controller" do
           message = messages.first
           max_diff = Validator.config['timeouts']['command_response'] * 2
           diff = Time.parse(message.attributes['cTS']) - CLOCK
+          diff = diff.round
           expect(diff.abs).to be <= max_diff,
             "Timestamp of command response is off by #{diff}s, expected it to be within #{max_diff}s"          
         end
@@ -175,6 +177,7 @@ RSpec.describe "Traffic Light Controller" do
           message = messages.first
           max_diff = Validator.config['timeouts']['command_response']
           diff = Time.parse(message.attributes['cTS']) - CLOCK
+          diff = diff.round
           expect(diff.abs).to be <= max_diff,
             "Timestamp of command response is off by #{diff}s, expected it to be within #{max_diff}s"
         end
@@ -201,6 +204,7 @@ RSpec.describe "Traffic Light Controller" do
           response = site.wait_for_alarm task, timeout: Validator.config['timeouts']['alarm']
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(response.attributes['sTs']) - CLOCK
+          diff = diff.round
           expect(diff.abs).to be <= max_diff,
             "Timestamp of alarm is off by #{diff}s, expected it to be within #{max_diff}s"
         end
@@ -222,6 +226,7 @@ RSpec.describe "Traffic Light Controller" do
           response = site.collect task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(response.attributes['wTs']) - CLOCK
+          diff = diff.round
           expect(diff.abs).to be <= max_diff,
             "Timestamp of watchdog is off by #{diff}s, expected it to be within #{max_diff}s"
         end
