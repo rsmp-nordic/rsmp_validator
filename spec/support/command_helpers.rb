@@ -354,8 +354,9 @@ module CommandHelpers
     }
     component = Validator.config['components']['detector_logic'].keys[0]
     expect {
-      send_command_and_confirm @task, command_list, "rejection of wrong security code", component
+      send_command_and_confirm @task, command_list, "M0008 with wrong security code", component
     }.to raise_error(RSMP::MessageRejected)
+    Validator.log "Command rejected as expected", level: :test
   end
 
   def wait_normal_control

@@ -43,7 +43,7 @@ RSpec.describe 'Core' do
       got_watchdog_messages = got[4..7]
 
       expect(got_version_messages).to include(*expected_version_messages)
-      expect(expected_watchdog_messages).to include(*got_watchdog_messages)
+      expect(got_watchdog_messages).to include(*expected_watchdog_messages)
     end
 
     def check_sequence_3_1_4 version
