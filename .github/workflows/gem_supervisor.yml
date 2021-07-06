@@ -28,7 +28,7 @@ jobs:
       run: bundle exec rsmp supervisor --config config/simulator/supervisor.yaml 2>&1 > simulator.log &
     - name: Run tests
       shell: bash
-      run: bundle exec rspec --format documentation --format Details --out log/validation.log --tag '~script' spec/supervisor
+      run: bundle exec rspec --format Brief --format Details --out log/validation.log --tag '~script' spec/supervisor
       env:
         SUPERVISOR_CONFIG: config/gem_supervisor.yaml
     - name: Show validation.log

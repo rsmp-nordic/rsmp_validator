@@ -31,7 +31,7 @@ jobs:
     - name: Set the time of the controller
       run: ssh 192.168.103.205 ./set_date.sh
     - name: Run tests
-      run: bundle exec rspec --format documentation --format Details --out log/validation.log spec/site
+      run: bundle exec rspec --format Brief --format Details --out log/validation.log spec/site
       env:
         SITE_CONFIG: config/swarco_itc2.yaml
     - name: Show validation.log

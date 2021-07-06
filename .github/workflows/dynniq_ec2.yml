@@ -31,7 +31,7 @@ jobs:
         ruby-version: 3.0
         bundler-cache: true # runs 'bundle install' and caches installed gems
     - name: Run tests
-      run: bundle exec rspec --format documentation --format Details --out log/validation.log spec/site
+      run: bundle exec rspec --format Brief --format Details --out log/validation.log spec/site
     - name: Show validation.log
       if: always()
       run: cat log/validation.log
