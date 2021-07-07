@@ -15,9 +15,6 @@ RSpec.describe 'Core' do
             timeout: Validator.config['timeouts']['status_response']
           }
         end
-        expect {
-          raise "bad"
-        }.not_to raise_error
       end
     end
   end
