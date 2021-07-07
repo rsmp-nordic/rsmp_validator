@@ -1,10 +1,3 @@
-
-#LOG_PATH = 'log/validation.log'
-
-# create log folder if it doesn't exist
-#FileUtils.mkdir_p 'log'
-
-
 module LogHelpers
   def log_confirmation action, &block
     Validator.log "Confirming #{action}", level: :test
