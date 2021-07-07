@@ -8,7 +8,6 @@ require 'rspec/expectations'
 
 class Validator::Testee 
   include RSpec::Matchers
-#  include RSMP::Logging
 
   @@sentinel_errors = []
 
