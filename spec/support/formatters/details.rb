@@ -35,7 +35,7 @@ class Details < FormatterBase
 
   def example_failed notification   
     # RSpec::Core::Formatters::ExceptionPresenter is a private class which
-    # should really be used by us, but the snippet extraction and backtrace
+    # should not really be used by us, but the snippet extraction and backtrace
     # processing seems rather cumbersome to reimplement
     presenter = RSpec::Core::Formatters::ExceptionPresenter.new(notification.example.execution_result.exception, notification.example, :indentation => 0)
     

@@ -25,7 +25,12 @@ class Brief < FormatterBase
 
   def example_failed notification   
     @output << colorize("#{indent}#{notification.example.description}",:failure)
-    @output << colorize(" - Failed: #{notification.example.execution_result.exception}\n",:light_black) 
+
+    # expect { }.not_to raise_error might raise an RSpec::Expectations::ExpectationNotMetError,
+    # with a messager that includes a backtrace. we don't want to show that here, so remove it
+    message = notification.example.execution_result.exception.message
+    message.sub! /\s+with backtrace\:.*/m, ''
+    @output << colorize(" - Failed: #{message}\n",:white)
   end
 
   def example_pending notification

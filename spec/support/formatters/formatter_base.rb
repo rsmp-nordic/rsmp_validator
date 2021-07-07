@@ -52,7 +52,7 @@ class FormatterBase
 
     num = Validator::Testee.sentinel_errors.size
     str = "#{num} sentinel warnings"
-    str = scolorize(str,:yellow) if num > 0
+    str = colorize(str,:yellow) if num > 0
     @output << "\n#{str}\n "
   end
 
