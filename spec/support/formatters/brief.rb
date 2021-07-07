@@ -29,7 +29,7 @@ class Brief < FormatterBase
     # expect { }.not_to raise_error might raise an RSpec::Expectations::ExpectationNotMetError,
     # with a messager that includes a backtrace. we don't want to show that here, so remove it
     message = notification.example.execution_result.exception.message
-    message.sub! /\s+with backtrace\:.*/m, ''
+    message = message.sub /\s+with backtrace\:.*/m, ''
     @output << colorize(" - Failed: #{message}\n",:white)
   end
 
