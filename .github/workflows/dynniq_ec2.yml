@@ -32,7 +32,7 @@ jobs:
         bundler-cache: true # runs 'bundle install' and caches installed gems
     - name: Run tests
       run: bundle exec rspec --format Brief --format Details --out log/validation.log spec/site
-    - name: Show validation.log
+    - name: Show detailed log
       if: always()
       run: cat log/validation.log
     - name: Rename validation.log

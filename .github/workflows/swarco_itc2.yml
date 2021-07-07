@@ -34,7 +34,7 @@ jobs:
       run: bundle exec rspec --format Brief --format Details --out log/validation.log spec/site
       env:
         SITE_CONFIG: config/swarco_itc2.yaml
-    - name: Show validation.log
+    - name: Show detailed log
       if: always()
       run: cat log/validation.log
     - name: Rename validation.log
