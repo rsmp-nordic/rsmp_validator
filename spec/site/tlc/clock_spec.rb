@@ -10,7 +10,7 @@ RSpec.describe "Traffic Light Controller" do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    it 'S0096 current date and time', sxl: '>=1.0.7'  do |example|
+    it 'can be read with S0096', sxl: '>=1.0.7'  do |example|
       request_status_and_confirm "current date and time",
         { S0096: [
           :year,
@@ -27,7 +27,7 @@ RSpec.describe "Traffic Light Controller" do
     # 1. Given the site is connected
     # 2. Send command
     # 3. Expect status response before timeout
-    it 'sets clock with M0104', sxl: '>=1.0.7' do |example|
+    it 'can be set with M0104', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         set_clock(CLOCK)
@@ -41,7 +41,7 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Request status S0096
     # 4. Compare set_clock and status timestamp
     # 5. Expect the difference to be within max_diff
-    it 'reports adjusted clock in S0096', sxl: '>=1.0.7' do |example|
+    it 'adjusts S0096 status response', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
@@ -87,7 +87,7 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Request status S0096
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
-    it 'timestamps S0096 with adjusted clock', sxl: '>=1.0.7' do |example|
+    it 'adjusts timestamps of S0096 command response', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
@@ -124,7 +124,7 @@ RSpec.describe "Traffic Light Controller" do
     # 4. Request aggregated status
     # 5. Compare set_clock and response timestamp
     # 6. Expect the difference to be within max_diff
-    it 'timestamps aggregated status response with adjusted clock', core: '>=3.1.5', sxl: '>=1.0.7' do |example|
+    it 'adjusts timestamps of aggregated status response', core: '>=3.1.5', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
@@ -147,7 +147,7 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Send command to set functional position
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
-    it 'timestamps command response with adjusted clock', sxl: '>=1.0.7' do |example|
+    it 'adjusts timestamps of command response', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
@@ -169,7 +169,7 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Send command to set functional position
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
-    it 'timestamps M0104 command response with adjusted clock', sxl: '>=1.0.7' do |example|
+    it 'adjusts timestamps of M0104 command response', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
@@ -218,7 +218,7 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Wait for Watchdog
     # 4. Compare set_clock and alarm response timestamp
     # 5. Expect the difference to be within max_diff
-    it 'timestamps watchdog messages with adjusted clock', sxl: '>=1.0.7' do |example|
+    it 'adjusts timestamp of watchdog messages', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
