@@ -89,11 +89,11 @@ class Validator::Site < Validator::Testee
 
     # scripts
     if config['scripts']
-      puts "Warning: Script path for activating alarm is missing or empty".colorize(:yellow) if config['scripts']['activate_alarm'] == {}
+      Validator.log "Warning: Script path for activating alarm is missing or empty".colorize(:yellow) if config['scripts']['activate_alarm'] == {}
       unless File.exist? config['scripts']['activate_alarm']
         Validator.abort_with_error "Script at #{config['scripts']['activate_alarm']} for activating alarm is missing".colorize(:yellow)
       end
-      puts "Warning: Script path for deactivating alarm is missing or empty".colorize(:yellow) if config['scripts']['deactivate_alarm'] == {}
+      Validator.log "Warning: Script path for deactivating alarm is missing or empty".colorize(:yellow) if config['scripts']['deactivate_alarm'] == {}
       unless File.exist? config['scripts']['deactivate_alarm']
         Validator.abort_with_error "Script at #{config['scripts']['deactivate_alarm']} for deactivating alarm is missing".colorize(:yellow)
       end
@@ -106,7 +106,7 @@ class Validator::Site < Validator::Testee
     RSMP::Supervisor.new(
       task: task,
       supervisor_settings: @supervisor_config.deep_merge(options),
-      logger: @logger,
+      logger: Validator.logger,
       collect: options['collect']
     )
   end
@@ -115,9 +115,13 @@ class Validator::Site < Validator::Testee
   def wait_for_connection
     @proxy = @node.proxies.first
     unless @proxy
-      log "Waiting for site to connect", level: :test
+      Validator.log "Waiting for site to connect", level: :test
       @proxy = @node.wait_for_site(:any, config['timeouts']['connect'])
     end
-    @proxy.wait_for_state :ready, config['timeouts']['ready']
+    unless @proxy.ready?
+      Validator.log "Waiting for handskake to complete", level: :test
+      @proxy.wait_for_state :ready, config['timeouts']['ready']
+    end
+    Validator.log "Ready", level: :test
   end
 end

@@ -8,7 +8,6 @@ require 'rspec/expectations'
 
 class Validator::Testee 
   include RSpec::Matchers
-  include RSMP::Logging
 
   @@sentinel_errors = []
 
@@ -79,19 +78,6 @@ class Validator::Testee
   def initialize
     parse_config
     @reactor = Async::Reactor.new
-    settings = {
-      'active' => true,
-      'port' => true,
-      'path' => LOG_PATH,    # from log_helpers.rb
-      'color' => true,
-      'json' => true,
-      'acknowledgements' => true,
-      'watchdogs' => true,
-      'test' => true
-    }
-    settings.merge!( config['log'] ) if config['log']
-    @logger = RSMP::Logger.new settings
-    initialize_logging logger: @logger
   end
 
   # Resume the reactor and run a block in an async task.
@@ -107,12 +93,9 @@ class Validator::Testee
       task.async do |sentinel|
         sentinel.annotate 'sentinel'
         loop do
-          @node.error_condition.wait  # if it's an exception, it will be raised
-        rescue => e
-          log "Sentinel warning: #{e.class}: #{e}", level: :test
+          e = @node.error_queue.dequeue
+          Validator.log "Sentinel warning: #{e.class}: #{e}", level: :test
           @@sentinel_errors << e
-          #error = e
-          #task.stop
         end
       end
       yield task              # run block until it's finished
@@ -124,10 +107,10 @@ class Validator::Testee
 
     # reraise errors outside task to surface them in rspec
     if error
-      log "Failed: #{error.class}: #{error}", level: :test
+      #Validator.log "Failed: #{error.class}: #{error}", level: :test
       raise error
     else
-      log "OK", level: :test
+      #Validator.log "OK", level: :test
     end
   end
 
@@ -152,7 +135,7 @@ class Validator::Testee
     # so run inside an Async block
     Async do
       if @node
-        log why, level: :test if why
+        Validator.log why, level: :test if why
         @node.stop
       end
       @node = nil
@@ -163,4 +146,8 @@ class Validator::Testee
   # Wait for peer to be ready
   def wait_for_connection
   end
+
+  def parse_config
+  end
+  
 end

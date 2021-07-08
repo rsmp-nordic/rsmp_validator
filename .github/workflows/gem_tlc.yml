@@ -28,9 +28,12 @@ jobs:
       run: bundle exec rsmp site --type tlc --config config/simulator/tlc.yaml 2>&1 > simulator.log &
     - name: Run tests
       shell: bash
-      run: bundle exec rspec --tag '~script' spec/site
+      run: bundle exec rspec --format Brief --format Details --out log/validation.log --tag '~script' spec/site
       env:
         SITE_CONFIG: config/gem_tlc.yaml
+    - name: Show detailed log
+      if: always()
+      run: cat log/validation.log
     - name: Rename validation.log
       if: always()
       run: mv log/validation.log log/validation_ruby_$(date +%F_%H-%M-%S).log

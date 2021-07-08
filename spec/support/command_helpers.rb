@@ -22,7 +22,7 @@ module CommandHelpers
 
   def set_signal_start status
     require_security_codes
-    @site.log "Start of signal group. Orders a signal group to green.", level: :test
+    Validator.log "Start of signal group. Orders a signal group to green.", level: :test
     command_list = build_command_list :M0010, :setStart, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
@@ -34,7 +34,7 @@ module CommandHelpers
 
   def set_signal_stop status
     require_security_codes
-    @site.log "Stop of signal group. Orders a signal group to red.", level: :test
+    Validator.log "Stop of signal group. Orders a signal group to red.", level: :test
     command_list = build_command_list :M0011, :setStop, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
@@ -45,7 +45,7 @@ module CommandHelpers
   end
 
   def set_signal_start_or_stop status
-    @site.log "Request start or stop of a series of signal groups", level: :test
+    Validator.log "Request start or stop of a series of signal groups", level: :test
     command_list = build_command_list :M0012, :setStart, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
@@ -56,7 +56,7 @@ module CommandHelpers
 
   def set_plan plan
     require_security_codes
-    @site.log "Switching to plan #{plan}", level: :test
+    Validator.log "Switching to plan #{plan}", level: :test
     command_list = build_command_list :M0002, :setPlan, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: 'True',     # true = use plan nr in commone, false = use time table
@@ -67,7 +67,7 @@ module CommandHelpers
 
   def set_traffic_situation ts
     require_security_codes
-    @site.log "Switching to traffic situation #{ts}", level: :test
+    Validator.log "Switching to traffic situation #{ts}", level: :test
     command_list = build_command_list :M0003, :setTrafficSituation, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       traficsituation: ts   # misspell 'traficsituation'is in the rsmp spec
@@ -78,7 +78,7 @@ module CommandHelpers
 
   def set_functional_position status
     require_security_codes
-    @site.log "Switching to #{status}", level: :test
+    Validator.log "Switching to #{status}", level: :test
     command_list = build_command_list :M0001, :setValue, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
@@ -90,7 +90,7 @@ module CommandHelpers
 
   def set_fixed_time status
     require_security_codes
-    @site.log "Switching to fixed time #{status}", level: :test
+    Validator.log "Switching to fixed time #{status}", level: :test
     command_list = build_command_list :M0007, :setFixedTime, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
@@ -100,7 +100,7 @@ module CommandHelpers
 
   def set_restart
     require_security_codes
-    @site.log "Restarting traffic controller", level: :test
+    Validator.log "Restarting traffic controller", level: :test
     command_list = build_command_list :M0004, :setRestart, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: 'True'
@@ -112,7 +112,7 @@ module CommandHelpers
 
   def set_emergency_route route
     require_security_codes
-    @site.log "Set emergency route #{route}", level: :test
+    Validator.log "Set emergency route #{route}", level: :test
     command_list = build_command_list :M0005, :setEmergency, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: 'True',
@@ -123,7 +123,7 @@ module CommandHelpers
 
   def disable_emergency_route
     require_security_codes
-    @site.log "Disable emergency route", level: :test
+    Validator.log "Disable emergency route", level: :test
     command_list = build_command_list :M0005, :setEmergency, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: 'False'
@@ -133,7 +133,7 @@ module CommandHelpers
 
   def set_input status, input
     require_security_codes
-    @site.log "Set input #{input}", level: :test
+    Validator.log "Set input #{input}", level: :test
     command_list = build_command_list :M0006, :setInput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
@@ -144,7 +144,7 @@ module CommandHelpers
 
   def force_detector_logic component, status, mode='True'
     require_security_codes
-    @site.log "Force detector logic", level: :test
+    Validator.log "Force detector logic", level: :test
     command_list = build_command_list :M0008, :setForceDetectorLogic, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
@@ -187,7 +187,7 @@ module CommandHelpers
 
   def set_series_of_inputs status
     require_security_codes
-    @site.log "Activate a series of inputs", level: :test
+    Validator.log "Activate a series of inputs", level: :test
     command_list = build_command_list :M0013, :setInput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
@@ -197,7 +197,7 @@ module CommandHelpers
 
   def set_dynamic_bands status, plan
     require_security_codes
-    @site.log "Set dynamic bands", level: :test
+    Validator.log "Set dynamic bands", level: :test
     command_list = build_command_list :M0014, :setCommands, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
@@ -208,7 +208,7 @@ module CommandHelpers
 
   def set_offset status, plan
     require_security_codes
-    @site.log "Set dynamic bands", level: :test
+    Validator.log "Set dynamic bands", level: :test
     command_list = build_command_list :M0015, :setOffset, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
@@ -219,7 +219,7 @@ module CommandHelpers
 
   def set_week_table status
     require_security_codes
-    @site.log "Set week table", level: :test
+    Validator.log "Set week table", level: :test
     command_list = build_command_list :M0016, :setWeekTable, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
@@ -229,7 +229,7 @@ module CommandHelpers
 
   def set_time_table status
     require_security_codes
-    @site.log "Set time table", level: :test
+    Validator.log "Set time table", level: :test
     command_list = build_command_list :M0017, :setTimeTable, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
@@ -239,7 +239,7 @@ module CommandHelpers
 
   def set_cycle_time status, plan
     require_security_codes
-    @site.log "Set cycle time", level: :test
+    Validator.log "Set cycle time", level: :test
     command_list = build_command_list :M0018, :setCycleTime, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
@@ -250,7 +250,7 @@ module CommandHelpers
 
   def force_input status, input, value
     require_security_codes
-    @site.log "Force input", level: :test
+    Validator.log "Force input", level: :test
     command_list = build_command_list :M0019, :setInput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
@@ -262,7 +262,7 @@ module CommandHelpers
 
   def force_output status, output, value
     require_security_codes
-    @site.log "Force output", level: :test
+    Validator.log "Force output", level: :test
     command_list = build_command_list :M0020, :setOutput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
@@ -274,7 +274,7 @@ module CommandHelpers
 
   def set_trigger_level status
     require_security_codes
-    @site.log "Set trigger level sensitivity for loop detector", level: :test
+    Validator.log "Set trigger level sensitivity for loop detector", level: :test
     command_list = build_command_list :M0021, :setLevel, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
@@ -285,7 +285,7 @@ module CommandHelpers
   def set_security_code level
     require_security_codes
     status = "Level#{level}"
-    @site.log "Set security code", level: :test
+    Validator.log "Set security code", level: :test
     command_list = build_command_list :M0103, :setSecurityCode, {
       oldSecurityCode: Validator.config['secrets']['security_codes'][level],
       newSecurityCode: Validator.config['secrets']['security_codes'][level],
@@ -296,34 +296,34 @@ module CommandHelpers
 
   def require_security_codes
     unless Validator.config.dig 'secrets', 'security_codes' 
-      skip "Skipping test: Security codes are not configured"
+      skip "Security codes are not configured"
     end
   end
 
   def require_scripts
-    skip "Skipping test: Scripts are not configured" unless Validator.config['scripts']
-    skip "Skipping test: Script to activate alarm is not configured" unless Validator.config.dig 'scripts', 'activate_alarm'
-    skip "Skipping test: Script to deactivate alarm is not configured" unless Validator.config.dig 'scripts','deactivate_alarm'
+    skip "Scripts are not configured" unless Validator.config['scripts']
+    skip "Script to activate alarm is not configured" unless Validator.config.dig 'scripts', 'activate_alarm'
+    skip "Script to deactivate alarm is not configured" unless Validator.config.dig 'scripts','deactivate_alarm'
   end
 
-  def set_date date
+  def set_clock clock
     require_security_codes
-    @site.log "Set date to #{date}", level: :test
+    Validator.log "Setting clock to #{clock}", level: :test
     command_list = build_command_list :M0104, :setDate, {
       securityCode: Validator.config['secrets']['security_codes'][1],
-      year: date.year,
-      month: date.month,
-      day: date.day,
-      hour: date.hour,
-      minute: date.min,
-      second: date.sec
+      year: clock.year,
+      month: clock.month,
+      day: clock.day,
+      hour: clock.hour,
+      minute: clock.min,
+      second: clock.sec
     }
-    send_command_and_confirm @task, command_list, "intention to set date"
+    send_command_and_confirm @task, command_list, "intention to set clock"
   end
 
-  def reset_date
+  def reset_clock
     require_security_codes
-    @site.log "Reset date", level: :test
+    Validator.log "Resetting clock", level: :test
     now = Time.now.utc
     command_list = build_command_list :M0104, :setDate, {
       securityCode: Validator.config['secrets']['security_codes'][1],
@@ -334,19 +334,19 @@ module CommandHelpers
       minute: now.min,
       second: now.sec
     }
-    send_command_and_confirm @task, command_list, "intention to set date"
+    send_command_and_confirm @task, command_list, "intention to set clock"
   end
 
-  def with_date_set date, &block
-    request, response = set_date date
+  def with_clock_set clock, &block
+    request, response = set_clock clock
     yield request,response
   ensure
-    reset_date
+    reset_clock
   end
 
 
   def wrong_security_code
-    @site.log "Try to force detector logic with wrong security code", level: :test
+    Validator.log "Try to force detector logic with wrong security code", level: :test
     command_list = build_command_list :M0008, :setForceDetectorLogic, {
       securityCode: '1111',
       status: 'True',
@@ -354,8 +354,9 @@ module CommandHelpers
     }
     component = Validator.config['components']['detector_logic'].keys[0]
     expect {
-      send_command_and_confirm @task, command_list, "rejection of wrong security code", component
+      send_command_and_confirm @task, command_list, "M0008 with wrong security code", component
     }.to raise_error(RSMP::MessageRejected)
+    Validator.log "Command rejected as expected", level: :test
   end
 
   def wait_normal_control

@@ -7,28 +7,36 @@
 # to ensure we get a fresh SiteProxy object each time, so our deformed site proxy
 # is not reused later tests
 
-RSpec.describe "Traffic Light Controller" do
+RSpec.describe 'Core' do
 
-  # 1. Given the site is new and connected
-  # 2. When site watchdog acknowledgement method is changed to do nothing
-  # 3. Then the site should disconnect
-  it 'disconnects if watchdogs are not acknowledged', sxl: '>=1.0.7' do |example|
-    Validator::Site.isolated do |task,supervisor,site|
-      def site.acknowledge original
+  describe 'Disconnect Behaviour' do
+
+    # 1. Given the site is new and connected
+    # 2. When site watchdog acknowledgement method is changed to do nothing
+    # 3. Then the site should disconnect
+    it 'disconnects if watchdogs are not acknowledged', sxl: '>=1.0.7' do |example|
+      Validator::Site.isolated do |task,supervisor,site|
+        def site.acknowledge original
+        end
+        timeout = Validator.config['timeouts']['disconnect']
+        site.wait_for_state :stopped, timeout
+      rescue RSMP::TimeoutError
+        raise "Site did not disconnect within #{timeout}s"
       end
-      site.wait_for_state :stopped, Validator.config['timeouts']['disconnect']
+    end
+
+    # 1. Given the site is new and connected
+    # 2. When site watchdog sending method is changed to do nothing
+    # 3. Then the supervisor should disconnect
+    it 'disconnects if no watchdogs are send', sxl: '>=1.0.7' do |example|
+      Validator::Site.isolated do |task,supervisor,site|
+        def site.send_watchdog now=nil
+        end
+        timeout = Validator.config['timeouts']['disconnect']
+        site.wait_for_state :stopped, timeout
+      rescue RSMP::TimeoutError
+        raise "Site did not disconnect within #{timeout}s"
+      end
     end
   end
-
-  # 1. Given the site is new and connected
-  # 2. When site watchdog sending method is changed to do nothing
-  # 3. Then the supervisor should disconnect
-  it 'disconnects if no watchdogs are send', sxl: '>=1.0.7' do |example|
-    Validator::Site.isolated do |task,supervisor,site|
-      def site.send_watchdog now=nil
-      end
-      site.wait_for_state :stopped, Validator.config['timeouts']['disconnect']
-    end
-  end
-
 end

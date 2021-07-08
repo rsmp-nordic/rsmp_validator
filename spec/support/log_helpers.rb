@@ -1,24 +1,13 @@
-
-LOG_PATH = 'log/validation.log'
-
-# create log folder if it doesn't exist
-FileUtils.mkdir_p 'log'
-
-
 module LogHelpers
   def log_confirmation action, &block
-    @site.log "Confirming #{action}", level: :test
+    Validator.log "Confirming #{action}", level: :test
     start_time = Time.now
     yield block
     delay = Time.now - start_time
     upcase_first = action.sub(/\S/, &:upcase)
-    @site.log "#{upcase_first} confirmed after #{delay.to_i}s", level: :test
-  end
-
-  def log str
-    File.open(LOG_PATH, 'a') do |file|
-      file.puts str
-    end
+    Validator.log "#{upcase_first} confirmed after #{delay.to_i}s", level: :test
+  rescue Async::TimeoutError => e
+    raise RSMP::TimeoutError.new "Timeout while confirming #{action}"
   end
 
 end

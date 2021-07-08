@@ -4,31 +4,46 @@ require 'rspec/expectations'
 
 module Validator
   include RSpec::Matchers
-  include RSMP::Logging
 
   class << self
-    attr_accessor :config, :mode
+    include RSMP::Logging
+    attr_accessor :config, :mode, :logger, :reporter
     attr_accessor :site_validator, :supervisor_validator
   end
 
   def self.setup rspec_config
+    setup_logging rspec_config
     determine_mode rspec_config.files_to_run
     load_config
     build_testee
     setup_filters rspec_config
   end
 
-  def self.after
-    str = "\n"
-    num_errors = Validator::Testee.sentinel_errors.size
-    if num_errors > 0
-      e = Validator::Testee.sentinel_errors.first
-      str << "#{num_errors} sentinel warnings. First warning: #{e.class}: #{e}".colorize(:yellow)
-    else
-      str << "No sentinel warnings.".colorize(:light_black)
-    end
-    puts str
-    log str
+  def self.setup_logging rspec_config
+    settings = {
+      'active' => true,
+      'port' => true,
+      'stream' => ReportStream.new(rspec_config.reporter),
+      'color' => {
+        'info' => 'white',
+        'log' => 'light_black',
+        'test' => 'white'
+      },
+      'json' => true,
+      'acknowledgements' => true,
+      'watchdogs' => true,
+      'test' => true,
+      'direction' => false
+    }
+    initialize_logging log_settings: settings
+    self.reporter = rspec_config.reporter
+  end
+
+  def self.log str, options
+    self.reporter.publish :step, message: str
+  end
+
+  def self.after example
   end
 
   private
@@ -52,9 +67,7 @@ module Validator
         self.abort_with_error "Unknown test mode: #{mode}"
       end
 
-      message = "We're testing a #{mode}"
-      puts message
-      log message
+      #log "We're testing a #{mode}"
     end
   end
 
@@ -83,7 +96,7 @@ module Validator
 
     # load config
     if File.exist? config_path
-      puts "Loading config from #{config_path}"
+      #log "Loading config from #{config_path}"
       self.config = YAML.load_file config_path
     else
       self.abort_with_error "Config file #{config_path} is missing"
@@ -143,13 +156,13 @@ module Validator
     end
 
     unless self.config.dig 'secrets','security_codes'
-      puts "Warning: No security code configured".colorize(:yellow)
+      log "Warning: No security code configured".colorize(:yellow)
     else
       unless self.config.dig 'secrets','security_codes',1
-        puts "Warning: Security code 1 is not configured".colorize(:yellow)
+        log "Warning: Security code 1 is not configured".colorize(:yellow)
       end
       unless self.config.dig 'secrets','security_codes',2
-        puts "Warning: Security code 2 is not configured".colorize(:yellow)
+        log "Warning: Security code 2 is not configured".colorize(:yellow)
       end
     end
   end
