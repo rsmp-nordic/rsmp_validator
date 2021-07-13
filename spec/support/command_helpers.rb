@@ -394,6 +394,14 @@ module Validator::CommandHelpers
     )
   end
 
+  def wait_normal_control_and_status
+    wait_for_status(@task,"controlmode startup", [{'sCI'=>'S0020','n'=>'controlmode','s'=>'startup'}])
+    wait_for_status(@task,"signalmode eeeee", [{'sCI'=>'S0001','n'=>'signalgroupstatus','s'=>'eeeee'}])
+    wait_for_status(@task,"signalmode ffffffff", [{'sCI'=>'S0001','n'=>'signalgroupstatus','s'=>'ffffffff'}])
+    wait_for_status(@task,"signalmode gggggg", [{'sCI'=>'S0001','n'=>'signalgroupstatus','s'=>'gggggg'}])
+    wait_for_status(@task,"controlmode startup", [{'sCI'=>'S0020','n'=>'controlmode','s'=>'control'}])
+  end
+
   def switch_normal_control
     set_functional_position 'NormalControl'
     wait_normal_control

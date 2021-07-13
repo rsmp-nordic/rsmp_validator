@@ -101,6 +101,37 @@ RSpec.describe 'Site::Traffic Light Controller' do
         { S0097: [:timestamp,:checksum] }
     end
 
+    # 1. Verify connection
+    # 2. Send control command to set time_table
+    # 3. Wait for status = true
+    # 4. Send control command to set time_table
+    # 5. Wait for status = true
+    # Remove "set time table status" when running with actual machine.
+    it 'M0017 set time table', sxl: '>=1.0.13' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        status = "12-1-12-59,1-0-23-12"
+        prepare task, site
+        set_time_table status
+        wait_for_status(@task,"", [{'sCI'=>'S0014','n'=>'status','s'=>'True'}])
+
+        status = "1-0-18-0,2-1-7-0"
+        set_time_table status
+        wait_for_status(@task,"", [{'sCI'=>'S0014','n'=>'status','s'=>'True'}])
+      end
+    end
+
+    # 1. Verify connection
+    # 2. Send control command to set cycle time
+    # 3. Wait for status = true  
+    it 'M0018 set cycle time', sxl: '>=1.0.13' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        status = 5
+        plan = 0
+        prepare task, site
+        set_cycle_time status, plan
+      end
+    end
+
     # Verify status S0023 command table
     #
     # 1. Given the site is connected
