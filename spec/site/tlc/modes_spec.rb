@@ -144,6 +144,40 @@ RSpec.describe 'Site::Traffic Light Controller' do
         { S0013: [:status] }
     end
 
+
+    # Verify that we can activate yellow flash
+    #
+    # 1. Given the site is connected
+    # 2. Send the control command to switch to Yellow flash
+    # 3. Wait for status Yellow flash
+    # 4. Send command to switch to normal control
+    # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
+    it 'M0001 set yellow flash', sxl: '>=1.0.7' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        switch_yellow_flash
+        switch_normal_control
+      end
+    end
+
+        # Verify that we can activate normal control after yellow flash mode
+    #
+    # 1. Given the site is connected and in yellow flash mode
+    # 2. Send the control command to switch to normal control
+    # 3. Wait for S0020 status "startup" 
+    # 4. Wait for S0001 status "eeeee"
+    # 5. Wait for S0001 status "ffffffff"
+    # 6. Wait for S0001 status "gggggg"
+    # 7. Wait for S0020 status "control" 
+    it 'M0001 startup after yellow flash', sxl: '>=1.0.7' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        switch_yellow_flash
+        set_functional_position 'NormalControl'
+        wait_normal_control_and_status
+      end
+    end
+
     # Verify that we can activate dark mode
     #
     # 1. Given the site is connected
@@ -156,6 +190,21 @@ RSpec.describe 'Site::Traffic Light Controller' do
         prepare task, site
         switch_dark_mode
         switch_normal_control
+      end
+    end
+
+    # 1. Verify connection
+    # 2. Send the control command to switch to  fixed time= true
+    # 3. Wait for status = true
+    # 4. Send control command to switch "fixed time"= true
+    # 5. Wait for status = false
+    it 'M0007 set fixed time with added status check', sxl: '>=1.0.7' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        switch_fixed_time 'True'
+        wait_for_status(@task,"Fixed time control active", [{'sCI'=>'S0009','n'=>'status','s'=>'True'}])
+        wait_for_status(@task,"signalgroupstatus A or B", [{'sCI'=>'S0001','n'=>'signalgroupstatus','s'=>/^[AB]$/}])
+        switch_fixed_time 'False'
       end
     end
   end
