@@ -120,6 +120,24 @@ RSpec.describe "Traffic Light Controller" do
       end
     end
 
+        # Verify that we can activate normal control after yellow flash mode
+    #
+    # 1. Given the site is connected and in yellow flash mode
+    # 2. Send the control command to switch to normal control
+    # 3. Wait for S0020 status "startup" 
+    # 4. Wait for S0001 status "eeeee"
+    # 5. Wait for S0001 status "ffffffff"
+    # 6. Wait for S0001 status "gggggg"
+    # 7. Wait for S0020 status "control" 
+    it 'M0001 startup after yellow flash', sxl: '>=1.0.7' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        switch_yellow_flash
+        set_functional_position 'NormalControl'
+        wait_normal_control_and_status
+      end
+    end
+
     # Verify that we can activate dark mode
     #
     # 1. Given the site is connected
@@ -140,16 +158,15 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Wait for status = true
     # 4. Send control command to switch "fixed time"= true
     # 5. Wait for status = false
-    it 'M0007 set fixed time', sxl: '>=1.0.7' do |example|
+    it 'M0007 set fixed time with added status check', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         switch_fixed_time 'True'
+        wait_for_status(@task,"Fixed time control active", [{'sCI'=>'S0009','n'=>'status','s'=>'True'}])
+        wait_for_status(@task,"signalgroupstatus A or B", [{'sCI'=>'S0001','n'=>'signalgroupstatus','s'=>/^[AB]$/}])
         switch_fixed_time 'False'
       end
     end
-
-
-
   end
 end
 
