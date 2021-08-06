@@ -1,7 +1,7 @@
 RSpec.describe "Traffic Light Controller" do
   include CommandHelpers
   include StatusHelpers
-  
+
   describe 'Clock' do
     CLOCK = Time.new 2020,9,29,17,29,51,'+00:00'
  
@@ -41,7 +41,7 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Request status S0096
     # 4. Compare set_clock and status timestamp
     # 5. Expect the difference to be within max_diff
-    it 'adjusts S0096 status response', sxl: '>=1.0.7' do |example|
+    it 'is used for S0096 status response', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
@@ -75,7 +75,7 @@ RSpec.describe "Traffic Light Controller" do
           diff = received - CLOCK
           diff = diff.round
           expect(diff.abs).to be <= max_diff, 
-            "Clock reported by S0096 is off by #{diff}s, expected it to be within #{max_diff}s"
+            "Clock reported by S0096 is off by #{diff}s, should be within #{max_diff}s"
         end
       end
     end
@@ -87,7 +87,7 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Request status S0096
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
-    it 'adjusts timestamps of S0096 command response', sxl: '>=1.0.7' do |example|
+    it 'is used for S0096 response timestamp', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
@@ -111,7 +111,7 @@ RSpec.describe "Traffic Light Controller" do
           diff = Time.parse(message.attributes['sTs']) - CLOCK
           diff = diff.round          
           expect(diff.abs).to be <= max_diff,
-            "Timestamp of S0096 is off by #{diff}s, expected it to be within #{max_diff}s"
+            "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s"
         end
       end
     end
@@ -124,7 +124,7 @@ RSpec.describe "Traffic Light Controller" do
     # 4. Request aggregated status
     # 5. Compare set_clock and response timestamp
     # 6. Expect the difference to be within max_diff
-    it 'adjusts timestamps of aggregated status response', core: '>=3.1.5', sxl: '>=1.0.7' do |example|
+    it 'is used for aggregated status timestamp', core: '>=3.1.5', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
@@ -135,7 +135,7 @@ RSpec.describe "Traffic Light Controller" do
           diff = Time.parse(response.attributes['aSTS']) - CLOCK
           diff = diff.round
           expect(diff.abs).to be <= max_diff,
-            "Timestamp of aggregated status is off by #{diff}s, expected it to be within #{max_diff}s"
+            "Timestamp of aggregated status is off by #{diff}s, should be within #{max_diff}s"
         end
       end
     end
@@ -147,7 +147,7 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Send command to set functional position
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
-    it 'adjusts timestamps of command response', sxl: '>=1.0.7' do |example|
+    it 'is used for M0001 response timestamp', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
@@ -157,7 +157,7 @@ RSpec.describe "Traffic Light Controller" do
           diff = Time.parse(message.attributes['cTS']) - CLOCK
           diff = diff.round
           expect(diff.abs).to be <= max_diff,
-            "Timestamp of command response is off by #{diff}s, expected it to be within #{max_diff}s"          
+            "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s"
         end
       end
     end
@@ -169,7 +169,7 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Send command to set functional position
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
-    it 'adjusts timestamps of M0104 command response', sxl: '>=1.0.7' do |example|
+    it 'is used for M0104 response timestamp', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
@@ -179,7 +179,7 @@ RSpec.describe "Traffic Light Controller" do
           diff = Time.parse(message.attributes['cTS']) - CLOCK
           diff = diff.round
           expect(diff.abs).to be <= max_diff,
-            "Timestamp of command response is off by #{diff}s, expected it to be within #{max_diff}s"
+            "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s"
         end
       end
     end
@@ -193,7 +193,7 @@ RSpec.describe "Traffic Light Controller" do
     # 5. Wait for alarm
     # 6. Compare set_clock and alarm response timestamp
     # 7. Expect the difference to be within max_diff
-    it 'timestamps alarm with adjusted clock', :script, sxl: '>=1.0.7' do |example|
+    it 'is used for alarm timestamp', :script, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         require_scripts
         prepare task, site
@@ -206,7 +206,7 @@ RSpec.describe "Traffic Light Controller" do
           diff = Time.parse(response.attributes['sTs']) - CLOCK
           diff = diff.round
           expect(diff.abs).to be <= max_diff,
-            "Timestamp of alarm is off by #{diff}s, expected it to be within #{max_diff}s"
+            "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s"
         end
       end
     end
@@ -218,7 +218,7 @@ RSpec.describe "Traffic Light Controller" do
     # 3. Wait for Watchdog
     # 4. Compare set_clock and alarm response timestamp
     # 5. Expect the difference to be within max_diff
-    it 'adjusts timestamp of watchdog messages', sxl: '>=1.0.7' do |example|
+    it 'is used for watchdog timestamp', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
@@ -228,7 +228,7 @@ RSpec.describe "Traffic Light Controller" do
           diff = Time.parse(response.attributes['wTs']) - CLOCK
           diff = diff.round
           expect(diff.abs).to be <= max_diff,
-            "Timestamp of watchdog is off by #{diff}s, expected it to be within #{max_diff}s"
+            "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s"
         end
       end
     end

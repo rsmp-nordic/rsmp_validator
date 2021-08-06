@@ -1,8 +1,8 @@
 RSpec.describe "Traffic Light Controller" do
   include StatusHelpers
 
-  describe 'Unknown Statuses' do
-    it 'responds with NotAck to invalid status request code' do |example|
+  context 'receiving an invalid status request code' do
+    it 'returns NotAck ' do |example|
       Validator::Site.connected do |task,supervisor,site|
         site.log "Requesting non-existing status S0000", level: :test
         expect {
@@ -14,8 +14,10 @@ RSpec.describe "Traffic Light Controller" do
         }.to raise_error(RSMP::MessageRejected)
       end
     end
+  end
 
-    it 'responds with NotAck to invalid status request name' do |example|
+  context 'receiving an invalid status request name' do
+    it 'returns NotAck' do |example|
       Validator::Site.connected do |task,supervisor,site|
         site.log "Requesting non-existing status S0001 name", level: :test
         expect {

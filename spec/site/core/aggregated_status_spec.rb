@@ -1,4 +1,4 @@
-RSpec.describe 'Core' do
+RSpec.describe 'Site' do
   include CommandHelpers
 
   describe 'Aggregated Status' do
@@ -7,7 +7,7 @@ RSpec.describe 'Core' do
     # 1. Given the site is connected
     # 2. Request aggregated status 
     # 3. Expect aggregated status response before timeout
-    it 'responds to aggregated status request', rsmp: '>=3.1.5' do |example|
+    it 'can be requested', rsmp: '>=3.1.5' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         log_confirmation "request aggregated status" do

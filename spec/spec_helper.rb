@@ -14,6 +14,7 @@ require_relative 'support/formatters/report_stream.rb'
 require_relative 'support/formatters/formatter_base.rb'
 require_relative 'support/formatters/brief.rb'
 require_relative 'support/formatters/details.rb'
+require_relative 'support/formatters/list.rb'
 
 include RSpec
 include LogHelpers

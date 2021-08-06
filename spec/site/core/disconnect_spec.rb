@@ -7,14 +7,12 @@
 # to ensure we get a fresh SiteProxy object each time, so our deformed site proxy
 # is not reused later tests
 
-RSpec.describe 'Core' do
-
-  describe 'Disconnect Behaviour' do
-
+RSpec.describe 'Site' do
+  context "which does not receive watchdog acknowledgements" do
     # 1. Given the site is new and connected
     # 2. When site watchdog acknowledgement method is changed to do nothing
     # 3. Then the site should disconnect
-    it 'disconnects if watchdogs are not acknowledged', sxl: '>=1.0.7' do |example|
+    it 'disconnects', sxl: '>=1.0.7' do |example|
       Validator::Site.isolated do |task,supervisor,site|
         def site.acknowledge original
         end
@@ -24,11 +22,13 @@ RSpec.describe 'Core' do
         raise "Site did not disconnect within #{timeout}s"
       end
     end
+  end
 
+  context "which does not receive watchdogs" do
     # 1. Given the site is new and connected
     # 2. When site watchdog sending method is changed to do nothing
     # 3. Then the supervisor should disconnect
-    it 'disconnects if no watchdogs are send', sxl: '>=1.0.7' do |example|
+    it 'disconnects', sxl: '>=1.0.7' do |example|
       Validator::Site.isolated do |task,supervisor,site|
         def site.send_watchdog now=nil
         end

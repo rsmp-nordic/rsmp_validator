@@ -1,9 +1,9 @@
 def menu_lists
   # Load the existing menus
   super + [{ 
-  	:type => 'specification',
-  	:title => 'Specifications',
-  	:search_title => 'Specification List'
+    :type => 'specification',
+    :title => 'Specifications',
+    :search_title => 'Specification List'
   }]
 end
 

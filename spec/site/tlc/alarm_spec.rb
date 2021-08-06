@@ -2,8 +2,8 @@ RSpec.describe 'Traffic Light Controller' do
   include CommandHelpers
   include StatusHelpers
 
-  describe 'Alarms' do
-    it 'A0302 detector error (logic error)', :script, sxl: '>=1.0.7' do |example|
+  describe 'Alarm' do
+    it 'A0302 detector/logic error is triggered', :script, sxl: '>=1.0.7' do |example|
       require_scripts
       Validator::Site.connected do |task,supervisor,site|
         component = Validator.config['components']['detector_logic'].keys.first
@@ -34,7 +34,7 @@ RSpec.describe 'Traffic Light Controller' do
       end
     end
 
-    it 'Acknowledge alarm', :script do |example|
+    it 'is acknowledged', :script do |example|
       skip "Don't yet have a way to trigger alarms on the equipment"
       require_scripts
       Validator::Site.connected do |task,supervisor,site|
@@ -66,7 +66,7 @@ RSpec.describe 'Traffic Light Controller' do
       end
     end
 
-    it 'buffers alarms during disconnects', :script, sxl: '>=1.0.7' do |example|
+    it 'is buffered during disconnect', :script, sxl: '>=1.0.7' do |example|
       require_scripts
       component = Validator.config['components']['detector_logic'].keys.first
       Validator::Site.isolated do |task,supervisor,site|

@@ -14,7 +14,7 @@ class Details < FormatterBase
   end
 
   def step notification
-    @output << "> #{notification.message}\n"
+    @output << "  > #{notification.message}\n"
   end
 
   def message notification
@@ -26,7 +26,7 @@ class Details < FormatterBase
   end
 
   def example_started notification
-    @output << colorize("#{@groups.join(' / ')} / #{notification.example.description}\n",:bold)
+    @output << colorize("#{notification.example.full_description}\n",:bold)
   end
 
   def example_passed notification # ExampleNotification
