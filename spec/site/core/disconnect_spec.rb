@@ -8,7 +8,7 @@
 # is not reused later tests
 
 RSpec.describe 'Site' do
-  context "which does not receive watchdog acknowledgements" do
+  context "not receiving watchdog acknowledgements" do
     # 1. Given the site is new and connected
     # 2. When site watchdog acknowledgement method is changed to do nothing
     # 3. Then the site should disconnect
@@ -24,7 +24,7 @@ RSpec.describe 'Site' do
     end
   end
 
-  context "which does not receive watchdogs" do
+  context "not receiving watchdogs" do
     # 1. Given the site is new and connected
     # 2. When site watchdog sending method is changed to do nothing
     # 3. Then the supervisor should disconnect

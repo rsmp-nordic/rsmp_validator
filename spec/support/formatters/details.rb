@@ -22,7 +22,7 @@ class Details < FormatterBase
   end
 
   def example_pending notification
-    @output << colorize("  Pending\n\n", :pending)
+    @output << colorize("    Pending\n\n", :pending)
   end
 
   def example_started notification
@@ -30,7 +30,7 @@ class Details < FormatterBase
   end
 
   def example_passed notification # ExampleNotification
-    @output << colorize("  Passed\n\n",:success)
+    @output << colorize("    Passed\n\n",:success)
   end
 
   def example_failed notification   

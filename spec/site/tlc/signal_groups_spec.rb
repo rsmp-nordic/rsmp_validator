@@ -9,7 +9,7 @@ RSpec.describe 'Traffic Light Controller' do
     it 'is ordered to green with M0010', :important, sxl: '>=1.0.8' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        set_signal_start 'True'
+        set_signal_start
       end
     end
 
@@ -19,7 +19,7 @@ RSpec.describe 'Traffic Light Controller' do
     it 'is ordered to red with M0011', :important, sxl: '>=1.0.8' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        set_signal_stop 'True'
+        set_signal_stop
       end
     end
 

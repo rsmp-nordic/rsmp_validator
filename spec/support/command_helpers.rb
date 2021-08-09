@@ -20,38 +20,38 @@ module CommandHelpers
     end
   end
 
-  def set_signal_start status
+  def set_signal_start
     require_security_codes
-    Validator.log "Start of signal group. Orders a signal group to green.", level: :test
+    Validator.log "Order signal group to green", level: :test
     command_list = build_command_list :M0010, :setStart, {
       securityCode: Validator.config['secrets']['security_codes'][2],
-      status: status
+      status: 'True'
     }
     indx = 0
     component = Validator.config['components']['signal_group'].keys[indx]
-    send_command_and_confirm @task, command_list, "intention to set start of signal group #{indx}.", component
+    send_command_and_confirm @task, command_list, "intention to start signal group #{indx}.", component
   end
 
-  def set_signal_stop status
+  def set_signal_stop
     require_security_codes
-    Validator.log "Stop of signal group. Orders a signal group to red.", level: :test
+    Validator.log "Order signal group to red", level: :test
     command_list = build_command_list :M0011, :setStop, {
       securityCode: Validator.config['secrets']['security_codes'][2],
-      status: status
+      status: 'True'
     }
     indx = 0
     component = Validator.config['components']['signal_group'].keys[indx]
-    send_command_and_confirm @task, command_list, "intention to set stop of signal group #{indx}.", component
+    send_command_and_confirm @task, command_list, "intention to stop signal group #{indx}.", component
   end
 
   def set_signal_start_or_stop status
-    Validator.log "Request start or stop of a series of signal groups", level: :test
+    Validator.log "Request series of signal groups to start/stop", level: :test
     command_list = build_command_list :M0012, :setStart, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
     }
     send_command_and_confirm @task, command_list,
-      "intention to request start or stop of a series of signal groups"
+      "intention to request start/stop of a series of signal groups"
   end
 
   def set_plan plan
@@ -150,7 +150,7 @@ module CommandHelpers
       status: status,
       mode: mode
     }
-    send_command_and_confirm @task, command_list, "intention to force detector logic #{status} to #{mode}", component
+    send_command_and_confirm @task, command_list, "intention to force detector logic to #{mode}", component
   end
 
   def switch_plan plan
