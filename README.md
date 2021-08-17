@@ -8,4 +8,4 @@ The validator is based on RSpec and written in Ruby. It uses the `rsmp` gem to h
 Test are written as RSpec specifications and it's easy to add new tests if needed.
 
 # Documentation
-See the [detailed documentation](guides/introduction.md).
+See the [detailed documentation](https://rsmp-nordic.github.io/rsmp_validator).
