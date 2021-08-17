@@ -6,4 +6,5 @@ gem 'activesupport'
 
 group :development do
   gem 'yard'
+  gem 'rake'
 end
