@@ -1,0 +1,21 @@
+// $font-factor: 1.0;
+// 
+// $font-size-1: $font-size-1 * $font-factor;
+// $font-size-1-sm: $font-size-1-sm * $font-factor;
+// $font-size-2: $font-size-2 * $font-factor;
+// $font-size-3: $font-size-3 * $font-factor;
+// $font-size-4: $font-size-4 * $font-factor;
+// $font-size-5: $font-size-5 * $font-factor;
+// $font-size-6: $font-size-6 * $font-factor;
+// $font-size-7: $font-size-7 * $font-factor;
+// $font-size-8: $font-size-8 * $font-factor;
+// $font-size-9: $font-size-9 * $font-factor;
+// $font-size-10: $font-size-10 * $font-factor;
+// $font-size-10-sm: $font-size-10-sm * $font-factor;
+
+$purple-000: #6E448E;
+$purple-100: scale-color($purple-000,$lightness:-10%);
+$purple-200: scale-color($purple-000,$lightness:-20%);
+$purple-300: scale-color($purple-000,$lightness:-30%);
+
+$link-color: scale-color($purple-000,$lightness:20%);
