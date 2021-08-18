@@ -1,0 +1,26 @@
+/* Override this file with custom rules */
+
+body {
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+.note.title { 
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+h3.inherited { 
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+
+li.odd, li.even { background: #fafafa; }
+.item:hover { background: #f0f0f0; }
+li.clicked > .item { background: #f0f0f0; font-weight: bold; }
+
+a, a:visited,
+#full_list_nav,
+#full_list_nav a,
+#nav a:visited,
+#menu a:hover,
+#footer a:hover,
+#content a,
+#content a:visited,
+.summary_desc .object_link a,
+.docstring .object_link a
+{
+  color: #8d5db1;
+}

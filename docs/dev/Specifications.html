@@ -1,0 +1,2312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Specs: Specifications
+  
+    &mdash; Documentation by YARD 0.9.26
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" />
+
+  <link rel="stylesheet" href="css/rspec.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "Specifications";
+  relpath = '';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="_index.html">Index (S)</a> &raquo;
+    
+    
+    <span class="title">Specifications</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><div>
+  <div>Contexts</div>
+  
+    
+    <div class='context'>
+  <div class='title'>Traffic Light Controller</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>IO</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>Input</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is activated with M0006
+  </div>
+  <!-- <div>inputs = Validator.config['items']['inputs']
+        skip("No inputs configured") if inputs.nil? || inputs.empty?
+        Validator::Site.connected do |task,supervisor,site|
+          prepare task, site
+          inputs.each { |input| switch_input input }
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>forcing</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0029
+  </div>
+  <!-- <div>request_status_and_confirm "forced input status",
+            { S0029: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is set with M0019
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+            status = 'False'
+            input = 1
+            inputValue = 'True'
+            prepare task, site
+            force_input status, input, inputValue
+          end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>series</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is activated with M0013
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+            status = "5,4134,65;511"
+            prepare task, site
+            set_series_of_inputs status
+          end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>sensitivity</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is set with M0021
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+            status = 'False'
+            output = 1
+            outputValue = 'True'
+            prepare task, site
+            set_trigger_level status
+          end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>Output</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>forcing</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0030
+  </div>
+  <!-- <div>request_status_and_confirm "forced output status",
+            { S0030: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is set with M0020
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+            status = 'False'
+            output = 1
+            outputValue = 'True'
+            prepare task, site
+            force_output status, output, outputValue
+          end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>Alarm</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    A0302 detector/logic error is triggered
+  </div>
+  <!-- <div>require_scripts
+      Validator::Site.connected do |task,supervisor,site|
+        component = Validator.config['components']['detector_logic'].keys.first
+        system(Validator.config['scripts']['activate_alarm'])
+        site.log "Waiting for alarm", level: :test
+        start_time = Time.now
+        message, response = nil,nil
+        expect do
+          response = site.wait_for_alarm task, component: component, aCId: 'A0302',
+            aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
+        end.to_not raise_error, "Did not receive alarm"
+
+        delay = Time.now - start_time
+        site.log "alarm confirmed after #{delay.to_i}s", level: :test
+        system(Validator.config['scripts']['deactivate_alarm'])
+
+        alarm_time = Time.parse(response[:message].attributes["aTs"])
+        expect(alarm_time).to be_within(1.minute).of Time.now.utc
+        expect(response[:message].attributes['rvs']).to eq([{
+          "n":"detector","v":"1"},
+          {"n":"type","v":"loop"},
+          {"n":"errormode","v":"on"},
+          {"n":"manual","v":"True"},
+          {"n":"logicerror","v":"always_off"}
+        ])
+      ensure
+        system(Validator.config['scripts']['deactivate_alarm'])
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is acknowledged
+  </div>
+  <!-- <div>skip "Don't yet have a way to trigger alarms on the equipment"
+      require_scripts
+      Validator::Site.connected do |task,supervisor,site|
+        component = Validator.config['components']['detector_logic'].keys.first
+        system(Validator.config['scripts']['activate_alarm'])
+        site.log "Waiting for alarm", level: :test
+        start_time = Time.now
+        message, response = nil,nil
+        expect do
+          response = site.wait_for_alarm task, component: component, aCId: 'A0302',
+            aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
+        end.to_not raise_error, "Did not receive alarm"
+
+        alarm_code_id = 'A0302'
+        message = site.send_alarm_acknowledgement Validator.config['main_component'], alarm_code_id
+
+        delay = Time.now - start_time
+        site.log "alarm confirmed after #{delay.to_i}s", level: :test
+
+        expect do
+          response = @site.wait_for_alarm_acknowledged_response message: message, component: Validator.config['main_component'], timeout: Validator.config['timeouts']['alarm']
+        end.to_not raise_error
+
+        expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
+        expect(response).to be_a(RSMP::AlarmAcknowledgedResponse)
+        expect(response.attributes['cId']).to eq(Validator.config['main_component'])
+      ensure 
+        system(Validator.config['scripts']['deactivate_alarm'])
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is buffered during disconnect
+  </div>
+  <!-- <div>require_scripts
+      component = Validator.config['components']['detector_logic'].keys.first
+      Validator::Site.isolated do |task,supervisor,site|
+      end
+      # Activate alarm
+      system(Validator.config['scripts']['activate_alarm'])
+
+      Validator::Site.isolated do |task,supervisor,site|
+        site = site
+        log_confirmation "Waiting for alarm" do
+          message, response = nil,nil
+          expect do
+            response = site.wait_for_alarm task, component: component, aCId: 'A0302',
+              aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
+          end.to_not raise_error, "Did not receive alarm"
+
+        end
+        system(Validator.config['scripts']['deactivate_alarm'])
+
+        alarm_time = Time.parse(response[:message].attributes["aTs"])
+        expect(alarm_time).to be_within(1.minute).of Time.now.utc
+        expect(response[:message].attributes['rvs']).to eq([{
+          "n":"detector","v":"1"},
+          {"n":"type","v":"loop"},
+          {"n":"errormode","v":"on"},
+          {"n":"manual","v":"True"},
+          {"n":"logicerror","v":"always_off"}
+        ])
+      ensure
+        system(Validator.config['scripts']['deactivate_alarm'])
+      end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>Clock</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    can be read with S0096
+  </div>
+  <!-- <div>request_status_and_confirm "current date and time",
+        { S0096: [
+          :year,
+          :month,
+          :day,
+          :hour,
+          :minute,
+          :second,
+        ] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    can be set with M0104
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        set_clock(CLOCK)
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is used for S0096 status response
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        with_clock_set CLOCK do
+          status_list = { S0096: [
+            :year,
+            :month,
+            :day,
+            :hour,
+            :minute,
+            :second,
+          ] }
+          request, response = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
+            timeout: Validator.config['timeouts']['status_update']
+          }
+          status = "S0096"
+
+          received = Time.new(
+            response[{"sCI" => status, "n" => "year"}]["s"],
+            response[{"sCI" => status, "n" => "month"}]["s"],
+            response[{"sCI" => status, "n" => "day"}]["s"],
+            response[{"sCI" => status, "n" => "hour"}]["s"],
+            response[{"sCI" => status, "n" => "minute"}]["s"],
+            response[{"sCI" => status, "n" => "second"}]["s"],
+            'UTC'
+          )
+
+          max_diff =
+            Validator.config['timeouts']['command_response'] + 
+            Validator.config['timeouts']['status_response']
+
+          diff = received - CLOCK
+          diff = diff.round
+          expect(diff.abs).to be <= max_diff, 
+            "Clock reported by S0096 is off by #{diff}s, should be within #{max_diff}s"
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is used for S0096 response timestamp
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        with_clock_set CLOCK do
+          status_list = { S0096: [
+            :year,
+            :month,
+            :day,
+            :hour,
+            :minute,
+            :second,
+          ] }
+          
+          request, response, messages = site.request_status Validator.config['main_component'],
+            convert_status_list(status_list),
+            collect: {
+              timeout: Validator.config['timeouts']['status_response']
+            }
+
+          message = messages.first
+          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
+          diff = Time.parse(message.attributes['sTs']) - CLOCK
+          diff = diff.round          
+          expect(diff.abs).to be <= max_diff,
+            "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s"
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is used for aggregated status timestamp
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        with_clock_set CLOCK do
+          request, response = site.request_aggregated_status Validator.config['main_component'], collect: {
+            timeout: Validator.config['timeouts']['status_response']
+          }
+          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
+          diff = Time.parse(response.attributes['aSTS']) - CLOCK
+          diff = diff.round
+          expect(diff.abs).to be <= max_diff,
+            "Timestamp of aggregated status is off by #{diff}s, should be within #{max_diff}s"
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is used for M0001 response timestamp
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        with_clock_set CLOCK do
+          request, response, messages = set_functional_position 'NormalControl'
+          message = messages.first
+          max_diff = Validator.config['timeouts']['command_response'] * 2
+          diff = Time.parse(message.attributes['cTS']) - CLOCK
+          diff = diff.round
+          expect(diff.abs).to be <= max_diff,
+            "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s"
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is used for M0104 response timestamp
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        with_clock_set CLOCK do
+          request, response, messages = set_functional_position 'NormalControl'
+          message = messages.first
+          max_diff = Validator.config['timeouts']['command_response']
+          diff = Time.parse(message.attributes['cTS']) - CLOCK
+          diff = diff.round
+          expect(diff.abs).to be <= max_diff,
+            "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s"
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is used for alarm timestamp
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        require_scripts
+        prepare task, site
+        with_clock_set CLOCK do
+          component = Validator.config['components']['detector_logic'].keys.first
+          system(Validator.config['scripts']['activate_alarm'])
+          site.log "Waiting for alarm", level: :test
+          response = site.wait_for_alarm task, timeout: Validator.config['timeouts']['alarm']
+          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
+          diff = Time.parse(response.attributes['sTs']) - CLOCK
+          diff = diff.round
+          expect(diff.abs).to be <= max_diff,
+            "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s"
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is used for watchdog timestamp
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        with_clock_set CLOCK do
+          Validator.log "Checking watchdog timestamp", level: :test
+          response = site.collect task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
+          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
+          diff = Time.parse(response.attributes['wTs']) - CLOCK
+          diff = diff.round
+          expect(diff.abs).to be <= max_diff,
+            "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s"
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>Operation</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>control mode</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0020
+  </div>
+  <!-- <div>request_status_and_confirm "control mode",
+          { S0020: [:controlmode,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>startup status</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0005
+  </div>
+  <!-- <div>request_status_and_confirm "traffic controller starting (true/false)",
+          { S0005: [:status] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>emergency stage</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0006
+  </div>
+  <!-- <div>request_status_and_confirm "emergency stage status",
+          { S0006: [:status,:emergencystage] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>switched on</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    read with S0007
+  </div>
+  <!-- <div>request_status_and_confirm "controller switch on (dark mode=off)",
+          { S0007: [:status,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>manual control</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0008
+  </div>
+  <!-- <div>request_status_and_confirm "manual control status",
+          { S0008: [:status,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>fixed time control</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0009
+  </div>
+  <!-- <div>request_status_and_confirm "fixed time control status",
+          { S0009: [:status,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    can be activated with M0007
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          prepare task, site
+          switch_fixed_time 'True'
+          switch_fixed_time 'False'
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>isolated control</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0010
+  </div>
+  <!-- <div>request_status_and_confirm "isolated control status",
+          { S0010: [:status,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>yellow flash</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    can be read with S0011
+  </div>
+  <!-- <div>request_status_and_confirm "yellow flash status",
+          { S0011: [:status,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    can be activated with M0001
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          prepare task, site
+          switch_yellow_flash
+          switch_normal_control
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>all red</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    can be read with S0012
+  </div>
+  <!-- <div>request_status_and_confirm "all-red status",
+          { S0012: [:status,:intersection] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>police key</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    can be read with S0013
+  </div>
+  <!-- <div>request_status_and_confirm "police key",
+          { S0013: [:status] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>dark mode</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    can be activated with M0001
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          prepare task, site
+          switch_dark_mode
+          switch_normal_control
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>System</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>operator logged in/out of OP-panel</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0091
+  </div>
+  <!-- <div>request_status_and_confirm "operator logged in/out OP-panel",
+          { S0091: [:status, :user] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>operator logged in/out of web-interface</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0092
+  </div>
+  <!-- <div>request_status_and_confirm "operator logged in/out web-interface",
+          { S0092: [:status, :user] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>version of traffic controller</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0095 
+  </div>
+  <!-- <div>request_status_and_confirm "version of traffic controller",
+          { S0095: [:status] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>restart</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is triggered by M0004
+  </div>
+  <!-- <div>Validator::Site.isolated do |task,supervisor,site|
+          prepare task, site
+          #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
+          set_restart
+          site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
+        end
+
+        # NOTE
+        # when a remote site closes the connection, our site proxy object will stop.
+        # when the site reconnects, a new site proxy object will be created.
+        # this means we can't wait for the old site to become ready
+        # it also means we need a new Validator::Site.
+        Validator::Site.isolated do |task,supervisor,site|
+          prepare task, site
+          site.wait_for_state :ready, Validator.config['timeouts']['ready']
+          wait_normal_control
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>security code</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is set with M0103
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          prepare task, site
+          set_security_code 1
+          set_security_code 2
+        end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is rejected when wrong
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          prepare task, site
+          wrong_security_code 
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>Subscription</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    can be turned on and off for S0001
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        component = Validator.config['main_component']
+        status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus','uRt'=>'1' }]
+        site.subscribe_to_status component, status_list, collect: {
+          timeout: Validator.config['timeouts']['status_update']
+        }
+      ensure
+        unsubscribe_list = status_list.map { |item| item.slice('sCI','n') }
+        site.unsubscribe_to_status component, unsubscribe_list
+      end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>Signal Program</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>running</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0014
+  </div>
+  <!-- <div>request_status_and_confirm "current time plan",
+          { S0014: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is set with M0002
+  </div>
+  <!-- <div>plans = Validator.config['items']['plans']
+        skip("No time plans configured") if plans.nil? || plans.empty?
+        Validator::Site.connected do |task,supervisor,site|
+          prepare task, site
+          plans.each { |plan| switch_plan plan }
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>list</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0022
+  </div>
+  <!-- <div>request_status_and_confirm "list of time plans",
+          { S0022: [:status] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>week table</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0026
+  </div>
+  <!-- <div>request_status_and_confirm "week time table",
+          { S0026: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is set with M0016
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          status = "0-1,6-2"
+          prepare task, site
+          set_week_table status
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>day table</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0027
+  </div>
+  <!-- <div>request_status_and_confirm "command table",
+          { S0027: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is set with M0017
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          status = "12-1-12-59,1-0-23-12"
+          prepare task, site
+          set_time_table status
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>version</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0097
+  </div>
+  <!-- <div>request_status_and_confirm "version of traffic program",
+          { S0097: [:timestamp,:checksum] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>dynamic bands</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0023
+  </div>
+  <!-- <div>request_status_and_confirm "command table",
+          { S0023: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is set with M0014
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          plan = "1"
+          status = "10,10"
+          prepare task, site
+          set_dynamic_bands status, plan
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>offset</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0024
+  </div>
+  <!-- <div>request_status_and_confirm "offset time",
+          { S0024: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is set with M0015
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          plan = 1
+          status = 255
+          prepare task, site
+          set_offset status, plan
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>cycle time</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0028
+  </div>
+  <!-- <div>request_status_and_confirm "cycle time",
+          { S0028: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is set with M0018
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          status = 5
+          plan = 0
+          prepare task, site
+          set_cycle_time status, plan
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>Signal Group</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is ordered to green with M0010
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        set_signal_start
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is ordered to red with M0011
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        set_signal_stop
+      end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>state</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0001
+  </div>
+  <!-- <div>request_status_and_confirm "signal group status",
+          { S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>red/green predictions</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0025
+  </div>
+  <!-- <div>request_status_and_confirm "time-of-green/time-of-red",
+          { S0025: [
+              :minToGEstimate,
+              :maxToGEstimate,
+              :likelyToGEstimate,
+              :ToGConfidence,
+              :minToREstimate,
+              :maxToREstimate,
+              :likelyToREstimate
+          ] },
+          Validator.config['components']['signal_group'].keys.first</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>series</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    can be started/stopped with M0012
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          prepare task, site
+          set_signal_start_or_stop '5,4134,65;5,11'
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>list</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>Detector Logic</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>list</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>status</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0002
+  </div>
+  <!-- <div>request_status_and_confirm "detector logic status",
+          { S0002: [:detectorlogicstatus] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>trigger level sensitivity</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is set with S0031
+  </div>
+  <!-- <div>request_status_and_confirm "loop detector sensitivity",
+          { S0031: [:status] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>Emergency Route</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    can be activated with M0005
+  </div>
+  <!-- <div>emergency_routes = Validator.config['items']['emergency_routes']
+      skip("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        emergency_routes.each { |emergency_route| switch_emergency_route emergency_route.to_s }
+      end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>Traffic Data</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>on number of vehicles</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    for a single detector is read with S0201
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: number of vehicles",
+          { S0201: [:starttime,:vehicles] },
+          Validator.config['components']['detector_logic'].keys.first</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    for all detectors is read with S0205
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: number of vehicles",
+          { S0205: [:start,:vehicles] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>on vehicle speed</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    for a single detector is read with S0202
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: vehicle speed",
+          { S0202: [:starttime,:speed] },
+          Validator.config['components']['detector_logic'].keys.first</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    for all detectors is read with S0206
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: vehicle speed",
+          { S0206: [:start,:speed] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>on occupancy</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    for a single detector is read with S0203
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: occupancy",
+          { S0203: [:starttime,:occupancy] },
+          Validator.config['components']['detector_logic'].keys.first</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    for all detectors is read with S0207
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: occupancy",
+          { S0207: [:start,:occupancy] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>on classification</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    for a single detector is read with S0204
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: classification",
+          { S0204: [
+              :starttime,
+              :P,
+              :PS,
+              :L,
+              :LS,
+              :B,
+              :SP,
+              :MC,
+              :C,
+              :F
+          ] },
+          Validator.config['components']['detector_logic'].keys.first</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    for all detectors is read with S0208
+  </div>
+  <!-- <div>request_status_and_confirm "traffic counting: classification",
+          { S0208: [
+              :start,
+              :P,
+              :PS,
+              :L,
+              :LS,
+              :B,
+              :SP,
+              :MC,
+              :C,
+              :F
+          ] }</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>Traffic Situation</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>active</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is read with S0015
+  </div>
+  <!-- <div>request_status_and_confirm "current traffic situation",
+          { S0015: [:status] }</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is set with M0003
+  </div>
+  <!-- <div>situations = Validator.config['items']['traffic_situations']
+        skip("No traffic situations configured") if situations.nil? || situations.empty?
+        Validator::Site.connected do |task,supervisor,site|
+          prepare task, site
+          situations.each { |traffic_situation| switch_traffic_situation traffic_situation.to_s }
+        end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>list</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div>
+  
+    
+    <div class='context'>
+  <div class='title'>Site</div>
+  
+  
+  <ul class='context-specifications'>
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+    
+    
+    <li class='odd'><div class='context'>
+  <div class='title'>Connection Sequence</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is correct for rsmp version 3.1.1
+  </div>
+  <!-- <div>check_sequence '3.1.1'</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is correct for rsmp version 3.1.2
+  </div>
+  <!-- <div>check_sequence '3.1.2'</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is correct for rsmp version 3.1.3
+  </div>
+  <!-- <div>check_sequence '3.1.3'</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    is correct for rsmp version 3.1.4
+  </div>
+  <!-- <div>check_sequence '3.1.4'</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    is correct for rsmp version 3.1.5
+  </div>
+  <!-- <div>check_sequence '3.1.5'</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+    
+    
+    <li class='even'><div class='context'>
+  <div class='title'>Aggregated Status</div>
+  
+  
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    can be requested
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        log_confirmation "request aggregated status" do
+          site.request_aggregated_status Validator.config['main_component'], collect: {
+            timeout: Validator.config['timeouts']['status_response']
+          }
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  </ul>
+</div></li>
+    
+    
+    
+  
+  </ul>
+</div>
+  
+</div></div>
+
+      <div id="footer">
+  Generated on Wed Aug 18 16:02:24 2021 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.26 (ruby-3.0.1).
+</div>
+
+    </div>
+  </body>
+</html>

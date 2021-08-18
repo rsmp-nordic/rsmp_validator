@@ -1,5 +1,5 @@
 desc "Build documentation with YARD"
-task :docs do
+task :yard do
 	system 'bundle exec yardoc spec/site -o docs/dev'
 end
 
