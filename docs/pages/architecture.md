@@ -12,7 +12,7 @@ A RSMP supervisor will be started by the validator and the site is expected to c
 
 Once the site has connected, tests will be run to validate aspects like connection sequence, commmands, alarms, etc.
 
-![Overview](/assets/images/rsmp_validator_overview.png "RSMP Validator Overview")
+![Overview]({{ site.baseurl }}/assets/images/rsmp_validator_overview.png "RSMP Validator Overview")
 
 To speed up testing, the connection will be kept open across tests when possible. However, tests specify whether the connection must be closedd and reestablished before the test is run. This is useful when testing connection sequence, etc.
 
