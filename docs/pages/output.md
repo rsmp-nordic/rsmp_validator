@@ -1,8 +1,8 @@
 ---
 layout: page
-title: Output
-permalink: /output/
-parent: Get Started
+title: Reporting
+permalink: /reporting/
+parent: Usage
 nav_order: 4
 ---
 

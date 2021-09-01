@@ -2,7 +2,7 @@
 layout: page
 title: Configuration
 permalink: /config/
-parent: Get Started
+parent: Usage
 nav_order: 2
 ---
 

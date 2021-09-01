@@ -2,7 +2,7 @@
 layout: page
 title: Installing
 permalink: /install/
-parent: Get Started
+parent: Usage
 nav_order: 1
 ---
 
