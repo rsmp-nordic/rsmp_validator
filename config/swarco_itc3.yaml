@@ -28,9 +28,6 @@ items:
   traffic_situations: []
   emergency_routes: [1]
   inputs: [1]
-scripts:
-  activate_alarm:
-  deactivate_alarm:
 secrets:
   security_codes:
     1: ''
