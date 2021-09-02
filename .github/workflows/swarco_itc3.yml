@@ -35,6 +35,8 @@ jobs:
         bundler-cache: true # runs 'bundle install' and caches installed gems
     - name: Run tests
       run: bundle exec rspec spec/site
+      env:
+        SITE_CONFIG: config/swarco_itc3.yaml
     - name: Rename validation.log
       if: always()
       run: |
