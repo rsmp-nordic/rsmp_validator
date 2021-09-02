@@ -29,8 +29,8 @@ items:
   emergency_routes: [1]
   inputs: [1]
 scripts:
-  activate_alarm: '/home/i0davla/activate_alarm.sh'
-  deactivate_alarm: '/home/i0davla/deactivate_alarm.sh'
+  activate_alarm:
+  deactivate_alarm:
 secrets:
   security_codes:
     1: ''
