@@ -1,22 +1,23 @@
 ---
 layout: page
-title: Architecture
+title: How it Works
 permalink: /architecture/
-nav_order: 1
+nav_order: 2
 ---
 
-# Architecture
-The RSMP Validator is a command-line tool for validating RSMP implementations. It's based on RSpec and tests comes with a suite of tests written in the Ruby language.
+# How it Works
+The RSMP Validator is a command-line tool for validating RSMP implementations. It's based on RSpec with tests written in the Ruby language.
 
-The validator performs integration testing, not unit testing. Because it's testing external systems, the equipment is not guaranteed to be in the same state every time you run a test. Most tests therefore start be resetting certain settings in the equipment.
+The `rsmp` gem is used to handle RSMP communication.
 
-## Overview
-The RSMP Validator is based on RSpec, a testing framework written in Ruby. It uses the `rsmp` gem to handle RSMP communication.
+The validator performs integration testing, not unit testing. The equipment, you test is not guaranteed to be in the same state every time you run a test. Most tests therefore start be resetting certain settings in the equipment to a a known state.
 
-The validator includes helper classes that provide an interface to the local RSMP supervisor. This local supervisor can in turn be used to exchange message with the remote RSMP site.
+## Flow
+The RSMP Validator consists of RSpec, the individual tests and some some helper classes.
+
+Then you run tests, a local RSMP supervisor is started, to communicate with the site you're testing. The helper classes provide an interface to the supervisor. This local supervisor can in turn be used to exchange message with the remote  site you're testing.
 
 ![Overview]({{ site.baseurl }}/assets/images/flow.png "RSMP Validator Flow")
-
 
 1. Testing is initiated with the `rspec` command. RSpec runs each tests, one after the other.
 2. The test uses a helper to wait for the site to connect. The helper will start the local RSMP supervisor if it's not already running.
@@ -25,43 +26,122 @@ The validator includes helper classes that provide an interface to the local RSM
 5. When the supervisor receives a reponse that the test is waiting for, it's passed to the test. The test can then e.g. check that the response is correct. If a response is not received within the defined timeout, the test fails.
 6. The test status is reported back to RSpec. RSpec collects results from all tests and generates a report.
 
-## Test Anatomy
-Each test is is RSpec _specification_, written in Ruby.
+## Understanding Tests
+Tests are written as RSpec specifications in the Ruby language.
 
-For example, this test verifies that a traffic light controller can be put into yellow flash, and afterwards be but back to normal control:
+RSpec specifications use [expectations](https://relishapp.com/rspec/rspec-expectations/docs) to check expected outcomes.
+
+### Connecting to the Site 
+The helper `Validator::Site` is used to wait for a connection to the site:
 
 ```ruby
-# Verify that we can activate yellow flash
-it 'M0001 set dark mode', sxl: '>=1.0.7' do |example|
+it 'connects' do
   Validator::Site.connected do |task,supervisor,site|
-    prepare task, site
-    switch_yellow_flash
-    switch_normal_control
+    # site is now connected. ready for testing!
   end
 end
 ```
 
-Helper methods typically sends RSMP mesages and verifies responses. For example, the method `switch_yellow_flash` used above first send an M0001 command and then subscribe to the S0011 status to check that the mode actually switches to yellow flash within a defined time period. Any errors will cause the test to abort and flagged as failed.
+An RSMP connection is always initiated by the site, not the supervisor. The retry interval can often be several minutes or more. Reestablishing the RSMP connection in each test would therefore be very slow.
 
-For traffic light controllers testing will attempt to change signal plans, force detector logics, restart the controller, etc. It is therefore **not** recommended to test equipment that's in use on street.
+To speed up testing `Validator::Site` can keep the RSMP connection open between tests.
 
-## RSMP Connections
-The RSMP communication is handled by the [rsmp gem](https://github.com/rsmp-nordic/rsmp).
+The example above uses `Validator::Site#connected`. If the previous test left the connection open, it's resused, otherwise it waits for the site to reconnect.
 
-To speed up testing, the connection will be kept open across tests when possible. However, each tests can specify whether the connection must be closed and reestablished before the test is run. This is useful when testing connection sequence, etc.
+A test can also use `Validator::Site#reconnected` to request that the RSMP connection is closed and restablished before continuing with the test, or `Validator::Site#disconnected` to ensure that the connection is closed. See the documentation of the [TestSite]({% link pages/test_site.md %}) helper for details. 
 
-## JSON Schema validation
-All RSMP messages are checked against the RSMP JSON Schema using the [rsmp_schemer gem](https://github.com/rsmp-nordic/rsmp_schemer) to validate the format, attribute names, etc.
+### Interacting with the Site
+`Validator::Site#connected` and friends will return a `site` object which can be used to communicate with the site using the interface provided by the `rsmp` gem. For example you can send RSMP commands, wait for responses, subscribe to statuses, etc.
+
+### Exceptions and Timeouts
+Timeouts are essential when testing external systems. When you send a command or request, you expect a respons within a certain amount of time.
+
+These timeouts must be defined in the test [configuration]({% link pages/configuring.md %}).
+
+When you use the `rsmp` gem to wait for RSMP message, you msut provide a timeout. If the desired message is not received in time, an exceptions is raised. 
+
+Often, you will not need to include any execption handling in your test code. If an exception is raised, the test will abort and RSpec will catch the error and move on to the next test.
+
+### Configurations
+Before running tests, you need to setup a configuration for the equipment you're testing. The configuration defines things like timeouts, RSMP components, etc.
+
+The configation is stored as a YAML file and loaded into a Ruby object. A test can access the configurations using `Validator.config`. For ecample, a test might access a specific watchdog timeout using:
+
+```ruby
+timeout = Validator.config['timeouts']['watchdog']
+```
+
+### Logging
+During testing, a log is genereted by RSpec. It's often useful to print to the log, for example to print information about what steps are being performed by the test. If a test fails, this will make it easier to understand the log file.
+
+```ruby
+Validator.log "Checking watchdog timestamp", level: :test
+```
+
+### Example
+The test below checks that a Traffic Light Controller responds correctly to setting the clock.
+
+First `Validator::Site.connected` is used to wait for a connection.
+
+The helper method `with_clock_set` is then used to send an RSMP command to set the clock in a TLC. 
+
+Then the method `site.collect` is used to to wait for a Watchdog message.
+
+Finally `expect()` is used to check that the timestamp close enough to what we expect, allowiwing for a bit inaccuracy due to network lag.
+
+```ruby
+RSpec.describe "Traffic Light Controller" do
+  include CommandHelpers
+  include StatusHelpers
+
+  describe 'Clock' do
+    CLOCK = Time.new 2020,9,29,17,29,51,'+00:00'
+
+    it 'is used for watchdog timestamp', sxl: '>=1.0.7' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        with_clock_set CLOCK do
+          Validator.log "Checking watchdog timestamp", level: :test
+          response = site.collect task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
+          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
+          diff = Time.parse(response.attributes['wTs']) - CLOCK
+          diff = diff.round
+          expect(diff.abs).to be <= max_diff,
+            "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s"
+        end
+      end
+    end
+
+  end
+end
+```
+
+Note that there is no code for handling exceptions or errors. Any error will cause the test to abort. The error will be caught and recorded by RSpec. 
+### Helper methods
+Many tests involve similar steps. To avoid duplicating code between tests, the common steps have been factored out as helper methods, located in files in `/spec/support/`.
+
+For example, the method `switch_yellow_flash` first send an M0001 command and then subscribe to the S0011 status to check that the mode actually switches to yellow flash within a defined time period. Any errors will cause the test to abort and flagged as failed.
 
 ## Concurrency
-The validator uses the `rsmp` gem to handle RSMP communication. The `rsmp` gem in turn uses the `async` gem to handle concurrency.
+The validator uses the [`rsmp`](https://github.com/rsmp-nordic/rsmp) gem to handle RSMP communication. To handle concurrency, the `rsmp` gem in turn uses the [`async`](https://github.com/socketry/async) gem, an asynchronous event-driven reactor.
 
-The RSMP supervisor therefore runs inside an Async event-reactor. The reactor must be stopped between test, to give RSpec an option to run and move on to the next test. The TestSite handles pausing and resuming the event reactor between tests.
+The local RSMP supervisor therefore runs inside an Async reactor. The reactor must be stopped between test, to give RSpec an chance to run and move on to the next test. The TestSite helper handles pausing the event reactor between tests.
 
-This [TestSite]({% link pages/test_site.md %}) class handles running the RSMP supervisor that that site connects to, and provides a few methods that that can be used in tests to wait for the site to be connected (or disconnected).
+It also means that you cannot usually interact with the RSMP site outside the `Validator::Site#connected` block.
 
-## Background Messages
+## JSON Schema Validation
 RSMP is based on TCP sockets, not HTTP. This means that messages can be send in both directions at any time. 
+ 
+RSMP messages that are not directly related to the currently running test are often exchanged. For example, watchdog or status messages might be send by the site at any time during a test, and acknowledgements are send back by the supervisor.
 
-RSMP messages that are not directly related to the currently running tests is often exchanged. For example, watchdog or status messages might be send by the site during testing, and acknowledgements are send back by the supervisor. Such message are typically ignored by the test, because the test will only wait for (and validate) to specific messages related to the current test flow.
+Such message are typically simply ignored by the test, because the test will only wait for (and validate) specific messages related to the current test flow.
+
+However, all ingoing RSMP messages are checked against the RSMP JSON Schema using the [rsmp_schemer gem](https://github.com/rsmp-nordic/rsmp_schemer) to validate the format, attribute names, etc.
+
+If an incoming message is invalid, a **sentinel warning** will be recorded and also noted in the log.
+
+When all tests have run and the test report is generated, sentinal warnings will be included.
+
+All outgoing messages are also checked against the RSMP JSON Schema. If the message is invalid, you will not be able to send it, unless you specifically disables validation.
+
 

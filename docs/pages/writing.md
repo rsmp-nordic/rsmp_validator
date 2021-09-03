@@ -1,6 +1,6 @@
 ---
 layout: page
-title: 'Writing Tests'
+title: Writing Tests
 permalink: /writing/
 has_children: true
 nav_order: 4

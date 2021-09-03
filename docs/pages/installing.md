@@ -1,12 +1,12 @@
 ---
 layout: page
-title: Installing
+title: Installation
 permalink: /install/
-parent: Usage
+parent: Getting Started
 nav_order: 1
 ---
 
-# Installing
+# Installation
 ## Prerequisites
 Git is used to fetch and update tools, dependencies, etc: https://git-scm.com/downloads
 

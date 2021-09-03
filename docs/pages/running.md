@@ -1,8 +1,8 @@
 ---
 layout: page
-title: Running Tests
-permalink: /running/
-parent: Usage
+title: Testing
+permalink: /testing/
+parent: Getting Started
 nav_order: 3
 ---
 

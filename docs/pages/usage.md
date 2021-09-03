@@ -1,9 +1,9 @@
 ---
 layout: page
-title: 'Usage'
-permalink: /usage/
+title: Getting Started
+permalink: /starting/
 has_children: true
 nav_order: 3
 ---
 
-# Usage
+# Getting Started
