@@ -48,7 +48,7 @@ To speed up testing `Validator::Site` can keep the RSMP connection open between 
 
 The example above uses `Validator::Site#connected`. If the previous test left the connection open, it's resused, otherwise it waits for the site to reconnect.
 
-A test can also use `Validator::Site#reconnected` to request that the RSMP connection is closed and restablished before continuing with the test, or `Validator::Site#disconnected` to ensure that the connection is closed. See the documentation of the [TestSite]({% link pages/test_site.md %}) helper for details. 
+A test can also use `Validator::Site#reconnected` to request that the RSMP connection is closed and restablished before continuing with the test, or `Validator::Site#disconnected` to ensure that the connection is closed. See the documentation of the [TestSite]({{ site.baseurl}}{% link pages/test_site.md %}) helper for details. 
 
 ### Interacting with the Site
 `Validator::Site#connected` and friends will return a `site` object which can be used to communicate with the site using the interface provided by the `rsmp` gem. For example you can send RSMP commands, wait for responses, subscribe to statuses, etc.
@@ -56,7 +56,7 @@ A test can also use `Validator::Site#reconnected` to request that the RSMP conne
 ### Exceptions and Timeouts
 Timeouts are essential when testing external systems. When you send a command or request, you expect a respons within a certain amount of time.
 
-These timeouts must be defined in the test [configuration]({% link pages/configuring.md %}).
+These timeouts must be defined in the test [configuration]({{ site.baseurl}}{% link pages/configuring.md %}).
 
 When you use the `rsmp` gem to wait for RSMP message, you msut provide a timeout. If the desired message is not received in time, an exceptions is raised. 
 

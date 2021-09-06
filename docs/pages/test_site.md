@@ -19,7 +19,7 @@ To avoid waiting for the site to connect for every test, the supervisor and its 
 Only one site is expected to connect to the supervisor. The first
 site connecting will be the one that tests communicate with.
 
-It's recommened to set the maximum number of connected sites in the [supervisor configuration]({% link pages/configuring.md %}) to 1. In case a second site tries to connect (or the same site opens multiple connections) the current test will abort and report an error.
+It's recommened to set the maximum number of connected sites in the [supervisor configuration]({{ site.baseurl}}{% link pages/configuring.md %}) to 1. In case a second site tries to connect (or the same site opens multiple connections) the current test will abort and report an error.
 
 ## Async
 The `rsmp` gem uses the `async` gem to handle concurrency. The supervisor is started inside an Async reactor. To avoid blocking RSpec, the reactor is paused between tests. 
@@ -79,7 +79,7 @@ Use this if you somehow modify the RSMP::SiteProxy or otherwise make the current
 Disconnects the site if connected before calling the block with a single argument `task`, which is an an Async::Task.
 
 ## Configurations
-The TestSite will use the following options from the test [specification]({% link pages/configuring.md %}):
+The TestSite will use the following options from the test [specification]({{ site.baseurl}}{% link pages/configuring.md %}):
 
 ```yaml
 timeouts:
