@@ -1,0 +1,50 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will run rspec
+
+name: Swarco ITC-3
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+
+    runs-on: [ self-hosted, Windows, X64, itc3 ]
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+    - name: Configure test
+      run: |
+        "rsmp_config_path: config/ci/swarco_itc3.yaml" | Out-File 'config/validator.yaml' -Encoding utf8
+    - name: Set up secrets
+      run: |
+        "security_codes:`n    1: ''`n    2: ''" | Out-File 'config/secrets.yaml' -Encoding utf8
+    - name: Set up ruby
+      uses: ruby/setup-ruby@v1
+      env:
+        ImageOS: win19
+      with:
+        ruby-version: 3.0
+        bundler-cache: true # runs 'bundle install' and caches installed gems
+    - name: Run tests
+      run: bundle exec rspec spec/site
+      env:
+        SITE_CONFIG: config/swarco_itc3.yaml
+    - name: Rename validation.log
+      if: always()
+      run: |
+        $date=Get-Date -Format 'yyyy-MM-dd_HH-mm'
+        mv log/validation.log log/validation_itc3_$date.log
+    - name: Upload validation.log
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: rspec validation
+        path: log/validation_itc3_*.log
