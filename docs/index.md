@@ -45,7 +45,7 @@ For other types of equipment, the tests cover only the RSMP Core specification. 
 The validator also includes preliminary support for testing supervisor systems. When testing a supervisor.
 
 ## Do I need to learn the Ruby language?
-No. You can use the validator without writing any Ruby code. Ruby is only needed if you want to [modify or add tests]({{ site.baseurl}}{% link pages/writing.md %}), or you more in-depth understanding of how specific tests work.
+No. You can use the validator without writing any Ruby code. Ruby is only needed if you want to [modify or add tests]({{ site.baseurl}}{% link pages/writing.md %}), or you need more in-depth understanding of how specific tests work.
 
 ## Try It
 Read more [about the validator]({{ site.baseurl}}{% link pages/architecture.md %}) or [get started now]({{ site.baseurl}}{% link pages/usage.md %}).
