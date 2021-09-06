@@ -40,7 +40,7 @@ Traffic Light Controller / Clock / can be read with S0096
 ```
 
 ## Sentinel Warnings
-Sometimes invalid messsage are received that are not direcly related to the currently executing test. For example, alarms or statuses can be received at any time. If such messages do not conform to the RSMP JSON schema, a sentinal warning will be recorded.
+Sometimes invalid message are received that are not direcly related to the currently executing test. For example, alarms or statuses can be received at any time. If such messages do not conform to the RSMP JSON schema, a sentinel warning will be recorded.
 
 The `Brief` and `Details` formats will show sentinel warnings in the summary:
 
@@ -90,7 +90,7 @@ You can set default options for the rspec command by adding them to the file `.r
 --format Details --out log/validation.log
 ```
 
-Now when you run rspec, the output formats will be used automaticallly and you can just run:
+Now when you run rspec, the output formats will be used automatically and you can just run:
 
 ```
 % bundle exec rspec
@@ -99,7 +99,7 @@ Now when you run rspec, the output formats will be used automaticallly and you c
 You can always override options in `.rspec-local` using options on the command-line.
 
 ## Following logs during testing
-In case you direct a formatter to a file, you can use the `tail` command in a separate termimal window to view the progress as tests are running:
+In case you direct a formatter to a file, you can use the `tail` command in a separate terminal window to view the progress as tests are running:
 
 ```
 % tail -f log/validation.log
@@ -113,7 +113,7 @@ The recommended way to document the result of a test run is to collect the follo
 
 - Validator version, including the specific git commit
 - Validator config for the equipment tested
-- Version of the equipment, including relavant OS, software and hardware
-- Configuration in the equiqment
+- Version of the equipment, including relevant OS, software and hardware
+- Configuration in the equipment
 - RSpec output in `Brief` and `Details` format.
 - Log file(s) from the equipment

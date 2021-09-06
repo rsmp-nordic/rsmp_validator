@@ -96,7 +96,7 @@ secrets:                # place secrets or in a separate file, see below
 
 The following settings will be copied into a configuration for the local supervisor: `port`, `sxl`, `intervals`, `timeouts`, `components`, `rsmp_versions`.
 
-The supervisor config will additionaly have `max_sites: 1` and `ips: all` meaning it will allow connections from any ip and with any RSMP site id, but will only allow one site to be connected at a time. Multiple connections will be flagged as an error.
+The supervisor config will also have `max_sites: 1` and `ips: all` meaning it will allow connections from any ip and with any RSMP site id, but will only allow one site to be connected at a time. Multiple connections will be flagged as an error.
 
 See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) for more details about these settings.
 
@@ -150,14 +150,14 @@ secrets:                # place secrets or in a separate file, see below
 Timeouts should be set as low as possible while, still giving the site time to respond correctly before tests times out and report errors.
 
 ## Configuring the actual site/supervisor
-You should make sure that the actual site or supervisor you want to test is configured to match the validator configuration file, ie. that the components match and intervals and timeouts are compatible.
+You should make sure that the actual site or supervisor you want to test is configured to match the validator configuration file, i.e. that the components match and intervals and timeouts are compatible.
 
 When testing a site, you need to configure it to connect to the validator.
-This typically includes setting an ip address and port. If the site and the validator is running in the same machine, the ip adress will typically be `localhost` or `127.0.0.1`.
+This typically includes setting an ip address and port. If the site and the validator is running in the same machine, the ip address will typically be `localhost` or `127.0.0.1`.
 
-When testing a supervisor, you need to configure it to listen for connections on the same port as th validator uses, and make it does reject the connection due to firewalls, ip filtering, or rsmp site id filtering.
+When testing a supervisor, you need to configure it to listen for connections on the same port as the validator uses, and make it does reject the connection due to firewalls, ip filtering, or rsmp site id filtering.
 
-RSMP Traffic Light Controllers be default communicate on port 12111, but to avoid interferring with real installations, the validator uses port 13111 by default. You can use another port if you like, just be sure to configure the equipment and the validator to use the same port.
+RSMP Traffic Light Controllers be default communicate on port 12111, but to avoid interfering with real installations, the validator uses port 13111 by default. You can use another port if you like, just be sure to configure the equipment and the validator to use the same port.
 
 If the site cannot connect to the validator, check the ip and port, and make sure firewalls, etc are not blocking the connection.
 
@@ -166,7 +166,7 @@ Some tests involve commands that require RSMP security codes.
 
 You can place security codes either directly in your config file, or in a separate file.
 
-Note: Files with nnames ending in `_secrets.yaml` are git-ignored.
+Note: Files with names ending in `_secrets.yaml` are git-ignored.
 
 Secrets have the following structure when in a separate file:
 

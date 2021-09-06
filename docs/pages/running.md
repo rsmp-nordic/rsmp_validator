@@ -8,7 +8,7 @@ nav_order: 3
 
 # Running tests
 ## Organization
-Tests are located in the `spec/` folder. They are organized into subfolders and files, according to system type, specification and functional areas.
+Tests are located in the `spec/` folder. They are organized into sub-folders and files, according to system type, specification and functional areas.
 
 ```
 % tree spec -d                          
@@ -37,7 +37,7 @@ Finished in 1.01 seconds (files took 0.64491 seconds to load)
 4 examples, 0 failures
 ```
 
-In this exampple, the tests are running against a TLC emulator from the rsmp gem, running on the local machine, which is why the tests run in just about 1 second.
+In this example, the tests are running against a TLC emulator from the rsmp gem, running on the local machine, which is why the tests run in just about 1 second.
 
 
 ## Filtering Tests
@@ -54,14 +54,14 @@ If you want to store you selection for easy reuse, add them to a file name .rspe
 
  .rspec-local is git ignored, and will therefore not be added to the repo. 
 
-You can also keep diffferent configurations, and pick on when running tests, eg:
+You can also keep different configurations, and pick on when running tests, eg:
 
 ```
 % bundle exec rspec --options my_rspec_options
 ```
 
 ### Running tests again a local Ruby TLC site
-For trying out the specs, you can juse the `rsmp` command from the resmp gem to run a local Ruby TLC site. 
+For trying out the specs, you can just the `rsmp` command from the rsmp gem to run a local Ruby TLC site. 
 
 Because the validator by default listens on port 13111, use should tell the site to connect on this port. You can do this either by editing the configuration, or using the `supervisor` command line option, as shown below.
 

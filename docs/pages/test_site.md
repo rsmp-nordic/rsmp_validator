@@ -19,7 +19,7 @@ To avoid waiting for the site to connect for every test, the supervisor and its 
 Only one site is expected to connect to the supervisor. The first
 site connecting will be the one that tests communicate with.
 
-It's recommened to set the maximum number of connected sites in the [supervisor configuration]({{ site.baseurl}}{% link pages/configuring.md %}) to 1. In case a second site tries to connect (or the same site opens multiple connections) the current test will abort and report an error.
+It's recommended to set the maximum number of connected sites in the [supervisor configuration]({{ site.baseurl}}{% link pages/configuring.md %}) to 1. In case a second site tries to connect (or the same site opens multiple connections) the current test will abort and report an error.
 
 ## Async
 The `rsmp` gem uses the `async` gem to handle concurrency. The supervisor is started inside an Async reactor. To avoid blocking RSpec, the reactor is paused between tests. 
@@ -27,9 +27,7 @@ The `rsmp` gem uses the `async` gem to handle concurrency. The supervisor is sta
 Each RSpec test is run inside a separate Async task.
 
 # Exceptions
-Exceptions in you test code will be cause the test task to stop,
-and re-raise the exception ourside the reactor so that RSpec
-sees it.
+Exceptions in you test code will be cause the test task to stop, and re-raise the exception outside the reactor so that RSpec sees it.
 
 Exceptions can be caused by timeouts or otherwise be related to your test code.
 
@@ -73,7 +71,7 @@ Use this if your test specifically needs to start with a fresh connection. But b
 ## Validator::Site.isolated
 Like `connected`, except that the connection is is closed after the test, before the next test is run.
 
-Use this if you somehow modify the RSMP::SiteProxy or otherwise make the current connection unstable or unusable. Because `isolated` closes the connection after the test, you ensure that the modified RSMP::SiteProxy object is discarted and following tests use a new object.
+Use this if you somehow modify the RSMP::SiteProxy or otherwise make the current connection unstable or unusable. Because `isolated` closes the connection after the test, you ensure that the modified RSMP::SiteProxy object is discarded and following tests use a new object.
 
 ## Validator::Site.disconnected
 Disconnects the site if connected before calling the block with a single argument `task`, which is an an Async::Task.
@@ -87,7 +85,7 @@ timeouts:
     ready: 10      # max seconds from connection to connection ready
 ```
 
-The `ready` options is the time from the site connects, until the intial Version messages etc. have been exchanged and you can start sending other messages to the site.
+The `ready` options is the time from the site connects, until the initial Version messages etc. have been exchanged and you can start sending other messages to the site.
 
 
 
