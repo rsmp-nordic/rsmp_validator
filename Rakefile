@@ -5,13 +5,11 @@ end
 
 desc "Prepare Jekyll documentation branch."
 task :docs do
-	system 'git checkout gh-pages '
-
-	# use --no-overlay to remove deleted files
+	# pull changes from master into gh-pages and commit
+	# use --no-overlay to ensure that deleted files are removed
 	# see https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt---no-overlay
+	system 'git checkout gh-pages'
 	system 'git checkout master --no-overlay -- docs'
-
 	system 'git add .'
-
-	# afterwards, you will usually commit changes and push to github
+	system 'git commit -m "update docs"'
 end
