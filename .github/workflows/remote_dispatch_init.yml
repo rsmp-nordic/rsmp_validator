@@ -1,6 +1,6 @@
 # Run equipment tests in rsmp_implementations
 
-name: Remote Dispatch Action Initiator
+name: Trigger equipment tests
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
   equipment_tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Run equipment tests in rsmp_implementations
+      - name: Trigger equipment tests in rsmp_implementations
         run: |
           curl -X POST https://api.github.com/repos/rsmp-nordic/rsmp_implementations/dispatches \
           -H 'Accept: application/vnd.github.everest-preview+json' \
