@@ -54,25 +54,25 @@ All settings except `components` and `items` can be left out, in which case the 
 port: 13111             # port to listen on
 ips: all                # allowed ip addresses. either 'all' or a list
 rsmp_versions: all      # allowed core version(s). either 'all' or a list
-sxl: tlc                # sxl of the connecting site
+sxl: tlc                # sxl of the connecting site, options are 'core' or 'tlc'
 intervals:
-  timer: 1              # main timer interval (resolution)
-  watchdog: 1           # how often to send watchdog messages
-  update_date: 0        # requested update rate when subscribing to statuses
+  timer: 1              # main timer interval (resolution), in seconds
+  watchdog: 1           # how often to send watchdog messages, in seconds
+  update_date: 0        # requested update rate when subscribing to statuses, in seconds
 timeouts:
-  watchdog: 2           # max time bewteen incoming watchdogs
-  acknowledgement: 2    # max time until acknowledgement is received
-  connect: 1            # max time until site connects
-  ready: 1              # max time until site completes connecton sequence
-  status_response: 1    # max time until site responds to a status request
-  status_update: 1      # max time until site sends a status update
-  subscribe: 1          # max time until site sends a status update
-  command: 1            # max time until a command results in a status update
-  command_response: 1   # max time until site responds to a command request
-  alarm: 1              # max time until site raises an alarm
-  disconnect: 1         # max time until site disconnects
-  shutdown: 1           # max time until site shuts down for a restart
-components:             # list of rsmp components, organized by type and name
+  watchdog: 2           # max time bewteen incoming watchdogs, in seconds
+  acknowledgement: 2    # max time until acknowledgement is received, in seconds
+  connect: 1            # max time until site connects, in seconds
+  ready: 1              # max time until site completes connecton sequence, in seconds
+  status_response: 1    # max time until site responds to a status request, in seconds
+  status_update: 1      # max time until site sends a status update, in seconds
+  subscribe: 1          # max time until site sends a status update, in seconds
+  command: 1            # max time until a command results in a status update, in seconds
+  command_response: 1   # max time until site responds to a command request, in seconds
+  alarm: 1              # max time until site raises an alarm, in seconds
+  disconnect: 1         # max time until site disconnects, in seconds
+  shutdown: 1           # max time until site shuts down for a restart, in seconds
+components:             # list of rsmp components, organized by type and name, in seconds
   main:                 # type
     TC:                 # name. note that this is an (empty) options hash
   signal_group:
@@ -111,7 +111,7 @@ site_id: RN+SI0001      # site id of local site
 supervisors:          # what supervisor the local site should connect to
   - ip: 127.0.0.1       # ip
     port: 13111         # port
-sxl: tlc                # sxl to use
+sxl: tlc                # sxl to use, options are 'core' or 'tlc'
 sxl_version: 1.0.15     # sxl version to use
 components:           # components of local site, organized by type and name
   main:                 # type
@@ -129,14 +129,14 @@ components:           # components of local site, organized by type and name
   detector_logic:
     DL1:
 intervals:            # intervals
-  timer: 0.1            # basic timer resolution in seconds
-  watchdog: 0.1         # time between sending watchdog messages
-  reconnect: 0.1        # interval between retries if supervisor is unreachable
+  timer: 0.1            # basic timer resolution in seconds, in seconds
+  watchdog: 0.1         # time between sending watchdog messages, in seconds
+  reconnect: 0.1        # interval between retries if supervisor is unreachable, in seconds
 timeouts:             # timeouts
-  connect: 1            # max time it should take to connect
-  ready: 1              # max time to complete handshake sequence
-  watchdog: 0.2         # max time between receiving watchdogs
-  acknowledgement: 0.2  # max time unless a message we send is acknowledged
+  connect: 1            # max time it should take to connect, in seconds
+  ready: 1              # max time to complete handshake sequence, in seconds
+  watchdog: 0.2         # max time between receiving watchdogs, in seconds
+  acknowledgement: 0.2  # max time unless a message we send is acknowledged, in seconds
 restrict_testing:       # restrict what tests are run, default is to run all
   core_version: 3.1.5   # skip unless relevant for core 3.1.5
   sxl_version: 1.0.13   # skip unless relevant for sxl 1.0.13
@@ -146,8 +146,43 @@ secrets:                # place secrets or in a separate file, see below
     2: '2222'           # level 2
 ```
 
+### SXL
+The `sxl` attribute of a configuration specifies what SXL to use for communication. Curently, the only valid options are:
+
+- core: Generic RSMP communication. No alarms, commands or status are allowed, only core messages.
+- sxl: Traffic Light Controllers.
+
+The sxl will choose the JSON Schema used to validate all ingoing and outgoing messages. It also restrict what type of components can be listed under the `components` attribute in the configuration.
+
+Equipment that doesn't yet have a standardized SXL cannot be fully validated using the RSMP validator, because there are no tests for these types yet, and because there is no JSON Schema to validate the command and statuses for such types of equipment.
+
+However, you can still use the RSMP Validator to valiate the core part of the communication, including connecting, Aggregated Status and Watchdog messages. Use 'core' as the sxl type in the configuration and then running only the tests in the folder `spec/site/core/`. Remember to also set sxl version to version of the core specification used, e.g. 3.1.5. 
+
+### Components
+RSMP equipment has a list of RSMP components. For example a traffic light controller will have some signal groups and detector logics. In addition all RSMP equipment must have a main component.
+
+To know what to test, your validator configuration must list the components in the equipment under the `components` attribute. Components are organized by type.
+
+For example, here's the component part of a configuration for a traffic light controller with two signal groups, two detector logics, and the main component:
+
+```yaml
+components:
+  main:                   # typer
+    KK+AG9998=001TC000:   # component id (a hash, due to the colon)
+  signal_group:
+    KK+AG9998=001SG001:
+    KK+AG9998=001SG002:
+  detector_logic:
+    KK+AG9998=001DL001:
+    KK+AG9998=001DL002:
+```
+
+The component ids (e.g. `KK+AG9998=001TC000` in the example above) must match the components in the equipment. Otherwise tests will fail.
+
+Note that each component must be defined as a hash in the YAML file, be using a training colon. As the example above show, the hash will ususally be empty. (Items are used to configure components when you run local RSMP site, e.g. a TLC emulator.)
+
 ## Timeouts
-Timeouts should be set as low as possible while, still giving the site time to respond correctly before tests times out and report errors.
+Timeouts are defined in seconds. Timeouts should be set as low as possible while, still giving the site time to respond correctly before tests times out and report errors.
 
 ## Configuring the actual site/supervisor
 You should make sure that the actual site or supervisor you want to test is configured to match the validator configuration file, i.e. that the components match and intervals and timeouts are compatible.
