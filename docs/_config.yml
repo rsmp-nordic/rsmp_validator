@@ -68,3 +68,7 @@ aux_links:
 
 # Use our custom theme
 color_scheme: rsmp
+
+# disable processing of markdown files witouth frontmatter
+optional_front_matter:
+  enabled: false
