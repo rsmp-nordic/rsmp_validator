@@ -3,4 +3,4 @@
 
 spec/site
 spec/supervisor
-spec/support/*_helper.rb
+spec/support/
