@@ -1,4 +1,7 @@
 module LogHelpers
+
+  # Run a block of code that validates some expectition,
+  # and log when we start and log how long it took to complete
   def log_confirmation action, &block
     Validator.log "Confirming #{action}", level: :test
     start_time = Time.now
