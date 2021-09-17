@@ -3,6 +3,8 @@ RSpec.describe 'Traffic Light Controller' do
   include StatusHelpers
 
   describe "Signal Group" do
+    # Validate that a signal group can be ordered to green using the M0002 command.
+    #
     # 1. Verify connection
     # 2. Send control command to start signalgrup, set_signal_start= true, include security_code
     # 3. Wait for status = true  

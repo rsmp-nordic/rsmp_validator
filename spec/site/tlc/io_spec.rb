@@ -2,6 +2,8 @@ RSpec.describe 'Traffic Light Controller' do
   include CommandHelpers
   include StatusHelpers
 
+  # Tests related to inputs and outputs.
+
   describe 'IO' do
     describe 'Input' do
       describe 'forcing' do

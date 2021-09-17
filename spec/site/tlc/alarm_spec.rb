@@ -2,6 +2,10 @@ RSpec.describe 'Traffic Light Controller' do
   include CommandHelpers
   include StatusHelpers
 
+  # Alarms can be hard to validate unless you have a reliable
+  # method of triggering them.
+  # There is currently no way to directly trigger alarms via RSMP,
+  # so you need a separate channel like SSH which can be scripted.
   describe 'Alarm' do
     it 'A0302 detector/logic error is triggered', :script, sxl: '>=1.0.7' do |example|
       require_scripts

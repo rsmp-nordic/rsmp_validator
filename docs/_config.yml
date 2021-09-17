@@ -29,7 +29,8 @@ github_username:  rsmp-nordic
 
 # Build settings
 theme: just-the-docs
-remote_theme: pmarsceill/just-the-docs
+#remote_theme: pmarsceill/just-the-docs
+remote_theme: pdmosses/just-the-docs@rec-nav-2
 
 plugins:
   - jekyll-feed
