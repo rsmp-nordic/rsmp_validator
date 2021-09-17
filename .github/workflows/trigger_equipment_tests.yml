@@ -4,9 +4,9 @@ name: Trigger equipment tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ equipment ]
   pull_request:
-    branches: [ master ]
+    branches: [ equipment ]
   workflow_dispatch:
   repository_dispatch:
 
