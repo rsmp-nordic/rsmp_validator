@@ -35,15 +35,16 @@ jobs:
 
       - name: check for changes
         run: |
-          if git diff --exit-code; then
+          if git diff --quiet; then
             echo "git_changes=false" >> $GITHUB_ENV
           else
             echo "git_changes=true" >> $GITHUB_ENV
           fi
 
       - name: Commit changes
-        if: env.git_changes
+        if: env.git_changes == 'true'
         run: |
+          echo env.git_changes
           git add docs/dev -f
           git commit -m "rebuild yard docs"
 

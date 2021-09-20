@@ -101,7 +101,7 @@ The supervisor config will also have `max_sites: 1` and `ips: all` meaning it wi
 See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) for more details about these settings.
 
 ## Options for Supervisor testing
-When testing a supervisor, the settings are used by local site settings without modification.
+When testing a supervisor, the settings are used by the local site without modifications.
 
 ```yaml
 # Config for testing a supervisor running on localhost (e.g. one from the rsmp gem)
@@ -146,7 +146,7 @@ secrets:                # place secrets or in a separate file, see below
     2: '2222'           # level 2
 ```
 
-### SXL
+## SXL Option
 The `sxl` attribute of a configuration specifies what SXL to use for communication. Curently, the only valid options are:
 
 - core: Generic RSMP communication. No alarms, commands or status are allowed, only core messages.
@@ -158,7 +158,7 @@ Equipment that doesn't yet have a standardized SXL cannot be fully validated usi
 
 However, you can still use the RSMP Validator to valiate the core part of the communication, including connecting, Aggregated Status and Watchdog messages. Use 'core' as the sxl type in the configuration and then running only the tests in the folder `spec/site/core/`. Remember to also set sxl version to version of the core specification used, e.g. 3.1.5. 
 
-### Components
+## Components Option
 RSMP equipment has a list of RSMP components. For example a traffic light controller will have some signal groups and detector logics. In addition all RSMP equipment must have a main component.
 
 To know what to test, your validator configuration must list the components in the equipment under the `components` attribute. Components are organized by type.
