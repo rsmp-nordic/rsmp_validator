@@ -408,7 +408,7 @@ module Validator::CommandHelpers
     )
   end
 
-  def wait_normal_control_and_status
+  def verify_startup_sequence
     wait_for_status(@task,"controlmode startup", [{'sCI'=>'S0020','n'=>'controlmode','s'=>'startup'}])
     wait_for_status(@task,"signalmode eeeee", [{'sCI'=>'S0001','n'=>'signalgroupstatus','s'=>'eeeee'}])
     wait_for_status(@task,"signalmode ffffffff", [{'sCI'=>'S0001','n'=>'signalgroupstatus','s'=>'ffffffff'}])

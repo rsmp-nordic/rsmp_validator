@@ -112,11 +112,11 @@ RSpec.describe 'Site::Traffic Light Controller' do
         status = "12-1-12-59,1-0-23-12"
         prepare task, site
         set_time_table status
-        wait_for_status(@task,"", [{'sCI'=>'S0014','n'=>'status','s'=>'True'}])
+        wait_for_status(@task,"Wait for S0014 first", [{'sCI'=>'S0014','n'=>'status','s'=>'True'}])
 
         status = "1-0-18-0,2-1-7-0"
         set_time_table status
-        wait_for_status(@task,"", [{'sCI'=>'S0014','n'=>'status','s'=>'True'}])
+        wait_for_status(@task,"Wait for S0014 second", [{'sCI'=>'S0014','n'=>'status','s'=>'True'}])
       end
     end
 
