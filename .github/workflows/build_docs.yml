@@ -32,13 +32,9 @@ jobs:
 
       - name: Update YARD docs
         run: bundle exec yardoc
-
-      - name: Check for changes (fail if none)
-        run: |
-          ! git diff --quiet
             
       - name: Commit changes
-        if: ${{ success() }}
+        if: 'git diff --quiet'
         run: |
           git add docs/dev -f
           git commit -m "rebuild yard docs"
