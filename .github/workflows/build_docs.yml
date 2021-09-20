@@ -22,24 +22,25 @@ jobs:
         with:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
-      - name: Set git indentity
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "<>"
-
       - name: Merge branch
         run: git merge origin/master
 
       - name: Update YARD docs
         run: bundle exec yardoc
 
-      - name: check for changes
+      - name: Check for changes
         run: |
           if git diff --quiet; then
             echo "git_changes=false" >> $GITHUB_ENV
           else
             echo "git_changes=true" >> $GITHUB_ENV
           fi
+
+      - name: Set git indentity
+        if: env.git_changes == 'true'
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "<>"
 
       - name: Commit changes
         if: env.git_changes == 'true'
