@@ -101,7 +101,7 @@ The supervisor config will also have `max_sites: 1` and `ips: all` meaning it wi
 See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) for more details about these settings.
 
 ## Options for Supervisor testing
-When testing a supervisor, the settings are used by local site settings without modification.
+When testing a supervisor, the settings are used by the local site without modifications.
 
 ```yaml
 # Config for testing a supervisor running on localhost (e.g. one from the rsmp gem)
