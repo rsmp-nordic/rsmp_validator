@@ -58,6 +58,7 @@ module CommandHelpers
       "intention to request start/stop of a series of signal groups"
   end
 
+  # Switch signal plan
   def set_plan plan
     require_security_codes
     Validator.log "Switching to plan #{plan}", level: :test
@@ -69,6 +70,7 @@ module CommandHelpers
     send_command_and_confirm @task, command_list, "intention to switch to plan #{plan}"
   end
 
+  # Set traffic situation
   def set_traffic_situation ts
     require_security_codes
     Validator.log "Switching to traffic situation #{ts}", level: :test
@@ -80,6 +82,7 @@ module CommandHelpers
     send_command_and_confirm @task, command_list, "intention to switch to traffic situation #{ts}"
   end
 
+  # Set functional position
   def set_functional_position status
     require_security_codes
     Validator.log "Switching to #{status}", level: :test
