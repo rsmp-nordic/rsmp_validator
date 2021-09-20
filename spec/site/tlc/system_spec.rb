@@ -71,7 +71,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 9. Wait for S0001 status "ffffffff"
     # 10. Wait for S0001 status "gggggg"
     # 11. Wait for S0020 status "control" 
-    it 'M0004 restart and added status check', sxl: '>=1.0.7' do |example|
+    it 'goes through startup sequence after M0004 restart', sxl: '>=1.0.7' do |example|
       Validator::Site.isolated do |task,supervisor,site|
         prepare task, site
         #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
