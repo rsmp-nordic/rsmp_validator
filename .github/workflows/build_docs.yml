@@ -32,13 +32,19 @@ jobs:
 
       - name: Update YARD docs
         run: bundle exec yardoc
-      
+
+      - name: Check for changes (fail if none)
+        run: |
+          ! git diff --quiet
+            
       - name: Commit changes
+        if: ${{ success() }}
         run: |
           git add docs/dev -f
           git commit -m "rebuild yard docs"
 
       - name: Push changes
+        if: ${{ success() }}
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
