@@ -32,15 +32,23 @@ jobs:
 
       - name: Update YARD docs
         run: bundle exec yardoc
-            
+
+      - name: check for changes
+        run: |
+          if git diff --exit-code; then
+            echo "git_changes=false" >> $GITHUB_ENV
+          else
+            echo "git_changes=true" >> $GITHUB_ENV
+          fi
+
       - name: Commit changes
-        if: 'git diff --quiet'
+        if: env.git_changes
         run: |
           git add docs/dev -f
           git commit -m "rebuild yard docs"
 
       - name: Push changes
-        if: ${{ success() }}
+        if: env.git_changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
