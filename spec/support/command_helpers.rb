@@ -9,6 +9,7 @@ module CommandHelpers
     return *result   # use splat '*' operator
   end
 
+  # Build a RSMP command value list from a hash
   def build_command_list command_code_id, command_name, values
     values.to_a.map do |n,v|
       {
@@ -20,6 +21,7 @@ module CommandHelpers
     end
   end
 
+  # Order a signal group to green
   def set_signal_start
     require_security_codes
     Validator.log "Order signal group to green", level: :test
@@ -32,6 +34,7 @@ module CommandHelpers
     send_command_and_confirm @task, command_list, "intention to start signal group #{indx}.", component
   end
 
+  # Order a signal group to red
   def set_signal_stop
     require_security_codes
     Validator.log "Order signal group to red", level: :test
@@ -44,6 +47,7 @@ module CommandHelpers
     send_command_and_confirm @task, command_list, "intention to stop signal group #{indx}.", component
   end
 
+  # Request series of signal groups to start/stop
   def set_signal_start_or_stop status
     Validator.log "Request series of signal groups to start/stop", level: :test
     command_list = build_command_list :M0012, :setStart, {
