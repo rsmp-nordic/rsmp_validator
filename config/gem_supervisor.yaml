@@ -29,7 +29,7 @@ intervals:
 timeouts:
   connect: 1
   ready: 1
-  watchdog: 1
+  watchdog: 3
   acknowledgement: 1
 secrets:
   security_codes:
