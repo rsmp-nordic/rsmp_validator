@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'rsmp', github: 'emiltin/rsmp'
+gem 'rsmp'
 gem 'rspec'
 gem 'activesupport'
 
