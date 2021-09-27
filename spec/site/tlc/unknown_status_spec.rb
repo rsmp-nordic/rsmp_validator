@@ -1,5 +1,5 @@
 RSpec.describe "Traffic Light Controller" do
-  include StatusHelpers
+  include Validator::StatusHelpers
 
   context 'receiving an invalid status request code' do
     it 'returns NotAck ' do |example|

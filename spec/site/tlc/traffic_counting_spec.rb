@@ -1,5 +1,5 @@
 RSpec.describe "Traffic Light Controller" do
-  include StatusHelpers
+  include Validator::StatusHelpers
 
   describe "Traffic Data" do
     describe 'on number of vehicles' do

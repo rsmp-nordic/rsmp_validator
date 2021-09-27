@@ -1,6 +1,6 @@
 RSpec.describe "Traffic Light Controller" do
-  include CommandHelpers
-  include StatusHelpers
+  include Validator::CommandHelpers
+  include Validator::StatusHelpers
 
   # Tests related to the clock.
   # When you set the clock, the adjusted time shoudl be used

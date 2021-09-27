@@ -1,6 +1,6 @@
 RSpec.describe 'Traffic Light Controller' do  
-  include CommandHelpers
-  include StatusHelpers
+  include Validator::CommandHelpers
+  include Validator::StatusHelpers
 
   describe 'Traffic Situation' do
     describe 'active' do

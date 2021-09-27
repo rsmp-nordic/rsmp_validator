@@ -1,6 +1,6 @@
 RSpec.describe 'Traffic Light Controller' do
-  include CommandHelpers
-  include StatusHelpers
+  include Validator::CommandHelpers
+  include Validator::StatusHelpers
 
   # Alarms can be hard to validate unless you have a reliable
   # method of triggering them.

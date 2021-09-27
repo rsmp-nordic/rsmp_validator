@@ -1,6 +1,6 @@
 RSpec.describe 'Traffic Light Controller' do  
-  include CommandHelpers
-  include StatusHelpers
+  include Validator::CommandHelpers
+  include Validator::StatusHelpers
 
   describe "Signal Group" do
     # Validate that a signal group can be ordered to green using the M0002 command.

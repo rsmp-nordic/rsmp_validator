@@ -1,6 +1,6 @@
 RSpec.describe 'Traffic Light Controller' do  
-  include CommandHelpers
-  include StatusHelpers
+  include Validator::CommandHelpers
+  include Validator::StatusHelpers
 
   # Tests related to inputs and outputs.
 

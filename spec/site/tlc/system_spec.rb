@@ -1,6 +1,6 @@
 RSpec.describe 'Traffic Light Controller' do  
-  include CommandHelpers
-  include StatusHelpers
+  include Validator::CommandHelpers
+  include Validator::StatusHelpers
 
   describe "System" do
     describe 'operator logged in/out of OP-panel' do
