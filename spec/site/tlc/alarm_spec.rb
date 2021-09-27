@@ -2,12 +2,32 @@ RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::CommandHelpers
   include Validator::StatusHelpers
 
+  
   # Alarms can be hard to validate unless you have a reliable
-  # method of triggering them.
-  # There is currently no way to directly trigger alarms via RSMP,
-  # so you need a separate channel like SSH which can be scripted.
+  # method of triggering them, and there is currently no way to directly triggering
+  # alarms via RSMP.
+  #
+  # Often some alarms can be triggered manually on the equipment,
+  # but since the validator is meant for automated testing, the this approach is
+  # not used.
+  #
+  # Instead a separate interface which can be scripted, like SSH,
+  # must be used. If the equipment support this, you must set up scripts to
+  # activate and deactive alarms. These scripts will then be used in the tests
+  # to trigger alarms.
+  #
+  # If you have no way of triggering the relevant alarm via a scripts, skipping
+  # the test is recommended.
+
   describe 'Alarm' do
-    it 'A0302 detector/logic error is triggered', :script, sxl: '>=1.0.7' do |example|
+
+    # Validate that a detector logic fault raises A0302.
+    #
+    # 1. Given the site is connected
+    # 2. When we trigger an alarm using an external script
+    # 3. Then we should receive ana alarm
+
+    specify 'A0302 is raised when a detector logic is faulty', :script, sxl: '>=1.0.7' do |example|
       require_scripts
       Validator::Site.connected do |task,supervisor,site|
         component = Validator.config['components']['detector_logic'].keys.first
@@ -38,7 +58,15 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    it 'is acknowledged', :script do |example|
+    # Validata that an alarm can be acknowledged.
+    #
+    # 1. Given the site is connected
+    # 2. When we trigger an alarm using an external script
+    # 3. Then we should receive an alarm
+    # 4. When we acknowledgement the alarm
+    # 5. Then we should receive a confirmation
+
+    it 'can be acknowledged', :script do |example|
       skip "Don't yet have a way to trigger alarms on the equipment"
       require_scripts
       Validator::Site.connected do |task,supervisor,site|
@@ -69,6 +97,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
         system(Validator.config['scripts']['deactivate_alarm'])
       end
     end
+
+    # Validate that alarm triggered during a RSMP disconnect is buffered
+    # and send once the RSMP connection is reestablished.
+    #
+    # 1. Given the site is disconnected
+    # 2. And we trigger an alarm using an external script
+    # 3. When the site reconnects
+    # 4. Then we should received an alarm
 
     it 'is buffered during disconnect', :script, sxl: '>=1.0.7' do |example|
       require_scripts

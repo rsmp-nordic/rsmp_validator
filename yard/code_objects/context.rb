@@ -19,6 +19,16 @@ module YARD::CodeObjects
       def unique_id
         "#{file}-#{line}".gsub(/\W/,'-')
       end
+
+      def full_name options={}
+        context = parent
+        parts = [name]
+        while context.is_a?(Context)
+          parts.unshift context.name
+          context = context.parent
+        end
+        parts.join ' '
+      end
     end
   end
 end

@@ -2,7 +2,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::StatusHelpers
   include Validator::CommandHelpers
 
-  describe "Signal Program" do
+  describe "Signal Plan" do
     describe 'running' do
       # Verify status S0014 current time plan
       #
@@ -32,7 +32,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
     end
 
-    describe 'list' do
+    describe 'List' do
       # Verify status S0018 number of time plans
       #
       # 1. Given the site is connected

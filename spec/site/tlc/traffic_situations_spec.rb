@@ -30,7 +30,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    describe 'list' do
+    describe 'List' do
       # Verify status S0019 number of traffic situations
       #
       # 1. Given the site is connected

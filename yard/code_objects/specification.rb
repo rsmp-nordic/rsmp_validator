@@ -15,9 +15,9 @@ module YARD::CodeObjects
         "#{file}-#{line}".gsub(/\W/,'-')
       end
 
-      def full_name
+      def full_name options={}
         context = parent
-        parts = ["**#{name}**"]
+        parts = [name]
         while context.is_a?(Context)
           parts.unshift context.name
           context = context.parent

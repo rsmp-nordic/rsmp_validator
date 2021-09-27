@@ -3,7 +3,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::StatusHelpers
 
   describe "Detector Logic" do
-    describe 'list' do
+    describe 'List' do
       # Verify status S0016 number of detector logics
       #
       # 1. Given the site is connected

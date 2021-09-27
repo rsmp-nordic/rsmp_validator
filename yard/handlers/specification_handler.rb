@@ -28,6 +28,7 @@ end
 # CodeObjects::RSpec::Specification
 class RSpecItHandler < YARD::Handlers::Ruby::Base
   handles method_call(:it)
+  handles method_call(:specify)
   
   # process an RSpec 'it' block (RSpec example/test specification)
   def process

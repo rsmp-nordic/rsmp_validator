@@ -7,7 +7,7 @@ end
 
 def get_parent_title object
 	if object.parent.type.to_s == 'rspec'
-		'Tests'
+		'Test Suite'
 	else
 		object.parent.name
 	end
@@ -18,7 +18,10 @@ def frontmatter
 		layout: 'page',
 		title: object.name
 	}
-	frontmatter[:parent] = get_parent_title(object) if object.parent
+	if object.parent
+		frontmatter[:parent] = get_parent_title object
+		frontmatter[:in_section] = object.parent.path
+	end
 
 	<<~HEREDOC
 	---
@@ -29,8 +32,7 @@ def frontmatter
 end
 
 def title
-
-	"# #{object.parent.name} #{object.name}\n\n"
+	"# #{object.full_name}\n\n"
 end
 
 def docstring

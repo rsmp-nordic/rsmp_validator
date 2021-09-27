@@ -3,7 +3,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::StatusHelpers
 
   describe "Signal Group" do
-    # Validate that a signal group can be ordered to green using the M0002 command.
+    # Validate that a signal group can be ordered to green using the M0010 command.
     #
     # 1. Verify connection
     # 2. Send control command to start signalgrup, set_signal_start= true, include security_code
@@ -26,7 +26,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
 
     describe 'state' do
-      # Verify that the controller responds to S0001.
+      # Verify that signal group status can be read with S0001.
       #
       # 1. Given the site is connected
       # 2. Request status
@@ -38,7 +38,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
 
     describe 'red/green predictions' do
-      # Verify status S0025 time-of-green/time-of-red
+      # Verify that time-of-green/time-of-red can be read with S0025.
       #
       # 1. Given the site is connected
       # 2. Request status
@@ -70,7 +70,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
  
-     describe 'list' do
+     describe 'List' do
       # Verify status S0017 number of signal groups
       #
       # 1. Given the site is connected

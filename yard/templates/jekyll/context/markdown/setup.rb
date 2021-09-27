@@ -5,7 +5,7 @@ end
 
 def get_parent_title obj
 	if obj.parent.type.to_s == 'rspec'
-		'Tests'
+		'Test Suite'
 	else
 		obj.parent.name
 	end
@@ -15,9 +15,13 @@ end
 def frontmatter
 	frontmatter = {
 		layout: 'page',
-		title: object.name
+		title: object.name,
+		section_id: object.path
 	}
-	frontmatter[:parent] = get_parent_title(object) if object.parent
+	if object.parent
+		frontmatter[:parent] = get_parent_title object
+		frontmatter[:in_section] = object.parent.path
+	end
 
 	<<~HEREDOC
 	---
@@ -29,16 +33,10 @@ end
 
 def content
 	<<~HEREDOC
-	# #{object.name}
-
+	# #{object.full_name}
+	
 	HEREDOC
 end
-
-#def subs
-#  object.children.map do |child|
-#  	"- #{child.name}"
-#  end.join("\n") + "\n\n"
-#end
 
 def docstring
   object.docstring.strip + "\n\n"
