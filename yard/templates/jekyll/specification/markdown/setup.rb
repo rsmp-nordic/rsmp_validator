@@ -7,7 +7,7 @@ end
 
 def get_parent_title object
 	if object.parent.type.to_s == 'rspec'
-		'Test Suite'
+		'Tests'
 	else
 		object.parent.name
 	end
@@ -29,7 +29,8 @@ def frontmatter
 end
 
 def title
-	"# #{object.full_name}\n\n"
+
+	"# #{object.parent.name} #{object.name}\n\n"
 end
 
 def docstring

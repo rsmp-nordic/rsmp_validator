@@ -1,4 +1,4 @@
-RSpec.describe 'Site' do
+RSpec.describe 'Site::Core' do
   include Validator::CommandHelpers
 
   describe 'Aggregated Status' do

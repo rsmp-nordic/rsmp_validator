@@ -1,3 +1,3 @@
 # Tests covering the SXL for Traffic Light Controllers
-RSpec.describe 'Traffic Light Controller' do
+RSpec.describe 'Site::Traffic Light Controller' do
 end

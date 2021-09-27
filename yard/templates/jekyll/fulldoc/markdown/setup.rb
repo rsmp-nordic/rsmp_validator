@@ -4,6 +4,7 @@ def init
 
   # serialize objects
   Registry.all(:context,:specification).each do |object|
+    p object
     options.serializer.extension = 'md'
     serialize object
   rescue => e

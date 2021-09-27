@@ -1,4 +1,4 @@
-RSpec.describe 'Site' do
+RSpec.describe 'Site::Core' do
 
   # Test how the site responds to various incorrect behaviour.
   #

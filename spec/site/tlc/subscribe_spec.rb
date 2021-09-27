@@ -1,4 +1,4 @@
-RSpec.describe "Traffic Light Controller" do
+RSpec.describe 'Site::Traffic Light Controller' do
   describe 'Subscription' do
     # Check that we can *subscribe* to status messages.
     # The test subscribes to S0001 (signal group status), because

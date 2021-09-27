@@ -5,7 +5,7 @@ end
 
 def get_parent_title obj
 	if obj.parent.type.to_s == 'rspec'
-		'Test Suite'
+		'Tests'
 	else
 		obj.parent.name
 	end
@@ -15,8 +15,7 @@ end
 def frontmatter
 	frontmatter = {
 		layout: 'page',
-		title: object.name,
-		has_children: true
+		title: object.name
 	}
 	frontmatter[:parent] = get_parent_title(object) if object.parent
 

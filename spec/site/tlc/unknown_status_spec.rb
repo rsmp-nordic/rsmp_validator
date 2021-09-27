@@ -1,4 +1,4 @@
-RSpec.describe "Traffic Light Controller" do
+RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::StatusHelpers
 
   context 'receiving an invalid status request code' do
