@@ -3,28 +3,24 @@ RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::StatusHelpers
 
   describe "Detector Logic" do
-    describe 'List' do
-      # Verify status S0016 number of detector logics
-      #
-      # 1. Given the site is connected
-      # 2. Request status
-      # 3. Expect status response before timeout
-      specify 'size is read with S0016', sxl: '>=1.0.7' do |example|
-        request_status_and_confirm "number of detector logics",
-          { S0016: [:number] }
-      end
+    # Verify status S0016 number of detector logics
+    #
+    # 1. Given the site is connected
+    # 2. Request status
+    # 3. Expect status response before timeout
+    specify 'list size is read with S0016', sxl: '>=1.0.7' do |example|
+      request_status_and_confirm "number of detector logics",
+        { S0016: [:number] }
     end
 
-    describe 'status' do
-      # Verify status S0002 detector logic status
-      #
-      # 1. Given the site is connected
-      # 2. Request status
-      # 3. Expect status response before timeout
-      it 'is read with S0002', sxl: '>=1.0.7' do |example|
-        request_status_and_confirm "detector logic status",
-          { S0002: [:detectorlogicstatus] }
-      end
+    # Verify status S0002 detector logic status
+    #
+    # 1. Given the site is connected
+    # 2. Request status
+    # 3. Expect status response before timeout
+    specify 'status is read with S0002', sxl: '>=1.0.7' do |example|
+      request_status_and_confirm "detector logic status",
+        { S0002: [:detectorlogicstatus] }
     end
 
     context 'forcing' do

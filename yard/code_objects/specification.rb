@@ -22,7 +22,12 @@ module YARD::CodeObjects
           parts.unshift context.name
           context = context.parent
         end
-        parts.join ' '
+        parts.shift if parts.size > 1
+        parts.join(' ')
+      end
+
+      def permalink
+        full_name.gsub(' ', '_').downcase
       end    
     end
   end

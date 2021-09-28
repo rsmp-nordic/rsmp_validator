@@ -20,7 +20,7 @@ def frontmatter
 	}
 	if object.parent
 		frontmatter[:parent] = get_parent_title object
-		frontmatter[:in_section] = object.parent.path
+		frontmatter[:in_section] = object.parent.path.gsub(' ','')
 	end
 
 	<<~HEREDOC

@@ -27,7 +27,22 @@ module YARD::CodeObjects
           parts.unshift context.name
           context = context.parent
         end
-        parts.join ' '
+        parts.shift if parts.size > 1
+        parts.join(' ')
+      end
+
+      def permalink
+        full_name.gsub(' ', '_').downcase
+      end
+
+      def link
+        context = parent
+        parts = [name]
+        while context.is_a?(Context)
+          parts.unshift context.name
+          context = context.parent
+        end
+        "Tests/Specifications/" + parts.join('/').gsub(' ', '_20') + '.md'
       end
     end
   end
