@@ -29,5 +29,4 @@ gem "wdm", "~> 0.1.1", :platforms => [:mingw, :x64_mingw, :mswin]
 
 
 gem 'webrick'
-#gem 'just-the-docs'
-gem 'just-the-docs', github: 'pdmosses/just-the-docs', branch: 'rec-nav-2'
+gem 'just-the-docs'

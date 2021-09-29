@@ -29,8 +29,7 @@ github_username:  rsmp-nordic
 
 # Build settings
 theme: just-the-docs
-#remote_theme: pmarsceill/just-the-docs
-remote_theme: pdmosses/just-the-docs@rec-nav-2
+remote_theme: pmarsceill/just-the-docs
 
 plugins:
   - jekyll-feed
@@ -57,7 +56,7 @@ plugins:
 
 # Aux links for the upper right navigation
 aux_links:
-  "Test Suite":
+  "YARD":
     - "https://rsmp-nordic.github.io/rsmp_validator/dev/"
   "GitHub":
     - "https://github.com/rsmp-nordic/rsmp_validator"

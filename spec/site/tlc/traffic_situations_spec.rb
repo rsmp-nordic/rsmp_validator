@@ -28,16 +28,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    describe 'List' do
-      # Verify status S0019 number of traffic situations
-      #
-      # 1. Given the site is connected
-      # 2. Request status
-      # 3. Expect status response before timeout
-      specify 'size is read with S0019', sxl: '>=1.0.7' do |example|
-        request_status_and_confirm "number of traffic situations",
-          { S0019: [:number] }
-      end
+    # Verify status S0019 number of traffic situations
+    #
+    # 1. Given the site is connected
+    # 2. Request status
+    # 3. Expect status response before timeout
+    specify 'list size is read with S0019', sxl: '>=1.0.7' do |example|
+      request_status_and_confirm "number of traffic situations",
+        { S0019: [:number] }
     end
   end
 end

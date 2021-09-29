@@ -13,20 +13,20 @@ def get_parent_title obj
 	end
 end
 
-
 def frontmatter
 	frontmatter = {
 		layout: 'page',
 		title: object.name,
-		parmalink: object.permalink,
-		section_id: object.path.gsub(' ',''),
-		nav_exclude: true,
+		parmalink: object_permalink(object),
+		has_children: @contexts.any?,
 		has_toc: false
 	}
 
 	if object.parent
 		frontmatter[:parent] = get_parent_title object
-		frontmatter[:in_section] = object.parent.path.gsub(' ','')
+		unless object.parent.parent.root?
+			frontmatter[:grand_parent] = get_parent_title object.parent
+		end
 	end
 
 	<<~HEREDOC
@@ -49,10 +49,19 @@ def description
   object.docstring.strip + "\n\n"
 end
 
+def object_permalink obj
+  obj.full_name.gsub(' ', '_').downcase
+end
+
+def object_link obj
+	path = 'tests/' + options.serializer.serialized_path(obj).gsub('.html','.md')
+end
+
 def context_toc
+	puts '--'
 	toc = @contexts.sort_by(&:name).map do |context|
-		path = 'tests/' + options.serializer.serialized_path(context).gsub('.html','.md')
-		"- [#{context.name}]({% link #{path} %})"
+		p context
+		"- [#{context.name}]({% link #{object_link context} %})"
 	end.join("\n")
 
 	return unless @contexts.any?
@@ -93,13 +102,20 @@ end
 
 def specification spec
 	<<~HEREDOC
-	## #{spec.parent.name} #{spec.name}
+	## #{spec.parent.name.capitalize} #{spec.name}
 
 	#{spec.docstring.strip}
 	
+	<details markdown="block">
+	  <summary>
+	     View Source
+	  </summary>
 	```ruby
 	#{indent spec.source}
 	```
+	</details>
+
+
 	HEREDOC
 end
 

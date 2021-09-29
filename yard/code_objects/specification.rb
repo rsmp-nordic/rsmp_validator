@@ -24,11 +24,7 @@ module YARD::CodeObjects
         end
         parts.shift if parts.size > 1
         parts.join(' ')
-      end
-
-      def permalink
-        full_name.gsub(' ', '_').downcase
-      end    
+      end  
     end
   end
 end

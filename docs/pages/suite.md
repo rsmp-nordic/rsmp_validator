@@ -1,8 +1,8 @@
 ---
 layout: page
 title: Test Suite
-permalink: /suite/
-section_id: Specifications
+permalink: /tests/
+has_children: true
 ---
 
 # Test Suite
