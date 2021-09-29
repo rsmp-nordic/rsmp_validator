@@ -13,4 +13,5 @@ config/private/
 /tmp/
 /ignore/
 /docs/dev/
+/docs/tests/
 /vendor/

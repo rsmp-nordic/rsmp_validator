@@ -17,15 +17,10 @@ task :yard do
 	system 'git commit -m "update yard docs"'
 end
 
-desc "\
-Prepare Jekyll documentation branch. 
-Merges docs/ from the master branch to the gh-pages branch.\
-\
-"
-task :docs do
-	system 'git checkout gh-pages'
-	system 'git checkout master --no-overlay -- docs'
-	system 'git add .'
-	system 'git status'
-	system 'git commit -m "update jekyll docs"'
+# Note that rebuilding with YARD does not delete unused fies.
+# For this reason, it's often a good idea  delete the output folder before rebuilding, using:
+# % rm -r docs/tests
+desc "Rebuild YARD docs for the RSpec files in spec."
+task :spec_docs do
+	system 'bundle exec yardoc --template jekyll --format markdown --output docs/tests'
 end

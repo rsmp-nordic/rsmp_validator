@@ -1,4 +1,4 @@
-module StatusHelpers
+module Validator::StatusHelpers
 
   # Convert from a hash:
   # {:S0001=>[:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage]}

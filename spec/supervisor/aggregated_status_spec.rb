@@ -1,5 +1,9 @@
 RSpec.describe 'Supervisor' do
+  
+  # Validate behaviour related to aggregated status messages 
   describe 'Aggregated Status' do
+
+  # Validate that the supervisor responds correctly when we send an aggregated status message
     it 'receives aggregated status' do
       Validator::Supervisor.connected do |task,site,supervisor_proxy|
         component = site.find_component Validator.config['main_component']

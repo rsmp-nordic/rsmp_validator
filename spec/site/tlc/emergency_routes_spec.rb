@@ -1,6 +1,6 @@
-RSpec.describe 'Traffic Light Controller' do  
-  include CommandHelpers
-  include StatusHelpers
+RSpec.describe 'Site::Traffic Light Controller' do  
+  include Validator::CommandHelpers
+  include Validator::StatusHelpers
 
   describe "Emergency Route" do
     # 1. Verify connection

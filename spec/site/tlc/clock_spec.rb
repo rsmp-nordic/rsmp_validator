@@ -1,7 +1,11 @@
-RSpec.describe "Traffic Light Controller" do
-  include CommandHelpers
-  include StatusHelpers
+RSpec.describe 'Site::Traffic Light Controller' do
+  include Validator::CommandHelpers
+  include Validator::StatusHelpers
 
+  # Tests related to the clock.
+  # When you set the clock, the adjusted time shoudl be used
+  # everywhere you get back a timestamp.
+  
   describe 'Clock' do
     CLOCK = Time.new 2020,9,29,17,29,51,'+00:00'
  

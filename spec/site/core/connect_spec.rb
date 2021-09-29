@@ -1,4 +1,4 @@
-RSpec.describe 'Site' do
+RSpec.describe 'Site::Core' do
   describe 'Connection Sequence' do
     def get_connection_message core_version, length
       timeout = Validator.config['timeouts']['ready']

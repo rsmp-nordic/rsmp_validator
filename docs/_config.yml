@@ -56,7 +56,7 @@ plugins:
 
 # Aux links for the upper right navigation
 aux_links:
-  "Test Suite":
+  "YARD":
     - "https://rsmp-nordic.github.io/rsmp_validator/dev/"
   "GitHub":
     - "https://github.com/rsmp-nordic/rsmp_validator"
