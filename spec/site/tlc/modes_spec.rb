@@ -76,16 +76,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    specify 'isolated control' do
-      # Verify status S0010 isolated control
-      #
-      # 1. Given the site is connected
-      # 2. Request status
-      # 3. Expect status response before timeout
-      specify 'isolated controlis read with S0010', sxl: '>=1.0.7' do |example|
-        request_status_and_confirm "isolated control status",
-          { S0010: [:status,:intersection] }
-      end
+    # Verify status S0010 isolated control
+    #
+    # 1. Given the site is connected
+    # 2. Request status
+    # 3. Expect status response before timeout
+    specify 'isolated controlis read with S0010', sxl: '>=1.0.7' do |example|
+      request_status_and_confirm "isolated control status",
+        { S0010: [:status,:intersection] }
     end
 
     # Verify status S0011 yellow flash
