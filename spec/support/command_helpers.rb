@@ -1,4 +1,4 @@
-module CommandHelpers
+module Validator::CommandHelpers
   def send_command_and_confirm parent_task, command_list, message, component=Validator.config['main_component']
     result = nil
     log_confirmation message do
