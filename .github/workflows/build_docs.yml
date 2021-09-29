@@ -13,9 +13,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-        with:
-          ref: gh-pages
-          fetch-depth: 0
 
       - name: Install Ruby and Gems
         uses: ruby/setup-ruby@v1
@@ -23,15 +20,12 @@ jobs:
           BUNDLE_WITH: documentation
         with:
           bundler-cache: true   # runs 'bundle install' and caches installed gems automatically
-          cache-version: 11
+          cache-version: 12
 
       - name: Set git indentity
         run: |
           git config user.name "GitHub Action"
           git config user.email "<>"
-
-      - name: Merge branch
-        run: git merge origin/master
 
       - name: Update YARD code docs (html)
         run: bundle exec yardoc
@@ -47,16 +41,17 @@ jobs:
             echo "git_changes=true" >> $GITHUB_ENV
           fi
 
-      - name: Commit changes
-        if: env.git_changes == 'true'
-        run: |
-          echo env.git_changes
-          git add docs/dev -f
-          git commit -m "rebuild yard docs"
-
-      - name: Push changes
-        if: env.git_changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages
+#      - name: Commit changes
+#        if: env.git_changes == 'true'
+#        run: |
+#          echo env.git_changes
+#          git add docs/dev -f
+#          git commit -m "rebuild yard docs"
+#
+#      - name: Push changes
+#        if: env.git_changes
+#        uses: ad-m/github-push-action@master
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          branch: gh-pages
+#
