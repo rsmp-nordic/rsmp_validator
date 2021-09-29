@@ -5,6 +5,9 @@ gem 'rspec'
 gem 'activesupport'
 
 group :development do
-  gem 'yard'
   gem 'rake'
+end
+
+group :development, :documentation do
+  gem 'yard'
 end
