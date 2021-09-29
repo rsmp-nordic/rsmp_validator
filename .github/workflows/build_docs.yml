@@ -4,7 +4,7 @@ name: Build Documentation
 
 on:
   push:
-    branches: [ master ]
+    branches: [ docs ]
 
 jobs:
   build:
