@@ -21,7 +21,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-          cache-version: 7
+          cache-version: 8
 
       - name: Set git indentity
         run: |
