@@ -69,7 +69,6 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
-  nio4r (~> 2.5.8)
   rake
   rsmp
   rspec
