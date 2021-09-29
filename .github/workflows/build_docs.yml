@@ -30,8 +30,12 @@ jobs:
       - name: Merge branch
         run: git merge origin/master
 
-      - name: Update YARD docs
+      - name: Update YARD code docs (html)
         run: bundle exec yardoc
+          bundle exec yardoc --template jekyll --format markdown --output docs/tests
+
+      - name: Update YARD spec docs (markdown)
+        run: bundle exec yardoc --template jekyll --format markdown --output docs/tests
 
       - name: Check for changes
         run: |
