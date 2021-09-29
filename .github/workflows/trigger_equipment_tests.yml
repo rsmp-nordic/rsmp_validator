@@ -15,9 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger equipment tests in rsmp_implementations
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          repository: rsmp-nordic/rsmp_implementations
-          event-type: trigger_equipment_tests
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+        run: |
+          curl -X POST https://api.github.com/repos/rsmp-nordic/rsmp_implementations/dispatches \
+          -H 'Accept: application/vnd.github.everest-preview+json' \
+          -u ${{ secrets.ACCESS_TOKEN }} \
+          --data '{"event_type": "trigger_equipment_tests", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
