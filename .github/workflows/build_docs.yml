@@ -4,7 +4,7 @@ name: Build Documentation
 
 on:
   push:
-    branches: [ master ]
+    branches: [ docs ]
 
 jobs:
   build:
@@ -14,46 +14,52 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
-          ref: gh-pages
           fetch-depth: 0
 
       - name: Install Ruby and Gems
         uses: ruby/setup-ruby@v1
+        env:
+          BUNDLE_WITH: documentation
         with:
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-          cache-version: 3
+          bundler-cache: true   # runs 'bundle install' and caches installed gems automatically
 
       - name: Set git indentity
         run: |
           git config user.name "GitHub Action"
           git config user.email "<>"
 
-      - name: Merge branch
-        run: git merge origin/master
+      - name: Update YARD html
+        run: bundle exec yardoc --output docs/dev
 
-      - name: Update YARD code docs (html)
-        run: bundle exec yardoc
-
-      - name: Update YARD spec docs (markdown)
+      - name: Update YARD markdown
         run: bundle exec yardoc --template jekyll --format markdown --output docs/tests
+
+      - name: Commit to local master branch
+        run: |
+          git add docs -f
+          git commit -m "update docs"
+
+      - name: Copy to local gh-pages branch
+        run: |
+          git checkout gh-pages
+          git checkout docs -- docs
 
       - name: Check for changes
         run: |
-          if git diff --quiet; then
+          if git diff --cached --quiet; then
             echo "git_changes=false" >> $GITHUB_ENV
           else
             echo "git_changes=true" >> $GITHUB_ENV
           fi
 
-      - name: Commit changes
+      - name: Commit changes to local gh-pages branch
         if: env.git_changes == 'true'
         run: |
-          echo env.git_changes
-          git add docs/dev -f
-          git commit -m "rebuild yard docs"
+          git add docs -f
+          git commit -m "update docs"
 
       - name: Push changes
-        if: env.git_changes
+        if: env.git_changes == 'true'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

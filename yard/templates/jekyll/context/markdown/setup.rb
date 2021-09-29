@@ -59,7 +59,7 @@ end
 
 def context_toc
 	toc = @contexts.sort_by(&:name).map do |context|
-		"- [#{context.name}]({% link #{object_link context} %})"
+		"- [#{context.name}]({{ site.baseurl }}{% link #{object_link context} %})"
 	end.join("\n")
 
 	return unless @contexts.any?
