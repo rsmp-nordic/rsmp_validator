@@ -58,9 +58,7 @@ def object_link obj
 end
 
 def context_toc
-	puts '--'
 	toc = @contexts.sort_by(&:name).map do |context|
-		p context
 		"- [#{context.name}]({% link #{object_link context} %})"
 	end.join("\n")
 
