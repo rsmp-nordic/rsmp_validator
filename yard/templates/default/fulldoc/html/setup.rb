@@ -6,9 +6,10 @@ def init
   asset("css/rspec.css",file("css/rspec.css",true))
   
   # Generates the specs splash page with the 'specs' template
-  serialize(YARD::CodeObjects::RSpec::RSPEC_NAMESPACE)
-  
-  #
+  Templates::Engine.with_serializer(YARD::CodeObjects::RSpec::RSPEC_NAMESPACE, options.serializer) do
+    T('specs').run(options)
+  end
+
   # Generate pages for each of the specs, with the 'spec' template and then
   # generate the page which is the full list of specs
   #
@@ -17,7 +18,6 @@ def init
     @contexts.each {|context| serialize(context) }
     generate_specification_list
   end
-  
 end
 
 def generate_specification_list
