@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Context: Specifications::Site::Traffic Light Controller::Signal Group
+  
+    &mdash; Documentation by YARD 0.9.26
+  
+</title>
+
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" />
+
+  <link rel="stylesheet" href="../../../css/rspec.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "Specifications::Site::Traffic Light Controller::Signal Group";
+  relpath = '../../../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../../../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../../../_index.html">Index (S)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../../Specifications.html" title="Specifications (rspec)">Specifications</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../../Site.html" title="Specifications::Site (context)">Site</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Traffic_20Light_20Controller.html" title="Specifications::Site::Traffic Light Controller (context)">Traffic Light Controller</a></span></span>
+     &raquo; 
+    <span class="title">Signal Group</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><div class='context'>
+  <h1 class='title'>
+  
+    Specifications: 
+  
+
+  </h1>
+
+  <ul class='context-specifications'>
+    
+      
+      <li class='context-specification'><div class="specification">
+  <div class="heading ">
+    <a name="spec-site-tlc-signal_groups_spec-rb-11"></a>
+    
+  </div>
+
+  <div class="details method_details_list">
+    
+    <div class="docstring">
+      
+<p>Validate that a signal group can be ordered to green using the M0010 command.</p>
+<ol><li>
+<p>Verify connection</p>
+</li><li>
+<p>Send control command to start signalgrup, set_signal_start= true, include security_code</p>
+</li><li>
+<p>Wait for status = true</p>
+</li></ol>
+
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <!-- Source Code -->
+    <div style="float: left;">
+      <table class="source_code">
+        <tr>
+          <td>
+            <pre class="lines">
+
+
+11
+12
+13
+14</pre>
+          </td>
+          <td>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 11</span>
+
+<span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
+        <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
+        <span class='id identifier rubyid_set_signal_start'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#set_signal_start-instance_method" title="Validator::CommandHelpers#set_signal_start (method)">set_signal_start</a></span></span>
+      <span class='kw'>end</span></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+
+    <div style="clear: both;"></div>
+    
+  </div>
+
+  <!-- Captures the collapsed state -->
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+
+</div></li> 
+    
+      
+      <li class='context-specification'><div class="specification">
+  <div class="heading ">
+    <a name="spec-site-tlc-signal_groups_spec-rb-21"></a>
+    
+  </div>
+
+  <div class="details method_details_list">
+    
+    <div class="docstring">
+      <ol><li>
+<p>Verify connection</p>
+</li><li>
+<p>Send control command to stop signalgrup, set_signal_start= false, include security_code</p>
+</li><li>
+<p>Wait for status = true</p>
+</li></ol>
+
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <!-- Source Code -->
+    <div style="float: left;">
+      <table class="source_code">
+        <tr>
+          <td>
+            <pre class="lines">
+
+
+21
+22
+23
+24</pre>
+          </td>
+          <td>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 21</span>
+
+<span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
+        <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
+        <span class='id identifier rubyid_set_signal_stop'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#set_signal_stop-instance_method" title="Validator::CommandHelpers#set_signal_stop (method)">set_signal_stop</a></span></span>
+      <span class='kw'>end</span></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+
+    <div style="clear: both;"></div>
+    
+  </div>
+
+  <!-- Captures the collapsed state -->
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+
+</div></li> 
+    
+      
+      <li class='context-specification'><div class="specification">
+  <div class="heading ">
+    <a name="spec-site-tlc-signal_groups_spec-rb-33"></a>
+    
+  </div>
+
+  <div class="details method_details_list">
+    
+    <div class="docstring">
+      
+<p>Verify that signal group status can be read with S0001.</p>
+<ol><li>
+<p>Given the site is connected</p>
+</li><li>
+<p>Request status</p>
+</li><li>
+<p>Expect status response before timeout</p>
+</li></ol>
+
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <!-- Source Code -->
+    <div style="float: left;">
+      <table class="source_code">
+        <tr>
+          <td>
+            <pre class="lines">
+
+
+33
+34</pre>
+          </td>
+          <td>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 33</span>
+
+<span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>signal group status</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+        <span class='lbrace'>{</span> <span class='label'>S0001:</span> <span class='lbracket'>[</span><span class='symbol'>:signalgroupstatus</span><span class='comma'>,</span> <span class='symbol'>:cyclecounter</span><span class='comma'>,</span> <span class='symbol'>:basecyclecounter</span><span class='comma'>,</span> <span class='symbol'>:stage</span><span class='rbracket'>]</span> <span class='rbrace'>}</span></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+
+    <div style="clear: both;"></div>
+    
+  </div>
+
+  <!-- Captures the collapsed state -->
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+
+</div></li> 
+    
+      
+      <li class='context-specification'><div class="specification">
+  <div class="heading ">
+    <a name="spec-site-tlc-signal_groups_spec-rb-43"></a>
+    
+  </div>
+
+  <div class="details method_details_list">
+    
+    <div class="docstring">
+      
+<p>Verify that time-of-green/time-of-red can be read with S0025.</p>
+<ol><li>
+<p>Given the site is connected</p>
+</li><li>
+<p>Request status</p>
+</li><li>
+<p>Expect status response before timeout</p>
+</li></ol>
+
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <!-- Source Code -->
+    <div style="float: left;">
+      <table class="source_code">
+        <tr>
+          <td>
+            <pre class="lines">
+
+
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53</pre>
+          </td>
+          <td>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 43</span>
+
+<span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>time-of-green/time-of-red</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+        <span class='lbrace'>{</span> <span class='label'>S0025:</span> <span class='lbracket'>[</span>
+            <span class='symbol'>:minToGEstimate</span><span class='comma'>,</span>
+            <span class='symbol'>:maxToGEstimate</span><span class='comma'>,</span>
+            <span class='symbol'>:likelyToGEstimate</span><span class='comma'>,</span>
+            <span class='symbol'>:ToGConfidence</span><span class='comma'>,</span>
+            <span class='symbol'>:minToREstimate</span><span class='comma'>,</span>
+            <span class='symbol'>:maxToREstimate</span><span class='comma'>,</span>
+            <span class='symbol'>:likelyToREstimate</span>
+        <span class='rbracket'>]</span> <span class='rbrace'>}</span><span class='comma'>,</span>
+        <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>components</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>signal_group</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+
+    <div style="clear: both;"></div>
+    
+  </div>
+
+  <!-- Captures the collapsed state -->
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+
+</div></li> 
+    
+      
+      <li class='context-specification'><div class="specification">
+  <div class="heading ">
+    <a name="spec-site-tlc-signal_groups_spec-rb-60"></a>
+    
+  </div>
+
+  <div class="details method_details_list">
+    
+    <div class="docstring">
+      <ol><li>
+<p>Verify connection</p>
+</li><li>
+<p>Send control command to start or stop a serie of signalgroups</p>
+</li><li>
+<p>Wait for status = true</p>
+</li></ol>
+
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <!-- Source Code -->
+    <div style="float: left;">
+      <table class="source_code">
+        <tr>
+          <td>
+            <pre class="lines">
+
+
+60
+61
+62
+63</pre>
+          </td>
+          <td>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 60</span>
+
+<span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
+        <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
+        <span class='id identifier rubyid_set_signal_start_or_stop'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#set_signal_start_or_stop-instance_method" title="Validator::CommandHelpers#set_signal_start_or_stop (method)">set_signal_start_or_stop</a></span></span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>5,4134,65;5,11</span><span class='tstring_end'>&#39;</span></span>
+      <span class='kw'>end</span></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+
+    <div style="clear: both;"></div>
+    
+  </div>
+
+  <!-- Captures the collapsed state -->
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+
+</div></li> 
+    
+      
+      <li class='context-specification'><div class="specification">
+  <div class="heading ">
+    <a name="spec-site-tlc-signal_groups_spec-rb-72"></a>
+    
+  </div>
+
+  <div class="details method_details_list">
+    
+    <div class="docstring">
+      
+<p>Verify status S0017 number of signal groups</p>
+<ol><li>
+<p>Given the site is connected</p>
+</li><li>
+<p>Request status</p>
+</li><li>
+<p>Expect status response before timeout</p>
+</li></ol>
+
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <!-- Source Code -->
+    <div style="float: left;">
+      <table class="source_code">
+        <tr>
+          <td>
+            <pre class="lines">
+
+
+72
+73</pre>
+          </td>
+          <td>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 72</span>
+
+<span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>number of signal groups</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+        <span class='lbrace'>{</span> <span class='label'>S0017:</span> <span class='lbracket'>[</span><span class='symbol'>:number</span><span class='rbracket'>]</span> <span class='rbrace'>}</span></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+
+    <div style="clear: both;"></div>
+    
+  </div>
+
+  <!-- Captures the collapsed state -->
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+
+</div></li> 
+    
+  </ul>
+  
+  <ul class='context-subcontext'>
+  
+  
+  </ul>
+
+</div></div>
+
+      <div id="footer">
+Maintained by <a href="https://rsmp-nordic.org" title="RSMP Nordic" target="_parent">RSMP Nordic</a>
+</div>
+    </div>
+  </body>
+</html>
