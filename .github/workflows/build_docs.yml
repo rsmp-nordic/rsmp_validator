@@ -20,7 +20,6 @@ jobs:
           BUNDLE_WITH: documentation
         with:
           bundler-cache: true   # runs 'bundle install' and caches installed gems automatically
-          cache-version: 12
 
       - name: Set git indentity
         run: |
@@ -28,7 +27,7 @@ jobs:
           git config user.email "<>"
 
       - name: Update YARD code docs (html)
-        run: bundle exec yardoc
+        run: bundle exec yardoc --output docs/dev
 
       - name: Update YARD spec docs (markdown)
         run: bundle exec yardoc --template jekyll --format markdown --output docs/tests
