@@ -17,7 +17,7 @@ These tests are generic and can be used to test all types of RSMP sites.
 
 ### Categories
 {: .no_toc .text-delta }
-- [Aggregated Status]({% link tests/Specifications/Site/Core/Aggregated_20Status.md %})
-- [Connection]({% link tests/Specifications/Site/Core/Connection.md %})
-- [Connection Sequence]({% link tests/Specifications/Site/Core/Connection_20Sequence.md %})
+- [Aggregated Status]({{ site.baseurl}}{% link tests/Specifications/Site/Core/Aggregated_20Status.md %})
+- [Connection]({{ site.baseurl}}{% link tests/Specifications/Site/Core/Connection.md %})
+- [Connection Sequence]({{ site.baseurl}}{% link tests/Specifications/Site/Core/Connection_20Sequence.md %})
 
