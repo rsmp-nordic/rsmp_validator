@@ -4,9 +4,7 @@ name: Build Documentation
 
 on:
   push:
-    branches: [ docs ]
-  pull_request:
-    branches: [ docs ]
+    branches: [ master, docs ]
 
 jobs:
   build:
@@ -14,12 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Extract branch name for pull requests
-        if: github.event_name == 'pull_request'
-        run: echo "BRANCH_NAME=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
-      
-      - name: Extract branch name if not a pull request
-        if: github.event_name != 'pull_request'
+      - name: Extract branch name
         run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Show branch name
@@ -48,7 +41,7 @@ jobs:
       - name: Update YARD markdown
         run: bundle exec yardoc --template jekyll --format markdown --output docs/tests
 
-      - name: Commit to local master branch
+      - name: Commit to local branch
         run: |
           git add docs -f
           git commit -m "update docs"
