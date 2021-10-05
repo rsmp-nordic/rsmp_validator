@@ -13,17 +13,15 @@ jobs:
     name: Rebuild YARD docs and update the gh-pages branch
     runs-on: ubuntu-latest
 
-
-
-
     steps:
-      - name: Show $GITHUB_REF
-        run: echo "GITHUB_REF is $GITHUB_REF"
+      - name: Extract branch name
+      - if: github.event_name == 'pull_request'
+        run: echo "BRANCH_NAME=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
+      - if: github.event_name != 'pull_request'
+        run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
-      - name: Show github.head_ref
-        env:
-          GITHUB_REF2: ${{ toJSON(github.ref) }}
-        run: echo "GITHUB_REF2 is $GITHUB_REF2"
+      - name: Show branch name
+        run: echo 'The branch name is' $BRANCH_NAME
 
       - name: Checkout repo
         uses: actions/checkout@v2
