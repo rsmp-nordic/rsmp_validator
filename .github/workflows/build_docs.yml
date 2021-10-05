@@ -15,11 +15,11 @@ jobs:
 
     steps:
       - name: Extract branch name for pull requests
-      - if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request'
         run: echo "BRANCH_NAME=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
       
       - name: Extract branch name if not a pull request
-      - if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request'
         run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Show branch name
