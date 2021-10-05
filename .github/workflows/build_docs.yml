@@ -51,7 +51,7 @@ jobs:
           git add docs -f
           git commit -m "update docs"
 
-      - name: Checkout changes from docs/ to local gh-pages branch
+      - name: Checkout changes from docs folder to local gh-pages branch
         run: |
           git checkout gh-pages
           git checkout $BRANCH_NAME -- docs
@@ -64,7 +64,7 @@ jobs:
             echo "git_changes=true" >> $GITHUB_ENV
           fi
 
-      - name: Commit changes in docs/ to local gh-pages branch
+      - name: Commit changes in docs folder to local gh-pages branch
         if: env.git_changes == 'true'
         run: |
           git add docs -f
