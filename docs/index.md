@@ -48,4 +48,4 @@ The validator also includes preliminary support for testing supervisor systems. 
 No. You can use the validator without writing any Ruby code. Ruby is only needed if you want to [modify or add tests]({{ site.baseurl}}{% link pages/writing.md %}), or you need more in-depth understanding of how specific tests work.
 
 ## Try It
-Read more [about the validator]({{ site.baseurl}}{% link pages/architecture.md %}) or [get started now]({{ site.baseurl}}{% link pages/usage.md %}).
+Read more [about the validator]({{ site.baseurl}}{% link pages/architecture.md %}) or [get started now]({{ site.baseurl}}{% link pages/getting_started.md %}).
