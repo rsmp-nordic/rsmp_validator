@@ -1,5 +1,4 @@
 # This workflow will rebuild YARD docs and update the gh-pages branch.
-#
 
 name: Build Documentation
 
@@ -52,10 +51,10 @@ jobs:
           git add docs -f
           git commit -m "update docs"
 
-      - name: Copy to local gh-pages branch
+      - name: Checkout changes from docs/ to local gh-pages branch
         run: |
           git checkout gh-pages
-          git checkout docs -- docs
+          git checkout $BRANCH_NAME -- docs
 
       - name: Check for changes
         run: |
@@ -65,7 +64,7 @@ jobs:
             echo "git_changes=true" >> $GITHUB_ENV
           fi
 
-      - name: Commit changes to local gh-pages branch
+      - name: Commit changes in docs/ to local gh-pages branch
         if: env.git_changes == 'true'
         run: |
           git add docs -f
