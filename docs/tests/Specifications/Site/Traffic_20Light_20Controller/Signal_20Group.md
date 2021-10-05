@@ -11,8 +11,6 @@ grand_parent: Site
 # Traffic Light Controller Signal Group
 {: .no_toc}
 
-site.baseurl: [{{ site.baseurl }}]
-
 
 
 ### Tests

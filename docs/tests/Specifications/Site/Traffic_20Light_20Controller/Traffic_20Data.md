@@ -11,8 +11,6 @@ grand_parent: Site
 # Traffic Light Controller Traffic Data
 {: .no_toc}
 
-site.baseurl: [{{ site.baseurl }}]
-
 
 
 ### Tests
