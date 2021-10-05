@@ -20,6 +20,6 @@ are initiated by the supervisor, only a limited set of tests can be automated by
 
 ### Categories
 {: .no_toc .text-delta }
-- [Aggregated Status]({{ base_url }}{% link tests/Specifications/Supervisor/Aggregated_20Status.md %})
-- [Connection Sequence]({{ base_url }}{% link tests/Specifications/Supervisor/Connection_20Sequence.md %})
+- [Aggregated Status]({{ site.base_url }}{% link tests/Specifications/Supervisor/Aggregated_20Status.md %})
+- [Connection Sequence]({{ site.base_url }}{% link tests/Specifications/Supervisor/Connection_20Sequence.md %})
 

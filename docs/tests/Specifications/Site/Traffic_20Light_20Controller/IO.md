@@ -15,6 +15,6 @@ Tests related to inputs and outputs.
 
 ### Categories
 {: .no_toc .text-delta }
-- [Input]({{ base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/IO/Input.md %})
-- [Output]({{ base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/IO/Output.md %})
+- [Input]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/IO/Input.md %})
+- [Output]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/IO/Output.md %})
 
