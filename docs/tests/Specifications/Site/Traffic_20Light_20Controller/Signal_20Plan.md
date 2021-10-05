@@ -11,7 +11,6 @@ grand_parent: Site
 # Traffic Light Controller Signal Plan
 {: .no_toc}
 
-{{ site.base_url }}
 
 
 ### Tests

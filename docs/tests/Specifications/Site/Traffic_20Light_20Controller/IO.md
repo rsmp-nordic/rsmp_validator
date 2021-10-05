@@ -11,11 +11,10 @@ grand_parent: Site
 # Traffic Light Controller IO
 {: .no_toc}
 
-{{ site.base_url }}
 Tests related to inputs and outputs.
 
 ### Categories
 {: .no_toc .text-delta }
-- [Input]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/IO/Input.md %})
-- [Output]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/IO/Output.md %})
+- [Input]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/IO/Input.md %})
+- [Output]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/IO/Output.md %})
 

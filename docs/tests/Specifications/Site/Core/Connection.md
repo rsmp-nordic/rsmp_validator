@@ -11,7 +11,6 @@ grand_parent: Site
 # Core Connection
 {: .no_toc}
 
-{{ site.base_url }}
 Check that the site closed the connection as required when faced with
 various types of incorrect behaviour from our side.
 

@@ -11,7 +11,6 @@ grand_parent: Test Suite
 # Aggregated Status
 {: .no_toc}
 
-{{ site.base_url }}
 Validate behaviour related to aggregated status messages
 
 ### Tests

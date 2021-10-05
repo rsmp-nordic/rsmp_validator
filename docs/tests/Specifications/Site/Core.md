@@ -11,14 +11,13 @@ grand_parent: Test Suite
 # Core
 {: .no_toc}
 
-{{ site.base_url }}
 Tests covering the core specification for sites.
 
 These tests are generic and can be used to test all types of RSMP sites.
 
 ### Categories
 {: .no_toc .text-delta }
-- [Aggregated Status]({{ site.base_url }}{% link tests/Specifications/Site/Core/Aggregated_20Status.md %})
-- [Connection]({{ site.base_url }}{% link tests/Specifications/Site/Core/Connection.md %})
-- [Connection Sequence]({{ site.base_url }}{% link tests/Specifications/Site/Core/Connection_20Sequence.md %})
+- [Aggregated Status]({{ site.baseurl }}{% link tests/Specifications/Site/Core/Aggregated_20Status.md %})
+- [Connection]({{ site.baseurl }}{% link tests/Specifications/Site/Core/Connection.md %})
+- [Connection Sequence]({{ site.baseurl }}{% link tests/Specifications/Site/Core/Connection_20Sequence.md %})
 

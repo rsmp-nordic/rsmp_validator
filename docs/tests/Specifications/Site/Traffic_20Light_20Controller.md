@@ -11,21 +11,20 @@ grand_parent: Test Suite
 # Traffic Light Controller
 {: .no_toc}
 
-{{ site.base_url }}
 Tests covering the SXL for Traffic Light Controllers.
 
 ### Categories
 {: .no_toc .text-delta }
-- [Alarm]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Alarm.md %})
-- [Clock]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Clock.md %})
-- [Detector Logic]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Detector_20Logic.md %})
-- [Emergency Route]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Emergency_20Route.md %})
-- [IO]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/IO.md %})
-- [Operational]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Operational.md %})
-- [Signal Group]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Signal_20Group.md %})
-- [Signal Plan]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Signal_20Plan.md %})
-- [Subscription]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Subscription.md %})
-- [System]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/System.md %})
-- [Traffic Data]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Traffic_20Data.md %})
-- [Traffic Situation]({{ site.base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Traffic_20Situation.md %})
+- [Alarm]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Alarm.md %})
+- [Clock]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Clock.md %})
+- [Detector Logic]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Detector_20Logic.md %})
+- [Emergency Route]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Emergency_20Route.md %})
+- [IO]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/IO.md %})
+- [Operational]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Operational.md %})
+- [Signal Group]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Signal_20Group.md %})
+- [Signal Plan]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Signal_20Plan.md %})
+- [Subscription]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Subscription.md %})
+- [System]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/System.md %})
+- [Traffic Data]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Traffic_20Data.md %})
+- [Traffic Situation]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Traffic_20Situation.md %})
 
