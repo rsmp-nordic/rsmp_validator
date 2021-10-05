@@ -5,12 +5,26 @@ name: Build Documentation
 on:
   push:
     branches: [ docs ]
+  pull_request:
+    branches: [ docs ]
 
 jobs:
   build:
     name: Rebuild YARD docs and update the gh-pages branch
     runs-on: ubuntu-latest
+
+
+
+
     steps:
+      - name: Show $GITHUB_REF
+        run: echo "GITHUB_REF is $GITHUB_REF"
+
+      - name: Show github.head_ref
+        env:
+          GITHUB_REF2: ${{ toJSON(github.ref) }}
+        run: echo "GITHUB_REF2 is $GITHUB_REF2"
+
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
