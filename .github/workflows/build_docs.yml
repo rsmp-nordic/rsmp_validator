@@ -13,9 +13,6 @@ jobs:
     name: Rebuild YARD docs and update the gh-pages branch
     runs-on: ubuntu-latest
 
-
-
-
     steps:
       - name: Show $GITHUB_REF
         run: echo "GITHUB_REF is $GITHUB_REF"
