@@ -10,6 +10,7 @@ parent: Test Suite
 # Site
 {: .no_toc}
 
+{{ site.base_url }}
 Tests for RSMP sites.
 
 ### Categories

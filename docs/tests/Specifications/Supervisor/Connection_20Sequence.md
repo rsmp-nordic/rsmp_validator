@@ -11,6 +11,7 @@ grand_parent: Test Suite
 # Connection Sequence
 {: .no_toc}
 
+{{ site.base_url }}
 
 
 ### Tests

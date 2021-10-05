@@ -11,6 +11,7 @@ grand_parent: Site
 # Traffic Light Controller Clock
 {: .no_toc}
 
+{{ site.base_url }}
 Tests related to the clock.
 When you set the clock, the adjusted time shoudl be used
 everywhere you get back a timestamp.

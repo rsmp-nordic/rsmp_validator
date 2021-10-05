@@ -10,6 +10,7 @@ parent: Test Suite
 # Supervisor
 {: .no_toc}
 
+{{ site.base_url }}
 Tests for RSMP supervisors.
 Supervisor testing is still preliminary, and only a small set of tests are available,
 covering just the core specification. No tests are available for specific equipment types, e.g.

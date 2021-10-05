@@ -11,6 +11,7 @@ grand_parent: Site
 # Traffic Light Controller Traffic Situation
 {: .no_toc}
 
+{{ site.base_url }}
 
 
 ### Tests
