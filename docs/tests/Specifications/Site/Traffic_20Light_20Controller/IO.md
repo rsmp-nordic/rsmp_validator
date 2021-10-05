@@ -11,6 +11,8 @@ grand_parent: Site
 # Traffic Light Controller IO
 {: .no_toc}
 
+site.baseurl: [{{ site.baseurl }}]
+
 Tests related to inputs and outputs.
 
 ### Categories

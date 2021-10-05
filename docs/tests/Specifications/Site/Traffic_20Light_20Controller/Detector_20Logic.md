@@ -11,6 +11,8 @@ grand_parent: Site
 # Traffic Light Controller Detector Logic
 {: .no_toc}
 
+site.baseurl: [{{ site.baseurl }}]
+
 
 
 ### Tests

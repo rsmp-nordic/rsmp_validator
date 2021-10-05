@@ -11,6 +11,8 @@ grand_parent: Site
 # Traffic Light Controller Emergency Route
 {: .no_toc}
 
+site.baseurl: [{{ site.baseurl }}]
+
 
 
 ### Tests

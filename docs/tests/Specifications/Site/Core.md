@@ -11,6 +11,8 @@ grand_parent: Test Suite
 # Core
 {: .no_toc}
 
+site.baseurl: [{{ site.baseurl }}]
+
 Tests covering the core specification for sites.
 
 These tests are generic and can be used to test all types of RSMP sites.

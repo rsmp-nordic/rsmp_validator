@@ -11,6 +11,8 @@ grand_parent: Site
 # Traffic Light Controller Alarm
 {: .no_toc}
 
+site.baseurl: [{{ site.baseurl }}]
+
 Alarms can be hard to validate unless you have a reliable
 method of triggering them, and there is currently no way to directly triggering
 alarms via RSMP.

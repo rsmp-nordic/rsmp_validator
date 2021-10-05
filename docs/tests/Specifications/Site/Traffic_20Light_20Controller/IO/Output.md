@@ -11,6 +11,8 @@ grand_parent: Traffic Light Controller
 # Traffic Light Controller IO Output
 {: .no_toc}
 
+site.baseurl: [{{ site.baseurl }}]
+
 
 
 ### Tests

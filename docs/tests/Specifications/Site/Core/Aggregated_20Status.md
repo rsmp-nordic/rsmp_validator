@@ -11,6 +11,8 @@ grand_parent: Site
 # Core Aggregated Status
 {: .no_toc}
 
+site.baseurl: [{{ site.baseurl }}]
+
 
 
 ### Tests

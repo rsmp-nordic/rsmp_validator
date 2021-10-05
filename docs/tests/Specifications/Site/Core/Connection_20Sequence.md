@@ -11,6 +11,8 @@ grand_parent: Site
 # Core Connection Sequence
 {: .no_toc}
 
+site.baseurl: [{{ site.baseurl }}]
+
 
 
 ### Tests

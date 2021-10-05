@@ -11,6 +11,8 @@ grand_parent: Site
 # Traffic Light Controller Subscription
 {: .no_toc}
 
+site.baseurl: [{{ site.baseurl }}]
+
 
 
 ### Tests
