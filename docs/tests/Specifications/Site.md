@@ -14,6 +14,6 @@ Tests for RSMP sites.
 
 ### Categories
 {: .no_toc .text-delta }
-- [Core]({{ site.baseurl}}{% link tests/Specifications/Site/Core.md %})
-- [Traffic Light Controller]({{ site.baseurl}}{% link tests/Specifications/Site/Traffic_20Light_20Controller.md %})
+- [Core]({{ base_url }}{% link tests/Specifications/Site/Core.md %})
+- [Traffic Light Controller]({{ base_url }}{% link tests/Specifications/Site/Traffic_20Light_20Controller.md %})
 
