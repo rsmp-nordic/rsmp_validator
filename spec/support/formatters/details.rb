@@ -50,5 +50,10 @@ module Validator
       end.join
       @output << backtrace << "\n"
     end
+
+    def dump_pending notification
+      dump_sentinel_warnings
+      super notification
+    end
   end
 end
