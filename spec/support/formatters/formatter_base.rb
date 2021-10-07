@@ -25,14 +25,13 @@ module Validator
     end
 
     def dump_pending notification
-      dump_sentinel_warnings
       if notification.pending_examples.any?
         @output << notification.fully_formatted_pending_examples
       end
     end
 
     def dump_sentinel_warnings
-        warnings = Validator::Testee.sentinel_errors
+      warnings = Validator::Testee.sentinel_errors
       if warnings.any?      
         @output << "\n\nSentinel warnings:\n\n"
         warnings.each.with_index(1) do |warning,i|
@@ -50,11 +49,17 @@ module Validator
 
     def dump_summary notification
       @output << notification.fully_formatted
+      dump_sentinel_summary
+    end
 
+    def dump_sentinel_summary
       num = Validator::Testee.sentinel_errors.size
-      str = "#{num} sentinel warnings"
+      str = "#{num} sentinel warnings:"
       str = colorize(str,:yellow) if num > 0
-      @output << "\n#{str}\n "
+      @output << "\n#{str}\n\n"
+      histogram = Validator::Testee.sentinel_errors.dup.inject(Hash.new(0)) { |h, x| h[x.class] += 1; h }.each_pair do |err,num|
+        @output << colorize("  #{num} #{err}\n",:yellow)
+      end
     end
 
     def close notification
