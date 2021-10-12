@@ -57,18 +57,18 @@ RSpec.describe 'Site::Traffic Light Controller' do
             :minute,
             :second,
           ] }
-          request, response = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
+          request, matcher = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
             timeout: Validator.config['timeouts']['status_update']
           }
           status = "S0096"
 
           received = Time.new(
-            response[{"sCI" => status, "n" => "year"}]["s"],
-            response[{"sCI" => status, "n" => "month"}]["s"],
-            response[{"sCI" => status, "n" => "day"}]["s"],
-            response[{"sCI" => status, "n" => "hour"}]["s"],
-            response[{"sCI" => status, "n" => "minute"}]["s"],
-            response[{"sCI" => status, "n" => "second"}]["s"],
+            matcher.result.dig( {"sCI" => status, "n" => "year"}, :item, 's' ),
+            matcher.result.dig( {"sCI" => status, "n" => "month"}, :item, 's' ),
+            matcher.result.dig( {"sCI" => status, "n" => "day"}, :item, 's' ),
+            matcher.result.dig( {"sCI" => status, "n" => "hour"}, :item, 's' ),
+            matcher.result.dig( {"sCI" => status, "n" => "minute"}, :item, 's' ),
+            matcher.result.dig( {"sCI" => status, "n" => "second"}, :item, 's' ),
             'UTC'
           )
 
@@ -104,13 +104,13 @@ RSpec.describe 'Site::Traffic Light Controller' do
             :second,
           ] }
           
-          request, response, messages = site.request_status Validator.config['main_component'],
+          request, matcher = site.request_status Validator.config['main_component'],
             convert_status_list(status_list),
             collect: {
               timeout: Validator.config['timeouts']['status_response']
             }
 
-          message = messages.first
+          message = matcher.messages.first
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(message.attributes['sTs']) - CLOCK
           diff = diff.round          
@@ -155,8 +155,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
-          request, response, messages = set_functional_position 'NormalControl'
-          message = messages.first
+          request, matcher = set_functional_position 'NormalControl'
+          message = matcher.messages.first
           max_diff = Validator.config['timeouts']['command_response'] * 2
           diff = Time.parse(message.attributes['cTS']) - CLOCK
           diff = diff.round
@@ -177,8 +177,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
-          request, response, messages = set_functional_position 'NormalControl'
-          message = messages.first
+          request, matcher = set_functional_position 'NormalControl'
+          message = matcher.messages.first
           max_diff = Validator.config['timeouts']['command_response']
           diff = Time.parse(message.attributes['cTS']) - CLOCK
           diff = diff.round
