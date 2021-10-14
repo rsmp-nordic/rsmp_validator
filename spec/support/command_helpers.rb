@@ -6,7 +6,7 @@ module Validator::CommandHelpers
           timeout: Validator.config['timeouts']['command_response']
         }
     end
-    return *result   # use splat '*' operator
+    result
   end
 
   # Build a RSMP command value list from a hash
