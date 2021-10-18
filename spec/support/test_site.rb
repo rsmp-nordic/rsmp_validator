@@ -62,7 +62,7 @@ class Validator::Site < Validator::Testee
   def parse_config
     # build rsmp supervisor config by
     # picking elements from the config
-    want = ['sxl','intervals','timeouts','components','rsmp_versions']
+    want = ['sxl','intervals','timeouts','components','rsmp_versions','skip_validation']
     guest_settings = config.select { |key| want.include? key }
     @supervisor_config = {
       'port' => config['port'],
