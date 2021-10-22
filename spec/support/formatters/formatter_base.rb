@@ -53,6 +53,7 @@ module Validator
     end
 
     def dump_sentinel_summary
+      return unless Validator::Testee.sentinel_errors.any?
       num = Validator::Testee.sentinel_errors.size
       str = "#{num} sentinel warnings:"
       str = colorize(str,:yellow) if num > 0
