@@ -36,7 +36,7 @@ module Validator
         @output << "\n\nSentinel warnings:\n\n"
         warnings.each.with_index(1) do |warning,i|
           @output << colorize("#{i.to_s.rjust(4)}) #{warning.class}\n",:yellow)
-          @output << "      #{warning.message}\n\n"
+          @output << "      #{warning.message.capitalize}\n\n"
         end
       end
     end
