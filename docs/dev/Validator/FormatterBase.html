@@ -439,12 +439,12 @@
       <pre class="lines">
 
 
-65
 66
-67</pre>
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/formatters/formatter_base.rb', line 65</span>
+      <pre class="code"><span class="info file"># File 'spec/support/formatters/formatter_base.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_close'>close</span> <span class='id identifier rubyid_notification'>notification</span>
   <span class='ivar'>@output</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span>
@@ -579,12 +579,14 @@
 60
 61
 62
-63</pre>
+63
+64</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'spec/support/formatters/formatter_base.rb', line 55</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dump_sentinel_summary'>dump_sentinel_summary</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Testee.html" title="Validator::Testee (class)">Testee</a></span></span><span class='period'>.</span><span class='id identifier rubyid_sentinel_errors'><span class='object_link'><a href="Testee.html#sentinel_errors-class_method" title="Validator::Testee.sentinel_errors (method)">sentinel_errors</a></span></span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span>
   <span class='id identifier rubyid_num'>num</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Testee.html" title="Validator::Testee (class)">Testee</a></span></span><span class='period'>.</span><span class='id identifier rubyid_sentinel_errors'><span class='object_link'><a href="Testee.html#sentinel_errors-class_method" title="Validator::Testee.sentinel_errors (method)">sentinel_errors</a></span></span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>
   <span class='id identifier rubyid_str'>str</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_num'>num</span><span class='embexpr_end'>}</span><span class='tstring_content'> sentinel warnings:</span><span class='tstring_end'>&quot;</span></span>
   <span class='id identifier rubyid_str'>str</span> <span class='op'>=</span> <span class='id identifier rubyid_colorize'>colorize</span><span class='lparen'>(</span><span class='id identifier rubyid_str'>str</span><span class='comma'>,</span><span class='symbol'>:yellow</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_num'>num</span> <span class='op'>&gt;</span> <span class='int'>0</span>
