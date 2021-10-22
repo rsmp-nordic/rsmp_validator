@@ -107,10 +107,7 @@ class Validator::Testee
 
     # reraise errors outside task to surface them in rspec
     if error
-      #Validator.log "Failed: #{error.class}: #{error}", level: :test
       raise error
-    else
-      #Validator.log "OK", level: :test
     end
   end
 

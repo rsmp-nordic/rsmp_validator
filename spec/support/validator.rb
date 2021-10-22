@@ -40,11 +40,20 @@ module Validator
     self.reporter = rspec_config.reporter
   end
 
-  def self.log str, options
-    self.reporter.publish :step, message: str
+  def self.check_connection
+    if self.mode == :site
+      Validator::Site.testee.connected {}
+    elsif self.mode == :supervisor
+      begin
+        Validator::Supervisor.testee.connected {}
+      rescue StandardError => e
+        raise e.exception "Could not connect to supervisor. #{e}"
+      end
+    end
   end
 
-  def self.after example
+  def self.log str, options
+    self.reporter.publish :step, message: str
   end
 
   private
