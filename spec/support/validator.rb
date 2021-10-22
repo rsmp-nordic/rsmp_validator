@@ -33,7 +33,8 @@ module Validator
       'acknowledgements' => true,
       'watchdogs' => true,
       'test' => true,
-      'direction' => false
+      'direction' => false,
+      'component' => true
     }
     initialize_logging log_settings: settings
     self.reporter = rspec_config.reporter
