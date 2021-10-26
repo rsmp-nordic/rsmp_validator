@@ -249,6 +249,28 @@
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stop-class_method" title="stop (class method)">.<strong>stop</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
     </ul>
   
     <h2>
@@ -341,7 +363,7 @@
   
   
   <h3 class="inherited">Methods inherited from <span class='object_link'><a href="Testee.html" title="Validator::Testee (class)">Testee</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Testee.html#config-instance_method" title="Validator::Testee#config (method)">#config</a></span>, <span class='object_link'><a href="Testee.html#connected-instance_method" title="Validator::Testee#connected (method)">#connected</a></span>, <span class='object_link'><a href="Testee.html#disconnected-instance_method" title="Validator::Testee#disconnected (method)">#disconnected</a></span>, <span class='object_link'><a href="Testee.html#isolated-instance_method" title="Validator::Testee#isolated (method)">#isolated</a></span>, <span class='object_link'><a href="Testee.html#reconnected-instance_method" title="Validator::Testee#reconnected (method)">#reconnected</a></span>, <span class='object_link'><a href="Testee.html#sentinel_errors-class_method" title="Validator::Testee.sentinel_errors (method)">sentinel_errors</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="Testee.html#config-instance_method" title="Validator::Testee#config (method)">#config</a></span>, <span class='object_link'><a href="Testee.html#connected-instance_method" title="Validator::Testee#connected (method)">#connected</a></span>, <span class='object_link'><a href="Testee.html#disconnected-instance_method" title="Validator::Testee#disconnected (method)">#disconnected</a></span>, <span class='object_link'><a href="Testee.html#isolated-instance_method" title="Validator::Testee#isolated (method)">#isolated</a></span>, <span class='object_link'><a href="Testee.html#reconnected-instance_method" title="Validator::Testee#reconnected (method)">#reconnected</a></span>, <span class='object_link'><a href="Testee.html#sentinel_errors-class_method" title="Validator::Testee.sentinel_errors (method)">sentinel_errors</a></span>, <span class='object_link'><a href="Testee.html#stop-instance_method" title="Validator::Testee#stop (method)">#stop</a></span></p>
 
   
   <div id="class_attr_details" class="attr_details">
@@ -522,6 +544,37 @@
 </table>
 </div>
     
+      <div class="method_details ">
+  <h3 class="signature " id="stop-class_method">
+  
+    .<strong>stop</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3>
+<table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+61
+62
+63</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 61</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_stop'>stop</span>
+  <span class='id identifier rubyid_testee'>testee</span><span class='period'>.</span><span class='id identifier rubyid_stop'>stop</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
   </div>
 
   <div id="instance_method_details" class="method_details_list">
@@ -555,17 +608,17 @@
       <pre class="lines">
 
 
-105
-106
-107
-108
 109
 110
 111
-112</pre>
+112
+113
+114
+115
+116</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 105</span>
+      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 109</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_build_node'>build_node</span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span>
   <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>Supervisor</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
@@ -596,10 +649,6 @@
       <pre class="lines">
 
 
-62
-63
-64
-65
 66
 67
 68
@@ -636,10 +685,14 @@
 99
 100
 101
-102</pre>
+102
+103
+104
+105
+106</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_parse_config'>parse_config</span>
   <span class='comment'># build rsmp supervisor config by
@@ -714,10 +767,6 @@
       <pre class="lines">
 
 
-115
-116
-117
-118
 119
 120
 121
@@ -725,10 +774,14 @@
 123
 124
 125
-126</pre>
+126
+127
+128
+129
+130</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 115</span>
+      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 119</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_for_connection'>wait_for_connection</span>
   <span class='ivar'>@proxy</span> <span class='op'>=</span> <span class='ivar'>@node</span><span class='period'>.</span><span class='id identifier rubyid_proxies'>proxies</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
