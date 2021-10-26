@@ -223,8 +223,9 @@ module Validator
       def core_filter.inspect
         "[unless relevant for #{Validator.config.dig('restrict_testing','core_version')}]"
       end
-      rspec_config.filter_run_excluding rsmp: core_filter
+      rspec_config.filter_run_excluding core: core_filter
     end
+
 
     # enable filtering by sxl version tags like '>=1.0.7'
     # Gem::Requirement and Gem::Version classed are used to do the version matching,
