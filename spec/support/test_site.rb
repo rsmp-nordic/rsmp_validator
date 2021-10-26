@@ -57,6 +57,10 @@ class Validator::Site < Validator::Testee
     def isolated options={}, &block
       testee.isolated options, &block
     end
+
+    def stop
+      testee.stop
+    end
   end
 
   def parse_config

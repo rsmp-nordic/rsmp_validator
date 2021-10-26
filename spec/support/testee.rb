@@ -73,6 +73,21 @@ class Validator::Testee
     end
   end
 
+  # Stop the rsmp supervisor
+  def stop why=nil
+    # will be called outside within_reactor
+    # but stop() requires an async context
+    # so run inside an Async block
+    Async do
+      if @node
+        Validator.log why, level: :test if why
+        @node.stop
+      end
+      @node = nil
+      @proxy = nil
+    end
+  end
+  
   private
 
   def initialize
@@ -121,22 +136,6 @@ class Validator::Testee
         @node = build_node task, options
         @node.start  # keep running inside the async task, listening for sites
       end
-    end
-
-  end
-
-  # Stop the rsmp supervisor
-  def stop why=nil
-    # will be called outside within_reactor
-    # but stop() requires an async context
-    # so run inside an Async block
-    Async do
-      if @node
-        Validator.log why, level: :test if why
-        @node.stop
-      end
-      @node = nil
-      @proxy = nil
     end
   end
 
