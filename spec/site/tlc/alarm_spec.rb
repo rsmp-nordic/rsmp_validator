@@ -28,6 +28,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Then we should receive ana alarm
 
     specify 'A0302 is raised when a detector logic is faulty', :script, sxl: '>=1.0.7' do |example|
+      skip "Don't yet have a way to trigger alarms on the equipment"
       Validator::Site.connected do |task,supervisor,site|
         component = Validator.config['components']['detector_logic'].keys.first
         with_alarm_activated do
@@ -89,6 +90,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Then we should received an alarm
 
     it 'is buffered during disconnect', :script, sxl: '>=1.0.7' do |example|
+      skip "Don't yet have a way to trigger alarms on the equipment"
       Validator::Site.stop
       with_alarm_activated do
         Validator::Site.connected do |task,supervisor,site|
