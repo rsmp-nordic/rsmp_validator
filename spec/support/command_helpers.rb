@@ -149,7 +149,7 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "intention to set input #{input}"
   end
 
-  def force_detector_logic component, status, mode='True'
+  def force_detector_logic component, status:'True', mode:'True'
     require_security_codes
     Validator.log "Force detector logic", level: :test
     command_list = build_command_list :M0008, :setForceDetectorLogic, {
@@ -436,7 +436,7 @@ module Validator::CommandHelpers
     indx = 0
     component = Validator.config['components']['detector_logic'].keys[indx]
 
-    force_detector_logic component, 'True', 'True'
+    force_detector_logic component, mode:'True'
     Validator.config['main_component'] = Validator.config['main_component']
     wait_for_status(@task,
       "activate detector logic #{component}",
@@ -444,7 +444,7 @@ module Validator::CommandHelpers
     )
     
 
-    force_detector_logic component, 'False'
+    force_detector_logic component, mode:'False'
     Validator.config['main_component'] = Validator.config['main_component']
     wait_for_status(@task,
       "deactivate detector logic #{component}",
