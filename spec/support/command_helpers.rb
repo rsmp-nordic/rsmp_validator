@@ -307,10 +307,17 @@ module Validator::CommandHelpers
     end
   end
 
-  def require_scripts
-    skip "Scripts are not configured" unless Validator.config['scripts']
-    skip "Script to activate alarm is not configured" unless Validator.config.dig 'scripts', 'activate_alarm'
-    skip "Script to deactivate alarm is not configured" unless Validator.config.dig 'scripts','deactivate_alarm'
+  def run_script key
+    path = Validator.config.dig('scripts',key)
+    raise "No Script configured for '#{key}'" unless path
+    system(path) if path
+  end
+
+  def with_alarm_activated
+    run_script 'activate_alarm'
+    yield
+  ensure
+    run_script 'deactivate_alarm'
   end
 
   def set_clock clock

@@ -28,33 +28,29 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Then we should receive ana alarm
 
     specify 'A0302 is raised when a detector logic is faulty', :script, sxl: '>=1.0.7' do |example|
-      require_scripts
       Validator::Site.connected do |task,supervisor,site|
         component = Validator.config['components']['detector_logic'].keys.first
-        system(Validator.config['scripts']['activate_alarm'])
-        site.log "Waiting for alarm", level: :test
-        start_time = Time.now
-        message, response = nil,nil
-        expect do
-          response = site.wait_for_alarm task, component: component, aCId: 'A0302',
+        with_alarm_activated do
+          site.log "Waiting for alarm", level: :test
+          start_time = Time.now
+          alarm_code_id = 'A0301'
+          collector = site.collect_alarms task, num: 1, component: component, aCId: alarm_code_id,
             aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
-        end.to_not raise_error, "Did not receive alarm"
 
-        delay = Time.now - start_time
-        site.log "alarm confirmed after #{delay.to_i}s", level: :test
-        system(Validator.config['scripts']['deactivate_alarm'])
+          alarm = collector.result
+          delay = Time.now - start_time
+          site.log "alarm confirmed after #{delay.to_i}s", level: :test
 
-        alarm_time = Time.parse(response[:message].attributes["aTs"])
-        expect(alarm_time).to be_within(1.minute).of Time.now.utc
-        expect(response[:message].attributes['rvs']).to eq([{
-          "n":"detector","v":"1"},
-          {"n":"type","v":"loop"},
-          {"n":"errormode","v":"on"},
-          {"n":"manual","v":"True"},
-          {"n":"logicerror","v":"always_off"}
-        ])
-      ensure
-        system(Validator.config['scripts']['deactivate_alarm'])
+          alarm_time = Time.parse(alarm.attributes["aTs"])
+          expect(alarm_time).to be_within(1.minute).of Time.now.utc
+          expect(alarm.attributes['rvs']).to eq([{
+            "n"=>"detector","v"=>"1"},
+            {"n"=>"type","v"=>"loop"},
+            {"n"=>"errormode","v"=>"on"},
+            {"n"=>"manual","v"=>"True"},
+            {"n"=>"logicerror","v"=>"always_off"}
+          ])
+        end
       end
     end
 
@@ -68,33 +64,19 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
     it 'can be acknowledged', :script do |example|
       skip "Don't yet have a way to trigger alarms on the equipment"
-      require_scripts
       Validator::Site.connected do |task,supervisor,site|
         component = Validator.config['components']['detector_logic'].keys.first
-        system(Validator.config['scripts']['activate_alarm'])
-        site.log "Waiting for alarm", level: :test
-        start_time = Time.now
-        message, response = nil,nil
-        expect do
-          response = site.wait_for_alarm task, component: component, aCId: 'A0302',
+
+        with_alarm_activated do
+          site.log "Waiting for alarm", level: :test
+          start_time = Time.now
+          message, response = nil,nil
+          alarm_code_id = 'A0301'
+
+          collector = site.collect_alarms task, num: 1, component: component, aCId: alarm_code_id,
             aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
-        end.to_not raise_error, "Did not receive alarm"
-
-        alarm_code_id = 'A0302'
-        message = site.send_alarm_acknowledgement Validator.config['main_component'], alarm_code_id
-
-        delay = Time.now - start_time
-        site.log "alarm confirmed after #{delay.to_i}s", level: :test
-
-        expect do
-          response = @site.wait_for_alarm_acknowledged_response message: message, component: Validator.config['main_component'], timeout: Validator.config['timeouts']['alarm']
-        end.to_not raise_error
-
-        expect(response).not_to be_a(RSMP::MessageNotAck), "Message rejected: #{response.attributes['rea']}"
-        expect(response).to be_a(RSMP::AlarmAcknowledgedResponse)
-        expect(response.attributes['cId']).to eq(Validator.config['main_component'])
-      ensure 
-        system(Validator.config['scripts']['deactivate_alarm'])
+        end
+        # TODO
       end
     end
 
@@ -107,36 +89,25 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Then we should received an alarm
 
     it 'is buffered during disconnect', :script, sxl: '>=1.0.7' do |example|
-      require_scripts
-      component = Validator.config['components']['detector_logic'].keys.first
-      Validator::Site.isolated do |task,supervisor,site|
-      end
-      # Activate alarm
-      system(Validator.config['scripts']['activate_alarm'])
-
-      Validator::Site.isolated do |task,supervisor,site|
-        site = site
-        log_confirmation "Waiting for alarm" do
-          message, response = nil,nil
-          expect do
-            response = site.wait_for_alarm task, component: component, aCId: 'A0302',
-              aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
-          end.to_not raise_error, "Did not receive alarm"
-
+      Validator::Site.stop
+      with_alarm_activated do
+        Validator::Site.connected do |task,supervisor,site|
+          component = Validator.config['components']['detector_logic'].keys.first
+          log_confirmation "Waiting for alarm" do
+            collector = site.collect_alarms task, num: 1, component: component, aCId: 'A0302',
+              aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']      
+            alarm = collector.result
+            alarm_time = Time.parse(alarm.attributes["aTs"])
+            expect(alarm_time).to be_within(1.minute).of Time.now.utc
+            expect(alarm.attributes['rvs']).to eq([{
+              "n"=>"detector","v"=>"1"},
+              {"n"=>"type","v"=>"loop"},
+              {"n"=>"errormode","v"=>"on"},
+              {"n"=>"manual","v"=>"True"},
+              {"n"=>"logicerror","v"=>"always_off"}
+            ])
+          end
         end
-        system(Validator.config['scripts']['deactivate_alarm'])
-
-        alarm_time = Time.parse(response[:message].attributes["aTs"])
-        expect(alarm_time).to be_within(1.minute).of Time.now.utc
-        expect(response[:message].attributes['rvs']).to eq([{
-          "n":"detector","v":"1"},
-          {"n":"type","v":"loop"},
-          {"n":"errormode","v":"on"},
-          {"n":"manual","v":"True"},
-          {"n":"logicerror","v":"always_off"}
-        ])
-      ensure
-        system(Validator.config['scripts']['deactivate_alarm'])
       end
     end
   end
