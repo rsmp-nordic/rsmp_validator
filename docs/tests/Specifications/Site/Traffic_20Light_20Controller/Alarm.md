@@ -46,6 +46,7 @@ Validate that a detector logic fault raises A0302.
      View Source
   </summary>
 ```ruby
+skip "Don't yet have a way to trigger alarms on the equipment"
 Validator::Site.connected do |task,supervisor,site|
   component = Validator.config['components']['detector_logic'].keys.first
   with_alarm_activated do
@@ -123,6 +124,7 @@ and send once the RSMP connection is reestablished.
      View Source
   </summary>
 ```ruby
+skip "Don't yet have a way to trigger alarms on the equipment"
 Validator::Site.stop
 with_alarm_activated do
   Validator::Site.connected do |task,supervisor,site|
