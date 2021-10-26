@@ -199,18 +199,18 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 7. Expect the difference to be within max_diff
     it 'is used for alarm timestamp', :script, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        require_scripts
         prepare task, site
         with_clock_set CLOCK do
           component = Validator.config['components']['detector_logic'].keys.first
-          system(Validator.config['scripts']['activate_alarm'])
-          site.log "Waiting for alarm", level: :test
-          response = site.wait_for_alarm task, timeout: Validator.config['timeouts']['alarm']
-          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-          diff = Time.parse(response.attributes['sTs']) - CLOCK
-          diff = diff.round
-          expect(diff.abs).to be <= max_diff,
-            "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s"
+          with_alarm_activated do
+            site.log "Waiting for alarm", level: :test
+            response = site.wait_for_alarm task, timeout: Validator.config['timeouts']['alarm']
+            max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
+            diff = Time.parse(response.attributes['sTs']) - CLOCK
+            diff = diff.round
+            expect(diff.abs).to be <= max_diff,
+              "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s"
+          end
         end
       end
     end
