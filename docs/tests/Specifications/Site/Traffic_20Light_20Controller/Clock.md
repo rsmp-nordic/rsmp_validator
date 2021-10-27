@@ -170,7 +170,7 @@ Validator::Site.connected do |task,supervisor,site|
       collect: {
         timeout: Validator.config['timeouts']['status_response']
       }
-    message = collector.messages.first
+    message = collector.message
     max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
     diff = Time.parse(message.attributes['sTs']) - CLOCK
     diff = diff.round          
@@ -215,12 +215,12 @@ Validator::Site.connected do |task,supervisor,site|
     }
     status = "S0096"
     received = Time.new(
-      collector.result.dig( {"sCI" => status, "n" => "year"}, :item, 's' ),
-      collector.result.dig( {"sCI" => status, "n" => "month"}, :item, 's' ),
-      collector.result.dig( {"sCI" => status, "n" => "day"}, :item, 's' ),
-      collector.result.dig( {"sCI" => status, "n" => "hour"}, :item, 's' ),
-      collector.result.dig( {"sCI" => status, "n" => "minute"}, :item, 's' ),
-      collector.result.dig( {"sCI" => status, "n" => "second"}, :item, 's' ),
+      collector.query_result( {"sCI" => status, "n" => "year"} )['s'],
+      collector.query_result( {"sCI" => status, "n" => "month"} )['s'],
+      collector.query_result( {"sCI" => status, "n" => "day"} )['s'],
+      collector.query_result( {"sCI" => status, "n" => "hour"} )['s'],
+      collector.query_result( {"sCI" => status, "n" => "minute"} )['s'],
+      collector.query_result( {"sCI" => status, "n" => "second"} )['s'],
       'UTC'
     )
     max_diff =
@@ -261,7 +261,7 @@ Validator::Site.connected do |task,supervisor,site|
       timeout: Validator.config['timeouts']['status_response']
     }
     max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-    diff = Time.parse(collector.result.attributes['aSTS']) - CLOCK
+    diff = Time.parse(collector.message.attributes['aSTS']) - CLOCK
     diff = diff.round
     expect(diff.abs).to be <= max_diff,
       "Timestamp of aggregated status is off by #{diff}s, should be within #{max_diff}s"
@@ -290,6 +290,7 @@ Verify timestamp of alarm after changing clock
      View Source
   </summary>
 ```ruby
+skip_unless_scripts_are_configured
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   with_clock_set CLOCK do
@@ -332,7 +333,7 @@ Validator::Site.connected do |task,supervisor,site|
     Validator.log "Checking watchdog timestamp", level: :test
     collector = site.collect task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
     max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-    diff = Time.parse(collector.result.attributes['wTs']) - CLOCK
+    diff = Time.parse(collector.message.attributes['wTs']) - CLOCK
     diff = diff.round
     expect(diff.abs).to be <= max_diff,
       "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s"

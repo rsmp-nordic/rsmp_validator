@@ -108,28 +108,7 @@ request_status_and_confirm "emergency stage status",
 
 
 
-## Operational fixed time control is read with S0009
-
-Verify status S0009 fixed time control
-
-1. Given the site is connected
-2. Request status
-3. Expect status response before timeout
-
-<details markdown="block">
-  <summary>
-     View Source
-  </summary>
-```ruby
-request_status_and_confirm "fixed time control status",
-{ S0009: [:status,:intersection] }
-```
-</details>
-
-
-
-
-## Operational fixed time controlcan be activated with M0007
+## Operational fixed time control can be activated with M0007
 
 1. Verify connection
 2. Send the control command to switch to  fixed time= true
@@ -147,6 +126,27 @@ Validator::Site.connected do |task,supervisor,site|
   switch_fixed_time 'True'
   switch_fixed_time 'False'
 end
+```
+</details>
+
+
+
+
+## Operational fixed time control is read with S0009
+
+Verify status S0009 fixed time control
+
+1. Given the site is connected
+2. Request status
+3. Expect status response before timeout
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+request_status_and_confirm "fixed time control status",
+{ S0009: [:status,:intersection] }
 ```
 </details>
 

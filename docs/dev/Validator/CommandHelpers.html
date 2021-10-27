@@ -755,6 +755,28 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#skip_unless_scripts_are_configured-instance_method" title="#skip_unless_scripts_are_configured (instance method)">#<strong>skip_unless_scripts_are_configured</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#switch_dark_mode-instance_method" title="#switch_dark_mode (instance method)">#<strong>switch_dark_mode</strong>  &#x21d2; Object </a>
     
 
@@ -1301,13 +1323,13 @@
       <pre class="lines">
 
 
-455
-456
-457
-458</pre>
+461
+462
+463
+464</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 455</span>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 461</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_prepare'>prepare</span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
   <span class='ivar'>@task</span> <span class='op'>=</span> <span class='id identifier rubyid_task'>task</span>
@@ -1369,12 +1391,6 @@
       <pre class="lines">
 
 
-338
-339
-340
-341
-342
-343
 344
 345
 346
@@ -1383,10 +1399,16 @@
 349
 350
 351
-352</pre>
+352
+353
+354
+355
+356
+357
+358</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 338</span>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 344</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reset_clock'>reset_clock</span>
   <span class='id identifier rubyid_require_security_codes'><span class='object_link'><a href="#require_security_codes-instance_method" title="Validator::CommandHelpers#require_security_codes (method)">require_security_codes</a></span></span>
@@ -1502,12 +1524,6 @@
       <pre class="lines">
 
 
-323
-324
-325
-326
-327
-328
 329
 330
 331
@@ -1515,10 +1531,16 @@
 333
 334
 335
-336</pre>
+336
+337
+338
+339
+340
+341
+342</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 323</span>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 329</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_set_clock'>set_clock</span> <span class='id identifier rubyid_clock'>clock</span>
   <span class='id identifier rubyid_require_security_codes'><span class='object_link'><a href="#require_security_codes-instance_method" title="Validator::CommandHelpers#require_security_codes (method)">require_security_codes</a></span></span>
@@ -2414,6 +2436,41 @@
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="skip_unless_scripts_are_configured-instance_method">
+  
+    #<strong>skip_unless_scripts_are_configured</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3>
+<table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+316
+317
+318
+319
+320</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 316</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_skip_unless_scripts_are_configured'>skip_unless_scripts_are_configured</span>
+  <span class='kw'>unless</span> <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>scripts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>scripts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span>
+    <span class='id identifier rubyid_skip'>skip</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Skipping because scripts are not configured</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="switch_dark_mode-instance_method">
   
     #<strong>switch_dark_mode</strong>  &#x21d2; <tt>Object</tt> 
@@ -2468,12 +2525,6 @@
       <pre class="lines">
 
 
-435
-436
-437
-438
-439
-440
 441
 442
 443
@@ -2486,10 +2537,16 @@
 450
 451
 452
-453</pre>
+453
+454
+455
+456
+457
+458
+459</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 435</span>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 441</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_switch_detector_logic'>switch_detector_logic</span>
   <span class='id identifier rubyid_indx'>indx</span> <span class='op'>=</span> <span class='int'>0</span>
@@ -2531,12 +2588,6 @@
       <pre class="lines">
 
 
-404
-405
-406
-407
-408
-409
 410
 411
 412
@@ -2546,10 +2597,16 @@
 416
 417
 418
-419</pre>
+419
+420
+421
+422
+423
+424
+425</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 404</span>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 410</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_switch_emergency_route'>switch_emergency_route</span> <span class='id identifier rubyid_route'>route</span>
   <span class='id identifier rubyid_set_emergency_route'><span class='object_link'><a href="#set_emergency_route-instance_method" title="Validator::CommandHelpers#set_emergency_route (method)">set_emergency_route</a></span></span> <span class='id identifier rubyid_route'>route</span>
@@ -2588,16 +2645,16 @@
       <pre class="lines">
 
 
-396
-397
-398
-399
-400
-401
-402</pre>
+402
+403
+404
+405
+406
+407
+408</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 396</span>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 402</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_switch_fixed_time'>switch_fixed_time</span> <span class='id identifier rubyid_status'>status</span>
   <span class='id identifier rubyid_set_fixed_time'><span class='object_link'><a href="#set_fixed_time-instance_method" title="Validator::CommandHelpers#set_fixed_time (method)">set_fixed_time</a></span></span> <span class='id identifier rubyid_status'>status</span>
@@ -2627,22 +2684,22 @@
       <pre class="lines">
 
 
-421
-422
-423
-424
-425
-426
 427
 428
 429
 430
 431
 432
-433</pre>
+433
+434
+435
+436
+437
+438
+439</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 421</span>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 427</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_switch_input'>switch_input</span> <span class='id identifier rubyid_indx'>indx</span>
   <span class='id identifier rubyid_set_input'><span class='object_link'><a href="#set_input-instance_method" title="Validator::CommandHelpers#set_input (method)">set_input</a></span></span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>True</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='id identifier rubyid_indx'>indx</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
@@ -2678,13 +2735,13 @@
       <pre class="lines">
 
 
-391
-392
-393
-394</pre>
+397
+398
+399
+400</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 391</span>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 397</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_switch_normal_control'>switch_normal_control</span>
   <span class='id identifier rubyid_set_functional_position'><span class='object_link'><a href="#set_functional_position-instance_method" title="Validator::CommandHelpers#set_functional_position (method)">set_functional_position</a></span></span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>NormalControl</span><span class='tstring_end'>&#39;</span></span>
@@ -2828,12 +2885,6 @@
       <pre class="lines">
 
 
-376
-377
-378
-379
-380
-381
 382
 383
 384
@@ -2841,10 +2892,16 @@
 386
 387
 388
-389</pre>
+389
+390
+391
+392
+393
+394
+395</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 376</span>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 382</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_normal_control'>wait_normal_control</span>
   <span class='comment'># Wait for:
@@ -2881,15 +2938,15 @@
       <pre class="lines">
 
 
-316
-317
-318
-319
-320
-321</pre>
+322
+323
+324
+325
+326
+327</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 316</span>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 322</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_with_alarm_activated'>with_alarm_activated</span>
   <span class='id identifier rubyid_run_script'><span class='object_link'><a href="#run_script-instance_method" title="Validator::CommandHelpers#run_script (method)">run_script</a></span></span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>activate_alarm</span><span class='tstring_end'>&#39;</span></span>
@@ -2918,15 +2975,15 @@
       <pre class="lines">
 
 
-354
-355
-356
-357
-358
-359</pre>
+360
+361
+362
+363
+364
+365</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 354</span>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 360</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_with_clock_set'>with_clock_set</span> <span class='id identifier rubyid_clock'>clock</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span>
   <span class='id identifier rubyid_request'>request</span><span class='comma'>,</span> <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='id identifier rubyid_set_clock'><span class='object_link'><a href="#set_clock-instance_method" title="Validator::CommandHelpers#set_clock (method)">set_clock</a></span></span> <span class='id identifier rubyid_clock'>clock</span>
@@ -2955,22 +3012,22 @@
       <pre class="lines">
 
 
-362
-363
-364
-365
-366
-367
 368
 369
 370
 371
 372
 373
-374</pre>
+374
+375
+376
+377
+378
+379
+380</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 362</span>
+      <pre class="code"><span class="info file"># File 'spec/support/command_helpers.rb', line 368</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wrong_security_code'>wrong_security_code</span>
   <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../Validator.html#log-class_method" title="Validator.log (method)">log</a></span></span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Try to force detector logic with wrong security code</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='label'>level:</span> <span class='symbol'>:test</span>

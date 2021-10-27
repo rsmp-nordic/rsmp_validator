@@ -16,7 +16,7 @@ method of triggering them, and there is currently no way to directly triggering
 alarms via RSMP.
 
 Often some alarms can be triggered manually on the equipment,
-but since the validator is meant for automated testing, the this approach is
+but since the validator is meant for automated testing, this approach is
 not used.
 
 Instead a separate interface which can be scripted, like SSH,
@@ -46,7 +46,7 @@ Validate that a detector logic fault raises A0302.
      View Source
   </summary>
 ```ruby
-skip "Don't yet have a way to trigger alarms on the equipment"
+skip_unless_scripts_are_configured
 Validator::Site.connected do |task,supervisor,site|
   component = Validator.config['components']['detector_logic'].keys.first
   with_alarm_activated do
@@ -55,7 +55,7 @@ Validator::Site.connected do |task,supervisor,site|
     alarm_code_id = 'A0301'
     collector = site.collect_alarms task, num: 1, component: component, aCId: alarm_code_id,
       aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
-    alarm = collector.result
+    alarm = collector.message
     delay = Time.now - start_time
     site.log "alarm confirmed after #{delay.to_i}s", level: :test
     alarm_time = Time.parse(alarm.attributes["aTs"])
@@ -90,7 +90,7 @@ Validata that an alarm can be acknowledged.
      View Source
   </summary>
 ```ruby
-skip "Don't yet have a way to trigger alarms on the equipment"
+skip_unless_scripts_are_configured
 Validator::Site.connected do |task,supervisor,site|
   component = Validator.config['components']['detector_logic'].keys.first
   with_alarm_activated do
@@ -124,7 +124,7 @@ and send once the RSMP connection is reestablished.
      View Source
   </summary>
 ```ruby
-skip "Don't yet have a way to trigger alarms on the equipment"
+skip_unless_scripts_are_configured
 Validator::Site.stop
 with_alarm_activated do
   Validator::Site.connected do |task,supervisor,site|
@@ -132,7 +132,7 @@ with_alarm_activated do
     log_confirmation "Waiting for alarm" do
       collector = site.collect_alarms task, num: 1, component: component, aCId: 'A0302',
         aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']      
-      alarm = collector.result
+      alarm = collector.message
       alarm_time = Time.parse(alarm.attributes["aTs"])
       expect(alarm_time).to be_within(1.minute).of Time.now.utc
       expect(alarm.attributes['rvs']).to eq([{
