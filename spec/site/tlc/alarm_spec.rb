@@ -8,7 +8,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
   # alarms via RSMP.
   #
   # Often some alarms can be triggered manually on the equipment,
-  # but since the validator is meant for automated testing, the this approach is
+  # but since the validator is meant for automated testing, this approach is
   # not used.
   #
   # Instead a separate interface which can be scripted, like SSH,
@@ -20,6 +20,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
   # the test is recommended.
 
   describe 'Alarm' do
+    before { skip "Don't yet have a reliable way of triggering alarms" }
 
     # Validate that a detector logic fault raises A0302.
     #
@@ -28,7 +29,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Then we should receive ana alarm
 
     specify 'A0302 is raised when a detector logic is faulty', :script, sxl: '>=1.0.7' do |example|
-      skip "Don't yet have a way to trigger alarms on the equipment"
+      skip_unless_scripts_are_configured
       Validator::Site.connected do |task,supervisor,site|
         component = Validator.config['components']['detector_logic'].keys.first
         with_alarm_activated do
@@ -38,7 +39,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           collector = site.collect_alarms task, num: 1, component: component, aCId: alarm_code_id,
             aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
 
-          alarm = collector.result
+          alarm = collector.message
           delay = Time.now - start_time
           site.log "alarm confirmed after #{delay.to_i}s", level: :test
 
@@ -64,7 +65,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 5. Then we should receive a confirmation
 
     it 'can be acknowledged', :script do |example|
-      skip "Don't yet have a way to trigger alarms on the equipment"
+      skip_unless_scripts_are_configured
       Validator::Site.connected do |task,supervisor,site|
         component = Validator.config['components']['detector_logic'].keys.first
 
@@ -90,7 +91,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Then we should received an alarm
 
     it 'is buffered during disconnect', :script, sxl: '>=1.0.7' do |example|
-      skip "Don't yet have a way to trigger alarms on the equipment"
+      skip_unless_scripts_are_configured
       Validator::Site.stop
       with_alarm_activated do
         Validator::Site.connected do |task,supervisor,site|
@@ -98,7 +99,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
           log_confirmation "Waiting for alarm" do
             collector = site.collect_alarms task, num: 1, component: component, aCId: 'A0302',
               aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']      
-            alarm = collector.result
+
+            alarm = collector.message
             alarm_time = Time.parse(alarm.attributes["aTs"])
             expect(alarm_time).to be_within(1.minute).of Time.now.utc
             expect(alarm.attributes['rvs']).to eq([{

@@ -313,6 +313,12 @@ module Validator::CommandHelpers
     system(path) if path
   end
 
+  def skip_unless_scripts_are_configured
+    unless Validator.config['scripts'] && Validator.config['scripts'].any?
+      skip "Skipping because scripts are not configured"
+    end
+  end
+
   def with_alarm_activated
     run_script 'activate_alarm'
     yield

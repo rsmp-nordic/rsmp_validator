@@ -63,12 +63,12 @@ RSpec.describe 'Site::Traffic Light Controller' do
           status = "S0096"
 
           received = Time.new(
-            collector.result.dig( {"sCI" => status, "n" => "year"}, :item, 's' ),
-            collector.result.dig( {"sCI" => status, "n" => "month"}, :item, 's' ),
-            collector.result.dig( {"sCI" => status, "n" => "day"}, :item, 's' ),
-            collector.result.dig( {"sCI" => status, "n" => "hour"}, :item, 's' ),
-            collector.result.dig( {"sCI" => status, "n" => "minute"}, :item, 's' ),
-            collector.result.dig( {"sCI" => status, "n" => "second"}, :item, 's' ),
+            collector.query_result( {"sCI" => status, "n" => "year"} )['s'],
+            collector.query_result( {"sCI" => status, "n" => "month"} )['s'],
+            collector.query_result( {"sCI" => status, "n" => "day"} )['s'],
+            collector.query_result( {"sCI" => status, "n" => "hour"} )['s'],
+            collector.query_result( {"sCI" => status, "n" => "minute"} )['s'],
+            collector.query_result( {"sCI" => status, "n" => "second"} )['s'],
             'UTC'
           )
 
@@ -110,7 +110,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
               timeout: Validator.config['timeouts']['status_response']
             }
 
-          message = collector.messages.first
+          message = collector.message
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(message.attributes['sTs']) - CLOCK
           diff = diff.round          
@@ -136,7 +136,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
             timeout: Validator.config['timeouts']['status_response']
           }
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-          diff = Time.parse(collector.result.attributes['aSTS']) - CLOCK
+          diff = Time.parse(collector.message.attributes['aSTS']) - CLOCK
           diff = diff.round
           expect(diff.abs).to be <= max_diff,
             "Timestamp of aggregated status is off by #{diff}s, should be within #{max_diff}s"
@@ -198,6 +198,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 6. Compare set_clock and alarm response timestamp
     # 7. Expect the difference to be within max_diff
     it 'is used for alarm timestamp', :script, sxl: '>=1.0.7' do |example|
+      skip_unless_scripts_are_configured
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
@@ -229,7 +230,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           Validator.log "Checking watchdog timestamp", level: :test
           collector = site.collect task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-          diff = Time.parse(collector.result.attributes['wTs']) - CLOCK
+          diff = Time.parse(collector.message.attributes['wTs']) - CLOCK
           diff = diff.round
           expect(diff.abs).to be <= max_diff,
             "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s"

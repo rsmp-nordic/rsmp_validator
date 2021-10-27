@@ -68,7 +68,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Wait for status = true
     # 4. Send control command to switch "fixed time"= true
     # 5. Wait for status = false
-    specify 'fixed time controlcan be activated with M0007', sxl: '>=1.0.7' do |example|
+    specify 'fixed time control can be activated with M0007', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         switch_fixed_time 'True'
