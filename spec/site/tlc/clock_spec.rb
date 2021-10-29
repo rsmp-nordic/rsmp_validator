@@ -205,7 +205,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           component = Validator.config['components']['detector_logic'].keys.first
           with_alarm_activated do
             site.log "Waiting for alarm", level: :test
-            response = site.wait_for_alarm task, timeout: Validator.config['timeouts']['alarm']
+            response = site.collect_alarms task, num: 1, timeout: Validator.config['timeouts']['alarm']
             max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
             diff = Time.parse(response.attributes['sTs']) - CLOCK
             diff = diff.round
