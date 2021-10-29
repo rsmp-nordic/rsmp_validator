@@ -27,14 +27,16 @@ module Validator
       'color' => {
         'info' => 'white',
         'log' => 'light_black',
-        'test' => 'white'
+        'test' => 'white',
+        'debug' => 'light_black'
       },
       'json' => true,
       'acknowledgements' => true,
       'watchdogs' => true,
       'test' => true,
       'direction' => false,
-      'component' => true
+      'component' => true,
+      'debug' => true
     }
     initialize_logging log_settings: settings
     self.reporter = rspec_config.reporter
