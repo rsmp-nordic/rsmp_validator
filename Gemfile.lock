@@ -33,7 +33,7 @@ GEM
     nio4r (2.5.8)
     rake (13.0.6)
     regexp_parser (2.1.1)
-    rsmp (0.4.4)
+    rsmp (0.4.5)
       async (~> 1.29.1)
       async-io (~> 1.32.1)
       colorize (~> 0.8.1)
