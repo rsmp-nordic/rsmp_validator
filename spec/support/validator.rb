@@ -43,6 +43,7 @@ module Validator
   end
 
   def self.check_connection
+    self.log "Initial #{self.mode} connection check", level: :info
     if self.mode == :site
       Validator::Site.testee.connected {}
     elsif self.mode == :supervisor
