@@ -9,7 +9,9 @@ module Validator
       timeout = Validator.config['timeouts']['ready']
       got = nil
       Validator::Site.isolated(
-        'rsmp_versions' => [core_version],
+        'guest' => {
+          'rsmp_versions' => [core_version],
+        },
         'collect' => length
       ) do |task,supervisor,site|
         site.collector.collect task, timeout: timeout
