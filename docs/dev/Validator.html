@@ -716,12 +716,14 @@
 52
 53
 54
-55</pre>
+55
+56</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 45</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_connection'>check_connection</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Initial </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='embexpr_end'>}</span><span class='tstring_content'> connection check</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='label'>level:</span> <span class='symbol'>:info</span>
   <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>==</span> <span class='symbol'>:site</span>
     <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_testee'><span class='object_link'><a href="Validator/Site.html#testee-class_method" title="Validator::Site.testee (method)">testee</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'>connected</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
   <span class='kw'>elsif</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>==</span> <span class='symbol'>:supervisor</span>
@@ -753,12 +755,12 @@
       <pre class="lines">
 
 
-57
 58
-59</pre>
+59
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 57</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 58</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span> <span class='id identifier rubyid_str'>str</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reporter'>reporter</span><span class='period'>.</span><span class='id identifier rubyid_publish'>publish</span> <span class='symbol'>:step</span><span class='comma'>,</span> <span class='label'>message:</span> <span class='id identifier rubyid_str'>str</span>
