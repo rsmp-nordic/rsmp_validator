@@ -174,7 +174,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         prepare task, site
         switch_yellow_flash
         set_functional_position 'NormalControl'
-        wait_normal_control_and_status
+        verify_startup_sequence
       end
     end
 
