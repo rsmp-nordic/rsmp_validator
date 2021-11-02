@@ -87,7 +87,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.isolated do |task,supervisor,site|
         prepare task, site
         site.wait_for_state :ready, Validator.config['timeouts']['ready']
-        wait_normal_control_and_status
+        verify_startup_sequence
       end
     end
 
