@@ -107,7 +107,7 @@ class Validator::Testee
       task.annotate 'rspec runner'
       task.async do |sentinel|
         sentinel.annotate 'sentinel'
-        loop do
+        while @node do
           e = @node.error_queue.dequeue
           Validator.log "Sentinel warning: #{e.class}: #{e}", level: :test
           @@sentinel_errors << e
@@ -135,6 +135,7 @@ class Validator::Testee
         @task = task
         @node = build_node task, options
         @node.start  # keep running inside the async task, listening for sites
+      rescue StandardError => e
       end
     end
   end
