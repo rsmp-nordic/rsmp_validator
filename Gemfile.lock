@@ -1,5 +1,7 @@
-PATH
-  remote: /Users/emiltin/Documents/code/rsmp
+GIT
+  remote: https://github.com/rsmp-nordic/rsmp.git
+  revision: e1de244bd8b26787ac5157c464035e4a2aafa241
+  ref: e1de244bd8b26787ac5157c464035e4a2aafa241
   specs:
     rsmp (0.4.6)
       async (~> 1.29.1)
