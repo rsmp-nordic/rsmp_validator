@@ -211,4 +211,38 @@ security_codes:
   2: '0000'
 ```
 
+## Restricting tests based on Core and SXL version
+Usually there is no need to run tests that relate to core or sxl versions newer than what the site or supervisor your testing is using.
+
+Each test is tagged with the core and sxl version it's relevant for. For example S0027 was added in the SXL version 1.0.13, which is why the test for S0027 is tagged with `sxl: '>=1.0.13`. This means the test is relevant if testing is either unrestricted or restricted to sxl 1.0.13 or higher.
+
+```ruby
+specify 'day table is read with S0027', sxl: '>=1.0.13'  do |example|
+  request_status_and_confirm "command table",
+    { S0027: [:status] }
+end
+```
+
+This following test run only if testing is unrestricted or restricted to exactly core version 3.1.5.
+
+```ruby
+it 'is correct for rsmp version 3.1.5',  core: '3.1.5' do |example|
+  check_sequence '3.1.5'
+end
+```
+
+
+You can limit the tests that will run by adding `restrict_testing` options in the config file for the test:
+
+```yaml
+restrict_testing:
+  core_version: 3.1.2
+  sxl_version: 1.0.7 
+```
+
+In this case, the S0027 test above will not run, because it requires sxl 1.0.13 or higher, but we limited to 1.0.7. 
+
+Usaully you will want to set `restrict_testing` version to what the site or supervisor is actually using, but it's possible to use other values.
+
+
 
