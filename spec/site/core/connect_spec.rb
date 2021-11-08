@@ -30,7 +30,7 @@ module Validator
     # We therefore cannot expect a specific sequence of the first four messages,
     # but we can check that the set of messages is correct
     # The same is the case with the next four messages, which is the exchange of Watchdogs
-    def check_sequence_3_1_1 core_version
+    def check_sequence_3_1_1_to_3_1_3 core_version
       expected_version_messages = [
         'in:Version',
         'out:MessageAck',
@@ -48,17 +48,22 @@ module Validator
                expected_watchdog_messages.length
 
       got = get_connection_message core_version, length
-      got_version_messages = got[0..3]
-      got_watchdog_messages = got[4..7]
 
-      expect(got_version_messages).to match_array(expected_version_messages)
-      expect(got_watchdog_messages).to match_array(expected_watchdog_messages)
+      got_version_messages = got[0..3]
+      expect( got_version_messages.include?('in:AggregatedStatus') ).to be_falsy, "AggregatedStatus not allowed during version part, got #{got_version_messages}"
+      expect(got_version_messages).to match_array(expected_version_messages),
+        "Wrong version part, must contain #{expected_version_messages}, got #{got_version_messages}"
+
+      got_watchdog_messages = got[4..7]
+      expect( got_watchdog_messages.include?('in:AggregatedStatus') ).to be_falsy, "AggregatedStatus not allowed during watchdog part, got #{got_watchdog_messages}"
+      expect(got_watchdog_messages).to match_array(expected_watchdog_messages),
+        "Wrong watchdog part, must contain #{expected_watchdog_messages}, got #{got_watchdog_messages}"
     end
 
     # Validate the connection sequence for core 3.1.4 and later
     # From 3.1.4, the site must send a Version first, so the sequence
     # is fixed and can be directly verified    
-    def check_sequence_3_1_4 version
+    def check_sequence_3_1_4_or_later version
       expected = [
         'in:Version',
         'out:MessageAck',
@@ -78,9 +83,9 @@ module Validator
     def check_sequence version
       case version
       when '3.1.1', '3.1.2', '3.1.3'
-        check_sequence_3_1_1 version
+        check_sequence_3_1_1_to_3_1_3 version
       when '3.1.4', '3.1.5'
-        check_sequence_3_1_4 version
+        check_sequence_3_1_4_or_later version
       else
         raise "Unkown rsmp version #{version}"
       end
