@@ -81,7 +81,9 @@ class Validator::Testee
     Async do
       if @node
         Validator.log why, level: :test if why
-        @node.stop
+        @node.ignore_errors RSMP::DisonnectError do
+          @node.stop
+        end
       end
       @node = nil
       @proxy = nil

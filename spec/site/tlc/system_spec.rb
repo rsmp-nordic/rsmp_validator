@@ -43,9 +43,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'restart is triggered by M0004', sxl: '>=1.0.7' do |example|
       Validator::Site.isolated do |task,supervisor,site|
         prepare task, site
-        #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
-        set_restart
-        site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
+        supervisor.ignore_errors RSMP::DisonnectError do
+          set_restart
+          site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
+        end
       end
 
       # NOTE
