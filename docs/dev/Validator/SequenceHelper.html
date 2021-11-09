@@ -230,19 +230,19 @@
       <pre class="lines">
 
 
-83
-84
-85
 86
 87
 88
 89
 90
 91
-92</pre>
+92
+93
+94
+95</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 83</span>
+      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 86</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_check_sequence'><span class='object_link'><a href="../top-level-namespace.html#check_sequence-instance_method" title="#check_sequence (method)">check_sequence</a></span></span> <span class='id identifier rubyid_version'>version</span>
   <span class='kw'>case</span> <span class='id identifier rubyid_version'>version</span>
@@ -316,7 +316,10 @@
 58
 59
 60
-61</pre>
+61
+62
+63
+64</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 33</span>
@@ -341,12 +344,15 @@
   <span class='id identifier rubyid_got'>got</span> <span class='op'>=</span> <span class='id identifier rubyid_get_connection_message'><span class='object_link'><a href="../top-level-namespace.html#get_connection_message-instance_method" title="#get_connection_message (method)">get_connection_message</a></span></span> <span class='id identifier rubyid_core_version'>core_version</span><span class='comma'>,</span> <span class='id identifier rubyid_length'>length</span>
 
   <span class='id identifier rubyid_got_version_messages'>got_version_messages</span> <span class='op'>=</span> <span class='id identifier rubyid_got'>got</span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='int'>3</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span> <span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:AggregatedStatus</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_falsy'>be_falsy</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>AggregatedStatus not allowed during version part, got </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span> <span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:AggregatedStatus</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_falsy'>be_falsy</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>AggregatedStatus not allowed during version exchange: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span> <span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:Watchdog</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_falsy'>be_falsy</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Watchdog not allowed during version exchange: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span> <span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:Alarm</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_falsy'>be_falsy</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Alarms not allowed during version exchange: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_match_array'>match_array</span><span class='lparen'>(</span><span class='id identifier rubyid_expected_version_messages'>expected_version_messages</span><span class='rparen'>)</span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Wrong version part, must contain </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_expected_version_messages'>expected_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_content'>, got </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
 
   <span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span> <span class='op'>=</span> <span class='id identifier rubyid_got'>got</span><span class='lbracket'>[</span><span class='int'>4</span><span class='op'>..</span><span class='int'>7</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span> <span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:AggregatedStatus</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_falsy'>be_falsy</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>AggregatedStatus not allowed during watchdog part, got </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span> <span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:AggregatedStatus</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_falsy'>be_falsy</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>AggregatedStatus not allowed during watchdog exchange: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span> <span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:Alarm</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_falsy'>be_falsy</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Alarms not allowed during watchdog exchange: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_match_array'>match_array</span><span class='lparen'>(</span><span class='id identifier rubyid_expected_watchdog_messages'>expected_watchdog_messages</span><span class='rparen'>)</span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Wrong watchdog part, must contain </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_expected_watchdog_messages'>expected_watchdog_messages</span><span class='embexpr_end'>}</span><span class='tstring_content'>, got </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
 <span class='kw'>end</span></pre>
@@ -382,9 +388,6 @@
       <pre class="lines">
 
 
-66
-67
-68
 69
 70
 71
@@ -397,10 +400,13 @@
 78
 79
 80
-81</pre>
+81
+82
+83
+84</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 66</span>
+      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 69</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_check_sequence_3_1_4_or_later'>check_sequence_3_1_4_or_later</span> <span class='id identifier rubyid_version'>version</span>
   <span class='id identifier rubyid_expected'>expected</span> <span class='op'>=</span> <span class='lbracket'>[</span>
