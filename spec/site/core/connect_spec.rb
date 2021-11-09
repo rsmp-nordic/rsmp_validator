@@ -50,12 +50,15 @@ module Validator
       got = get_connection_message core_version, length
 
       got_version_messages = got[0..3]
-      expect( got_version_messages.include?('in:AggregatedStatus') ).to be_falsy, "AggregatedStatus not allowed during version part, got #{got_version_messages}"
+      expect( got_version_messages.include?('in:AggregatedStatus') ).to be_falsy, "AggregatedStatus not allowed during version exchange: #{got_version_messages}"
+      expect( got_version_messages.include?('in:Watchdog') ).to be_falsy, "Watchdog not allowed during version exchange: #{got_version_messages}"
+      expect( got_version_messages.include?('in:Alarm') ).to be_falsy, "Alarms not allowed during version exchange: #{got_version_messages}"
       expect(got_version_messages).to match_array(expected_version_messages),
         "Wrong version part, must contain #{expected_version_messages}, got #{got_version_messages}"
 
       got_watchdog_messages = got[4..7]
-      expect( got_watchdog_messages.include?('in:AggregatedStatus') ).to be_falsy, "AggregatedStatus not allowed during watchdog part, got #{got_watchdog_messages}"
+      expect( got_watchdog_messages.include?('in:AggregatedStatus') ).to be_falsy, "AggregatedStatus not allowed during watchdog exchange: #{got_watchdog_messages}"
+      expect( got_watchdog_messages.include?('in:Alarm') ).to be_falsy, "Alarms not allowed during watchdog exchange: #{got_version_messages}"
       expect(got_watchdog_messages).to match_array(expected_watchdog_messages),
         "Wrong watchdog part, must contain #{expected_watchdog_messages}, got #{got_watchdog_messages}"
     end
