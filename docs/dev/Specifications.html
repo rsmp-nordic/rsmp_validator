@@ -760,9 +760,10 @@
   </div>
   <!-- <div>Validator::Site.isolated do |task,supervisor,site|
         prepare task, site
-        #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
-        set_restart
-        site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
+        supervisor.ignore_errors RSMP::DisonnectError do
+          set_restart
+          site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
+        end
       end
 
       # NOTE
@@ -1552,10 +1553,12 @@
     
   </div>
   <!-- <div>Validator::Site.isolated do |task,supervisor,site|
-        def site.acknowledge original
+        supervisor.ignore_errors RSMP::DisonnectError do
+          def site.acknowledge original
+          end
+          timeout = Validator.config['timeouts']['disconnect']
+          site.wait_for_state :stopped, timeout
         end
-        timeout = Validator.config['timeouts']['disconnect']
-        site.wait_for_state :stopped, timeout
       rescue RSMP::TimeoutError
         raise "Site did not disconnect within #{timeout}s"
       end</div> -->
@@ -1569,10 +1572,12 @@
     
   </div>
   <!-- <div>Validator::Site.isolated do |task,supervisor,site|
-        def site.send_watchdog now=nil
+        supervisor.ignore_errors RSMP::DisonnectError do
+          def site.send_watchdog now=nil
+          end
+          timeout = Validator.config['timeouts']['disconnect']
+          site.wait_for_state :stopped, timeout
         end
-        timeout = Validator.config['timeouts']['disconnect']
-        site.wait_for_state :stopped, timeout
       rescue RSMP::TimeoutError
         raise "Site did not disconnect within #{timeout}s"
       end</div> -->

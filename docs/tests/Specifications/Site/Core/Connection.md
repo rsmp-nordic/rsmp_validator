@@ -37,10 +37,12 @@ rather than the more common Validator::Site.connect.
   </summary>
 ```ruby
 Validator::Site.isolated do |task,supervisor,site|
-  def site.acknowledge original
+  supervisor.ignore_errors RSMP::DisonnectError do
+    def site.acknowledge original
+    end
+    timeout = Validator.config['timeouts']['disconnect']
+    site.wait_for_state :stopped, timeout
   end
-  timeout = Validator.config['timeouts']['disconnect']
-  site.wait_for_state :stopped, timeout
 rescue RSMP::TimeoutError
   raise "Site did not disconnect within #{timeout}s"
 end
@@ -62,10 +64,12 @@ end
   </summary>
 ```ruby
 Validator::Site.isolated do |task,supervisor,site|
-  def site.send_watchdog now=nil
+  supervisor.ignore_errors RSMP::DisonnectError do
+    def site.send_watchdog now=nil
+    end
+    timeout = Validator.config['timeouts']['disconnect']
+    site.wait_for_state :stopped, timeout
   end
-  timeout = Validator.config['timeouts']['disconnect']
-  site.wait_for_state :stopped, timeout
 rescue RSMP::TimeoutError
   raise "Site did not disconnect within #{timeout}s"
 end

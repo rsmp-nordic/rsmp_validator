@@ -2819,16 +2819,18 @@
 56
 57
 58
-59</pre>
+59
+60</pre>
           </td>
           <td>
             <pre class="code"><span class="info file"># File 'spec/site/tlc/system_spec.rb', line 43</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_isolated'><span class='object_link'><a href="../../Validator/Site.html#isolated-class_method" title="Validator::Site.isolated (method)">isolated</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
-        <span class='comment'>#if ask_user site, &quot;Going to restart controller. Press enter when ready or &#39;s&#39; to skip:&quot;
-</span>        <span class='id identifier rubyid_set_restart'><span class='object_link'><a href="../../Validator/CommandHelpers.html#set_restart-instance_method" title="Validator::CommandHelpers#set_restart (method)">set_restart</a></span></span>
-        <span class='id identifier rubyid_site'>site</span><span class='period'>.</span><span class='id identifier rubyid_wait_for_state'>wait_for_state</span> <span class='symbol'>:stopped</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>shutdown</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+        <span class='id identifier rubyid_supervisor'>supervisor</span><span class='period'>.</span><span class='id identifier rubyid_ignore_errors'>ignore_errors</span> <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>DisonnectError</span> <span class='kw'>do</span>
+          <span class='id identifier rubyid_set_restart'><span class='object_link'><a href="../../Validator/CommandHelpers.html#set_restart-instance_method" title="Validator::CommandHelpers#set_restart (method)">set_restart</a></span></span>
+          <span class='id identifier rubyid_site'>site</span><span class='period'>.</span><span class='id identifier rubyid_wait_for_state'>wait_for_state</span> <span class='symbol'>:stopped</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>shutdown</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+        <span class='kw'>end</span>
       <span class='kw'>end</span>
 
       <span class='comment'># NOTE
@@ -2861,7 +2863,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-system_spec-rb-68"></a>
+    <a name="spec-site-tlc-system_spec-rb-69"></a>
     
   </div>
 
@@ -2892,14 +2894,14 @@
             <pre class="lines">
 
 
-68
 69
 70
 71
-72</pre>
+72
+73</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/system_spec.rb', line 68</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/system_spec.rb', line 69</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -2926,7 +2928,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-system_spec-rb-76"></a>
+    <a name="spec-site-tlc-system_spec-rb-77"></a>
     
   </div>
 
@@ -2946,13 +2948,13 @@
             <pre class="lines">
 
 
-76
 77
 78
-79</pre>
+79
+80</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/system_spec.rb', line 76</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/system_spec.rb', line 77</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
