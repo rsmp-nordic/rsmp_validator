@@ -25,8 +25,8 @@ module Validator
       'port' => true,
       'stream' => ReportStream.new(rspec_config.reporter),
       'color' => {
-        'info' => 'white',
-        'log' => 'light_black',
+        'info' => 'light_black',
+        'log' => 'white',
         'test' => 'white',
         'debug' => 'light_black'
       },
@@ -35,7 +35,7 @@ module Validator
       'watchdogs' => true,
       'test' => true,
       'direction' => false,
-      'component' => true,
+      'component_id' => true,
       'debug' => true
     }
     initialize_logging log_settings: settings
