@@ -202,7 +202,7 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "intention to activate a series of inputs #{status}"
   end
 
-  def set_dynamic_bands status, plan
+  def set_dynamic_bands plan, status
     require_security_codes
     Validator.log "Set dynamic bands", level: :test
     command_list = build_command_list :M0014, :setCommands, {
@@ -212,6 +212,20 @@ module Validator::CommandHelpers
     }
     send_command_and_confirm @task, command_list, "intention to set dynamic bands #{status} for plan #{plan}"
   end
+
+  def get_dynamic_bands plan, band
+    Validator.log "Get dynamic bands", level: :test
+    status_list = { S0023: [:status] }
+    request, collector = @site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
+      timeout: Validator.config['timeouts']['status_update']
+    }
+    collector.queries.first.got['s'].split(',').each do |item|
+      some_plan, some_band, value = *item.split('-')
+      return value.to_i if some_plan.to_i == plan.to_i && some_band.to_i == band.to_i
+    end
+    nil
+  end
+
 
   def set_offset status, plan
     require_security_codes
