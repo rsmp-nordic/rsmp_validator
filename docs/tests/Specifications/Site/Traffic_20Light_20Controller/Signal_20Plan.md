@@ -188,9 +188,42 @@ request_status_and_confirm "command table",
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   plan = "1"
-  status = "10,10"
+  status = "1-12"
   prepare task, site
-  set_dynamic_bands status, plan
+  set_dynamic_bands plan, status
+end
+```
+</details>
+
+
+
+
+## Signal plan dynamic bands values can be changed and read back
+
+1. Given the site is connected
+2. Read dynamic band
+3. Set dynamic band to 2x previous value
+4. Read  band to confirm
+5. Set dynamic band to previous value
+6. Read dynamic band to confirm
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+  prepare task, site
+  plan = 1
+  band = 3
+  value = get_dynamic_bands(plan, band) || 0
+  expect( value ).to be_a(Integer)
+  new_value = value + 1
+  
+  set_dynamic_bands plan, "#{band}-#{new_value}"
+  expect( get_dynamic_bands(plan, band) ).to eq(new_value)
+  set_dynamic_bands plan, "#{band}-#{value}"
+  expect( get_dynamic_bands(plan, band) ).to eq(value)
 end
 ```
 </details>

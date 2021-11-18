@@ -989,9 +989,9 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         plan = "1"
-        status = "10,10"
+        status = "1-12"
         prepare task, site
-        set_dynamic_bands status, plan
+        set_dynamic_bands plan, status
       end</div> -->
 </div></li>
       
@@ -1002,6 +1002,31 @@
   <div class="specification">
     
   </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        plan = 1
+        band = 3
+
+        value = get_dynamic_bands(plan, band) || 0
+        expect( value ).to be_a(Integer)
+
+        new_value = value + 1
+        
+        set_dynamic_bands plan, "#{band}-#{new_value}"
+        expect( get_dynamic_bands(plan, band) ).to eq(new_value)
+
+        set_dynamic_bands plan, "#{band}-#{value}"
+        expect( get_dynamic_bands(plan, band) ).to eq(value)
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    
+  </div>
   <!-- <div>request_status_and_confirm "offset time",
         { S0024: [:status] }</div> -->
 </div></li>
@@ -1009,7 +1034,7 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
@@ -1024,7 +1049,7 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
@@ -1035,7 +1060,7 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>

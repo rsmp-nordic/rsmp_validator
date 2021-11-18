@@ -153,7 +153,7 @@ request_status_and_confirm "fixed time control status",
 
 
 
-## Operational isolated controlis read with S0010
+## Operational isolated control is read with S0010
 
 Verify status S0010 isolated control
 
@@ -237,7 +237,7 @@ request_status_and_confirm "traffic controller starting (true/false)",
 
 
 
-## Operational switched on read with S0007
+## Operational switched on is read with S0007
 
 Verify status S0007 controller switched on (dark mode=off)
 
