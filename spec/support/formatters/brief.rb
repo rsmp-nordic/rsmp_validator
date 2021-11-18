@@ -38,5 +38,8 @@ module Validator
       @output << colorize("#{indent}#{notification.example.description} - " \
         "Pending: #{notification.example.execution_result.pending_message}\n",:pending)
     end
+
+    def dump_failures notification
+    end
   end
 end
