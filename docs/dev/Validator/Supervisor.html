@@ -541,7 +541,7 @@
 <span class='kw'>def</span> <span class='id identifier rubyid_build_node'>build_node</span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span>
   <span class='id identifier rubyid_klass'>klass</span> <span class='op'>=</span> <span class='kw'>case</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>type</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
   <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>tlc</span><span class='tstring_end'>&#39;</span></span>
-    <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>Tlc</span>
+    <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>TLC</span><span class='op'>::</span><span class='const'>TrafficControllerSite</span>
   <span class='kw'>else</span>
     <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>Site</span>
   <span class='kw'>end</span>
