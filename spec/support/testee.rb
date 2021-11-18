@@ -128,24 +128,25 @@ class Validator::Testee
     end
   end
 
-  # Start the rsmp supervisor
+  # Start the testee, which is either a site or supervisor,
+  # depending on what we're testing.
   def start options={}, why=nil
     unless @node
-      # start the supervisor in a separe async task that will
+      # start it in a separate async task that will
       # persist across tests
       @reactor.async do |task|
         @task = task
         @node = build_node task, options
-        @node.start  # keep running inside the async task, listening for sites
-      rescue StandardError => e
+        @node.start  # keep running inside the async task
       end
     end
   end
 
-  # Wait for peer to be ready
+  # Wait for peer to be ready. Subclasses must override
   def wait_for_connection
   end
 
+  # Parse config file. Subclasses must override
   def parse_config
   end
   

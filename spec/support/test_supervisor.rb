@@ -31,7 +31,7 @@ class Validator::Supervisor < Validator::Testee
   def build_node task, options
     klass = case config['type']
     when 'tlc'
-      RSMP::Tlc
+      RSMP::TLC::TrafficControllerSite
     else
       RSMP::Site
     end
