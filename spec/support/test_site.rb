@@ -73,8 +73,6 @@ class Validator::Site < Validator::Testee
       'max_sites' => 1,
       'guest' => guest_settings
     }
-    @log_settings = config['log']
-
     [
       'connect',
       'ready',

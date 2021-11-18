@@ -45,16 +45,7 @@ security_codes:
   1: '1111'
   2: '2222'
 log:
-  active: true
-  color: true
-  timestamp: true
   id: true
-  component: true
-  ip: false
-  site_id: true
-  level: false
-  text: true
-  direction: true
   json: true
   acknowledgements: false
   watchdogs: false

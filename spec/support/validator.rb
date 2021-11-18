@@ -12,17 +12,15 @@ module Validator
   end
 
   def self.setup rspec_config
-    setup_logging rspec_config
     determine_mode rspec_config.files_to_run
     load_config
+    setup_logging rspec_config
     build_testee
     setup_filters rspec_config
   end
 
   def self.setup_logging rspec_config
     settings = {
-      'active' => true,
-      'port' => true,
       'stream' => ReportStream.new(rspec_config.reporter),
       'color' => {
         'info' => 'light_black',
@@ -30,14 +28,14 @@ module Validator
         'test' => 'white',
         'debug' => 'light_black'
       },
+      'port' => true,
       'json' => true,
       'acknowledgements' => true,
       'watchdogs' => true,
       'test' => true,
-      'direction' => false,
-      'component_id' => true,
       'debug' => true
     }
+    settings = settings.deep_merge(config['log']) if config['log']
     initialize_logging log_settings: settings
     self.reporter = rspec_config.reporter
   end

@@ -8,17 +8,8 @@ guest:
     watchdog: 0.5
     acknowledgement: 0.5
 log:
-  active: true
-  color: true
-  timestamp: true
   id: true
-  component: true
-  ip: false
   port: true
-  site_id: true
-  text: true
-  direction: true
-  level: false
   json: true
   acknowledgements: false
   watchdogs: false
