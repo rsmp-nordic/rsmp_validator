@@ -38,7 +38,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'switched on read with S0007', sxl: '>=1.0.7' do |example|
+    specify 'switched on is read with S0007', sxl: '>=1.0.7' do |example|
       request_status_and_confirm "controller switch on (dark mode=off)",
         { S0007: [:status,:intersection] }
     end
@@ -81,7 +81,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'isolated controlis read with S0010', sxl: '>=1.0.7' do |example|
+    specify 'isolated control is read with S0010', sxl: '>=1.0.7' do |example|
       request_status_and_confirm "isolated control status",
         { S0010: [:status,:intersection] }
     end
