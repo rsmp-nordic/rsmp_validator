@@ -170,11 +170,38 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 6. Wait for S0001 status "gggggg"
     # 7. Wait for S0020 status "control" 
     it 'M0001 startup after yellow flash', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+        Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        switch_yellow_flash
-        set_functional_position 'NormalControl'
-        verify_startup_sequence
+
+        status_list = [
+          {'sCI'=>'S0001','n'=>'signalgroupstatus'}
+        ]
+        subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>0.to_s }
+
+        component = Validator.config['main_component']
+        timeout = Validator.config['timeouts']['command']
+        collector = RSMP::StatusUpdateMatcher.new site, status_list
+        sequencer = Validator::StatusHelpers::SequenceHelper.new 'efg'
+        error = false
+        
+        collect_task = task.async do     # start an asyncronous task
+          collector.collect(task, timeout: 10) do |message|   # listen for status messages
+            states = message.attribute('sS').first['s']
+            print "#{states}... "         # debug outout (remove later)
+            begin
+              sequencer.check states      # check sequences?
+              puts 'ok'
+              next sequencer.done?        # done if all groups reached end
+            rescue Validator::StatusHelpers::SequenceError => e
+              puts "fail"
+              error = e
+              next true
+            end
+          end
+          error 
+        end
+        @site.subscribe_to_status component, subscribe_list  # subscribe, so we start getting status udates
+        collect_task.wait  # wait for the collector to complete. if the async task raised an error it will be reraised
       end
     end
 
