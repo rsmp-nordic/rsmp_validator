@@ -42,7 +42,7 @@ module Validator::StatusHelpers
 
   def verify_status parent_task, description, status_list
     log_confirmation description do
-      message, result = @site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
+      result = @site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
         timeout: Validator.config['timeouts']['status_update']
       }
     end
@@ -55,7 +55,7 @@ module Validator::StatusHelpers
     log_confirmation description do
       subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
       begin
-        message, result = @site.subscribe_to_status Validator.config['main_component'], subscribe_list, collect: {
+        result = @site.subscribe_to_status Validator.config['main_component'], subscribe_list, collect: {
           timeout: Validator.config['timeouts']['command']
         }
       ensure

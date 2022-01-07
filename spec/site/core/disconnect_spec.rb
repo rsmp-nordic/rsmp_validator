@@ -15,7 +15,7 @@ RSpec.describe 'Site::Core' do
     it 'is closed if watchdogs are not acknowledged', sxl: '>=1.0.7' do |example|
       timeout = Validator.config['timeouts']['disconnect']
       Validator::Site.isolated do |task,supervisor,site|
-        supervisor.ignore_errors RSMP::DisonnectError do
+        supervisor.ignore_errors RSMP::DisconnectError do
           def site.acknowledge original
           end
           site.wait_for_state :stopped, timeout
@@ -31,7 +31,7 @@ RSpec.describe 'Site::Core' do
     it 'is closed if watchdogs are not received', sxl: '>=1.0.7' do |example|
       Validator::Site.isolated do |task,supervisor,site|
         timeout = Validator.config['timeouts']['disconnect']
-        supervisor.ignore_errors RSMP::DisonnectError do
+        supervisor.ignore_errors RSMP::DisconnectError do
           def site.send_watchdog now=nil
           end
           site.wait_for_state :stopped, timeout

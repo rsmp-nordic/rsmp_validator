@@ -170,38 +170,53 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 6. Wait for S0001 status "gggggg"
     # 7. Wait for S0020 status "control" 
     it 'M0001 startup after yellow flash', sxl: '>=1.0.7' do |example|
-        Validator::Site.connected do |task,supervisor,site|
+      Validator::Site.connected do |task,supervisor,site|
         prepare task, site
 
         status_list = [
           {'sCI'=>'S0001','n'=>'signalgroupstatus'}
         ]
         subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>0.to_s }
+        unsubscribe_list = convert_status_list(status_list)
 
         component = Validator.config['main_component']
         timeout = Validator.config['timeouts']['command']
         collector = RSMP::StatusUpdateMatcher.new site, status_list
         sequencer = Validator::StatusHelpers::SequenceHelper.new 'efg'
-        error = false
-        
+        states = nil
+        seq_timeout = 7
+
         collect_task = task.async do     # start an asyncronous task
-          collector.collect(task, timeout: 10) do |message|   # listen for status messages
+          collector.collect(task, timeout: seq_timeout) do |message,item|   # listen for status messages
             states = message.attribute('sS').first['s']
-            print "#{states}... "         # debug outout (remove later)
             begin
               sequencer.check states      # check sequences?
-              puts 'ok'
-              next sequencer.done?        # done if all groups reached end
+              site.log "Checking startup sequence, #{states}: OK", level: :test
+              puts "Checking startup sequence, #{states}: OK"
+              sequencer.done?        # done if all groups reached end
             rescue Validator::StatusHelpers::SequenceError => e
-              puts "fail"
-              error = e
-              next true
+              site.log "Checking startup sequence, #{states}: Fail", level: :test
+              puts "Checking startup sequence, #{states}: Fail"
+              false
             end
           end
-          error 
         end
-        @site.subscribe_to_status component, subscribe_list  # subscribe, so we start getting status udates
-        collect_task.wait  # wait for the collector to complete. if the async task raised an error it will be reraised
+        begin
+          @site.subscribe_to_status component, subscribe_list  # subscribe, so we start getting status udates
+          switch_yellow_flash
+          switch_normal_control
+
+          collect_task.wait  # wait for the collector to complete. if the async task raised an error it will be reraised
+        rescue RSMP::TimeoutError => e
+          if states
+            raise "Startup sequence didn't complete in #{seq_timeout}s, #{sequencer.num_started}/#{states.size} initiated, #{sequencer.num_done}/#{states.size} done"
+          else
+            raise "No signal group status was received."
+          end
+        ensure
+          @site.unsubscribe_to_status component, unsubscribe_list  # unsubscribe
+          set_functional_position 'NormalControl'
+        end
       end
     end
 

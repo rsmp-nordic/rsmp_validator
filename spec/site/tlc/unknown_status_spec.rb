@@ -5,13 +5,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
     it 'returns NotAck ' do |example|
       Validator::Site.connected do |task,supervisor,site|
         site.log "Requesting non-existing status S0000", level: :test
-        expect {
-          status_list = convert_status_list( S0000:[:status] )
-          site.request_status Validator.config['main_component'], status_list, collect: {
-            timeout: Validator.config['timeouts']['command_response']
-          },
+        status_list = convert_status_list( S0000:[:status] )
+        result = site.request_status Validator.config['main_component'], status_list,
+          collect: { timeout: Validator.config['timeouts']['command_response'] },
           validate: false
-        }.to raise_error(RSMP::MessageRejected)
+        collector = result[:collector]
+        expect(collector).to be_an(RSMP::Collector)
+        expect(collector.status).to eq(:cancelled)
+        expect(collector.error).to be_an(RSMP::MessageRejected)
       end
     end
   end
@@ -20,13 +21,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
     it 'returns NotAck' do |example|
       Validator::Site.connected do |task,supervisor,site|
         site.log "Requesting non-existing status S0001 name", level: :test
-        expect {
-          status_list = convert_status_list( S0001:[:bad] )
-          site.request_status Validator.config['main_component'], status_list, collect: {
-            timeout: Validator.config['timeouts']['command_response']
-          },
+        status_list = convert_status_list( S0001:[:bad] )
+        result = site.request_status Validator.config['main_component'], status_list,
+          collect: { timeout: Validator.config['timeouts']['command_response'] },
           validate: false
-        }.to raise_error(RSMP::MessageRejected)
+                collector = result[:collector]
+        expect(collector).to be_an(RSMP::Collector)
+        expect(collector.status).to eq(:cancelled)
+        expect(collector.error).to be_an(RSMP::MessageRejected)
       end
     end
   end

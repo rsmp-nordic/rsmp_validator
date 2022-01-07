@@ -1,22 +1,24 @@
 module Validator
 
   # Helpers for validating the sequence of messages during rsmp connection establishment
-  module SequenceHelper
+  module HandshakeHelper
 
     # Wait for the site to connect and collect a specified number of messages,
-    # whicn cen then be analysed.
+    # which can then be analysed.
     def get_connection_message core_version, length
       timeout = Validator.config['timeouts']['ready']
       got = nil
+
       Validator::Site.isolated(
+        'collect' => {timeout: timeout, num: length, ingoing: true, outgoing: true},
         'guest' => {
           'rsmp_versions' => [core_version],
-        },
-        'collect' => length
+        }
       ) do |task,supervisor,site|
-        site.collector.collect task, timeout: timeout
         expect(site.ready?).to be true
-        got = site.collector.messages.map { |message| "#{message.direction}:#{message.type}" }
+        collector = site.collector
+        collector.wait! task
+        got = collector.messages.map { |message| "#{message.direction}:#{message.type}" }
       end
       got
     rescue Async::TimeoutError => e
@@ -99,7 +101,7 @@ end
 
 RSpec.describe 'Site::Core' do
   describe 'Connection Sequence' do
-    include Validator::SequenceHelper
+    include Validator::HandshakeHelper
 
     # Verify the connection sequence when using rsmp core 3.1.1
     #

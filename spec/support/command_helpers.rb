@@ -216,9 +216,10 @@ module Validator::CommandHelpers
   def get_dynamic_bands plan, band
     Validator.log "Get dynamic bands", level: :test
     status_list = { S0023: [:status] }
-    request, collector = @site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
+    result = @site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
       timeout: Validator.config['timeouts']['status_update']
     }
+    collector = result[:collector]
     collector.queries.first.got['s'].split(',').each do |item|
       some_plan, some_band, value = *item.split('-')
       return value.to_i if some_plan.to_i == plan.to_i && some_band.to_i == band.to_i
@@ -248,7 +249,7 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "intention to set week table #{status}"
   end
 
-  def set_time_table status
+  def set_day_table status
     require_security_codes
     Validator.log "Set time table", level: :test
     command_list = build_command_list :M0017, :setTimeTable, {
@@ -372,8 +373,8 @@ module Validator::CommandHelpers
   end
 
   def with_clock_set clock, &block
-    request, response = set_clock clock
-    yield request,response
+    result = set_clock clock
+    yield result
   ensure
     reset_clock
   end
@@ -387,9 +388,7 @@ module Validator::CommandHelpers
       mode: 'True'
     }
     component = Validator.config['components']['detector_logic'].keys[0]
-    expect {
-      send_command_and_confirm @task, command_list, "M0008 with wrong security code", component
-    }.to raise_error(RSMP::MessageRejected)
+    result = send_command_and_confirm @task, command_list, "M0008 with wrong security code", component
     Validator.log "Command rejected as expected", level: :test
   end
 

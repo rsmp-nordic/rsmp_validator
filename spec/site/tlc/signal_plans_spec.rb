@@ -87,7 +87,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         status = "12-1-12-59,1-0-23-12"
         prepare task, site
-        set_time_table status
+        set_day_table status
       end
     end
 
@@ -99,25 +99,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'version is read with S0097', sxl: '>=1.0.15' do |example|
       request_status_and_confirm "version of traffic program",
         { S0097: [:timestamp,:checksum] }
-    end
-
-    # 1. Verify connection
-    # 2. Send control command to set time_table
-    # 3. Wait for status = true
-    # 4. Send control command to set time_table
-    # 5. Wait for status = true
-    # Remove "set time table status" when running with actual machine.
-    it 'M0017 set time table', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
-        status = "12-1-12-59,1-0-23-12"
-        prepare task, site
-        set_time_table status
-        wait_for_status(@task,"Wait for S0014 first", [{'sCI'=>'S0014','n'=>'status','s'=>'True'}])
-
-        status = "1-0-18-0,2-1-7-0"
-        set_time_table status
-        wait_for_status(@task,"Wait for S0014 second", [{'sCI'=>'S0014','n'=>'status','s'=>'True'}])
-      end
     end
 
     # 1. Verify connection

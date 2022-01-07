@@ -1,13 +1,3 @@
-PATH
-  remote: /Users/emiltin/Documents/code/rsmp
-  specs:
-    rsmp (0.7.5)
-      async (~> 1.29.1)
-      async-io (~> 1.32.1)
-      colorize (~> 0.8.1)
-      rsmp_schemer
-      thor (~> 1.0.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -43,6 +33,12 @@ GEM
     nio4r (2.5.8)
     rake (13.0.6)
     regexp_parser (2.2.0)
+    rsmp (0.8.0)
+      async (~> 1.29.1)
+      async-io (~> 1.32.1)
+      colorize (~> 0.8.1)
+      rsmp_schemer
+      thor (~> 1.0.1)
     rsmp_schemer (0.3.2)
       json_schemer (~> 0.2.18)
     rspec (3.10.0)
@@ -75,7 +71,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   rake
-  rsmp!
+  rsmp
   rspec
   yard
 
