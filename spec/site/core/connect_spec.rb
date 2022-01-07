@@ -17,7 +17,8 @@ module Validator
       ) do |task,supervisor,site|
         expect(site.ready?).to be true
         collector = site.collector
-        collector.wait! task
+        collector.use_task task
+        collector.wait!
         got = collector.messages.map { |message| "#{message.direction}:#{message.type}" }
       end
       got

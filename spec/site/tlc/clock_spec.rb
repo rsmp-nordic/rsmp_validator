@@ -230,7 +230,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         prepare task, site
         with_clock_set CLOCK do
           Validator.log "Checking watchdog timestamp", level: :test
-          collector = site.collect task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
+          collector = site.collect type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(collector.messages.first.attributes['wTs']) - CLOCK
           diff = diff.round

@@ -179,15 +179,15 @@ RSpec.describe 'Site::Traffic Light Controller' do
         subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>0.to_s }
         unsubscribe_list = convert_status_list(status_list)
 
+        seq_timeout = 7
         component = Validator.config['main_component']
         timeout = Validator.config['timeouts']['command']
-        collector = RSMP::StatusUpdateMatcher.new site, status_list
+        collector = RSMP::StatusUpdateCollector.new site, status_list, task: task, timeout: seq_timeout
         sequencer = Validator::StatusHelpers::SequenceHelper.new 'efg'
         states = nil
-        seq_timeout = 7
 
         collect_task = task.async do     # start an asyncronous task
-          collector.collect(task, timeout: seq_timeout) do |message,item|   # listen for status messages
+          collector.collect do |message,item|   # listen for status messages
             states = message.attribute('sS').first['s']
             begin
               sequencer.check states      # check sequences?
