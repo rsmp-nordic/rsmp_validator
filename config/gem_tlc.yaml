@@ -18,6 +18,7 @@ timeouts:
   alarm: 1
   disconnect: 1
   shutdown: 1
+  startup_sequence: 4
 components:
   main:
     TC:
@@ -33,6 +34,7 @@ items:
   traffic_situations: [1,2]
   emergency_routes: [1]
   inputs: [1]
+startup_sequence: 'efg'
 secrets:
   security_codes:
     1: '1111'

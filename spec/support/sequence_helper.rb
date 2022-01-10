@@ -1,12 +1,12 @@
 module Validator::StatusHelpers
-  class SequenceError < StandardError
-  end
-
   class SequenceHelper
+    attr_reader :sequence, :latest
+
     def initialize sequence
       @pos = []
       @sequence = sequence
       @num_groups = 0
+      @latest = nil
     end
 
     def num_started
@@ -22,6 +22,7 @@ module Validator::StatusHelpers
     end
 
     def check states
+      @latest = states
       @num_groups = states.size
       states.each_char.with_index do |state,i|
         pos = @pos[i]                 # current pos
@@ -35,7 +36,7 @@ module Validator::StatusHelpers
               expected = @sequence[ next_pos ] # if not at end expected to move to the next state in sequence
             end
             if state != expected      # did it go to, or stay in, the expected state?
-              raise SequenceError.new("Group #{i} at step #{pos} changed from #{current} to #{state}, expected #{expected}")
+              return "Group #{i} changed from #{current} to #{state}, must go to #{expected}"
             end
             @pos[i] = next_pos        # move position
           end
@@ -45,6 +46,7 @@ module Validator::StatusHelpers
           end
         end
       end
+      return :ok
     end
   end
 end
