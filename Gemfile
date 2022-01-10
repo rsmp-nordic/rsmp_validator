@@ -4,6 +4,7 @@ gem 'rsmp'
 gem 'activesupport'
 
 group :development do
+  gem 'rspec'
   gem 'rake'
 end
 
