@@ -36,7 +36,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           site.log "Waiting for alarm", level: :test
           start_time = Time.now
           alarm_code_id = 'A0301'
-          collector = site.collect_alarms task, num: 1, component: component, aCId: alarm_code_id,
+          collector = site.collect_alarms num: 1, component: component, aCId: alarm_code_id,
             aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
 
           alarm = collector.message
@@ -75,7 +75,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           message, response = nil,nil
           alarm_code_id = 'A0301'
 
-          collector = site.collect_alarms task, num: 1, component: component, aCId: alarm_code_id,
+          collector = site.collect_alarms num: 1, component: component, aCId: alarm_code_id,
             aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
         end
         # TODO
@@ -97,7 +97,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         Validator::Site.connected do |task,supervisor,site|
           component = Validator.config['components']['detector_logic'].keys.first
           log_confirmation "Waiting for alarm" do
-            collector = site.collect_alarms task, num: 1, component: component, aCId: 'A0302',
+            collector = site.collect_alarms num: 1, component: component, aCId: 'A0302',
               aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']      
 
             alarm = collector.message

@@ -167,65 +167,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    # Verify that we can activate normal control after yellow flash mode
-    #
-    # 1. Given the site is connected and in yellow flash mode
-    # 2. When we activate normal control
-    # 3. All signal groups should go through e, f and g
-    it 'startup sequence is used after yellow flash', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
-        prepare task, site
-
-        status_list = [
-          {'sCI'=>'S0001','n'=>'signalgroupstatus'}
-        ]
-        subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>0.to_s }
-        unsubscribe_list = convert_status_list(status_list)
-
-        component = Validator.config['main_component']
-        timeout = Validator.config['timeouts']['startup_sequence']
-        collector = RSMP::StatusUpdateCollector.new site, status_list, task: task, timeout: timeout
-        sequencer = Validator::StatusHelpers::SequenceHelper.new Validator.config['startup_sequence']
-        states = nil
-
-        collector_task = task.async do
-          site.log "Verifying startup sequence"
-          collector.collect do |message,item|   # listen for status messages
-            next unless item
-            states = item['s']
-            status  = sequencer.check states      # check sequences
-            if status == :ok
-              site.log "Startup sequence #{states}: OK", level: :test
-              if sequencer.done?             # if all groups reached end?
-                collector.complete           # then end collection
-              else
-                false                        # reject item, ie. continue collecting
-              end
-            else
-              site.log "Startup sequence #{states}: Fail", level: :test
-              collector.cancel status        # if sequence was incorrect then cancel collection
-            end
-          end
-        end
-
-        @site.subscribe_to_status component, subscribe_list  # subscribe, so we start getting status udates
-        switch_yellow_flash
-        switch_normal_control
-
-        case collector_task.wait  # wait for the collector to complete
-        when :ok
-          site.log "Startup sequence verified", level: :test
-        when :timeout
-          raise "Startup sequence '#{sequencer.sequence}' didn't complete in #{timeout}s, reached #{sequencer.latest}, #{sequencer.num_started} started, #{sequencer.num_done} done"
-        when :cancelled
-          raise "Startup sequence '#{sequencer.sequence}' not followed: #{collector.error}"
-        end
-      ensure
-        @site.unsubscribe_to_status component, unsubscribe_list  # unsubscribe
-        set_functional_position 'NormalControl'
-      end
-    end
-
     # Verify that we can activate dark mode
     #
     # 1. Given the site is connected

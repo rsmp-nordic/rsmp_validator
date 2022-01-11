@@ -73,5 +73,39 @@ RSpec.describe 'Site::Traffic Light Controller' do
       request_status_and_confirm "number of signal groups",
         { S0017: [:number] }
     end
+
+    # Verify that groups follow startup sequence after a restart
+    #
+    # 1. Given the site is connected
+    # 2. And has just been restarted
+    # 3. Then all signal groups should follow the startup sequence
+    it 'follows startup sequence after restart', sxl: '>=1.0.7' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        supervisor.ignore_errors RSMP::DisconnectError do
+          verify_startup_sequence do
+            set_restart
+            site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
+            site.wait_for_state :ready, Validator.config['timeouts']['ready']
+          end
+        end
+      end
+    end
+
+    # Verify that we can activate normal control after yellow flash mode is turned off
+    #
+    # 1. Given the site is connected and in yellow flash mode
+    # 2. When we activate normal control
+    # 3. All signal groups should go through e, f and g
+    it 'follow startup sequence after yellow flash', sxl: '>=1.0.7' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        verify_startup_sequence do
+          switch_yellow_flash
+          switch_normal_control
+        end
+        set_functional_position 'NormalControl'
+      end
+    end
   end
 end

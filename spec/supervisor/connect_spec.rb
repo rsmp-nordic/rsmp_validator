@@ -5,9 +5,16 @@ RSpec.describe 'Supervisor' do
       got = nil
       Validator::Supervisor.isolated(
         'rsmp_versions' => [core_version],
-        'collect' => length
+        'collect' => {
+          timeout: Validator.config['timeouts']['ready'],
+          num: length,
+          ingoing: true,
+          outgoing: true
+        }
       ) do |task,site,supervisor_proxy|
-        supervisor_proxy.collector.collect timeout: Validator.config['timeouts']['ready']
+        collector = supervisor_proxy.collector
+        collector.use_task task
+        collector.wait!
         expect(supervisor_proxy.ready?).to be true
         got = supervisor_proxy.collector.messages.map { |message| [message.direction.to_s, message.type] }
       end

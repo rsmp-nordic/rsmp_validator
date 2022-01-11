@@ -61,39 +61,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    # 1. Verify connection in isolated_mode
-    # 2. Send the control command to restart, include security_code
-    # 3. Wait for status response= stopped
-    # 4. Reconnect as Isolated_mode
-    # 5. Wait for status= ready
-    # 6. Send command to switch to normal controll
-    # 7. Wait for S0020 status "startup" 
-    # 8. Wait for S0001 status "eeeee"
-    # 9. Wait for S0001 status "ffffffff"
-    # 10. Wait for S0001 status "gggggg"
-    # 11. Wait for S0020 status "control" 
-    it 'goes through startup sequence after M0004 restart', sxl: '>=1.0.7' do |example|
-      Validator::Site.isolated do |task,supervisor,site|
-        prepare task, site
-        #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
-        supervisor.ignore_errors RSMP::DisconnectError do
-          set_restart
-          site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
-        end
-      end
-
-      # NOTE
-      # when a remote site closes the connection, our site proxy object will stop.
-      # when the site reconnects, a new site proxy object will be created.
-      # this means we can't wait for the old site to become ready
-      # it also means we need a new Validator::Site.
-      Validator::Site.isolated do |task,supervisor,site|
-        prepare task, site
-        site.wait_for_state :ready, Validator.config['timeouts']['ready']
-        verify_startup_sequence
-      end
-    end
-
     # 1. Verify connection
     # 2. Send control command to set securitycode_level
     # 3. Wait for status = true

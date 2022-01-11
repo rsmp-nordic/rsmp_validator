@@ -409,11 +409,55 @@ module Validator::CommandHelpers
 
   def verify_startup_sequence
     wait_for_status(@task,"controlmode startup", [{'sCI'=>'S0020','n'=>'controlmode','s'=>'startup'}])
-    wait_for_status(@task,"signalmode eeeee", [{'sCI'=>'S0001','n'=>'signalgroupstatus','s'=>'eeeee'}])
-    wait_for_status(@task,"signalmode ffffffff", [{'sCI'=>'S0001','n'=>'signalgroupstatus','s'=>'ffffffff'}])
-    wait_for_status(@task,"signalmode gggggg", [{'sCI'=>'S0001','n'=>'signalgroupstatus','s'=>'gggggg'}])
+
+    status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus'}]
+    subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>0.to_s }
+    unsubscribe_list = convert_status_list(status_list)
+    component = Validator.config['main_component']
+    timeout = Validator.config['timeouts']['startup_sequence']
+    collector = RSMP::StatusCollector.new @site, status_list, timeout: timeout
+    sequencer = Validator::StatusHelpers::SequenceHelper.new Validator.config['startup_sequence']
+    states = nil
+
+    collector_task = @task.async do
+      @site.log "Verifying startup sequence"
+      collector.collect do |message,item|   # listen for status messages
+        next unless item
+        states = item['s']
+        status  = sequencer.check states      # check sequences
+        if status == :ok
+          @site.log "Startup sequence #{states}: OK", level: :test
+          if sequencer.done?             # if all groups reached end?
+            collector.complete           # then end collection
+          else
+            false                        # reject item, ie. continue collecting
+          end
+        else
+          @site.log "Startup sequence #{states}: Fail", level: :test
+          collector.cancel status        # if sequence was incorrect then cancel collection
+        end
+      end
+    end
+
+    # subscribe, so we start getting status udates
+    @site.subscribe_to_status component, subscribe_list
+
+     # let block take other actions, like restarting the site, change control mode, etc.
+    yield   
+
+    case collector_task.wait  # wait for the collector to complete
+    when :ok
+      @site.log "Startup sequence verified", level: :test
+    when :timeout
+      raise "Startup sequence '#{sequencer.sequence}' didn't complete in #{timeout}s, reached #{sequencer.latest}, #{sequencer.num_started} started, #{sequencer.num_done} done"
+    when :cancelled
+      raise "Startup sequence '#{sequencer.sequence}' not followed: #{collector.error}"
+    end
+
     wait_for_status(@task,"controlmode startup", [{'sCI'=>'S0020','n'=>'controlmode','s'=>'control'}])
-  end
+  ensure
+    @site.unsubscribe_to_status component, unsubscribe_list  # unsubscribe
+ end
 
   def switch_normal_control
     set_functional_position 'NormalControl'
