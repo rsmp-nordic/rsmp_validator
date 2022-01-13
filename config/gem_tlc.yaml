@@ -18,7 +18,7 @@ timeouts:
   alarm: 1
   disconnect: 1
   shutdown: 1
-  startup_sequence: 4
+  startup_sequence: 6
 components:
   main:
     TC:
