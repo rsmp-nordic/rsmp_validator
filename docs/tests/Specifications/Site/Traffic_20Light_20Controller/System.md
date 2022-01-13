@@ -78,7 +78,7 @@ request_status_and_confirm "operator logged in/out web-interface",
 ```ruby
 Validator::Site.isolated do |task,supervisor,site|
   prepare task, site
-  supervisor.ignore_errors RSMP::DisonnectError do
+  supervisor.ignore_errors RSMP::DisconnectError do
     set_restart
     site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
   end

@@ -108,9 +108,37 @@ request_status_and_confirm "emergency stage status",
 
 
 
+## Operational fixed time activation should cause all groups to bo to state A or B
+
+Verify 
+1. Verify connection
+2. Send the control command to switch to  fixed time= true
+3. Wait for status = true
+4. Send control command to switch "fixed time"= true
+5. Wait for status = false
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+  prepare task, site
+  switch_fixed_time 'True'
+  wait_for_status(@task,"Fixed time control active", [{'sCI'=>'S0009','n'=>'status','s'=>'True'}])
+  wait_for_status(@task,"signalgroupstatus A or B", [{'sCI'=>'S0001','n'=>'signalgroupstatus','s'=>/^[AB]$/}])
+  switch_fixed_time 'False'
+end
+```
+</details>
+
+
+
+
 ## Operational fixed time control can be activated with M0007
 
 1. Verify connection
+
 2. Send the control command to switch to  fixed time= true
 3. Wait for status = true
 4. Send control command to switch "fixed time"= true
@@ -260,7 +288,13 @@ request_status_and_confirm "controller switch on (dark mode=off)",
 
 ## Operational yellow flash affects all signal groups
 
+Verify that we can yellow flash causes all groups to go to state 'c'
 
+1. Given the site is connected
+2. Send the control command to switch to Yellow flash
+3. Wait for all groups to go to group 'c'
+4. Send command to switch to normal control
+5. Wait for all groups to switch do something else that 'c'
 
 <details markdown="block">
   <summary>
@@ -286,8 +320,8 @@ end
 Verify that we can activate yellow flash
 
 1. Given the site is connected
-2. Send the control command to switch to Yellow flash
-3. Wait for status Yellow flash
+2. Send command to switch to yellow flash
+3. Wait for yellow flash
 4. Send command to switch to normal control
 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
 

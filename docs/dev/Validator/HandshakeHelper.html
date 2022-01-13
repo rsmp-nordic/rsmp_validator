@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Module: Validator::HandshakeHelper
+  
+    &mdash; Documentation by YARD 0.9.26
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+
+  <link rel="stylesheet" href="../css/rspec.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "Validator::HandshakeHelper";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (H)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span>
+     &raquo; 
+    <span class="title">HandshakeHelper</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Module: Validator::HandshakeHelper
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>spec/site/core/connect_spec.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Helpers for validating the sequence of messages during rsmp connection establishment</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#check_sequence-instance_method" title="#check_sequence (instance method)">#<strong>check_sequence</strong>(version)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#check_sequence_3_1_1_to_3_1_3-instance_method" title="#check_sequence_3_1_1_to_3_1_3 (instance method)">#<strong>check_sequence_3_1_1_to_3_1_3</strong>(core_version)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Validate the connection sequence for core 3.1.1, 3.1.2 and 3.1.3     In these earliser version of core, both the site and and the supervisor sends a Version message simulatenously as soon as the connection is opened, and then acknowledged.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#check_sequence_3_1_4_or_later-instance_method" title="#check_sequence_3_1_4_or_later (instance method)">#<strong>check_sequence_3_1_4_or_later</strong>(version)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Validate the connection sequence for core 3.1.4 and later From 3.1.4, the site must send a Version first, so the sequence is fixed and can be directly verified.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_connection_message-instance_method" title="#get_connection_message (instance method)">#<strong>get_connection_message</strong>(core_version, length)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Wait for the site to connect and collect a specified number of messages, which can then be analysed.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="check_sequence-instance_method">
+  
+    #<strong>check_sequence</strong>(version)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3>
+<table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 89</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_check_sequence'><span class='object_link'><a href="../top-level-namespace.html#check_sequence-instance_method" title="#check_sequence (method)">check_sequence</a></span></span> <span class='id identifier rubyid_version'>version</span>
+  <span class='kw'>case</span> <span class='id identifier rubyid_version'>version</span>
+  <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>3.1.1</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>3.1.2</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>3.1.3</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_check_sequence_3_1_1_to_3_1_3'><span class='object_link'><a href="#check_sequence_3_1_1_to_3_1_3-instance_method" title="Validator::HandshakeHelper#check_sequence_3_1_1_to_3_1_3 (method)">check_sequence_3_1_1_to_3_1_3</a></span></span> <span class='id identifier rubyid_version'>version</span>
+  <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>3.1.4</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>3.1.5</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_check_sequence_3_1_4_or_later'><span class='object_link'><a href="#check_sequence_3_1_4_or_later-instance_method" title="Validator::HandshakeHelper#check_sequence_3_1_4_or_later (method)">check_sequence_3_1_4_or_later</a></span></span> <span class='id identifier rubyid_version'>version</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Unkown rsmp version </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_version'>version</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="check_sequence_3_1_1_to_3_1_3-instance_method">
+  
+    #<strong>check_sequence_3_1_1_to_3_1_3</strong>(core_version)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Validate the connection sequence for core 3.1.1, 3.1.2 and 3.1.3 </p>
+
+<p>In these earliser version of core, both the site and and the supervisor sends a Version message simulatenously as soon as the connection is opened, and then acknowledged. We therefore cannot expect a specific sequence of the first four messages, but we can check that the set of messages is correct The same is the case with the next four messages, which is the exchange of Watchdogs</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+<table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 36</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_check_sequence_3_1_1_to_3_1_3'>check_sequence_3_1_1_to_3_1_3</span> <span class='id identifier rubyid_core_version'>core_version</span>
+  <span class='id identifier rubyid_expected_version_messages'>expected_version_messages</span> <span class='op'>=</span> <span class='lbracket'>[</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:Version</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>out:MessageAck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>out:Version</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:MessageAck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='rbracket'>]</span>
+  <span class='id identifier rubyid_expected_watchdog_messages'>expected_watchdog_messages</span> <span class='op'>=</span> <span class='lbracket'>[</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:Watchdog</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>out:MessageAck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>out:Watchdog</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:MessageAck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='rbracket'>]</span>
+
+  <span class='id identifier rubyid_length'>length</span> <span class='op'>=</span> <span class='id identifier rubyid_expected_version_messages'>expected_version_messages</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>+</span>
+           <span class='id identifier rubyid_expected_watchdog_messages'>expected_watchdog_messages</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span>
+
+  <span class='id identifier rubyid_got'>got</span> <span class='op'>=</span> <span class='id identifier rubyid_get_connection_message'><span class='object_link'><a href="../top-level-namespace.html#get_connection_message-instance_method" title="#get_connection_message (method)">get_connection_message</a></span></span> <span class='id identifier rubyid_core_version'>core_version</span><span class='comma'>,</span> <span class='id identifier rubyid_length'>length</span>
+
+  <span class='id identifier rubyid_got_version_messages'>got_version_messages</span> <span class='op'>=</span> <span class='id identifier rubyid_got'>got</span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='int'>3</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span> <span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:AggregatedStatus</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_falsy'>be_falsy</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>AggregatedStatus not allowed during version exchange: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span> <span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:Watchdog</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_falsy'>be_falsy</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Watchdog not allowed during version exchange: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span> <span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:Alarm</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_falsy'>be_falsy</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Alarms not allowed during version exchange: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_match_array'>match_array</span><span class='lparen'>(</span><span class='id identifier rubyid_expected_version_messages'>expected_version_messages</span><span class='rparen'>)</span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Wrong version part, must contain </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_expected_version_messages'>expected_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_content'>, got </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+
+  <span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span> <span class='op'>=</span> <span class='id identifier rubyid_got'>got</span><span class='lbracket'>[</span><span class='int'>4</span><span class='op'>..</span><span class='int'>7</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span> <span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:AggregatedStatus</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_falsy'>be_falsy</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>AggregatedStatus not allowed during watchdog exchange: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span> <span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:Alarm</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_falsy'>be_falsy</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Alarms not allowed during watchdog exchange: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_version_messages'>got_version_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_match_array'>match_array</span><span class='lparen'>(</span><span class='id identifier rubyid_expected_watchdog_messages'>expected_watchdog_messages</span><span class='rparen'>)</span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Wrong watchdog part, must contain </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_expected_watchdog_messages'>expected_watchdog_messages</span><span class='embexpr_end'>}</span><span class='tstring_content'>, got </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_got_watchdog_messages'>got_watchdog_messages</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="check_sequence_3_1_4_or_later-instance_method">
+  
+    #<strong>check_sequence_3_1_4_or_later</strong>(version)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Validate the connection sequence for core 3.1.4 and later From 3.1.4, the site must send a Version first, so the sequence is fixed and can be directly verified</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+<table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 72</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_check_sequence_3_1_4_or_later'>check_sequence_3_1_4_or_later</span> <span class='id identifier rubyid_version'>version</span>
+  <span class='id identifier rubyid_expected'>expected</span> <span class='op'>=</span> <span class='lbracket'>[</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:Version</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>out:MessageAck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>out:Version</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:MessageAck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:Watchdog</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>out:MessageAck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>out:Watchdog</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:MessageAck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:AggregatedStatus</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>out:MessageAck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+ <span class='rbracket'>]</span>
+  <span class='id identifier rubyid_got'>got</span> <span class='op'>=</span> <span class='id identifier rubyid_get_connection_message'><span class='object_link'><a href="../top-level-namespace.html#get_connection_message-instance_method" title="#get_connection_message (method)">get_connection_message</a></span></span> <span class='id identifier rubyid_version'>version</span><span class='comma'>,</span> <span class='id identifier rubyid_expected'>expected</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span>
+  <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_got'>got</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_eq'>eq</span><span class='lparen'>(</span><span class='id identifier rubyid_expected'>expected</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_connection_message-instance_method">
+  
+    #<strong>get_connection_message</strong>(core_version, length)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Wait for the site to connect and collect a specified number of messages, which can then be analysed.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+<table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 8</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_get_connection_message'><span class='object_link'><a href="../top-level-namespace.html#get_connection_message-instance_method" title="#get_connection_message (method)">get_connection_message</a></span></span> <span class='id identifier rubyid_core_version'>core_version</span><span class='comma'>,</span> <span class='id identifier rubyid_length'>length</span>
+  <span class='id identifier rubyid_timeout'>timeout</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ready</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_got'>got</span> <span class='op'>=</span> <span class='kw'>nil</span>
+
+  <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_isolated'><span class='object_link'><a href="Site.html#isolated-class_method" title="Validator::Site.isolated (method)">isolated</a></span></span><span class='lparen'>(</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>collect</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span><span class='label'>timeout:</span> <span class='id identifier rubyid_timeout'>timeout</span><span class='comma'>,</span> <span class='label'>num:</span> <span class='id identifier rubyid_length'>length</span><span class='comma'>,</span> <span class='label'>ingoing:</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='label'>outgoing:</span> <span class='kw'>true</span><span class='rbrace'>}</span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>guest</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>rsmp_versions</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='id identifier rubyid_core_version'>core_version</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='rbrace'>}</span>
+  <span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
+    <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_site'>site</span><span class='period'>.</span><span class='id identifier rubyid_ready?'>ready?</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be'>be</span> <span class='kw'>true</span>
+    <span class='id identifier rubyid_collector'>collector</span> <span class='op'>=</span> <span class='id identifier rubyid_site'>site</span><span class='period'>.</span><span class='id identifier rubyid_collector'>collector</span>
+    <span class='id identifier rubyid_collector'>collector</span><span class='period'>.</span><span class='id identifier rubyid_use_task'>use_task</span> <span class='id identifier rubyid_task'>task</span>
+    <span class='id identifier rubyid_collector'>collector</span><span class='period'>.</span><span class='id identifier rubyid_wait!'>wait!</span>
+    <span class='id identifier rubyid_got'>got</span> <span class='op'>=</span> <span class='id identifier rubyid_collector'>collector</span><span class='period'>.</span><span class='id identifier rubyid_messages'>messages</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_message'>message</span><span class='op'>|</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_message'>message</span><span class='period'>.</span><span class='id identifier rubyid_direction'>direction</span><span class='embexpr_end'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_message'>message</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_got'>got</span>
+<span class='kw'>rescue</span> <span class='const'>Async</span><span class='op'>::</span><span class='const'>TimeoutError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Did not collect </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_length'>length</span><span class='embexpr_end'>}</span><span class='tstring_content'> messages within </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_timeout'>timeout</span><span class='embexpr_end'>}</span><span class='tstring_content'>s</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+Maintained by <a href="https://rsmp-nordic.org" title="RSMP Nordic" target="_parent">RSMP Nordic</a>
+</div>
+    </div>
+  </body>
+</html>

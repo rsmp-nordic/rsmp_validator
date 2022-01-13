@@ -53,7 +53,7 @@ Validator::Site.connected do |task,supervisor,site|
     site.log "Waiting for alarm", level: :test
     start_time = Time.now
     alarm_code_id = 'A0301'
-    collector = site.collect_alarms task, num: 1, component: component, aCId: alarm_code_id,
+    collector = site.collect_alarms num: 1, component: component, aCId: alarm_code_id,
       aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
     alarm = collector.message
     delay = Time.now - start_time
@@ -98,7 +98,7 @@ Validator::Site.connected do |task,supervisor,site|
     start_time = Time.now
     message, response = nil,nil
     alarm_code_id = 'A0301'
-    collector = site.collect_alarms task, num: 1, component: component, aCId: alarm_code_id,
+    collector = site.collect_alarms num: 1, component: component, aCId: alarm_code_id,
       aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
   end
   # TODO
@@ -130,7 +130,7 @@ with_alarm_activated do
   Validator::Site.connected do |task,supervisor,site|
     component = Validator.config['components']['detector_logic'].keys.first
     log_confirmation "Waiting for alarm" do
-      collector = site.collect_alarms task, num: 1, component: component, aCId: 'A0302',
+      collector = site.collect_alarms num: 1, component: component, aCId: 'A0302',
         aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']      
       alarm = collector.message
       alarm_time = Time.parse(alarm.attributes["aTs"])
