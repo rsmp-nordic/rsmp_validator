@@ -1,0 +1,40 @@
+port: 12111
+sxl: tlc
+intervals:
+  timer: 1
+  watchdog: 60
+timeouts:
+  watchdog: 3600    # ITC-3 does not send watchdogs at all if other message are send
+  acknowledgement: 60
+  connect: 120
+  ready: 60
+  status_response: 60
+  status_update: 60
+  subscribe: 60
+  command: 180
+  command_response: 180
+  alarm: 60
+  disconnect: 120
+  shutdown: 180
+  startup_sequence: 60
+components:
+  main:
+    KK+AG9998=001TC000:
+  signal_group:
+    KK+AG9998=001SG001:
+  detector_logic:
+    KK+AG9998=001DL001:
+items:
+  plans: [1,7,8]
+  traffic_situations: []
+  emergency_routes: [1]
+  inputs: [1]
+startup_sequence: 'efg'
+secrets:
+  security_codes:
+    1: testcode1
+    2: testcode2
+restrict_testing:
+  core_version: 3.1.2
+  sxl_version: 1.0.13
+
