@@ -26,8 +26,8 @@ class Validator::Testee
   # A sequence of test using `connected` will  maintain the current connection
   # to the site without disconnecting/reconnecting, leading to faster testing.
   def connected options={}, &block
-    start options, 'Connecting'
     within_reactor do |task|
+      start options, 'Connecting'
       wait_for_connection
       yield task, @node, @proxy
     end
@@ -40,9 +40,9 @@ class Validator::Testee
   # will be in a pristine state. The equipment is not restart or otherwise be
   # reset.
   def reconnected options={}, &block
-    stop 'Reconnecting'
-    start options
     within_reactor do |task|
+      stop 'Reconnecting'
+      start options
       wait_for_connection
       yield task, @node, @proxy
     end
@@ -55,20 +55,20 @@ class Validator::Testee
   # connection after the test, you ensure that the modified RSMP::SiteProxy
   # object is discarted and following tests use a new object.
   def isolated options={}, &block
-    stop 'Isolating'
-    start options, 'Connecting'
     within_reactor do |task|
+      stop 'Isolating'
+      start options, 'Connecting'
       wait_for_connection
       yield task, @node, @proxy
+      stop 'Isolating'
     end
-    stop 'Isolating'
   end
 
   # Disconnects the site if connected before calling the block with a single
   # argument `task`, which is an an Async::Task.
   def disconnected &block
-    stop 'Disconnecting'
     within_reactor do |task|
+      stop 'Disconnecting'
       yield task
     end
   end
@@ -78,16 +78,14 @@ class Validator::Testee
     # will be called outside within_reactor
     # but stop() requires an async context
     # so run inside an Async block
-    Async do
-      if @node
-        Validator.log why, level: :test if why
-        @node.ignore_errors RSMP::DisconnectError do
-          @node.stop
-        end
+    if @node
+      Validator.log why, level: :test if why
+      @node.ignore_errors RSMP::DisconnectError do
+        @node.stop
       end
-      @node = nil
-      @proxy = nil
     end
+    @node = nil
+    @proxy = nil
   end
   
   private
