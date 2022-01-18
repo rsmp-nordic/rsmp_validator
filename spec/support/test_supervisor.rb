@@ -28,7 +28,7 @@ class Validator::Supervisor < Validator::Testee
   end
 
   # build local site
-  def build_node task, options
+  def build_node options
     klass = case config['type']
     when 'tlc'
       RSMP::TLC::TrafficControllerSite
@@ -36,7 +36,6 @@ class Validator::Supervisor < Validator::Testee
       RSMP::Site
     end
     @site = klass.new(
-      task: task,
       site_settings: config.deep_merge(options),
       logger: Validator.logger,
       collect: options['collect']
@@ -44,12 +43,15 @@ class Validator::Supervisor < Validator::Testee
   end
 
   def wait_for_connection
-    @proxy = @node.proxies.first
-    unless @proxy
-      Validator.log "Waiting for connection to supervisor", level: :test
-      @proxy = @node.wait_for_supervisor(:any, config['timeouts']['connect'])
-    end
-    @proxy.wait_for_state :ready, config['timeouts']['ready']
+    Validator.log "Waiting for connection to supervisor", level: :test
+    @proxy = @node.wait_for_supervisor(:any, config['timeouts']['connect'])
+    @proxy.wait_for_state :connected, timeout: config['timeouts']['connect']
+  rescue RSMP::TimeoutError
+    raise RSMP::ConnectionError.new "Supervisor did not connect within #{config['timeouts']['connect']}s"
+  end
+
+  def wait_for_handshake
+    @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
   end
 
 end
