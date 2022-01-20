@@ -4,7 +4,7 @@
 # documentation.
 # This workflow will run rspec
 
-name: Swarco ITC-3
+name: Dynniq EC-2
 
 on:
   push:
@@ -18,7 +18,7 @@ on:
 jobs:
   test:
 
-    runs-on: [ self-hosted, Windows, X64, itc3 ]
+    runs-on: [ self-hosted, Windows, X64, ec2 ]
     steps:
     - name: Check out rsmp_validator repository
       uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
     - name: Run tests
       run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/site
       env:
-        SITE_CONFIG: implementations/config/swarco_itc3.yaml
+        SITE_CONFIG: implementations/config/dynniq_ec2.yaml
     - name: Show detailed log
       if: always()
       run: cat log/validation.log
@@ -47,10 +47,44 @@ jobs:
       if: always()
       run: |
         $date=Get-Date -Format 'yyyy-MM-dd_HH-mm'
-        mv log/validation.log log/validation_itc3_$date.log
+        mv log/validation.log log/validation_ec2_$date.log
     - name: Upload validation.log
       if: always()
       uses: actions/upload-artifact@v2
       with:
         name: rspec validation
-        path: log/validation_itc3_*.log
+        path: log/validation_ec2_*.log
+    - name: Get ec2 rsmp log
+      if: always()
+      env:
+        USER: ${{ secrets.EC2_USER }}
+        PASSWD: ${{ secrets.EC2_PASSWD }}
+        IP: ${{ secrets.EC2_IP }}
+      run: |
+        Remove-Item Alias:curl
+        $remote_path='ftp://'+$env:IP+'/tmp/proxyapp.log'
+        $credentials=$env:USER+':'+$env:PASSWD
+        curl -u $credentials $remote_path -o simulator.log
+    - name: Upload ec2 rsmp log
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: ec2 rsmp log
+        path: simulator.log
+    - name: Get ec2 proxyapp.ini
+      if: always()
+      env:
+        USER: ${{ secrets.EC2_USER }}
+        PASSWD: ${{ secrets.EC2_PASSWD }}
+        IP: ${{ secrets.EC2_IP }}
+      run: |
+        Remove-Item Alias:curl
+        $remote_path='ftp://'+$env:IP+'/opt/D2/appl2/proxyapp.ini'
+        $credentials=$env:USER+':'+$env:PASSWD
+        curl -u $credentials $remote_path -o proxyapp.ini
+    - name: Upload ec2 proxyapp.ini
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: ec2 proxyapp.ini
+        path: proxyapp.ini
