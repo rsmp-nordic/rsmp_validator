@@ -119,7 +119,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
           diff = diff.round          
           expect(diff.abs).to be <= max_diff,
             "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s"
-          Validator.log "Diff is: #{diff}s", level: :test
         end
       end
     end
