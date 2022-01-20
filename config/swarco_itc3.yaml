@@ -8,7 +8,7 @@ timeouts:
   acknowledgement: 60
   connect: 120
   ready: 60
-  status_response: 180
+  status_response: 4000
   status_update: 60
   subscribe: 60
   command: 180
