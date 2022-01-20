@@ -49,7 +49,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
-          sleep 10
+          task.sleep 10
           status_list = { S0096: [
             :year,
             :month,
@@ -97,7 +97,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
-          sleep 10
+          task.sleep 10
           status_list = { S0096: [
             :year,
             :month,
