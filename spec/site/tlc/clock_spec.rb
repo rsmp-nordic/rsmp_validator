@@ -104,6 +104,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
             :minute,
             :second,
           ] }
+          sleep(300)
           
           result = site.request_status Validator.config['main_component'],
             convert_status_list(status_list),
