@@ -104,7 +104,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
             :minute,
             :second,
           ] }
-          sleep(200)
           
           result = site.request_status Validator.config['main_component'],
             convert_status_list(status_list),
@@ -118,6 +117,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           diff = diff.round          
           expect(diff.abs).to be <= max_diff,
             "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s"
+          Validator.log "Diff is: #{diff}s", level: :test
         end
       end
     end
