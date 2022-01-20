@@ -32,7 +32,7 @@ items:
 startup_sequence: 'efg'
 secrets:
   security_codes:
-    1: testcode1
+    1: testcode2
     2: testcode2
 restrict_testing:
   core_version: 3.1.2
