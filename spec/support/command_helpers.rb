@@ -376,7 +376,6 @@ module Validator::CommandHelpers
     result = set_clock clock
     yield result
   ensure
-    reset_clock
   end
 
 
