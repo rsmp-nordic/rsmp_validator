@@ -18,15 +18,8 @@ jobs:
 
     runs-on: [ self-hosted, Windows, X64, ec2 ]
     steps:
-    - name: Check out rsmp_validator repository
+    - name: Check out repository
       uses: actions/checkout@v2
-      with:
-        repository: rsmp-nordic/rsmp_validator
-        ref: ${{ github.event.client_payload.ref }}
-    - name: Check out rsmp_implementations repository
-      uses: actions/checkout@v2
-      with:
-        path: implementations
     - name: Set up ruby
       uses: ruby/setup-ruby@v1
       env:
@@ -37,7 +30,7 @@ jobs:
     - name: Run tests
       run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/site
       env:
-        SITE_CONFIG: implementations/config/dynniq_ec2.yaml
+        SITE_CONFIG: config/dynniq_ec2.yaml
     - name: Show detailed log
       if: always()
       run: cat log/validation.log
