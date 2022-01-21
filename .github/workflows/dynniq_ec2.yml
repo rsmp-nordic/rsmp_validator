@@ -45,23 +45,6 @@ jobs:
       with:
         name: rspec validation
         path: log/validation_ec2_*.log
-    - name: Get ec2 rsmp log
-      if: always()
-      env:
-        USER: ${{ secrets.EC2_USER }}
-        PASSWD: ${{ secrets.EC2_PASSWD }}
-        IP: ${{ secrets.EC2_IP }}
-      run: |
-        Remove-Item Alias:curl
-        $remote_path='ftp://'+$env:IP+'/tmp/proxyapp.log'
-        $credentials=$env:USER+':'+$env:PASSWD
-        curl -u $credentials $remote_path -o simulator.log
-    - name: Upload ec2 rsmp log
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: ec2 rsmp log
-        path: simulator.log
     - name: Get ec2 proxyapp.ini
       if: always()
       env:
