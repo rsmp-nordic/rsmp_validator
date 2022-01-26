@@ -2296,9 +2296,9 @@
 <ol><li>
 <p>Given the site is connected</p>
 </li><li>
-<p>Send command to switch to yellow flash</p>
+<p>Send the control command to switch to Yellow flash</p>
 </li><li>
-<p>Wait for yellow flash</p>
+<p>Wait for status Yellow flash</p>
 </li><li>
 <p>Send command to switch to normal control</p>
 </li><li>
@@ -2542,74 +2542,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-107"></a>
-    
-  </div>
-
-  <div class="details method_details_list">
-    
-    <div class="docstring">
-      
-<p>Verify that we can activate yellow flash</p>
-<ol><li>
-<p>Given the site is connected</p>
-</li><li>
-<p>Send command to switch to yellow flash</p>
-</li><li>
-<p>Wait for yellow flash</p>
-</li><li>
-<p>Send command to switch to normal control</p>
-</li><li>
-<p>Wait for status “Yellow flash” = false, “Controller starting”= false, “Controller on”= true“</p>
-</li></ol>
-
-    </div>
-
-    <div style="clear: both;"></div>
-
-    <!-- Source Code -->
-    <div style="float: left;">
-      <table class="source_code">
-        <tr>
-          <td>
-            <pre class="lines">
-
-
-107
-108
-109
-110
-111</pre>
-          </td>
-          <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 107</span>
-
-<span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
-        <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
-        <span class='id identifier rubyid_switch_yellow_flash'><span class='object_link'><a href="../Validator/CommandHelpers.html#switch_yellow_flash-instance_method" title="Validator::CommandHelpers#switch_yellow_flash (method)">switch_yellow_flash</a></span></span>
-        <span class='id identifier rubyid_switch_normal_control'><span class='object_link'><a href="../Validator/CommandHelpers.html#switch_normal_control-instance_method" title="Validator::CommandHelpers#switch_normal_control (method)">switch_normal_control</a></span></span>
-      <span class='kw'>end</span></pre>
-          </td>
-        </tr>
-      </table>
-    </div>
-    
-
-    <div style="clear: both;"></div>
-    
-  </div>
-
-  <!-- Captures the collapsed state -->
-  <div class="attributes" style="display:none;">
-    <input type="hidden" name="collapsed" value="false">
-  </div>
-
-</div></li> 
-    
-      
-      <li class='context-specification'><div class="specification">
-  <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-177"></a>
+    <a name="spec-site-tlc-modes_spec-rb-162"></a>
     
   </div>
 
@@ -2642,14 +2575,14 @@
             <pre class="lines">
 
 
-177
-178
-179
-180
-181</pre>
+162
+163
+164
+165
+166</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 177</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 162</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>

@@ -293,8 +293,8 @@ end
 Verify that we can activate yellow flash
 
 1. Given the site is connected
-2. Send command to switch to yellow flash
-3. Wait for yellow flash
+2. Send the control command to switch to Yellow flash
+3. Wait for status Yellow flash
 4. Send command to switch to normal control
 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
 
