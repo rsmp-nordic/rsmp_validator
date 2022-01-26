@@ -167,7 +167,7 @@ Validator::Site.connected do |task,supervisor,site|
     
     result = site.request_status Validator.config['main_component'],
       convert_status_list(status_list),
-      collect: {
+      collect!: {
         timeout: Validator.config['timeouts']['status_response']
       }
     collector = result[:collector]
@@ -210,7 +210,7 @@ Validator::Site.connected do |task,supervisor,site|
       :minute,
       :second,
     ] }
-    result = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
+    result = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect!: {
       timeout: Validator.config['timeouts']['status_update']
     }
     collector = result[:collector]
@@ -258,7 +258,7 @@ Verify aggregated status response timestamp after changing clock
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   with_clock_set CLOCK do
-    result = site.request_aggregated_status Validator.config['main_component'], collect: {
+    result = site.request_aggregated_status Validator.config['main_component'], collect!: {
       timeout: Validator.config['timeouts']['status_response']
     }
     collector = result[:collector]

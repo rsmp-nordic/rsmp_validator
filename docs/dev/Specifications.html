@@ -339,7 +339,7 @@
             :minute,
             :second,
           ] }
-          result = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
+          result = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect!: {
             timeout: Validator.config['timeouts']['status_update']
           }
           collector = result[:collector]
@@ -388,7 +388,7 @@
           
           result = site.request_status Validator.config['main_component'],
             convert_status_list(status_list),
-            collect: {
+            collect!: {
               timeout: Validator.config['timeouts']['status_response']
             }
           collector = result[:collector]
@@ -412,7 +412,7 @@
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
-          result = site.request_aggregated_status Validator.config['main_component'], collect: {
+          result = site.request_aggregated_status Validator.config['main_component'], collect!: {
             timeout: Validator.config['timeouts']['status_response']
           }
           collector = result[:collector]
@@ -834,7 +834,7 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        wrong_security_code 
+        expect { wrong_security_code }.to raise_error(RSMP::MessageRejected)
       end</div> -->
 </div></li>
       
@@ -866,7 +866,7 @@
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         component = Validator.config['main_component']
         status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus','uRt'=>'1' }]
-        site.subscribe_to_status component, status_list, collect: {
+        site.subscribe_to_status component, status_list, collect!: {
           timeout: Validator.config['timeouts']['status_update']
         }
       ensure
@@ -1720,7 +1720,7 @@
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         log_confirmation "request aggregated status" do
-          site.request_aggregated_status Validator.config['main_component'], collect: {
+          result = site.request_aggregated_status Validator.config['main_component'], collect!: {
             timeout: Validator.config['timeouts']['status_response']
           }
         end
@@ -1845,7 +1845,7 @@
 
         # setting ':collect' will cause set_aggregated_status() to wait for the
         # outgoing aggregated status is acknowledged
-        component.set_aggregated_status :high_priority_alarm, collect: {
+        component.set_aggregated_status :high_priority_alarm, collect!: {
           timeout: Validator.config['timeouts']['acknowledgement']
         }
       end</div> -->

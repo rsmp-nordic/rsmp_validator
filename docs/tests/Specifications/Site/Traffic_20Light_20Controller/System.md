@@ -110,7 +110,7 @@ end
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
-  wrong_security_code 
+  expect { wrong_security_code }.to raise_error(RSMP::MessageRejected)
 end
 ```
 </details>

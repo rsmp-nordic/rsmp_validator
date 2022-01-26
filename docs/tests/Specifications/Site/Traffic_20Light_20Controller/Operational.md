@@ -108,11 +108,11 @@ request_status_and_confirm "emergency stage status",
 
 
 
-## Operational fixed time activation should cause all groups to bo to state A or B
+## Operational fixed time activation should cause all groups to go to state A or B
 
 Verify 
 1. Verify connection
-2. Send the control command to switch to  fixed time= true
+2. Send the control command to switch to fixed time= true
 3. Wait for status = true
 4. Send control command to switch "fixed time"= true
 5. Wait for status = false
