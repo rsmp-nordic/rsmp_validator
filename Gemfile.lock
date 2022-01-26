@@ -33,12 +33,12 @@ GEM
     nio4r (2.5.8)
     rake (13.0.6)
     regexp_parser (2.2.0)
-    rsmp (0.8.4)
+    rsmp (0.8.5)
       async (~> 1.29.1)
-      async-io (~> 1.32.1)
+      async-io (~> 1.32.2)
       colorize (~> 0.8.1)
       rsmp_schemer
-      thor (~> 1.0.1)
+      thor (~> 1.2.1)
     rsmp_schemer (0.3.2)
       json_schemer (~> 0.2.18)
     rspec (3.10.0)
@@ -54,7 +54,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
     rspec-support (3.10.3)
-    thor (1.0.1)
+    thor (1.2.1)
     timers (4.3.3)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
@@ -77,4 +77,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.2.32
+   2.3.6

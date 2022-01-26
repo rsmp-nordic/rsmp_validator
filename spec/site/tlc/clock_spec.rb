@@ -57,7 +57,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
             :minute,
             :second,
           ] }
-          result = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
+          result = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect!: {
             timeout: Validator.config['timeouts']['status_update']
           }
           collector = result[:collector]
@@ -107,7 +107,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           
           result = site.request_status Validator.config['main_component'],
             convert_status_list(status_list),
-            collect: {
+            collect!: {
               timeout: Validator.config['timeouts']['status_response']
             }
           collector = result[:collector]
@@ -133,7 +133,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
-          result = site.request_aggregated_status Validator.config['main_component'], collect: {
+          result = site.request_aggregated_status Validator.config['main_component'], collect!: {
             timeout: Validator.config['timeouts']['status_response']
           }
           collector = result[:collector]

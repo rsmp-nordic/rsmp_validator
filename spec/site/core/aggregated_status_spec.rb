@@ -11,7 +11,7 @@ RSpec.describe 'Site::Core' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         log_confirmation "request aggregated status" do
-          site.request_aggregated_status Validator.config['main_component'], collect: {
+          result = site.request_aggregated_status Validator.config['main_component'], collect!: {
             timeout: Validator.config['timeouts']['status_response']
           }
         end

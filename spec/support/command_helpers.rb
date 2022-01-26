@@ -2,7 +2,7 @@ module Validator::CommandHelpers
   def send_command_and_confirm parent_task, command_list, message, component=Validator.config['main_component']
     result = nil
     log_confirmation message do
-      result = @site.send_command component, command_list, collect: {
+      result = @site.send_command component, command_list, collect!: {
           timeout: Validator.config['timeouts']['command_response']
         }
     end
@@ -216,7 +216,7 @@ module Validator::CommandHelpers
   def get_dynamic_bands plan, band
     Validator.log "Get dynamic bands", level: :test
     status_list = { S0023: [:status] }
-    result = @site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
+    result = @site.request_status Validator.config['main_component'], convert_status_list(status_list), collect!: {
       timeout: Validator.config['timeouts']['status_update']
     }
     collector = result[:collector]
@@ -408,8 +408,6 @@ module Validator::CommandHelpers
   end
 
   def verify_startup_sequence
-    wait_for_status(@task,"controlmode startup", [{'sCI'=>'S0020','n'=>'controlmode','s'=>'startup'}])
-
     status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus'}]
     subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>0.to_s }
     unsubscribe_list = convert_status_list(status_list)
@@ -456,6 +454,8 @@ module Validator::CommandHelpers
 
     wait_for_status(@task,"controlmode startup", [{'sCI'=>'S0020','n'=>'controlmode','s'=>'control'}])
   ensure
+    p subscribe_list
+    p unsubscribe_list
     @site.unsubscribe_to_status component, unsubscribe_list  # unsubscribe
  end
 

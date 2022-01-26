@@ -77,7 +77,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'security code is rejected when incorrect', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        wrong_security_code 
+        expect { wrong_security_code }.to raise_error(RSMP::MessageRejected)
       end
     end
   end
