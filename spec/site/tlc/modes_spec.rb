@@ -152,21 +152,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
         { S0013: [:status] }
     end
 
-    # Verify that we can activate yellow flash
-    #
-    # 1. Given the site is connected
-    # 2. Send command to switch to yellow flash
-    # 3. Wait for yellow flash
-    # 4. Send command to switch to normal control
-    # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
-    it 'yellow flash can be activated with M0001', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
-        prepare task, site
-        switch_yellow_flash
-        switch_normal_control
-      end
-    end
-
     # Verify that we can activate dark mode
     #
     # 1. Given the site is connected
