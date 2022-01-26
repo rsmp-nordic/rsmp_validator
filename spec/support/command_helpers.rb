@@ -454,8 +454,6 @@ module Validator::CommandHelpers
 
     wait_for_status(@task,"controlmode startup", [{'sCI'=>'S0020','n'=>'controlmode','s'=>'control'}])
   ensure
-    p subscribe_list
-    p unsubscribe_list
     @site.unsubscribe_to_status component, unsubscribe_list  # unsubscribe
  end
 
