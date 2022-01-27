@@ -15,4 +15,37 @@ on:
 
 jobs:
   test:
-    if: ${{ false }}      # disable for now
+    runs-on: [ self-hosted, Linux, X64 ]
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+    - name: Configure bundle
+      run: bundle config set path '~/rsmp_gems/bundle'
+    - name: Run bundle install
+      run: bundle install
+    - name: Start TLC in background
+      shell: bash
+      run: bundle exec rsmp site --type tlc --config config/simulator/tlc.yaml 2>&1 > simulator.log &
+    - name: Run tests
+      shell: bash
+      run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log --tag '~script' spec/site
+      env:
+        SITE_CONFIG: config/gem_tlc.yaml
+    - name: Show detailed log
+      if: always()
+      run: cat log/validation.log
+    - name: Rename validation.log
+      if: always()
+      run: mv log/validation.log log/validation_ruby_$(date +%F_%H-%M-%S).log
+    - name: Upload validation.log
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: rspec validation
+        path: log/validation_ruby_*.log
+    - name: Upload simulator.log
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: simulator log
+        path: simulator.log

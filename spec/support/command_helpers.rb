@@ -83,7 +83,7 @@ module Validator::CommandHelpers
   end
 
   # Set functional position
-  def set_functional_position status timeout
+  def set_functional_position status, timeout
     require_security_codes
     Validator.log "Switching to #{status}", level: :test
     command_list = build_command_list :M0001, :setValue, {
