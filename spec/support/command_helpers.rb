@@ -177,7 +177,7 @@ module Validator::CommandHelpers
   end
 
   def switch_yellow_flash timeout
-    set_functional_position 'YellowFlash' timeout
+    set_functional_position 'YellowFlash', timeout
     wait_for_status(@task,
       "switch to yellow flash",
       [{'sCI'=>'S0011','n'=>'status','s'=>/^True(,True)*$/}]
@@ -185,7 +185,7 @@ module Validator::CommandHelpers
   end
 
   def switch_dark_mode
-    set_functional_position 'Dark' 0
+    set_functional_position 'Dark', 0
     wait_for_status(@task,
       "switch to dark mode",
       [{'sCI'=>'S0007','n'=>'status','s'=>/^False(,False)*$/}]
@@ -458,7 +458,7 @@ module Validator::CommandHelpers
  end
 
   def switch_normal_control
-    set_functional_position 'NormalControl' 0
+    set_functional_position 'NormalControl', 0
     wait_normal_control
   end
 
