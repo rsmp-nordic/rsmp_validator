@@ -765,7 +765,7 @@
         prepare task, site
         supervisor.ignore_errors RSMP::DisconnectError do
           set_restart
-          site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
+          site.wait_for_state :disconnected, timeout: Validator.config['timeouts']['shutdown']
         end
       end
 
@@ -776,7 +776,7 @@
       # it also means we need a new Validator::Site.
       Validator::Site.isolated do |task,supervisor,site|
         prepare task, site
-        site.wait_for_state :ready, Validator.config['timeouts']['ready']
+        site.wait_for_state :ready, timeout: Validator.config['timeouts']['ready']
         wait_normal_control
       end</div> -->
 </div></li>
@@ -1333,8 +1333,8 @@
         supervisor.ignore_errors RSMP::DisconnectError do
           verify_startup_sequence do
             set_restart
-            site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
-            site.wait_for_state :ready, Validator.config['timeouts']['ready']
+            site.wait_for_state :disconnected, timeout: Validator.config['timeouts']['shutdown']
+            site.wait_for_state :ready, timeout: Validator.config['timeouts']['ready']
           end
         end
       end</div> -->
@@ -1634,9 +1634,10 @@
   <!-- <div>timeout = Validator.config['timeouts']['disconnect']
       Validator::Site.isolated do |task,supervisor,site|
         supervisor.ignore_errors RSMP::DisconnectError do
+          Validator.log "Disabling acknowledgements, site should disconnect", level: :test
           def site.acknowledge original
           end
-          site.wait_for_state :stopped, timeout
+          site.wait_for_state :disconnected, timeout: timeout
         end
       rescue RSMP::TimeoutError
         raise "Site did not disconnect within #{timeout}s"
@@ -1653,9 +1654,10 @@
   <!-- <div>Validator::Site.isolated do |task,supervisor,site|
         timeout = Validator.config['timeouts']['disconnect']
         supervisor.ignore_errors RSMP::DisconnectError do
+          Validator.log "Disabling watchdogs, site should disconnect", level: :test
           def site.send_watchdog now=nil
           end
-          site.wait_for_state :stopped, timeout
+          site.wait_for_state :disconnected, timeout: timeout
         end
       rescue RSMP::TimeoutError
         raise "Site did not disconnect within #{timeout}s"

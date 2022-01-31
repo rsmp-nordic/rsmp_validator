@@ -80,7 +80,7 @@ Validator::Site.isolated do |task,supervisor,site|
   prepare task, site
   supervisor.ignore_errors RSMP::DisconnectError do
     set_restart
-    site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
+    site.wait_for_state :disconnected, timeout: Validator.config['timeouts']['shutdown']
   end
 end
 # NOTE
@@ -90,7 +90,7 @@ end
 # it also means we need a new Validator::Site.
 Validator::Site.isolated do |task,supervisor,site|
   prepare task, site
-  site.wait_for_state :ready, Validator.config['timeouts']['ready']
+  site.wait_for_state :ready, timeout: Validator.config['timeouts']['ready']
   wait_normal_control
 end
 ```
