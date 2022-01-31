@@ -393,21 +393,18 @@ module Validator::CommandHelpers
   end
 
   def wait_normal_control
-    # Wait for:
-    # 'switched on' to be true (dark mode false)
-    #  yellow flash status to be false
-    # for startup mode to be false
     wait_for_status(@task,
-      "dark mode off, yellow flash off, start-up mode off",
+      "normal control on, yellow flash off, startup mode off",
       [
-        {'sCI'=>'S0007','n'=>'status','s'=>/^True(,True)*$/},
-        {'sCI'=>'S0011','n'=>'status','s'=>/^False(,False)*$/},
-        {'sCI'=>'S0005','n'=>'status','s'=>'False'}
-      ]
+        {'sCI'=>'S0007','n'=>'status','s'=>/^True(,True)*$/},     # normal control on (=dark mode off)
+        {'sCI'=>'S0011','n'=>'status','s'=>/^False(,False)*$/},   # yellow flash off
+        {'sCI'=>'S0005','n'=>'status','s'=>'False'}               # startup mode off
+      ],
+      timeout: Validator.config['timeouts']['startup_sequence'].size + 2
     )
   end
 
-  def verify_startup_sequence
+  def verify_startup_sequence &block
     status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus'}]
     subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>0.to_s }
     unsubscribe_list = convert_status_list(status_list)
@@ -422,6 +419,7 @@ module Validator::CommandHelpers
       collector.collect do |message,item|   # listen for status messages
         next unless item
         states = item['s']
+        #p states
         status  = sequencer.check states      # check sequences
         if status == :ok
           @site.log "Startup sequence #{states}: OK", level: :test
@@ -437,11 +435,12 @@ module Validator::CommandHelpers
       end
     end
 
+    # let block take other actions, like restarting the site, change control mode, etc.
+    yield
+
     # subscribe, so we start getting status udates
     @site.subscribe_to_status component, subscribe_list
 
-     # let block take other actions, like restarting the site, change control mode, etc.
-    yield   
 
     case collector_task.wait  # wait for the collector to complete
     when :ok

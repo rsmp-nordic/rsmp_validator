@@ -85,8 +85,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
         supervisor.ignore_errors RSMP::DisconnectError do
           verify_startup_sequence do
             set_restart
-            site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
-            site.wait_for_state :ready, Validator.config['timeouts']['ready']
+            site.wait_for_state :disconnected, timeout: Validator.config['timeouts']['shutdown']
+            site.wait_for_state :ready, timeout: Validator.config['timeouts']['ready']
           end
         end
       end

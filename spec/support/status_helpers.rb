@@ -56,7 +56,7 @@ module Validator::StatusHelpers
       subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
       begin
         result = @site.subscribe_to_status Validator.config['main_component'], subscribe_list, collect!: {
-          timeout: Validator.config['timeouts']['command']
+          timeout: timeout
         }
       ensure
         unsubscribe_list = convert_status_list(status_list).map { |item| item.slice('sCI','n') }

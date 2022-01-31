@@ -104,9 +104,8 @@ class Validator::Site < Validator::Testee
   end
 
   # build local supervisor
-  def build_node task, options
+  def build_node options
     RSMP::Supervisor.new(
-      task: task,
       supervisor_settings: @supervisor_config.deep_merge(options),
       logger: Validator.logger,
       collect: options['collect']
@@ -116,14 +115,16 @@ class Validator::Site < Validator::Testee
   # Wait for an rsmp site to connect to the supervisor
   def wait_for_connection
     @proxy = @node.proxies.first
-    unless @proxy
-      Validator.log "Waiting for site to connect", level: :test
-      @proxy = @node.wait_for_site(:any, config['timeouts']['connect'])
-    end
-    unless @proxy.ready?
-      Validator.log "Waiting for handskake to complete", level: :test
-      @proxy.wait_for_state :ready, config['timeouts']['ready']
-    end
+    return if @proxy
+    Validator.log "Waiting for site to connect", level: :test
+    @proxy = @node.wait_for_site(:any, timeout:config['timeouts']['connect'])
+      end
+
+  # Wait for an the rsmp handshake to complete
+  def wait_for_handshake
+    return if @proxy.ready?
+    Validator.log "Waiting for handskake to complete", level: :test
+    @proxy.wait_for_state :ready, timeout:config['timeouts']['ready']
     Validator.log "Ready", level: :test
   end
 end

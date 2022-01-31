@@ -1,3 +1,15 @@
+GIT
+  remote: https://github.com/rsmp-nordic/rsmp.git
+  revision: 7bdf95902a8608695037187333003338d4d45a88
+  branch: async_refactor
+  specs:
+    rsmp (0.8.6)
+      async (~> 1.29.1)
+      async-io (~> 1.32.2)
+      colorize (~> 0.8.1)
+      rsmp_schemer
+      thor (~> 1.2.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -33,12 +45,6 @@ GEM
     nio4r (2.5.8)
     rake (13.0.6)
     regexp_parser (2.2.0)
-    rsmp (0.8.6)
-      async (~> 1.29.1)
-      async-io (~> 1.32.2)
-      colorize (~> 0.8.1)
-      rsmp_schemer
-      thor (~> 1.2.1)
     rsmp_schemer (0.3.2)
       json_schemer (~> 0.2.18)
     rspec (3.10.0)
@@ -72,7 +78,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   rake
-  rsmp
+  rsmp!
   rspec
   yard
 

@@ -10,6 +10,16 @@ class Validator::Testee
   include RSpec::Matchers
 
   @@sentinel_errors = []
+  @@reactor = nil
+  @@task = nil
+
+  def self.set_reactor reactor
+    @@reactor = reactor
+  end
+
+  def self.set_task task
+    @@task = task
+  end
 
   def self.sentinel_errors
     @@sentinel_errors
@@ -26,11 +36,9 @@ class Validator::Testee
   # A sequence of test using `connected` will  maintain the current connection
   # to the site without disconnecting/reconnecting, leading to faster testing.
   def connected options={}, &block
-    within_reactor do |task|
-      start options, 'Connecting'
-      wait_for_connection
-      yield task, @node, @proxy
-    end
+    start options, 'Connecting'
+    wait_for_proxy
+    yield Async::Task.current, @node, @proxy
   end
 
   # Disconnects the site if connected, then waits until the site is connected
@@ -40,12 +48,10 @@ class Validator::Testee
   # will be in a pristine state. The equipment is not restart or otherwise be
   # reset.
   def reconnected options={}, &block
-    within_reactor do |task|
-      stop 'Reconnecting'
-      start options
-      wait_for_connection
-      yield task, @node, @proxy
-    end
+    stop 'Reconnecting'
+    start options
+    wait_for_proxy
+    yield Async::Task.current, @node, @proxy
   end
 
   # Like `connected`, except that the connection is is closed after the test,
@@ -55,29 +61,22 @@ class Validator::Testee
   # connection after the test, you ensure that the modified RSMP::SiteProxy
   # object is discarted and following tests use a new object.
   def isolated options={}, &block
-    within_reactor do |task|
-      stop 'Isolating'
-      start options, 'Connecting'
-      wait_for_connection
-      yield task, @node, @proxy
-      stop 'Isolating'
-    end
+    stop 'Isolating'
+    start options, 'Connecting'
+    wait_for_proxy
+    yield Async::Task.current, @node, @proxy
+    stop 'Isolating'
   end
 
   # Disconnects the site if connected before calling the block with a single
   # argument `task`, which is an an Async::Task.
   def disconnected &block
-    within_reactor do |task|
-      stop 'Disconnecting'
-      yield task
-    end
+    stop 'Disconnecting'
+    yield Async::Task.current
   end
 
   # Stop the rsmp supervisor
   def stop why=nil
-    # will be called outside within_reactor
-    # but stop() requires an async context
-    # so run inside an Async block
     if @node
       Validator.log why, level: :test if why
       @node.ignore_errors RSMP::DisconnectError do
@@ -92,20 +91,23 @@ class Validator::Testee
 
   def initialize
     parse_config
-    @reactor = Async::Reactor.new
   end
 
-  # Resume the reactor and run a block in an async task.
-  # A separate sentinel task is used be receive error
-  # notifications that should abort the block
-  def within_reactor &block
-    error = nil
+  # Start the testee, which is either a site or supervisor,
+  # depending on what we're testing.
+  # The node is run inside an async task that will persist
+  # bewteen tests.
+  # also run a sentinel task that will listen for sentinel errors
+  # notified by the node
+  def start options={}, why=nil
+    return if @node
 
-    # use run() to continue the reactor. this will give as a new task,
-    # which we run the rspec test inside
-    @reactor.run do |task|
-      task.annotate 'rspec runner'
-      task.async do |sentinel|
+    @@task.async do |task|
+      task.annotate 'node runner'
+
+      @node = build_node options
+
+      @@task.async do |sentinel|
         sentinel.annotate 'sentinel'
         while @node do
           e = @node.error_queue.dequeue
@@ -113,35 +115,16 @@ class Validator::Testee
           @@sentinel_errors << e
         end
       end
-      yield task              # run block until it's finished
-    rescue StandardError, RSpec::Expectations::ExpectationNotMetError => e
-      error = e               # catch and store errors
-    ensure
-      @reactor.interrupt      # interrupt reactor
+
+      @node.start  # keep running inside the async task
     end
 
-    # reraise errors outside task to surface them in rspec
-    if error
-      raise error
-    end
   end
 
-  # Start the testee, which is either a site or supervisor,
-  # depending on what we're testing.
-  def start options={}, why=nil
-    unless @node
-      # start it in a separate async task that will
-      # persist across tests
-      @reactor.async do |task|
-        @task = task
-        @node = build_node task, options
-        @node.start  # keep running inside the async task
-      end
-    end
-  end
-
-  # Wait for peer to be ready. Subclasses must override
-  def wait_for_connection
+  # Wait until communication has been established, and handshake completed. Subclasses must override
+  def wait_for_proxy
+    wait_for_connection
+    wait_for_handshake
   end
 
   # Parse config file. Subclasses must override
