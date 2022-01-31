@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'rsmp', github: 'rsmp-nordic/rsmp', branch: 'async_refactor'
+gem 'rsmp'
 gem 'activesupport'
 
 group :development do
