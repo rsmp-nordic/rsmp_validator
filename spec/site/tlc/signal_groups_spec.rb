@@ -104,7 +104,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           switch_yellow_flash
           switch_normal_control
         end
-        set_functional_position 'NormalControl'
+        set_functional_position 'NormalControl', 0
       end
     end
   end
