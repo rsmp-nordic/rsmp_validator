@@ -16,6 +16,7 @@ components:
     B2:
   detector_logic:
     DL1:
+    DL2:
 signal_plans:
   1:
     dynamic_bands:

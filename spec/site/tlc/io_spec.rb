@@ -30,6 +30,19 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end    
 
       # 1. Verify connection
+      # 2. Send control command to release force input
+      # 3. Wait for status = true  
+      specify 'forcing is released with M0019', sxl: '>=1.0.13' do |example|
+        Validator::Site.connected do |task,supervisor,site|
+          status = 'True'
+          input = 1
+          inputValue = 'True'
+          prepare task, site
+          force_input status, input, inputValue
+        end
+      end    
+
+      # 1. Verify connection
       # 2. Verify that there is a Validator.config['validator'] with a input
       # 3. Send control command to switch input
       # 4. Wait for status "input" = requested  

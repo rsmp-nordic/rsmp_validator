@@ -83,13 +83,13 @@ module Validator::CommandHelpers
   end
 
   # Set functional position
-  def set_functional_position status
+  def set_functional_position status, timeout
     require_security_codes
     Validator.log "Switching to #{status}", level: :test
     command_list = build_command_list :M0001, :setValue, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
-      timeout: 0,
+      timeout: timeout,
       intersection: 0 
     }
     send_command_and_confirm @task, command_list, "intention to switch to #{status}"
@@ -176,8 +176,8 @@ module Validator::CommandHelpers
     )
   end
 
-  def switch_yellow_flash
-    set_functional_position 'YellowFlash'
+  def switch_yellow_flash timeout
+    set_functional_position 'YellowFlash', 0
     wait_for_status(@task,
       "switch to yellow flash",
       [{'sCI'=>'S0011','n'=>'status','s'=>/^True(,True)*$/}]
@@ -185,7 +185,7 @@ module Validator::CommandHelpers
   end
 
   def switch_dark_mode
-    set_functional_position 'Dark'
+    set_functional_position 'Dark', 0
     wait_for_status(@task,
       "switch to dark mode",
       [{'sCI'=>'S0007','n'=>'status','s'=>/^False(,False)*$/}]
@@ -280,6 +280,10 @@ module Validator::CommandHelpers
       inputValue: value
     }
     send_command_and_confirm @task, command_list,  "intention to force input #{input} to #{value}"
+    wait_for_status(@task,
+      "switch #{input} to #{value}",
+      [{'sCI'=>'S0029','n'=>'status','s'=>/^1/}]
+    )
   end
 
   def force_output status, output, value
@@ -458,7 +462,7 @@ module Validator::CommandHelpers
  end
 
   def switch_normal_control
-    set_functional_position 'NormalControl'
+    set_functional_position 'NormalControl', 0
     wait_normal_control
   end
 
@@ -503,22 +507,22 @@ module Validator::CommandHelpers
 
   def switch_detector_logic
     indx = 0
-    component = Validator.config['components']['detector_logic'].keys[indx]
-
-    force_detector_logic component, mode:'True'
-    Validator.config['main_component'] = Validator.config['main_component']
-    wait_for_status(@task,
-      "activate detector logic #{component}",
-      [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}1/}]
-    )
-    
-
-    force_detector_logic component, mode:'False'
-    Validator.config['main_component'] = Validator.config['main_component']
-    wait_for_status(@task,
-      "deactivate detector logic #{component}",
-      [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}0/}]
-    )
+    Validator.config['components']['detector_logic'].keys.each do |component|
+      force_detector_logic component, mode:'True'
+      Validator.config['main_component'] = Validator.config['main_component']
+      wait_for_status(@task,
+        "activate detector logic #{component}",
+        [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}1/}]
+      )
+      
+      force_detector_logic component, mode:'False'
+      Validator.config['main_component'] = Validator.config['main_component']
+      wait_for_status(@task,
+        "deactivate detector logic #{component}",
+        [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}0/}]
+      )
+      indx = indx + 1
+    end
   end
 
   def prepare task, site

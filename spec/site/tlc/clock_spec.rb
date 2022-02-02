@@ -157,7 +157,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
-          result = set_functional_position 'NormalControl'
+          result = set_functional_position 'NormalControl', 0
           collector = result[:collector]
           max_diff = Validator.config['timeouts']['command_response'] * 2
           diff = Time.parse(collector.messages.first.attributes['cTS']) - CLOCK
@@ -179,7 +179,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
-          result = set_functional_position 'NormalControl'
+          result = set_functional_position 'NormalControl', 0
           collector = result[:collector]
           max_diff = Validator.config['timeouts']['command_response']
           diff = Time.parse(collector.messages.first.attributes['cTS']) - CLOCK
