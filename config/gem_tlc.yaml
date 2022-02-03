@@ -29,6 +29,7 @@ components:
     B2:
   detector_logic:
     DL1:
+    DL2:
 items:
   plans: [1,2]
   traffic_situations: [1,2]
