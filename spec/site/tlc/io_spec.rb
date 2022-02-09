@@ -27,7 +27,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           input = 1
 
           # set forced input
-          status = 'False'  # forced
+          status = 'True'  # forced
           inputValue = 'False'
           force_input status, input, inputValue
           
@@ -44,7 +44,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           )
           
           # set forced input
-          status = 'False'  # forced
+          status = 'True'  # forced
           inputValue = 'True'
           force_input status, input, inputValue
  
@@ -55,7 +55,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           )  
 
           # set unforced input
-          status = 'True'  # unforced
+          status = 'False'  # unforced
           inputValue = 'False'
           force_input status, input, inputValue
 
