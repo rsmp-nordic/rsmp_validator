@@ -505,8 +505,7 @@ module Validator::CommandHelpers
   end
 
   def switch_detector_logic
-    indx = 0
-    Validator.config['components']['detector_logic'].keys.each do |component|
+    Validator.config['components']['detector_logic'].keys.each_with_index do |component, indx|
       force_detector_logic component, mode:'True'
       Validator.config['main_component'] = Validator.config['main_component']
       wait_for_status(@task,
@@ -520,7 +519,6 @@ module Validator::CommandHelpers
         "deactivate detector logic #{component}",
         [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}0/}]
       )
-      indx = indx + 1
     end
   end
 
