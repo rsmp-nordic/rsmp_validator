@@ -21,32 +21,50 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 3. Wait for status = true  
       specify 'forcing is set with M0019', sxl: '>=1.0.13' do |example|
         Validator::Site.connected do |task,supervisor,site|
-          status = 'False'
-          input = 1
-          inputValue = 'True'
+
           prepare task, site
+
+          input = 1
+
+          # set forced input
+          status = 'False'  # forced
+          inputValue = 'False'
           force_input status, input, inputValue
+          
+          # verify forced input status = 1
           wait_for_status(@task,
             "switch #{input} to #{inputValue}",
             [{'sCI'=>'S0029','n'=>'status','s'=>/^1/}]
-          )      
-        end
-      end    
+          )
 
-      # 1. Verify connection
-      # 2. Send control command to release force input
-      # 3. Wait for status = true  
-      specify 'forcing is released with M0019', sxl: '>=1.0.13' do |example|
-        Validator::Site.connected do |task,supervisor,site|
-          status = 'True'
-          input = 1
+          # verify inputstatus = 0
+          wait_for_status(@task,
+            "switch #{input} to #{inputValue}",
+            [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^0/}]
+          )
+          
+          # set forced input
+          status = 'False'  # forced
           inputValue = 'True'
-          prepare task, site
           force_input status, input, inputValue
+ 
+          # verify inputstatus = 1
+          wait_for_status(@task,
+            "switch #{input} to #{inputValue}",
+            [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^1/}]
+          )  
+
+          # set unforced input
+          status = 'True'  # unforced
+          inputValue = 'False'
+          force_input status, input, inputValue
+
+          # verify unforced input status = 0
           wait_for_status(@task,
             "switch #{input} to #{inputValue}",
             [{'sCI'=>'S0029','n'=>'status','s'=>/^0/}]
-          )      
+          )
+
         end
       end    
 
