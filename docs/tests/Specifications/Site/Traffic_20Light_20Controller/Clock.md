@@ -90,10 +90,10 @@ Verify command response timestamp after changing clock
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   with_clock_set CLOCK do
-    result = set_functional_position 'NormalControl'
-    collector = result[:collector]
+    request, response, messages = set_functional_position 'NormalControl'
+    message = messages.first
     max_diff = Validator.config['timeouts']['command_response'] * 2
-    diff = Time.parse(collector.messages.first.attributes['cTS']) - CLOCK
+    diff = Time.parse(message.attributes['cTS']) - CLOCK
     diff = diff.round
     expect(diff.abs).to be <= max_diff,
       "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s"
@@ -123,10 +123,10 @@ Verify command response timestamp after changing clock
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   with_clock_set CLOCK do
-    result = set_functional_position 'NormalControl'
-    collector = result[:collector]
+    request, response, messages = set_functional_position 'NormalControl'
+    message = messages.first
     max_diff = Validator.config['timeouts']['command_response']
-    diff = Time.parse(collector.messages.first.attributes['cTS']) - CLOCK
+    diff = Time.parse(message.attributes['cTS']) - CLOCK
     diff = diff.round
     expect(diff.abs).to be <= max_diff,
       "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s"
@@ -165,14 +165,14 @@ Validator::Site.connected do |task,supervisor,site|
       :second,
     ] }
     
-    result = site.request_status Validator.config['main_component'],
+    request, response, messages = site.request_status Validator.config['main_component'],
       convert_status_list(status_list),
-      collect!: {
+      collect: {
         timeout: Validator.config['timeouts']['status_response']
       }
-    collector = result[:collector]
+    message = messages.first
     max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-    diff = Time.parse(collector.messages.first.attributes['sTs']) - CLOCK
+    diff = Time.parse(message.attributes['sTs']) - CLOCK
     diff = diff.round          
     expect(diff.abs).to be <= max_diff,
       "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s"
@@ -210,18 +210,17 @@ Validator::Site.connected do |task,supervisor,site|
       :minute,
       :second,
     ] }
-    result = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect!: {
+    request, response = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect: {
       timeout: Validator.config['timeouts']['status_update']
     }
-    collector = result[:collector]
-    status = status_list.keys.first.to_s
+    status = "S0096"
     received = Time.new(
-      collector.query_result( {"sCI" => status, "n" => "year"} )['s'],
-      collector.query_result( {"sCI" => status, "n" => "month"} )['s'],
-      collector.query_result( {"sCI" => status, "n" => "day"} )['s'],
-      collector.query_result( {"sCI" => status, "n" => "hour"} )['s'],
-      collector.query_result( {"sCI" => status, "n" => "minute"} )['s'],
-      collector.query_result( {"sCI" => status, "n" => "second"} )['s'],
+      response[{"sCI" => status, "n" => "year"}]["s"],
+      response[{"sCI" => status, "n" => "month"}]["s"],
+      response[{"sCI" => status, "n" => "day"}]["s"],
+      response[{"sCI" => status, "n" => "hour"}]["s"],
+      response[{"sCI" => status, "n" => "minute"}]["s"],
+      response[{"sCI" => status, "n" => "second"}]["s"],
       'UTC'
     )
     max_diff =
@@ -258,12 +257,11 @@ Verify aggregated status response timestamp after changing clock
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   with_clock_set CLOCK do
-    result = site.request_aggregated_status Validator.config['main_component'], collect!: {
+    request, response = site.request_aggregated_status Validator.config['main_component'], collect: {
       timeout: Validator.config['timeouts']['status_response']
     }
-    collector = result[:collector]
     max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-    diff = Time.parse(collector.messages.first.attributes['aSTS']) - CLOCK
+    diff = Time.parse(response.attributes['aSTS']) - CLOCK
     diff = diff.round
     expect(diff.abs).to be <= max_diff,
       "Timestamp of aggregated status is off by #{diff}s, should be within #{max_diff}s"
@@ -292,20 +290,19 @@ Verify timestamp of alarm after changing clock
      View Source
   </summary>
 ```ruby
-skip_unless_scripts_are_configured
 Validator::Site.connected do |task,supervisor,site|
+  require_scripts
   prepare task, site
   with_clock_set CLOCK do
     component = Validator.config['components']['detector_logic'].keys.first
-    with_alarm_activated do
-      site.log "Waiting for alarm", level: :test
-      collector = site.collect_alarms task, num: 1, timeout: Validator.config['timeouts']['alarm']
-      max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-      diff = Time.parse(collector.message.first.attributes['sTs']) - CLOCK
-      diff = diff.round
-      expect(diff.abs).to be <= max_diff,
-        "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s"
-    end
+    system(Validator.config['scripts']['activate_alarm'])
+    site.log "Waiting for alarm", level: :test
+    response = site.wait_for_alarm task, timeout: Validator.config['timeouts']['alarm']
+    max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
+    diff = Time.parse(response.attributes['sTs']) - CLOCK
+    diff = diff.round
+    expect(diff.abs).to be <= max_diff,
+      "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s"
   end
 end
 ```
@@ -333,10 +330,9 @@ Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   with_clock_set CLOCK do
     Validator.log "Checking watchdog timestamp", level: :test
-    collector = RSMP::Collector.new site, task:task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
-    collector.collect!
+    response = site.collect task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
     max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-    diff = Time.parse(collector.messages.first.attributes['wTs']) - CLOCK
+    diff = Time.parse(response.attributes['wTs']) - CLOCK
     diff = diff.round
     expect(diff.abs).to be <= max_diff,
       "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s"

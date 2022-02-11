@@ -31,7 +31,7 @@ Tests are written as RSpec specifications in the Ruby language.
 
 RSpec specifications use [expectations](https://relishapp.com/rspec/rspec-expectations/docs) to check expected outcomes.
 
-### Connecting to the Site
+### Connecting to the Site 
 The helper `Validator::Site` is used to wait for a connection to the site:
 
 ```ruby
@@ -102,7 +102,7 @@ RSpec.describe "Traffic Light Controller" do
         prepare task, site
         with_clock_set CLOCK do
           Validator.log "Checking watchdog timestamp", level: :test
-          response = site.collect type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
+          response = site.collect task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(response.attributes['wTs']) - CLOCK
           diff = diff.round

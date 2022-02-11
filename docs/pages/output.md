@@ -63,13 +63,13 @@ The `Details` formatter will also show sentinel errors as they occur, as part of
 You choose the output format with the `--format` switch (or shorthand `-d`) of the `rspec` command.
 
 ```
-% bundle exec rspec spec/site --format Validator::Brief
+% bundle exec rspec spec/site --format Brief
 ```
 
 By default, the output is printed to the console, but you can redirect it to a file:
 
 ```
-% bundle exec rspec spec/site --format Validator::Brief --out log/brief.log
+% bundle exec rspec spec/site --format Brief --out log/brief.log
 ```
 
 ##  Multiple outputs
@@ -78,7 +78,7 @@ RSpec allows you to select several output formats, and direct each one to a sepa
 For example, you can show the brief format in the console, and also direct the detailed log to a file with:
 
 ```
-% bundle exec rspec spec/site --format Validator::Brief --format Validator::Details --out log/validation.log
+% bundle exec rspec spec/site --format Brief --format Details --out log/validation.log
 ```
 
 ## Default output formats
@@ -86,8 +86,8 @@ You can set default options for the rspec command by adding them to the file `.r
 
 ```
 % cat .rspec-local
---format Validator::Brief
---format Validator::Details --out log/validation.log
+--format Brief
+--format Details --out log/validation.log
 ```
 
 Now when you run rspec, the output formats will be used automatically and you can just run:
@@ -115,5 +115,5 @@ The recommended way to document the result of a test run is to collect the follo
 - Validator config for the equipment tested
 - Version of the equipment, including relevant OS, software and hardware
 - Configuration in the equipment
-- RSpec output in `Validator::Brief` and `Validator::Details` format.
+- RSpec output in `Brief` and `Details` format.
 - Log file(s) from the equipment

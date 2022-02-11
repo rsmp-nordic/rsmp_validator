@@ -108,31 +108,6 @@ request_status_and_confirm "emergency stage status",
 
 
 
-## Operational fixed time control can be activated with M0007
-
-1. Verify connection
-
-2. Send the control command to switch to  fixed time= true
-3. Wait for status = true
-4. Send control command to switch "fixed time"= true
-5. Wait for status = false
-
-<details markdown="block">
-  <summary>
-     View Source
-  </summary>
-```ruby
-Validator::Site.connected do |task,supervisor,site|
-  prepare task, site
-  switch_fixed_time 'True'
-  switch_fixed_time 'False'
-end
-```
-</details>
-
-
-
-
 ## Operational fixed time control is read with S0009
 
 Verify status S0009 fixed time control
@@ -154,7 +129,31 @@ request_status_and_confirm "fixed time control status",
 
 
 
-## Operational isolated control is read with S0010
+## Operational fixed time controlcan be activated with M0007
+
+1. Verify connection
+2. Send the control command to switch to  fixed time= true
+3. Wait for status = true
+4. Send control command to switch "fixed time"= true
+5. Wait for status = false
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+  prepare task, site
+  switch_fixed_time 'True'
+  switch_fixed_time 'False'
+end
+```
+</details>
+
+
+
+
+## Operational isolated controlis read with S0010
 
 Verify status S0010 isolated control
 
@@ -238,7 +237,7 @@ request_status_and_confirm "traffic controller starting (true/false)",
 
 
 
-## Operational switched on is read with S0007
+## Operational switched on read with S0007
 
 Verify status S0007 controller switched on (dark mode=off)
 
@@ -261,13 +260,7 @@ request_status_and_confirm "controller switch on (dark mode=off)",
 
 ## Operational yellow flash affects all signal groups
 
-Verify that we can yellow flash causes all groups to go to state 'c'
 
-1. Given the site is connected
-2. Send the control command to switch to Yellow flash
-3. Wait for all groups to go to group 'c'
-4. Send command to switch to normal control
-5. Wait for all groups to switch do something else that 'c'
 
 <details markdown="block">
   <summary>

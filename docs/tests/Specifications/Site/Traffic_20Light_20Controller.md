@@ -11,7 +11,7 @@ grand_parent: Test Suite
 # Traffic Light Controller
 {: .no_toc}
 
-Tests for Traffic Light Controllers.
+Tests covering the SXL for Traffic Light Controllers.
 
 ### Categories
 {: .no_toc .text-delta }

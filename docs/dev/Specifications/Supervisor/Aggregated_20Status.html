@@ -104,8 +104,7 @@
 12
 13
 14
-15
-16</pre>
+15</pre>
           </td>
           <td>
             <pre class="code"><span class="info file"># File 'spec/supervisor/aggregated_status_spec.rb', line 7</span>
@@ -115,9 +114,8 @@
 
         <span class='comment'># setting &#39;:collect&#39; will cause set_aggregated_status() to wait for the
 </span>        <span class='comment'># outgoing aggregated status is acknowledged
-</span>        <span class='id identifier rubyid_component'>component</span><span class='period'>.</span><span class='id identifier rubyid_set_aggregated_status'>set_aggregated_status</span> <span class='symbol'>:high_priority_alarm</span><span class='comma'>,</span> <span class='label'>collect!:</span> <span class='lbrace'>{</span>
-          <span class='label'>timeout:</span> <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>acknowledgement</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
-          <span class='label'>num:</span> <span class='int'>1</span>
+</span>        <span class='id identifier rubyid_component'>component</span><span class='period'>.</span><span class='id identifier rubyid_set_aggregated_status'>set_aggregated_status</span> <span class='symbol'>:high_priority_alarm</span><span class='comma'>,</span> <span class='label'>collect:</span> <span class='lbrace'>{</span>
+          <span class='label'>timeout:</span> <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>acknowledgement</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
         <span class='rbrace'>}</span>
       <span class='kw'>end</span></pre>
           </td>
