@@ -12,7 +12,7 @@ grand_parent: Site
 {: .no_toc}
 
 Tests related to the clock.
-When you set the clock, the adjusted time shoudl be used
+When you set the clock, the adjusted time should be used
 everywhere you get back a timestamp.
 
 ### Tests
