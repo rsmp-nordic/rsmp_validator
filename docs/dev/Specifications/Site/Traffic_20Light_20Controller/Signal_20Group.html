@@ -439,6 +439,148 @@
 
 </div></li> 
     
+      
+      <li class='context-specification'><div class="specification">
+  <div class="heading ">
+    <a name="spec-site-tlc-signal_groups_spec-rb-82"></a>
+    
+  </div>
+
+  <div class="details method_details_list">
+    
+    <div class="docstring">
+      
+<p>Verify that groups follow startup sequence after a restart</p>
+<ol><li>
+<p>Given the site is connected</p>
+</li><li>
+<p>And has just been restarted</p>
+</li><li>
+<p>Then all signal groups should follow the startup sequence</p>
+</li></ol>
+
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <!-- Source Code -->
+    <div style="float: left;">
+      <table class="source_code">
+        <tr>
+          <td>
+            <pre class="lines">
+
+
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91</pre>
+          </td>
+          <td>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 82</span>
+
+<span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
+        <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
+        <span class='id identifier rubyid_supervisor'>supervisor</span><span class='period'>.</span><span class='id identifier rubyid_ignore_errors'>ignore_errors</span> <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>DisconnectError</span> <span class='kw'>do</span>
+          <span class='id identifier rubyid_verify_startup_sequence'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#verify_startup_sequence-instance_method" title="Validator::CommandHelpers#verify_startup_sequence (method)">verify_startup_sequence</a></span></span> <span class='kw'>do</span>
+            <span class='id identifier rubyid_set_restart'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#set_restart-instance_method" title="Validator::CommandHelpers#set_restart (method)">set_restart</a></span></span>
+            <span class='id identifier rubyid_site'>site</span><span class='period'>.</span><span class='id identifier rubyid_wait_for_state'>wait_for_state</span> <span class='symbol'>:disconnected</span><span class='comma'>,</span> <span class='label'>timeout:</span> <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>shutdown</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+            <span class='id identifier rubyid_site'>site</span><span class='period'>.</span><span class='id identifier rubyid_wait_for_state'>wait_for_state</span> <span class='symbol'>:ready</span><span class='comma'>,</span> <span class='label'>timeout:</span> <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ready</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+          <span class='kw'>end</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+
+    <div style="clear: both;"></div>
+    
+  </div>
+
+  <!-- Captures the collapsed state -->
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+
+</div></li> 
+    
+      
+      <li class='context-specification'><div class="specification">
+  <div class="heading ">
+    <a name="spec-site-tlc-signal_groups_spec-rb-100"></a>
+    
+  </div>
+
+  <div class="details method_details_list">
+    
+    <div class="docstring">
+      
+<p>Verify that we can activate normal control after yellow flash mode is turned off</p>
+<ol><li>
+<p>Given the site is connected and in yellow flash mode</p>
+</li><li>
+<p>When we activate normal control</p>
+</li><li>
+<p>All signal groups should go through e, f and g</p>
+</li></ol>
+
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <!-- Source Code -->
+    <div style="float: left;">
+      <table class="source_code">
+        <tr>
+          <td>
+            <pre class="lines">
+
+
+100
+101
+102
+103
+104
+105
+106
+107</pre>
+          </td>
+          <td>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 100</span>
+
+<span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
+        <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
+        <span class='id identifier rubyid_verify_startup_sequence'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#verify_startup_sequence-instance_method" title="Validator::CommandHelpers#verify_startup_sequence (method)">verify_startup_sequence</a></span></span> <span class='kw'>do</span>
+          <span class='id identifier rubyid_switch_yellow_flash'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#switch_yellow_flash-instance_method" title="Validator::CommandHelpers#switch_yellow_flash (method)">switch_yellow_flash</a></span></span>
+          <span class='id identifier rubyid_switch_normal_control'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#switch_normal_control-instance_method" title="Validator::CommandHelpers#switch_normal_control (method)">switch_normal_control</a></span></span>
+        <span class='kw'>end</span>
+        <span class='id identifier rubyid_set_functional_position'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#set_functional_position-instance_method" title="Validator::CommandHelpers#set_functional_position (method)">set_functional_position</a></span></span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>NormalControl</span><span class='tstring_end'>&#39;</span></span>
+      <span class='kw'>end</span></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+
+    <div style="clear: both;"></div>
+    
+  </div>
+
+  <!-- Captures the collapsed state -->
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+
+</div></li> 
+    
   </ul>
   
   <ul class='context-subcontext'>

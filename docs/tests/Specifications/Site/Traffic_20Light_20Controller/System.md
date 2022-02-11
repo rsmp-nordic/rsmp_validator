@@ -78,9 +78,10 @@ request_status_and_confirm "operator logged in/out web-interface",
 ```ruby
 Validator::Site.isolated do |task,supervisor,site|
   prepare task, site
-  #if ask_user site, "Going to restart controller. Press enter when ready or 's' to skip:"
-  set_restart
-  site.wait_for_state :stopped, Validator.config['timeouts']['shutdown']
+  supervisor.ignore_errors RSMP::DisconnectError do
+    set_restart
+    site.wait_for_state :disconnected, timeout: Validator.config['timeouts']['shutdown']
+  end
 end
 # NOTE
 # when a remote site closes the connection, our site proxy object will stop.
@@ -89,7 +90,7 @@ end
 # it also means we need a new Validator::Site.
 Validator::Site.isolated do |task,supervisor,site|
   prepare task, site
-  site.wait_for_state :ready, Validator.config['timeouts']['ready']
+  site.wait_for_state :ready, timeout: Validator.config['timeouts']['ready']
   wait_normal_control
 end
 ```
@@ -109,7 +110,7 @@ end
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
-  wrong_security_code 
+  expect { wrong_security_code }.to raise_error(RSMP::MessageRejected)
 end
 ```
 </details>

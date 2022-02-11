@@ -90,8 +90,8 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>spec/support/validator.rb<span class="defines">,<br />
-  spec/support/log_helpers.rb,<br /> spec/support/formatters/list.rb,<br /> spec/support/formatters/brief.rb,<br /> spec/support/formatters/details.rb,<br /> spec/support/interaction_helpers.rb,<br /> spec/support/formatters/report_stream.rb,<br /> spec/support/formatters/formatter_base.rb</span>
+    <dd>spec/site/core/connect_spec.rb<span class="defines">,<br />
+  spec/support/validator.rb,<br /> spec/support/log_helpers.rb,<br /> spec/support/formatters/list.rb,<br /> spec/support/formatters/brief.rb,<br /> spec/support/formatters/details.rb,<br /> spec/support/interaction_helpers.rb,<br /> spec/support/formatters/report_stream.rb,<br /> spec/support/formatters/formatter_base.rb</span>
 </dd>
   </dl>
   
@@ -101,7 +101,7 @@
 <p class="children">
   
     
-      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Validator/CommandHelpers.html" title="Validator::CommandHelpers (module)">CommandHelpers</a></span>, <span class='object_link'><a href="Validator/LogHelpers.html" title="Validator::LogHelpers (module)">LogHelpers</a></span>, <span class='object_link'><a href="Validator/StatusHelpers.html" title="Validator::StatusHelpers (module)">StatusHelpers</a></span>
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Validator/CommandHelpers.html" title="Validator::CommandHelpers (module)">CommandHelpers</a></span>, <span class='object_link'><a href="Validator/HandshakeHelper.html" title="Validator::HandshakeHelper (module)">HandshakeHelper</a></span>, <span class='object_link'><a href="Validator/LogHelpers.html" title="Validator::LogHelpers (module)">LogHelpers</a></span>, <span class='object_link'><a href="Validator/StatusHelpers.html" title="Validator::StatusHelpers (module)">StatusHelpers</a></span>
     
   
     
@@ -294,7 +294,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#after-class_method" title="after (class method)">.<strong>after</strong>(example)  &#x21d2; Object </a>
+      <a href="#check_connection-class_method" title="check_connection (class method)">.<strong>check_connection</strong>  &#x21d2; Object </a>
     
 
     
@@ -691,9 +691,9 @@
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="after-class_method">
+  <h3 class="signature first" id="check_connection-class_method">
   
-    .<strong>after</strong>(example)  &#x21d2; <tt>Object</tt> 
+    .<strong>check_connection</strong>  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -706,13 +706,33 @@
       <pre class="lines">
 
 
+43
+44
+45
 46
-47</pre>
+47
+48
+49
+50
+51
+52
+53
+54</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 46</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 43</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_after'>after</span> <span class='id identifier rubyid_example'>example</span>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_connection'>check_connection</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Initial </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='embexpr_end'>}</span><span class='tstring_content'> connection check</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='label'>level:</span> <span class='symbol'>:info</span>
+  <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>==</span> <span class='symbol'>:site</span>
+    <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_testee'><span class='object_link'><a href="Validator/Site.html#testee-class_method" title="Validator::Site.testee (method)">testee</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'>connected</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='kw'>elsif</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>==</span> <span class='symbol'>:supervisor</span>
+    <span class='kw'>begin</span>
+      <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Validator/Supervisor.html" title="Validator::Supervisor (class)">Supervisor</a></span></span><span class='period'>.</span><span class='id identifier rubyid_testee'><span class='object_link'><a href="Validator/Supervisor.html#testee-class_method" title="Validator::Supervisor.testee (method)">testee</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'>connected</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+    <span class='kw'>rescue</span> <span class='const'>StandardError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+      <span class='id identifier rubyid_raise'>raise</span> <span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_exception'>exception</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Could not connect to supervisor. </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -735,12 +755,12 @@
       <pre class="lines">
 
 
-42
-43
-44</pre>
+56
+57
+58</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 42</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 56</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span> <span class='id identifier rubyid_str'>str</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reporter'>reporter</span><span class='period'>.</span><span class='id identifier rubyid_publish'>publish</span> <span class='symbol'>:step</span><span class='comma'>,</span> <span class='label'>message:</span> <span class='id identifier rubyid_str'>str</span>
@@ -778,9 +798,9 @@
       <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 14</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_setup'>setup</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span>
-  <span class='id identifier rubyid_setup_logging'>setup_logging</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span>
   <span class='id identifier rubyid_determine_mode'>determine_mode</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span><span class='period'>.</span><span class='id identifier rubyid_files_to_run'>files_to_run</span>
   <span class='id identifier rubyid_load_config'>load_config</span>
+  <span class='id identifier rubyid_setup_logging'>setup_logging</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span>
   <span class='id identifier rubyid_build_testee'>build_testee</span>
   <span class='id identifier rubyid_setup_filters'>setup_filters</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span>
 <span class='kw'>end</span></pre>
@@ -823,27 +843,29 @@
 37
 38
 39
-40</pre>
+40
+41</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 22</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_setup_logging'>setup_logging</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span>
   <span class='id identifier rubyid_settings'>settings</span> <span class='op'>=</span> <span class='lbrace'>{</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>active</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='comma'>,</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>port</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>stream</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='const'><span class='object_link'><a href="Validator/ReportStream.html" title="Validator::ReportStream (class)">ReportStream</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Validator/ReportStream.html#initialize-instance_method" title="Validator::ReportStream#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_rspec_config'>rspec_config</span><span class='period'>.</span><span class='id identifier rubyid_reporter'>reporter</span><span class='rparen'>)</span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>color</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span>
-      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>info</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>white</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>log</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>light_black</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>test</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>white</span><span class='tstring_end'>&#39;</span></span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>info</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>light_black</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>log</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>white</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>test</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>white</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>debug</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>light_black</span><span class='tstring_end'>&#39;</span></span>
     <span class='rbrace'>}</span><span class='comma'>,</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>port</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>json</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>acknowledgements</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>watchdogs</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>test</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='comma'>,</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>direction</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='kw'>false</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>debug</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='kw'>true</span>
   <span class='rbrace'>}</span>
+  <span class='id identifier rubyid_settings'>settings</span> <span class='op'>=</span> <span class='id identifier rubyid_settings'>settings</span><span class='period'>.</span><span class='id identifier rubyid_deep_merge'>deep_merge</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>log</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>log</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_initialize_logging'>initialize_logging</span> <span class='label'>log_settings:</span> <span class='id identifier rubyid_settings'>settings</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reporter'>reporter</span> <span class='op'>=</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span><span class='period'>.</span><span class='id identifier rubyid_reporter'>reporter</span>
 <span class='kw'>end</span></pre>

@@ -19,6 +19,29 @@ grand_parent: Site
 - TOC
 {:toc}
 
+## Signal plan M0018 set cycle time
+
+1. Verify connection
+2. Send control command to set cycle time
+3. Wait for status = true
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+  status = 5
+  plan = 0
+  prepare task, site
+  set_cycle_time status, plan
+end
+```
+</details>
+
+
+
+
 ## Signal plan currently active is read with S0014
 
 Verify status S0014 current time plan
@@ -146,7 +169,7 @@ request_status_and_confirm "command table",
 Validator::Site.connected do |task,supervisor,site|
   status = "12-1-12-59,1-0-23-12"
   prepare task, site
-  set_time_table status
+  set_day_table status
 end
 ```
 </details>
@@ -188,9 +211,42 @@ request_status_and_confirm "command table",
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   plan = "1"
-  status = "10,10"
+  status = "1-12"
   prepare task, site
-  set_dynamic_bands status, plan
+  set_dynamic_bands plan, status
+end
+```
+</details>
+
+
+
+
+## Signal plan dynamic bands values can be changed and read back
+
+1. Given the site is connected
+2. Read dynamic band
+3. Set dynamic band to 2x previous value
+4. Read  band to confirm
+5. Set dynamic band to previous value
+6. Read dynamic band to confirm
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+  prepare task, site
+  plan = 1
+  band = 3
+  value = get_dynamic_bands(plan, band) || 0
+  expect( value ).to be_a(Integer)
+  new_value = value + 1
+  
+  set_dynamic_bands plan, "#{band}-#{new_value}"
+  expect( get_dynamic_bands(plan, band) ).to eq(new_value)
+  set_dynamic_bands plan, "#{band}-#{value}"
+  expect( get_dynamic_bands(plan, band) ).to eq(value)
 end
 ```
 </details>

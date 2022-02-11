@@ -10,7 +10,7 @@ parent: Test Suite
 # Site
 {: .no_toc}
 
-Tests for RSMP sites.
+Tests for RSMP sites (as opposed to supervisors), like traffic light controllers.
 
 ### Categories
 {: .no_toc .text-delta }
