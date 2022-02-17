@@ -513,12 +513,12 @@ module Validator::CommandHelpers
         [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}1/}]
       )
       
-      force_detector_logic component, mode:'False'
-      Validator.config['main_component'] = Validator.config['main_component']
-      wait_for_status(@task,
-        "deactivate detector logic #{component}",
-        [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}0/}]
-      )
+      # force_detector_logic component, mode:'False'
+      # Validator.config['main_component'] = Validator.config['main_component']
+      # wait_for_status(@task,
+      #   "deactivate detector logic #{component}",
+      #   [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}0/}]
+      # )
     end
   end
 
