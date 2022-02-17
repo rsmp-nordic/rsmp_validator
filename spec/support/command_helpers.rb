@@ -399,7 +399,7 @@ module Validator::CommandHelpers
   def wait_normal_control timeout=0
 
     if timeout == 0
-      timeout = Validator.config['timeouts']['startup_sequence'].size + 2
+      timeout = Validator.config['timeouts']['startup_sequence']
     end
 
     wait_for_status(@task,
