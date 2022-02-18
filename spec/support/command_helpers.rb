@@ -400,7 +400,7 @@ module Validator::CommandHelpers
         {'sCI'=>'S0011','n'=>'status','s'=>/^False(,False)*$/},   # yellow flash off
         {'sCI'=>'S0005','n'=>'status','s'=>'False'}               # startup mode off
       ],
-      timeout: Validator.config['timeouts']['startup_sequence'].size + 2
+      timeout: Validator.config['timeouts']['startup_sequence']
     )
   end
 
