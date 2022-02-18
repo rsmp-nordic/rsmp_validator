@@ -108,6 +108,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         switch_yellow_flash
+        task.sleep(2)
         switch_normal_control
       end
     end
