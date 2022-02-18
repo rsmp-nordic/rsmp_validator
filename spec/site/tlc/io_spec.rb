@@ -34,14 +34,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
           # verify forced input status = 1
           wait_for_status(@task,
             "switch #{input} to #{inputValue}",
-            [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input}}1/}]
+            [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}1/}]
           )
           # [{'sCI'=>'S0029','n'=>'status','s'=>/^1/}]
 
           # verify inputstatus = 0
           wait_for_status(@task,
             "switch #{input} to #{inputValue}",
-            [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input}}0/}]
+            [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input - 1}}0/}]
           )
           
           # set forced input
@@ -52,7 +52,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           # verify inputstatus = 1
           wait_for_status(@task,
             "switch #{input} to #{inputValue}",
-            [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input}}1/}]
+            [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input - 1}}1/}]
           )  
 
           # set unforced input
@@ -63,7 +63,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           # verify unforced input status = 0
           wait_for_status(@task,
             "switch #{input} to #{inputValue}",
-            [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input}}1/}]
+            [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}1/}]
           )
 
         end
