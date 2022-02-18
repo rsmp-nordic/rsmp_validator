@@ -24,7 +24,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
           prepare task, site
 
-          input = 101
+          input = Validator.config['items']['force_input']
 
           # set forced input
           status = 'True'  # forced

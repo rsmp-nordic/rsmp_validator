@@ -29,6 +29,7 @@ items:
   traffic_situations: []
   emergency_routes: [1]
   inputs: [1]
+  force_input: 101
 startup_sequence: 'efg'
 scripts:
   activate_alarm: '/home/i0davla/activate_alarm.sh'
