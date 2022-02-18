@@ -21,11 +21,50 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 3. Wait for status = true  
       specify 'forcing is set with M0019', sxl: '>=1.0.13' do |example|
         Validator::Site.connected do |task,supervisor,site|
-          status = 'False'
-          input = 1
-          inputValue = 'True'
+
           prepare task, site
+
+          input = Validator.config['items']['force_input']
+
+          # set forced input
+          status = 'True'  # forced
+          inputValue = 'False'
           force_input status, input, inputValue
+          
+          # verify forced input status = 1
+          wait_for_status(@task,
+            "verify that input #{input} is forced",
+            [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}1/}]
+          )
+
+          # verify inputstatus = 0
+          wait_for_status(@task,
+            "verify that input #{input} is set to #{inputValue}",
+            [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input - 1}}0/}]
+          )
+          
+          # set forced input
+          status = 'True'  # forced
+          inputValue = 'True'
+          force_input status, input, inputValue
+ 
+          # verify inputstatus = 1
+          wait_for_status(@task,
+            "verify that input #{input} is set to #{inputValue}",
+            [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input - 1}}1/}]
+          )  
+
+          # set unforced input
+          status = 'False'  # unforced
+          inputValue = 'False'
+          force_input status, input, inputValue
+
+          # verify unforced input status = 0
+          wait_for_status(@task,
+            "verify that input #{input} is unforced",
+            [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}0/}]
+          )
+
         end
       end    
 
