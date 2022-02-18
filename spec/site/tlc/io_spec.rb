@@ -63,7 +63,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           # verify unforced input status = 0
           wait_for_status(@task,
             "switch #{input} to #{inputValue}",
-            [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}1/}]
+            [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}0/}]
           )
 
         end
