@@ -101,10 +101,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         verify_startup_sequence do
-          switch_yellow_flash 0
+          switch_yellow_flash
           switch_normal_control
         end
-        set_functional_position 'NormalControl', 0
+        set_functional_position 'NormalControl'
       end
     end
   end

@@ -107,7 +107,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'yellow flash can be activated with M0001', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        switch_yellow_flash 0
+        switch_yellow_flash
         switch_normal_control
       end
     end
@@ -124,7 +124,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         prepare task, site
         timeout =  10
 
-        switch_yellow_flash 0
+        switch_yellow_flash
         wait_for_groups 'c', timeout: timeout      # c mean s yellow flash
 
         switch_normal_control
@@ -179,8 +179,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
     Validator::Site.connected do |task,supervisor,site|
       prepare task, site
       switch_normal_control
-      switch_yellow_flash 1
-      wait_normal_control 120
+      switch_yellow_flash timeout_minutes: 1
+      wait_normal_control timeout: 120
     end
   end  
 end
