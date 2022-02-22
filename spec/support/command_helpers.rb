@@ -396,12 +396,7 @@ module Validator::CommandHelpers
     Validator.log "Command rejected as expected", level: :test
   end
 
-  def wait_normal_control timeout=0
-
-    if timeout == 0
-      timeout = Validator.config['timeouts']['startup_sequence']
-    end
-
+  def wait_normal_control timeout=Validator.config['timeouts']['startup_sequence']
     wait_for_status(@task,
       "normal control on, yellow flash off, startup mode off",
       [
@@ -409,7 +404,7 @@ module Validator::CommandHelpers
         {'sCI'=>'S0011','n'=>'status','s'=>/^False(,False)*$/},   # yellow flash off
         {'sCI'=>'S0005','n'=>'status','s'=>'False'}               # startup mode off
       ],
-      timeout: Validator.config['timeouts']['startup_sequence']
+      timeout: timeout
     )
   end
 
