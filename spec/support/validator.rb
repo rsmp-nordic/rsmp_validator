@@ -11,6 +11,13 @@ module Validator
     attr_accessor :site_validator, :supervisor_validator
   end
 
+  @@reactor = nil
+
+  # get our global reactor
+  def self.reactor
+    @@reactor
+  end
+
   def self.setup rspec_config
     determine_mode rspec_config.files_to_run
     load_config
@@ -40,30 +47,62 @@ module Validator
     self.reporter = rspec_config.reporter
   end
 
+  # called by rspec at startup
+  def self.before_suite examle
+    @@reactor = Async::Reactor.new
+    reactor.annotate 'reactor'
+    error = nil
+    reactor.run do |task|
+      Validator.check_connection
+    rescue StandardError => e
+      error = e
+      task.stop
+    ensure
+      reactor.interrupt
+    end
+    raise error if error
+  rescue RSMP::ConnectionError => e
+    STDERR.puts "Aborting: #{e.message}".colorize(:red)
+    raise
+  rescue StandardError => e
+    STDERR.puts "Aborting: #{e.inspect}".colorize(:red)
+    raise
+  end
+
+  # called by rspec when each example is being run
+  def self.around_each example
+    reactor.run do |task|
+      task.annotate 'rspec'
+      example.run
+    ensure
+      reactor.interrupt
+    end
+  end
+
+  # initial check that we have a connection to the site/supervisor
   def self.check_connection
     self.log "Initial #{self.mode} connection check", level: :info
     if self.mode == :site
       Validator::Site.testee.connected {}
     elsif self.mode == :supervisor
-      begin
-        Validator::Supervisor.testee.connected {}
-      rescue StandardError => e
-        raise e.exception "Could not connect to supervisor. #{e}"
-      end
+      Validator::Supervisor.testee.connected {}
     end
   end
 
+  # log to the rspec formatter
   def self.log str, options
     self.reporter.publish :step, message: str
   end
 
   private
 
+  # print and error to STDERR and exit with an error
   def self.abort_with_error error
     STDERR.puts "Error: #{error}".colorize(:red)
     exit 1
   end
 
+  # set whether we are testing a site or a supervisor
   def self.set_mode mode
     if self.mode
       if self.mode != mode
@@ -82,6 +121,7 @@ module Validator
     end
   end
 
+  # get the path of our config file, which depend on whether we're testing a site or supervisor
   def self.get_config_path
     key = "#{self.mode.to_s.upcase}_CONFIG"
     if ENV[key]
@@ -102,6 +142,7 @@ module Validator
     config_path
   end
 
+  # load config from a YAML file
   def self.load_config
     config_path = get_config_path
 
@@ -133,8 +174,6 @@ module Validator
         HEREDOC
       end
     end
-
-
 
     # components
     self.abort_with_error "Error: config 'components' settings is missing or empty" if config['components'] == {}
@@ -178,6 +217,8 @@ module Validator
     end
   end
 
+  # find out whether we're testing a site or a supervisor,
+  # based on the path to the specs we're going to run
   def self.determine_mode files_to_run
     site_folder = './spec/site'
     supervisor_folder = './spec/supervisor'
@@ -196,6 +237,8 @@ module Validator
     end
   end
 
+  # build the testee, which can Validator::Site or a Validator::Supervisor,
+  # depending on what we're going to test
   def self.build_testee
     if self.mode == :site
       Validator::Site.testee = Validator::Site.new
@@ -206,6 +249,7 @@ module Validator
     end
   end
 
+  # setup rspec filters to support filtering by RSMP core and SXL version tags
   def self.setup_filters rspec_config
     core_version = Validator.config.dig('restrict_testing','core_version')
     sxl_version = Validator.config.dig('restrict_testing','sxl_version')
@@ -227,7 +271,6 @@ module Validator
       rspec_config.filter_run_excluding core: core_filter
     end
 
-
     # enable filtering by sxl version tags like '>=1.0.7'
     # Gem::Requirement and Gem::Version classed are used to do the version matching,
     # but this otherwise has nothing to do with Gems
@@ -245,5 +288,4 @@ module Validator
       rspec_config.filter_run_excluding sxl: sxl_filter
     end
   end
-
 end

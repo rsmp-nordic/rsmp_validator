@@ -10,16 +10,6 @@ class Validator::Testee
   include RSpec::Matchers
 
   @@sentinel_errors = []
-  @@reactor = nil
-  @@task = nil
-
-  def self.set_reactor reactor
-    @@reactor = reactor
-  end
-
-  def self.set_task task
-    @@task = task
-  end
 
   def self.sentinel_errors
     @@sentinel_errors
@@ -102,12 +92,12 @@ class Validator::Testee
   def start options={}, why=nil
     return if @node
 
-    @@task.async do |task|
+    Validator.reactor.async do |task|
       task.annotate 'node runner'
 
       @node = build_node options
 
-      @@task.async do |sentinel|
+      Validator.reactor.async do |sentinel|
         sentinel.annotate 'sentinel'
         while @node do
           e = @node.error_queue.dequeue

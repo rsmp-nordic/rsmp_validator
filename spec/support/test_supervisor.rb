@@ -47,7 +47,7 @@ class Validator::Supervisor < Validator::Testee
     @proxy = @node.wait_for_supervisor(:any, config['timeouts']['connect'])
     @proxy.wait_for_state :connected, timeout: config['timeouts']['connect']
   rescue RSMP::TimeoutError
-    raise RSMP::ConnectionError.new "Supervisor did not connect within #{config['timeouts']['connect']}s"
+    raise RSMP::ConnectionError.new "Could not connect to supervisor within #{config['timeouts']['connect']}s"
   end
 
   def wait_for_handshake

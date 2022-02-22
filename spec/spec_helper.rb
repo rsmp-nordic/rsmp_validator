@@ -20,15 +20,6 @@ require_relative 'support/formatters/list.rb'
 include RSpec
 include Validator::LogHelpers
 
-reactor = nil
-
-def wait_all(task = self)
-  task.children&.each do |child|
-    wait_all(child)
-  end
-  task.wait
-end
-
 # configure RSpec
 RSpec.configure do |config|
   Validator.setup config
@@ -44,40 +35,10 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do |example|
-    reactor = Async::Reactor.new
-    reactor.annotate 'reactor'
-    Validator::Testee.set_reactor reactor
-
-    # start a never-ending task.
-    # he purpose of this task is to be the parents task of tasks that need to persist
-    # between test, like the site/supervisor
-    task = reactor.async do |task|
-      task.annotate 'persistent'
-      loop do
-        task.sleep 1
-      end
-    end
-    Validator::Testee.set_task task
-
-    #Validator.check_connection
-  #rescue StandardError => e
-  #  STDERR.puts "Error: #{e}".colorize(:red)
-  #  raise
-  end
-
-  config.after(:suite) do |example|
-    puts
-    reactor.stop
+    Validator.before_suite example
   end
 
   config.around(:each) do |example|
-    reactor.run do |task|
-      task.annotate 'rspec'
-      example.run
-    ensure
-      reactor.interrupt
-    end
+    Validator.around_each example
   end
-
 end
-
