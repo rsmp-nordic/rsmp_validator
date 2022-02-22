@@ -54,36 +54,41 @@ request_status_and_confirm "forced input status",
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   input = Validator.config['items']['force_input']
-  # set forced input
+  # force input to false
   status = 'True'  # forced
   inputValue = 'False'
   force_input status, input, inputValue
   
-  # verify forced input status = 1
+  # verify forced = 1
   wait_for_status(@task,
-    "verify that input #{input} is forced",
+    "input #{input} is forced",
     [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}1/}]
   )
   # verify inputstatus = 0
   wait_for_status(@task,
-    "verify that input #{input} is set to #{inputValue}",
+    "input #{input} is set to #{inputValue}",
     [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input - 1}}0/}]
   )
   
-  # set forced input
+  # force input to true
   status = 'True'  # forced
   inputValue = 'True'
   force_input status, input, inputValue
+  # verify forced = 1
+  wait_for_status(@task,
+    "input #{input} is forced",
+    [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}1/}]
+  )
   # verify inputstatus = 1
   wait_for_status(@task,
-    "verify that input #{input} is set to #{inputValue}",
+    "input #{input} is set to #{inputValue}",
     [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input - 1}}1/}]
-  )  
-  # set unforced input
+  )
+  # release input
   status = 'False'  # unforced
   inputValue = 'False'
   force_input status, input, inputValue
-  # verify unforced input status = 0
+  # verify force = 0
   wait_for_status(@task,
     "verify that input #{input} is unforced",
     [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}0/}]

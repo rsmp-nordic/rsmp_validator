@@ -124,16 +124,6 @@
         </dt>
         <dd><pre class="code"><span class='lbracket'>[</span><span class='rbracket'>]</span></pre></dd>
       
-        <dt id="reactor-classvariable" class="">@@reactor =
-          
-        </dt>
-        <dd><pre class="code"><span class='kw'>nil</span></pre></dd>
-      
-        <dt id="task-classvariable" class="">@@task =
-          
-        </dt>
-        <dd><pre class="code"><span class='kw'>nil</span></pre></dd>
-      
     </dl>
   
 
@@ -155,50 +145,6 @@
   <span class="summary_signature">
     
       <a href="#sentinel_errors-class_method" title="sentinel_errors (class method)">.<strong>sentinel_errors</strong>  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#set_reactor-class_method" title="set_reactor (class method)">.<strong>set_reactor</strong>(reactor)  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#set_task-class_method" title="set_task (class method)">.<strong>set_task</strong>(task)  &#x21d2; Object </a>
     
 
     
@@ -394,77 +340,15 @@
       <pre class="lines">
 
 
-24
-25
-26</pre>
+14
+15
+16</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 24</span>
+      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 14</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_sentinel_errors'>sentinel_errors</span>
   <span class='cvar'>@@sentinel_errors</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="set_reactor-class_method">
-  
-    .<strong>set_reactor</strong>(reactor)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3>
-<table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-16
-17
-18</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 16</span>
-
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_set_reactor'>set_reactor</span> <span class='id identifier rubyid_reactor'>reactor</span>
-  <span class='cvar'>@@reactor</span> <span class='op'>=</span> <span class='id identifier rubyid_reactor'>reactor</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="set_task-class_method">
-  
-    .<strong>set_task</strong>(task)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3>
-<table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-20
-21
-22</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 20</span>
-
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_set_task'>set_task</span> <span class='id identifier rubyid_task'>task</span>
-  <span class='cvar'>@@task</span> <span class='op'>=</span> <span class='id identifier rubyid_task'>task</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -493,12 +377,12 @@
       <pre class="lines">
 
 
-28
-29
-30</pre>
+18
+19
+20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 28</span>
+      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 18</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_config'>config</span>
   <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span>
@@ -548,14 +432,14 @@
       <pre class="lines">
 
 
-38
-39
-40
-41
-42</pre>
+28
+29
+30
+31
+32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 38</span>
+      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 28</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_connected'>connected</span> <span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span>
   <span class='id identifier rubyid_start'>start</span> <span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Connecting</span><span class='tstring_end'>&#39;</span></span>
@@ -607,13 +491,13 @@
       <pre class="lines">
 
 
-73
-74
-75
-76</pre>
+63
+64
+65
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 73</span>
+      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 63</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_disconnected'>disconnected</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span>
   <span class='id identifier rubyid_stop'>stop</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Disconnecting</span><span class='tstring_end'>&#39;</span></span>
@@ -664,16 +548,16 @@
       <pre class="lines">
 
 
-63
-64
-65
-66
-67
-68
-69</pre>
+53
+54
+55
+56
+57
+58
+59</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 63</span>
+      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 53</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_isolated'>isolated</span> <span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span>
   <span class='id identifier rubyid_stop'>stop</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Isolating</span><span class='tstring_end'>&#39;</span></span>
@@ -727,15 +611,15 @@
       <pre class="lines">
 
 
-50
-51
-52
-53
-54
-55</pre>
+40
+41
+42
+43
+44
+45</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 50</span>
+      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 40</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reconnected'>reconnected</span> <span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span>
   <span class='id identifier rubyid_stop'>stop</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Reconnecting</span><span class='tstring_end'>&#39;</span></span>
@@ -775,19 +659,19 @@
       <pre class="lines">
 
 
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88</pre>
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 79</span>
+      <pre class="code"><span class="info file"># File 'spec/support/testee.rb', line 69</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_stop'>stop</span> <span class='id identifier rubyid_why'>why</span><span class='op'>=</span><span class='kw'>nil</span>
   <span class='kw'>if</span> <span class='ivar'>@node</span>
