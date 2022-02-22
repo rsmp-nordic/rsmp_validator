@@ -45,7 +45,7 @@ class Validator::Supervisor < Validator::Testee
   def wait_for_connection
     Validator.log "Waiting for connection to supervisor", level: :test
     @proxy = @node.wait_for_supervisor(:any, config['timeouts']['connect'])
-    @proxy.wait_for_state :connected, timeout: config['timeouts']['connect']
+    @proxy.wait_for_state :ready, timeout: config['timeouts']['connect']
   rescue RSMP::TimeoutError
     raise RSMP::ConnectionError.new "Could not connect to supervisor within #{config['timeouts']['connect']}s"
   end
