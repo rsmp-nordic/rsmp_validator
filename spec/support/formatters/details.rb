@@ -15,7 +15,7 @@ module Validator
     end
 
     def step notification
-      @output << "  > #{notification.message}\n"
+      @output << colorize("  > #{notification.message}\n",:cyan)
     end
 
     def message notification
