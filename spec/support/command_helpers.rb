@@ -272,14 +272,18 @@ module Validator::CommandHelpers
 
   def force_input status, input, value
     require_security_codes
-    Validator.log "Force input", level: :test
+    if status == 'True'
+      Validator.log "Force input #{input} to #{value}", level: :test
+    else
+      Validator.log "Release input #{input}", level: :test
+    end
     command_list = build_command_list :M0019, :setInput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
       input: input,
       inputValue: value
     }
-    send_command_and_confirm @task, command_list,  "intention to force input #{input} to #{value}"
+    send_command_and_confirm @task, command_list,  "command to force input #{input} to #{value}"
   end
 
   def force_output status, output, value
