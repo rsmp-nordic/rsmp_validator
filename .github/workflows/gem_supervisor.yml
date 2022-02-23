@@ -13,7 +13,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v2
 
-    - Install Ruby and gems
+    - name: Install Ruby and gems
     - uses: ruby/setup-ruby@v1
       with:
         # ruby-version is not needed because we have a .ruby-version file
