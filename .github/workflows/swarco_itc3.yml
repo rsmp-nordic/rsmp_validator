@@ -16,7 +16,7 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
 
-    - name: Set up ruby
+    - name: Install Ruby and gems
       uses: ruby/setup-ruby@v1
       env:
         ImageOS: win19
