@@ -19,7 +19,7 @@ jobs:
     - name: Install Ruby and gems
       uses: ruby/setup-ruby@v1
       env:
-        ImageOS: win19
+        ImageOS: ubuntu18
       with:
         bundler-cache: true # runs 'bundle install' and caches installed gems
 
