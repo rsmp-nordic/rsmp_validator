@@ -179,8 +179,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     Validator::Site.connected do |task,supervisor,site|
       prepare task, site
       switch_normal_control
-      switch_yellow_flash timeout_minutes: 1
-      wait_normal_control timeout: 120
+      minutes = 1
+      switch_yellow_flash timeout_minutes: minutes
+      wait_normal_control timeout: minutes*60 + Validator.config['timeouts']['functional_position']
     end
   end  
 end

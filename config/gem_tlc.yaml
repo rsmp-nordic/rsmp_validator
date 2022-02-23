@@ -8,7 +8,7 @@ intervals:
 timeouts:
   watchdog: 1
   acknowledgement: 1
-  connect: 180
+  connect: 1
   ready: 1
   status_response: 1
   status_update: 1
@@ -19,6 +19,7 @@ timeouts:
   disconnect: 1
   shutdown: 1
   startup_sequence: 5
+  functional_position: 2
 components:
   main:
     TC:
