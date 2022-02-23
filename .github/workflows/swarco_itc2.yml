@@ -16,11 +16,12 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
 
-    - name: Configure bundle
-      run: bundle config set path '~/rsmp_gems/bundle'
-
-    - name: Run bundle install
-      run: bundle install
+    - name: Install Ruby and gems
+      uses: ruby/setup-ruby@v1
+      env:
+        ImageOS: win19
+      with:
+        bundler-cache: true # runs 'bundle install' and caches installed gems
 
     - name: Start ITC-2 simulator
       run: virsh -c qemu:///system start ts1001
