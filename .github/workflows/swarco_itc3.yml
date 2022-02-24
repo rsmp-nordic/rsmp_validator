@@ -7,6 +7,8 @@
 name: Swarco ITC-3
 
 on:
+  push:
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 jobs:
