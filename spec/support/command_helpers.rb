@@ -90,7 +90,7 @@ module Validator::CommandHelpers
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
       timeout: 0,
-      intersection: 0 
+      intersection: 0
     }
     send_command_and_confirm @task, command_list, "intention to switch to #{status}"
   end
