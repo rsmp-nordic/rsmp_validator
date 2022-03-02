@@ -26,7 +26,6 @@ jobs:
     - name: Run tests
       shell: bash
       run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log --tag '~script' spec/site
-
       env:
         SITE_CONFIG: config/gem_tlc.yaml
     
