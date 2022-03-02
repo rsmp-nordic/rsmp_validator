@@ -5,13 +5,16 @@
 # This workflow will run rspec
 
 name: Gem TLC
-on: [push, pull_request]
+on: push
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ruby/setup-ruby@v1
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Install Ruby and gems
+      uses: ruby/setup-ruby@v1
       with:
         # ruby-version is not needed because we have a .ruby-version file
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically

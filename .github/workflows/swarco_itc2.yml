@@ -11,48 +11,57 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-  workflow_dispatch:
-
 jobs:
   test:
-
     runs-on: [ self-hosted, Linux, X64, itc2 ]
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
+
     - name: Configure bundle
       run: bundle config set path '~/rsmp_gems/bundle'
+
     - name: Run bundle install
       run: bundle install
+
     - name: Start ITC-2 simulator
       run: virsh -c qemu:///system start ts1001
+
     - name: Wait for ITC-2 simulator to start and completes startup sequence
       timeout-minutes: 5
       run: until `echo -e "ITC\nEXIT" | nc 192.168.103.205 10002 | grep -q -a "3-light"`; do echo Waiting...; sleep 5; done
+
     - name: Set the time of the controller
       run: ssh 192.168.103.205 ./set_date.sh
+
     - name: Run tests
       run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/site/tlc/modes_spec.rb:178
       env:
         SITE_CONFIG: config/swarco_itc2.yaml
+
     - name: Show detailed log
       if: always()
       run: cat log/validation.log
+
     - name: Rename validation.log
       if: always()
       run: mv log/validation.log log/validation_itc2_$(date +%F_%H-%M-%S).log
+
     - name: Fetch itc2 rsmp log
       if: always()
       run: scp 192.168.103.205:/tmp/simulator.log /tmp/simulator.log
+
     - name: Stop ITC-2 simulator
       if: always()
       run: virsh -c qemu:///system shutdown ts1001
+
     - name: Upload validation.log
       if: always()
       uses: actions/upload-artifact@v2
       with:
         name: rspec validation
         path: log/validation_itc2_*.log
+
     - name: Upload itc2 rsmp log
       if: always()
       uses: actions/upload-artifact@v2

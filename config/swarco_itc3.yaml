@@ -25,6 +25,7 @@ components:
     KK+AG9998=001SG001:
   detector_logic:
     KK+AG9998=001DL001:
+    KK+AG9998=001DL002:
 items:
   plans: [1,7,8]
   traffic_situations: []

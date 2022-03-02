@@ -16,7 +16,7 @@ timeouts:
   alarm: 60
   disconnect: 120
   shutdown: 180
-  startup_sequence: 60
+  startup_sequence: 180
   functional_position: 30
 components:
   main:

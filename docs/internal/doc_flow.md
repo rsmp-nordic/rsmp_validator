@@ -1,24 +1,35 @@
-# Documenation Flow
+# Documentation Flow
+
+## Overview
+Documentation is located in the folder docs/ and is published to https://rsmp-nordic.org/rsmp_validator using GitHub Pages.
+
+General documentation is written as Markdown files and is structured as a Jekyll site, which is what GitHub Pages uses.
+
+The RSpec test suite is documented in the code, and extracted using YARD, which then generates a HTML site which is publushed as part of the Jekyll site.
+
+Changes to documentation are committed to the `master` branch. GitHub actions then use the branches `docs` and `gh-pages` to rebuild and publish documentation.
 
 ## Jekyll
-The general documenentation is written in Markdown and structure as a Jekyll site located in docs/. It's deployed on Github Pages, using the branch gh-pages as publishing source.
+The general documenentation is written in Markdown and structured as a Jekyll site located in docs/. It's deployed on Github Pages, using the branch gh-pages as publishing source.
 
 To update the general documentation:
 
-1. Edit Markdown files in docs/
+1. Edit Markdown files in docs/pages/
 2. Commit changes and push to the master branch on GitHub.
 
-When you push to the master branch on GitHub, a GitHub Action will run the `yardoc` command to rebuild the YARD documentation in docs/dev. Changes are committed to the gh-pages branch, which will update the website.
+When you push to the master branch on GitHub, a GitHub Action will run the `yardoc` command to rebuild the YARD documentation in docs/tests. Changes are then committed to the gh-pages branch, which will cause GitHub pages to update the website.
 
-Internal documentation is located on docs/internal/. Files without Jekyll frontmatter will not be processed by Jekyll, and will not be shown on the website.
+The Jekyll site includes the YARD documentation described below, located in docs/tests/.
+
+Internal documentation is located on docs/internal/. Files in this folder should not include Jekyll frontmattter. Files without Jekyll frontmatter will not be processed by Jekyll, and will not be shown on the website.
 
 ## YARD
-The documentation of the RSpec test suite, including specs and helper methods n spec/, is written as code comments. The documentatio is read by YARD which generates a HMTL site in docs/dev. Note that the folder docs/dev/ is gitignored.
+The documentation of the RSpec test suite, including specs and helper methods in spec/, is written as code comments. The source files are read by YARD which extracts the documentation and generates a HMTL site in docs/tests. The YARD documentation is published as part of the Jekyll site.
 
 To update the YARD documentation:
 
 1. Edit comments in RSpec spec files in spec/ or Ruby files in spec/support/
-2. If you wan to review the generated documentation locally, run the `yardoc` command to rebuild the YARD documentation. Then view the generated files in docs/dev, or use the `jekyll server` command to server the Jekyll site and view it on http://localhost:4000.
+2. If you wan to review the generated documentation locally, run the `yardoc` command to rebuild the YARD documentation. Then view the generated files in docs/tests/, or use the `jekyll server` command to server the Jekyll site and view it on http://localhost:4000.
 3. Push changes to the master branch on GitHub.
 
 When you push the master branch to GitHub, a GitHub Action will update the run `yardoc` to update the files in docs/dev. Changes are then committed to the gh-pages branch.
