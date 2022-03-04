@@ -71,6 +71,77 @@
 
   <ul class='context-specifications'>
     
+      
+      <li class='context-specification'><div class="specification">
+  <div class="heading ">
+    <a name="spec-site-tlc-modes_spec-rb-178"></a>
+    
+  </div>
+
+  <div class="details method_details_list">
+    
+    <div class="docstring">
+      
+<p>Verify that we can activate yellow flash and after 1 minute goes back to NormalControl</p>
+<ol><li>
+<p>Given the site is connected</p>
+</li><li>
+<p>Send the control command to switch to Normal Control, and wait for this</p>
+</li><li>
+<p>Send the control command to switch to Yellow flash</p>
+</li><li>
+<p>Wait for status Yellow flash</p>
+</li><li>
+<p>Wait for automatic revert to Normal Control</p>
+</li></ol>
+
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <!-- Source Code -->
+    <div style="float: left;">
+      <table class="source_code">
+        <tr>
+          <td>
+            <pre class="lines">
+
+
+178
+179
+180
+181
+182
+183
+184</pre>
+          </td>
+          <td>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 178</span>
+
+<span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
+      <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
+      <span class='id identifier rubyid_switch_normal_control'><span class='object_link'><a href="../../Validator/CommandHelpers.html#switch_normal_control-instance_method" title="Validator::CommandHelpers#switch_normal_control (method)">switch_normal_control</a></span></span>
+      <span class='id identifier rubyid_minutes'>minutes</span> <span class='op'>=</span> <span class='int'>1</span>
+      <span class='id identifier rubyid_switch_yellow_flash'><span class='object_link'><a href="../../Validator/CommandHelpers.html#switch_yellow_flash-instance_method" title="Validator::CommandHelpers#switch_yellow_flash (method)">switch_yellow_flash</a></span></span> <span class='label'>timeout_minutes:</span> <span class='id identifier rubyid_minutes'>minutes</span>
+      <span class='id identifier rubyid_wait_normal_control'><span class='object_link'><a href="../../Validator/CommandHelpers.html#wait_normal_control-instance_method" title="Validator::CommandHelpers#wait_normal_control (method)">wait_normal_control</a></span></span> <span class='label'>timeout:</span> <span class='id identifier rubyid_minutes'>minutes</span><span class='op'>*</span><span class='int'>60</span> <span class='op'>+</span> <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>functional_position</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+    <span class='kw'>end</span></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+
+    <div style="clear: both;"></div>
+    
+  </div>
+
+  <!-- Captures the collapsed state -->
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+
+</div></li> 
+    
   </ul>
   
   <ul class='context-subcontext'>
