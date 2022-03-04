@@ -11,7 +11,7 @@ module Validator::CommandHelpers
 
   # Build a RSMP command value list from a hash
   def build_command_list command_code_id, command_name, values
-    values.to_a.map do |n,v|
+    values.compact.to_a.map do |n,v|
       {
         'cCI' => command_code_id.to_s,
         'cO' => command_name.to_s,
@@ -83,13 +83,13 @@ module Validator::CommandHelpers
   end
 
   # Set functional position
-  def set_functional_position status
+  def set_functional_position status, timeout_minutes:nil
     require_security_codes
     Validator.log "Switching to #{status}", level: :test
     command_list = build_command_list :M0001, :setValue, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
-      timeout: 0,
+      timeout: timeout_minutes,
       intersection: 0
     }
     send_command_and_confirm @task, command_list, "intention to switch to #{status}"
@@ -176,8 +176,8 @@ module Validator::CommandHelpers
     )
   end
 
-  def switch_yellow_flash
-    set_functional_position 'YellowFlash'
+  def switch_yellow_flash timeout_minutes: nil
+    set_functional_position 'YellowFlash', timeout_minutes: timeout_minutes
     wait_for_status(@task,
       "switch to yellow flash",
       [{'sCI'=>'S0011','n'=>'status','s'=>/^True(,True)*$/}]
@@ -396,7 +396,7 @@ module Validator::CommandHelpers
     Validator.log "Command rejected as expected", level: :test
   end
 
-  def wait_normal_control
+  def wait_normal_control timeout: Validator.config['timeouts']['startup_sequence']
     wait_for_status(@task,
       "normal control on, yellow flash off, startup mode off",
       [
@@ -404,7 +404,7 @@ module Validator::CommandHelpers
         {'sCI'=>'S0011','n'=>'status','s'=>/^False(,False)*$/},   # yellow flash off
         {'sCI'=>'S0005','n'=>'status','s'=>'False'}               # startup mode off
       ],
-      timeout: Validator.config['timeouts']['startup_sequence']
+      timeout: timeout
     )
   end
 

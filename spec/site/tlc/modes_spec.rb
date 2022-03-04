@@ -167,5 +167,22 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
   end
+
+  # Verify that we can activate yellow flash and after 1 minute goes back to NormalControl
+  #
+  # 1. Given the site is connected
+  # 2. Send the control command to switch to Normal Control, and wait for this
+  # 2. Send the control command to switch to Yellow flash
+  # 3. Wait for status Yellow flash
+  # 5. Wait for automatic revert to Normal Control
+  specify 'yellow flash can be activated with M0001 and goes back to NormalControl after one minute', sxl: '>=1.0.7' do |example|
+    Validator::Site.connected do |task,supervisor,site|
+      prepare task, site
+      switch_normal_control
+      minutes = 1
+      switch_yellow_flash timeout_minutes: minutes
+      wait_normal_control timeout: minutes*60 + Validator.config['timeouts']['functional_position']
+    end
+  end  
 end
 

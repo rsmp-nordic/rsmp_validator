@@ -17,6 +17,7 @@ timeouts:
   disconnect: 120
   shutdown: 180
   startup_sequence: 60
+  functional_position: 30
 components:
   main:
     KK+AG9998=001TC000:
