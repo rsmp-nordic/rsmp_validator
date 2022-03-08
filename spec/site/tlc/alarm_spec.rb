@@ -20,7 +20,64 @@ RSpec.describe 'Site::Traffic Light Controller' do
   # the test is recommended.
 
   describe 'Alarm' do
-    before { skip "Don't yet have a reliable way of triggering alarms" }
+        
+    # Validate that a detector logic fault A0302 raises and removed.
+    # 1. Given the site is connected
+    # 2. We trigger an alarm by setting S0003 input 152 to True
+    # 3. Then we should receive an active alarm
+    # 4. We remove an alarm by setting S0003 input 152 to False
+    # 5. Then we should receive an inactive alarm
+
+    specify 'A0302 is raised when a detector logic is faulty', :script, sxl: '>=1.0.7' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+
+        # Alarm is raised by setting S0003 input 152 to True
+        ensure_input 'True', 152 do
+          site.log "Waiting for alarm", level: :test
+          start_time = Time.now
+          alarm_code_id = 'A0302'
+          collector = site.collect_alarms num: 1, component: component, aCId: alarm_code_id,
+            aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
+
+          alarm = collector.message
+          delay = Time.now - start_time
+          site.log "alarm confirmed after #{delay.to_i}s", level: :test
+
+          alarm_time = Time.parse(alarm.attributes["aTs"])
+          expect(alarm_time).to be_within(1.minute).of Time.now.utc
+          expect(alarm.attributes['rvs']).to eq([{
+            "n"=>"detector","v"=>"1"},
+            {"n"=>"type","v"=>"loop"},
+            {"n"=>"errormode","v"=>"on"},
+            {"n"=>"manual","v"=>"True"},
+            {"n"=>"logicerror","v"=>"always_off"}
+          ])
+        end
+
+        # Alarm is removed by setting S0003 input 152 to False
+        ensure_input 'False', 152 do
+          site.log "Waiting for alarm", level: :test
+          start_time = Time.now
+          alarm_code_id = 'A0302'
+          collector = site.collect_alarms num: 1, component: component, aCId: alarm_code_id,
+            aSp: 'Issue', aS: 'Inactive', timeout: Validator.config['timeouts']['alarm']
+
+          alarm = collector.message
+          delay = Time.now - start_time
+          site.log "alarm confirmed after #{delay.to_i}s", level: :test
+
+          alarm_time = Time.parse(alarm.attributes["aTs"])
+          expect(alarm_time).to be_within(1.minute).of Time.now.utc
+          expect(alarm.attributes['rvs']).to eq([{
+            "n"=>"detector","v"=>"1"},
+            {"n"=>"type","v"=>"loop"},
+            {"n"=>"errormode","v"=>"on"},
+            {"n"=>"manual","v"=>"True"},
+            {"n"=>"logicerror","v"=>"always_off"}
+          ])
+        end
+      end
+    end
 
     # Validate that a detector logic fault raises A0302.
     #
@@ -29,6 +86,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Then we should receive ana alarm
 
     specify 'A0302 is raised when a detector logic is faulty', :script, sxl: '>=1.0.7' do |example|
+      before { skip "Don't yet have a reliable way of triggering alarms" }
       skip_unless_scripts_are_configured
       Validator::Site.connected do |task,supervisor,site|
         component = Validator.config['components']['detector_logic'].keys.first
@@ -65,6 +123,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 5. Then we should receive a confirmation
 
     it 'can be acknowledged', :script do |example|
+      before { skip "Don't yet have a reliable way of triggering alarms" }
       skip_unless_scripts_are_configured
       Validator::Site.connected do |task,supervisor,site|
         component = Validator.config['components']['detector_logic'].keys.first
@@ -91,6 +150,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Then we should received an alarm
 
     it 'is buffered during disconnect', :script, sxl: '>=1.0.7' do |example|
+      before { skip "Don't yet have a reliable way of triggering alarms" }
       skip_unless_scripts_are_configured
       Validator::Site.stop
       with_alarm_activated do

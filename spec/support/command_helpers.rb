@@ -345,6 +345,14 @@ module Validator::CommandHelpers
     run_script 'deactivate_alarm'
   end
 
+  def ensure_input status, indx
+    set_input status, indx.to_s
+    wait_for_status(@task,
+      "activate input #{indx}",
+      [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx-1}}1/}] # index is 1-based, convert to 0-based fo regex
+    )
+  end
+
   def set_clock clock
     require_security_codes
     Validator.log "Setting clock to #{clock}", level: :test
