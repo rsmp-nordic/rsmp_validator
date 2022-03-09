@@ -28,7 +28,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. We remove an alarm by setting S0003 input 152 to False
     # 5. Then we should receive an inactive alarm
 
-    specify 'A0302 is raised when a detector logic is faulty', :script, sxl: '>=1.0.7' do |example|
+    specify 'A0301 is raised when S0003 input 152 is forced to True', :script, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
 
         # Alarm is raised by setting S0003 input 152 to True
@@ -36,7 +36,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         ensure_input('True', 152) do
           site.log "Waiting for alarm", level: :test
           start_time = Time.now
-          alarm_code_id = 'A0302'
+          alarm_code_id = 'A0301'
           collector = site.collect_alarms num: 1, component: component, aCId: alarm_code_id,
             aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
 
@@ -60,7 +60,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         ensure_input('False', 152) do
           site.log "Waiting for alarm", level: :test
           start_time = Time.now
-          alarm_code_id = 'A0302'
+          alarm_code_id = 'A0301'
           collector = site.collect_alarms num: 1, component: component, aCId: alarm_code_id,
             aSp: 'Issue', aS: 'Inactive', timeout: Validator.config['timeouts']['alarm']
 
