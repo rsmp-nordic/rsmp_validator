@@ -32,6 +32,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
 
         # Alarm is raised by setting S0003 input 152 to True
+        prepare task, site
         ensure_input('True', 152) do
           site.log "Waiting for alarm", level: :test
           start_time = Time.now
@@ -55,6 +56,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         end
 
         # Alarm is removed by setting S0003 input 152 to False
+        prepare task, site
         ensure_input('False', 152) do
           site.log "Waiting for alarm", level: :test
           start_time = Time.now
