@@ -345,7 +345,7 @@ module Validator::CommandHelpers
     run_script 'deactivate_alarm'
   end
 
-  def ensure_input status, indx
+  def ensure_input(status, indx)
     set_input status, indx.to_s
     wait_for_status(@task,
       "activate input #{indx}",
