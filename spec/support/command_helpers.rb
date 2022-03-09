@@ -345,11 +345,12 @@ module Validator::CommandHelpers
     run_script 'deactivate_alarm'
   end
 
-  def ensure_input(status, indx)
+  def set_input_and_confirm(status, indx)
     set_input status, indx.to_s
+    digit = (status == 'True' ? '1' : '0')
     wait_for_status(@task,
-      "activate input #{indx}",
-      [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx-1}}1/}] # index is 1-based, convert to 0-based fo regex
+      "set input #{indx} to #{status}",
+      [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx-1}}#{digit}/}] # index is 1-based, convert to 0-based fo regex
     )
   end
 
