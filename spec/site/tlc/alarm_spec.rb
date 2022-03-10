@@ -52,28 +52,22 @@ RSpec.describe 'Site::Traffic Light Controller' do
         alarm_code_id = Validator.config['activate_alarm']['alarm']  # what alarm to expect
         timeout  = Validator.config['timeouts']['alarm']
 
-        # Alarm should be raised when input is activated
-        set_input_and_confirm 'True', input_nr
-        log_confirmation "Waiting for active alarm #{alarm_code_id} to be active" do
-          collector = RSMP::AlarmCollector.new( site,
-            num: 1,
-            query: { aCId: alarm_code_id, aSp: 'Issue', aS: 'Active' },
-            timeout: timeout
-          )
-          collector.collect!  # the bang (!) version raises an error if we time out
-          validate_alarm_attributes collector.messages.first
-        end
+        mapping = {
+          'True' => 'Active',    # alarm should be raised when input is activated
+          'False' => 'inActive'  # alarm should be deactivated when input is deactivated
+        }
 
-        # Alarm should be removed when input is deactivated
-        set_input_and_confirm 'False', input_nr
-        log_confirmation "Waiting for alarm #{alarm_code_id} to be inactive" do
-          collector = RSMP::AlarmCollector.new( site,
-            num: 1,
-            query: { aCId: alarm_code_id, aSp: 'Issue', aS: 'inActive' },
-            timeout: timeout
-          )
-          collector.collect!  # the bang (!) version raises an error if we time out  
-          validate_alarm_attributes collector.messages.first
+        mapping.each_pair do |input_status, alarm_status|
+          set_input_and_confirm input_status, input_nr
+          log_confirmation "Waiting for alarm #{alarm_code_id} to be #{alarm_status}" do
+            collector = RSMP::AlarmCollector.new( site,
+              num: 1,
+              query: { aCId: alarm_code_id, aSp: 'Issue', aS: alarm_status },
+              timeout: timeout
+            )
+            collector.collect!  # the bang (!) version raises an error if we time out
+            validate_alarm_attributes collector.messages.first
+          end
         end
       end
     end
