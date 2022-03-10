@@ -42,6 +42,5 @@ secrets:
   security_codes:
     1: '1111'
     2: '2222'
-activate_alarm:
-  input: 8
-  alarm: A0301
+alarm_activation:
+  A0301: 8

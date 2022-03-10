@@ -21,7 +21,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
   describe 'Alarm' do
         
-    # Validate that a detector logic fault A0302 raises and removed.
+    # Validate that a detector logic fault A0301 is raises and removed.
     # This test expects that the TLC is programmed so that an alarm
     # is raise when a specific input is activated.
     # 1. Given the site is connected
@@ -29,8 +29,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Then we should receive an active alarm
     # 4. When we force the input to False
     # 5. Then the alarm should become inactive
-
-    specify 'Alarm is raised when input is activated', :script, sxl: '>=1.0.7' do |example|
+    specify 'Alarm A0301 is raised when input is activated', :script, sxl: '>=1.0.7' do |example|
       def validate_alarm_attributes alarm
         expected_rvs = [
           {"n"=>"detector","v"=>"1"},
@@ -48,8 +47,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
         prepare task, site
 
         # get config
-        input_nr = Validator.config['activate_alarm']['input']       # what input to activate 
-        alarm_code_id = Validator.config['activate_alarm']['alarm']  # what alarm to expect
+        alarm_code_id = 'A0301'                                        # what alarm to expect
+        input_nr = Validator.config['alarm_activation'][alarm_code_id] # what input to activate 
         timeout  = Validator.config['timeouts']['alarm']
 
         force_input_and_confirm input:input_nr, value:'False'    #force input to false
