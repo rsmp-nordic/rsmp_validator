@@ -23,29 +23,29 @@ RSpec.describe 'Site::Traffic Light Controller' do
         
     # Validate that a detector logic fault A0302 raises and removed.
     # 1. Given the site is connected
-    # 2. We trigger an alarm by setting S0003 input 152 to True
+    # 2. When we trigger an alarm by setting a preconfigured input to True with S0003
     # 3. Then we should receive an active alarm
-    # 4. We remove an alarm by setting S0003 input 152 to False
-    # 5. Then we should receive an inactive alarm
+    # 4. When we set the input to False
+    # 5. Then the alarm should be deactivated
 
-    specify 'A0301 is raised when S0003 input 152 is forced to True', :script, sxl: '>=1.0.7' do |example|
+    specify 'A0301 is raised when S0003 configured input is forced to True', :script, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
+        input_nr = Validator.config['activate_alarm']['input']
+        alarm_code_id = Validator.config['activate_alarm']['alarm']
 
-        alarm_code_id = 'A0301'
-        input_nr = 1    # TODO read from config
-
-        # Alarm is raised by setting S0003 input to True
-        set_input_and_confirm 'False', input_nr
+        # Alarm is raised by setting input to True with using M0006
+        set_input_and_confirm 'True', input_nr
         site.log "Waiting for alarm", level: :test
         start_time = Time.now
-        want = {
+        query = {
           aCId: alarm_code_id,
           aSp: 'Issue',
           aS: 'Active'
         }
-        collector = RSMP::AlarmCollector.new(
-          site, want, num: 1,
+        collector = RSMP::AlarmCollector.new(site,
+          query: query,
+          num: 1,
           timeout: Validator.config['timeouts']['alarm']
         )
         collector.collect!  # the bang (!) version raises an error if we time out
@@ -64,18 +64,19 @@ RSpec.describe 'Site::Traffic Light Controller' do
         ])
 
 
-        # Alarm is removed by setting S0003 input to False
+        # Alarm is removed by settin input to False with M0006
         set_input_and_confirm 'False', input_nr
         site.log "Waiting for alarm", level: :test
         start_time = Time.now
         
-        want = {
+        query = {
           aCId: alarm_code_id,
           aSp: 'Issue',
           aS: 'Inactive'
         }
-        collector = RSMP::AlarmCollector.new(
-          site, want, num: 1,
+        collector = RSMP::AlarmCollector.new( site,
+          query: query,
+          num: 1,
           timeout: Validator.config['timeouts']['alarm']
         )
         collector.collect!  # the bang (!) version raises an error if we time out

@@ -40,4 +40,6 @@ secrets:
 restrict_testing:
   core_version: 3.1.2
   sxl_version: 1.0.13
-
+activate_alarm:
+  input: 8
+  alarm: A0301

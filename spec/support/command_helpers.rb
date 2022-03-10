@@ -140,13 +140,13 @@ module Validator::CommandHelpers
 
   def set_input status, input
     require_security_codes
-    Validator.log "Set input #{input}", level: :test
+    Validator.log "Set input #{input} to #{status}", level: :test
     command_list = build_command_list :M0006, :setInput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
       input: input
     }
-    send_command_and_confirm @task, command_list, "intention to set input #{input}"
+    send_command_and_confirm @task, command_list, "intention to set input #{input} to #{status}"
   end
 
   def force_detector_logic component, status:'True', mode:'True'
