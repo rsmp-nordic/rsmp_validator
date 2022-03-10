@@ -47,6 +47,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
 
+        set_input_and_confirm 'True', input_nr, 'False'    #force input to false
+
         # get config
         input_nr = Validator.config['activate_alarm']['input']       # what input to activate 
         alarm_code_id = Validator.config['activate_alarm']['alarm']  # what alarm to expect
