@@ -58,7 +58,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         }
 
         mapping.each_pair do |input_status, alarm_status|
-          set_input_and_confirm 'True', input_nr, input_status
+          set_input_and_confirm input_status, input_nr
           log_confirmation "Waiting for alarm #{alarm_code_id} to be #{alarm_status}" do
             collector = RSMP::AlarmCollector.new( site,
               num: 1,

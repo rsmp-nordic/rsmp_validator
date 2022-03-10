@@ -346,7 +346,7 @@ module Validator::CommandHelpers
   end
 
   def set_input_and_confirm(status, indx)
-    set_input status, indx.to_s
+    force_input 'True', indx.to_s, status
     digit = (status == 'True' ? '1' : '0')
     wait_for_status(@task,
       "set input #{indx} to #{status}",
