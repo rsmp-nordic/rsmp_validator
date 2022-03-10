@@ -270,7 +270,7 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "intention to set cycle table #{plan}"
   end
 
-  def force_input status, input, value
+  def force_input status:, input:, value:
     require_security_codes
     if status == 'True'
       Validator.log "Force input #{input} to #{value}", level: :test
@@ -345,12 +345,12 @@ module Validator::CommandHelpers
     run_script 'deactivate_alarm'
   end
 
-  def set_input_and_confirm(status, indx)
-    force_input 'True', indx.to_s, status
-    digit = (status == 'True' ? '1' : '0')
+  def force_input_and_confirm(input:, value:)
+    force_input status: 'True', input: input.to_s, value: value
+    digit = (value == 'True' ? '1' : '0')
     wait_for_status(@task,
-      "set input #{indx} to #{status}",
-      [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx-1}}#{digit}/}] # index is 1-based, convert to 0-based fo regex
+      "set input #{input} to #{value}",
+      [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input-1}}#{digit}/}] # index is 1-based, convert to 0-based fo regex
     )
   end
 

@@ -52,15 +52,15 @@ RSpec.describe 'Site::Traffic Light Controller' do
         alarm_code_id = Validator.config['activate_alarm']['alarm']  # what alarm to expect
         timeout  = Validator.config['timeouts']['alarm']
 
-        set_input_and_confirm 'True', input_nr, 'False'    #force input to false
+        force_input_and_confirm input:input_nr, value:'False'    #force input to false
 
         mapping = {
           'True' => 'Active',    # alarm should be raised when input is activated
           'False' => 'inActive'  # alarm should be deactivated when input is deactivated
         }
 
-        mapping.each_pair do |input_status, alarm_status|
-          set_input_and_confirm input_status, input_nr
+        mapping.each_pair do |input_value, alarm_status|
+          force_input_and_confirm input:input_nr, value:input_value
           log_confirmation "Waiting for alarm #{alarm_code_id} to be #{alarm_status}" do
             collector = RSMP::AlarmCollector.new( site,
               num: 1,
@@ -72,7 +72,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           end
         end
 
-        set_input_and_confirm 'False', input_nr, 'False'    #un-force input
+        force_input input: input_nr.to_s, force:'False', value:'False'
       end
     end
 

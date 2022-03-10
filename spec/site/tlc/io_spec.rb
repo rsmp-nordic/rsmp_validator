@@ -29,7 +29,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           # force input to false
           status = 'True'  # forced
           inputValue = 'False'
-          force_input status, input, inputValue
+          force_input status:status, input:input, value:inputValue
           
           # verify forced = 1
           wait_for_status(@task,
@@ -47,7 +47,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           # force input to true
           status = 'True'  # forced
           inputValue = 'True'
-          force_input status, input, inputValue
+          force_input status:status, input:input, value:inputValue
           # verify forced = 1
           wait_for_status(@task,
             "input #{input} is forced",
@@ -64,7 +64,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           # release input
           status = 'False'  # unforced
           inputValue = 'False'
-          force_input status, input, inputValue
+          force_input status:status, input:input, value:inputValue
 
           # verify force = 0
           wait_for_status(@task,
