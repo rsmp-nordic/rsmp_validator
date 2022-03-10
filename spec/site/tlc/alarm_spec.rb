@@ -22,77 +22,59 @@ RSpec.describe 'Site::Traffic Light Controller' do
   describe 'Alarm' do
         
     # Validate that a detector logic fault A0302 raises and removed.
+    # This test expects that the TLC is programming so that an alarm
+    # is raise when a specific input is activated.
     # 1. Given the site is connected
-    # 2. When we trigger an alarm by setting a preconfigured input to True with S0003
+    # 2. When we force input to True
     # 3. Then we should receive an active alarm
-    # 4. When we set the input to False
-    # 5. Then the alarm should be deactivated
+    # 4. When we force the input to False
+    # 5. Then the alarm should become inactive
 
-    specify 'A0301 is raised when S0003 configured input is forced to True', :script, sxl: '>=1.0.7' do |example|
+    specify 'A0301 is raised when input is activated', :script, sxl: '>=1.0.7' do |example|
+      def validate_alarm_attributes alarm
+        expected_rvs = [
+          {"n"=>"detector","v"=>"1"},
+          {"n"=>"type","v"=>"loop"},
+          {"n"=>"errormode","v"=>"on"},
+          {"n"=>"manual","v"=>"True"},
+          {"n"=>"logicerror","v"=>"always_off"}
+        ]
+        alarm_time = Time.parse(alarm.attributes["aTs"])
+        expect(alarm_time).to be_within(1.minute).of Time.now.utc
+        expect(alarm.attributes['rvs']).to eq(expected_rvs)
+      end
+
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        input_nr = Validator.config['activate_alarm']['input']
-        alarm_code_id = Validator.config['activate_alarm']['alarm']
 
-        # Alarm is raised by setting input to True with using M0006
+        # get config
+        input_nr = Validator.config['activate_alarm']['input']       # what input to activate 
+        alarm_code_id = Validator.config['activate_alarm']['alarm']  # what alarm to expect
+        timeout  = Validator.config['timeouts']['alarm']
+
+        # Alarm should be raised when input is activated
         set_input_and_confirm 'True', input_nr
-        site.log "Waiting for alarm", level: :test
-        start_time = Time.now
-        query = {
-          aCId: alarm_code_id,
-          aSp: 'Issue',
-          aS: 'Active'
-        }
-        collector = RSMP::AlarmCollector.new(site,
-          query: query,
-          num: 1,
-          timeout: Validator.config['timeouts']['alarm']
-        )
-        collector.collect!  # the bang (!) version raises an error if we time out
-        alarm = collector.messages.first
-        delay = Time.now - start_time
-        site.log "alarm confirmed after #{delay.to_i}s", level: :test
+        log_confirmation "Waiting for active alarm #{alarm_code_id} to be active" do
+          collector = RSMP::AlarmCollector.new( site,
+            num: 1,
+            query: { aCId: alarm_code_id, aSp: 'Issue', aS: 'Active' },
+            timeout: timeout
+          )
+          collector.collect!  # the bang (!) version raises an error if we time out
+          validate_alarm_attributes collector.messages.first
+        end
 
-        alarm_time = Time.parse(alarm.attributes["aTs"])
-        expect(alarm_time).to be_within(1.minute).of Time.now.utc
-        expect(alarm.attributes['rvs']).to eq([
-          {"n"=>"detector","v"=>"1"},
-          {"n"=>"type","v"=>"loop"},
-          {"n"=>"errormode","v"=>"on"},
-          {"n"=>"manual","v"=>"True"},
-          {"n"=>"logicerror","v"=>"always_off"}
-        ])
-
-
-        # Alarm is removed by settin input to False with M0006
+        # Alarm should be removed when input is deactivated
         set_input_and_confirm 'False', input_nr
-        site.log "Waiting for alarm", level: :test
-        start_time = Time.now
-        
-        query = {
-          aCId: alarm_code_id,
-          aSp: 'Issue',
-          aS: 'Inactive'
-        }
-        collector = RSMP::AlarmCollector.new( site,
-          query: query,
-          num: 1,
-          timeout: Validator.config['timeouts']['alarm']
-        )
-        collector.collect!  # the bang (!) version raises an error if we time out
-        alarm = collector.messages.first
-        delay = Time.now - start_time
-        site.log "alarm confirmed after #{delay.to_i}s", level: :test
-
-        alarm_time = Time.parse(alarm.attributes["aTs"])
-        expect(alarm_time).to be_within(1.minute).of Time.now.utc
-        expect(alarm.attributes['rvs']).to eq([
-          {"n"=>"detector","v"=>"1"},
-          {"n"=>"type","v"=>"loop"},
-          {"n"=>"errormode","v"=>"on"},
-          {"n"=>"manual","v"=>"True"},
-          {"n"=>"logicerror","v"=>"always_off"}
-        ])
+        log_confirmation "Waiting for alarm #{alarm_code_id} to be inactive" do
+          collector = RSMP::AlarmCollector.new( site,
+            num: 1,
+            query: { aCId: alarm_code_id, aSp: 'Issue', aS: 'inActive' },
+            timeout: timeout
+          )
+          collector.collect!  # the bang (!) version raises an error if we time out  
+          validate_alarm_attributes collector.messages.first
+        end
       end
     end
 
