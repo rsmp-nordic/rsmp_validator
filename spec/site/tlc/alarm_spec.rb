@@ -30,19 +30,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. When we force the input to False
     # 5. Then the alarm should become inactive
     specify 'Alarm A0301 is raised when input is activated', :script, sxl: '>=1.0.7' do |example|
-      def validate_alarm_attributes alarm
-        expected_rvs = [
-          {"n"=>"detector","v"=>"1"},
-          {"n"=>"type","v"=>"loop"},
-          {"n"=>"errormode","v"=>"on"},
-          {"n"=>"manual","v"=>"True"},
-          {"n"=>"logicerror","v"=>"always_off"}
-        ]
-        alarm_time = Time.parse(alarm.attributes["aTs"])
-        expect(alarm_time).to be_within(1.minute).of Time.now.utc
-        expect(alarm.attributes['rvs']).to eq(expected_rvs)
-      end
-
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
 
@@ -59,18 +46,25 @@ RSpec.describe 'Site::Traffic Light Controller' do
         }
 
         mapping.each_pair do |input_value, alarm_status|
-          force_input_and_confirm input:input_nr, value:input_value
           log_confirmation "Waiting for alarm #{alarm_code_id} to be #{alarm_status}" do
-            collector = RSMP::AlarmCollector.new( site,
-              num: 1,
-              query: { aCId: alarm_code_id, aSp: 'Issue', aS: alarm_status },
-              timeout: timeout
-            )
-            collector.collect!  # the bang (!) version raises an error if we time out
-            validate_alarm_attributes collector.messages.first
+            collect_task = task.async do
+              collector = RSMP::AlarmCollector.new( site,
+                num: 1,
+                query: { 'aCId' =>  alarm_code_id, 'aSp' =>  'Issue', 'aS' => alarm_status },
+                timeout: timeout
+              )
+              collector.collect!  # the bang (!) version raises an error if we time out
+
+              alarm = collector.messages.first
+              alarm_time = Time.parse(alarm.attributes["aTs"])
+              expect(alarm_time).to be_within(1.minute).of Time.now.utc
+            end
+            force_input_and_confirm input:input_nr, value:input_value
+            collect_task.wait
           end
         end
       ensure
+        # always release the input
         force_input status: 'False', input: input_nr.to_s, value: 'False'
       end
     end
@@ -99,18 +93,11 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
           alarm_time = Time.parse(alarm.attributes["aTs"])
           expect(alarm_time).to be_within(1.minute).of Time.now.utc
-          expect(alarm.attributes['rvs']).to eq([{
-            "n"=>"detector","v"=>"1"},
-            {"n"=>"type","v"=>"loop"},
-            {"n"=>"errormode","v"=>"on"},
-            {"n"=>"manual","v"=>"True"},
-            {"n"=>"logicerror","v"=>"always_off"}
-          ])
         end
       end
     end
 
-    # Validata that an alarm can be acknowledged.
+    # Validate that an alarm can be acknowledged.
     #
     # 1. Given the site is connected
     # 2. When we trigger an alarm using an external script
