@@ -70,8 +70,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
             validate_alarm_attributes collector.messages.first
           end
         end
-
-        force_input input: input_nr.to_s, force:'False', value:'False'
+      ensure
+        force_input status: 'False', input: input_nr.to_s, value: 'False'
       end
     end
 
