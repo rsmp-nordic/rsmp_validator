@@ -50,10 +50,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
           collect_task = task.async do
             collector = RSMP::AlarmCollector.new( site,
               num: 1,
-              query: { 'aCId' =>  alarm_code_id, 'aSp' =>  'Issue', 'aS' => alarm_status },
+              query: { 'aCId' =>  alarm_code_id, 'aS' => alarm_status },
               timeout: timeout
             )
-            collector.collect!  # the bang (!) version raises an error if we time out
+            collector.collect!
             alarm = collector.messages.first
             alarm_time = Time.parse(alarm.attributes["aTs"])
             expect(alarm_time).to be_within(1.minute).of Time.now.utc
