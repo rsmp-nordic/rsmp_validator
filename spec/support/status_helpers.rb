@@ -41,7 +41,7 @@ module Validator::StatusHelpers
   end
 
   def verify_status parent_task, description, status_list
-    log_confirmation description do
+    log_block description do
       result = @site.request_status Validator.config['main_component'], convert_status_list(status_list), collect!: {
         timeout: Validator.config['timeouts']['status_update']
       }
@@ -52,7 +52,7 @@ module Validator::StatusHelpers
       update_rate: Validator.config['intervals']['status_update'],
       timeout: Validator.config['timeouts']['command']
     update_rate = 0 unless update_rate
-    log_confirmation description do
+    log_block "Wait for #{description}" do
       subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
       begin
         result = @site.subscribe_to_status Validator.config['main_component'], subscribe_list, collect!: {
@@ -79,7 +79,7 @@ module Validator::StatusHelpers
   def request_status_and_confirm description, status_list, component=Validator.config['main_component']
     Validator::Site.connected do |task,supervisor,site|
       @site = site
-      log_confirmation "request of #{description}" do
+      log_block "Read #{description}" do
         result = site.request_status component, convert_status_list(status_list), collect!: {
           timeout: Validator.config['timeouts']['status_response'],
         }

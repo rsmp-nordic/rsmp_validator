@@ -46,7 +46,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         }
 
         mapping.each_pair do |input_value, alarm_status|
-          log_confirmation "Waiting for alarm #{alarm_code_id} to be #{alarm_status}" do
+          log_block "Check that alarm #{alarm_code_id} becomes #{alarm_status} when we force input #{input_nr} to #{input_value}" do
             collect_task = task.async do
               collector = RSMP::AlarmCollector.new( site,
                 num: 1,
@@ -54,18 +54,15 @@ RSpec.describe 'Site::Traffic Light Controller' do
                 timeout: timeout
               )
               collector.collect!  # the bang (!) version raises an error if we time out
-
               alarm = collector.messages.first
               alarm_time = Time.parse(alarm.attributes["aTs"])
               expect(alarm_time).to be_within(1.minute).of Time.now.utc
+              log "Alarm #{alarm_code_id} is now #{alarm_status}"
             end
             force_input_and_confirm input:input_nr, value:input_value
             collect_task.wait
           end
         end
-      ensure
-        # always release the input
-        force_input status: 'False', input: input_nr.to_s, value: 'False'
       end
     end
 
@@ -139,7 +136,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       with_alarm_activated do
         Validator::Site.connected do |task,supervisor,site|
           component = Validator.config['components']['detector_logic'].keys.first
-          log_confirmation "Waiting for alarm" do
+          log_block "Wait for alarm" do
             collector = site.collect_alarms num: 1, component: component, aCId: 'A0302',
               aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']      
 

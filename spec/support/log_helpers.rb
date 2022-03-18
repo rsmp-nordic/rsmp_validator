@@ -1,17 +1,30 @@
 module Validator
-  module LogHelpers
+  module Log
+    INDENT = '> '
 
-    # Run a block of code that validates some expectition,
-    # and log when we start and log how long it took to complete
-    def log_confirmation action, &block
-      Validator.log "Confirming #{action}...", level: :test
+    # log the start of an action
+    def log action
+      @log_indentation ||= 0
+      Validator.log "> #{INDENT*@log_indentation}#{action}", level: :test
+    end
+
+    # log the start and completion/error of a block of code
+    def log_block action, &block
+      @log_indentation ||= 0
+      previous_log_indentation = @log_indentation
+      Validator.log "> #{INDENT*@log_indentation}#{action}", level: :test
       start_time = Time.now
+      @log_indentation += 1
       yield block
-      delay = Time.now - start_time
-      upcase_first = action.sub(/\S/, &:upcase)
-      Validator.log "#{upcase_first} confirmed after #{delay.to_i}s √", level: :test
+      #Validator.log "  #{INDENT*previous_log_indentation}#{action}: OK", level: :test
+    rescue StandardError => e
+      Validator.log "  #{INDENT*previous_log_indentation}#{action}: ERROR", level: :test
+      raise
     rescue Async::TimeoutError => e
-      raise RSMP::TimeoutError.new "Timeout while confirming #{action}"
+      Validator.log "  #{INDENT*previous_log_indentation}#{action}: TIMEOUT", level: :test
+      raise RSMP::TimeoutError.new "Timeout while #{action}"
+    ensure
+      @log_indentation = previous_log_indentation
     end
   end
 end

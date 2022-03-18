@@ -16,7 +16,7 @@ RSpec.describe 'Site::Core' do
       timeout = Validator.config['timeouts']['disconnect']
       Validator::Site.isolated do |task,supervisor,site|
         supervisor.ignore_errors RSMP::DisconnectError do
-          Validator.log "Disabling acknowledgements, site should disconnect", level: :test
+          log "Disabling acknowledgements, site should disconnect"
           def site.acknowledge original
           end
           site.wait_for_state :disconnected, timeout: timeout
@@ -33,7 +33,7 @@ RSpec.describe 'Site::Core' do
       Validator::Site.isolated do |task,supervisor,site|
         timeout = Validator.config['timeouts']['disconnect']
         supervisor.ignore_errors RSMP::DisconnectError do
-          Validator.log "Disabling watchdogs, site should disconnect", level: :test
+          log "Disabling watchdogs, site should disconnect"
           def site.send_watchdog now=nil
           end
           site.wait_for_state :disconnected, timeout: timeout

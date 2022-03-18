@@ -4,7 +4,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
   context 'receiving an invalid status request code' do
     it 'returns NotAck ' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        site.log "Requesting non-existing status S0000", level: :test
+        log "Requesting non-existing status S0000"
         status_list = convert_status_list( S0000:[:status] )
         result = site.request_status Validator.config['main_component'], status_list,
           collect: { timeout: Validator.config['timeouts']['command_response'] },
@@ -20,7 +20,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
   context 'receiving an invalid status request name' do
     it 'returns NotAck' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        site.log "Requesting non-existing status S0001 name", level: :test
+        log "Requesting non-existing status S0001 name"
         status_list = convert_status_list( S0001:[:bad] )
         result = site.request_status Validator.config['main_component'], status_list,
           collect: { timeout: Validator.config['timeouts']['command_response'] },
