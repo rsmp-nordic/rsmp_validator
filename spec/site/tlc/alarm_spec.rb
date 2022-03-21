@@ -140,7 +140,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           component = Validator.config['components']['detector_logic'].keys.first
           log "Wait for alarm"
           collector = site.collect_alarms num: 1, component: component, aCId: 'A0302',
-            aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']      
+            aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
 
           alarm = collector.message
           alarm_time = Time.parse(alarm.attributes["aTs"])
