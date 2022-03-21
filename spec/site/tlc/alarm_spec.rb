@@ -44,8 +44,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
         # to be able to test the alarm behaviour even when incorrect casing is used by the equipment,
         # we use regex patterns that matches different casings.
         mapping = {
-          'True' => /[Aa]ctive/,    # alarm should be raised when input is activated
-          'False' => /[Ii]nActive/  # alarm should be deactivated when input is deactivated
+          'True' => /Active/i,    # alarm should be raised when input is activated
+          'False' => /inActive/i  # alarm should be deactivated when input is deactivated
         }
 
         mapping.each_pair do |input_value, alarm_status|
@@ -53,7 +53,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           collect_task = task.async do
             collector = RSMP::AlarmCollector.new( site,
               num: 1,
-              query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /[Ii]ssue/, 'aS' => alarm_status },
+              query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'aS' => alarm_status },
               timeout: timeout
             )
             collector.collect!
