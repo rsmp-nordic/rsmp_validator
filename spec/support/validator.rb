@@ -81,7 +81,7 @@ module Validator
 
   # initial check that we have a connection to the site/supervisor
   def self.check_connection
-    Log.log "Initial #{self.mode} connection check"
+    Validator::Log.log "Initial #{self.mode} connection check"
     if self.mode == :site
       Validator::Site.testee.connected {}
     elsif self.mode == :supervisor
