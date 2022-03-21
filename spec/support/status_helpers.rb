@@ -41,27 +41,25 @@ module Validator::StatusHelpers
   end
 
   def verify_status parent_task, description, status_list
-    log_block description do
-      result = @site.request_status Validator.config['main_component'], convert_status_list(status_list), collect!: {
-        timeout: Validator.config['timeouts']['status_update']
-      }
-    end
+    log description
+    @site.request_status Validator.config['main_component'], convert_status_list(status_list), collect!: {
+      timeout: Validator.config['timeouts']['status_update']
+    }
   end
 
   def wait_for_status parent_task, description, status_list,
       update_rate: Validator.config['intervals']['status_update'],
       timeout: Validator.config['timeouts']['command']
     update_rate = 0 unless update_rate
-    log_block "Wait for #{description}" do
-      subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
-      begin
-        result = @site.subscribe_to_status Validator.config['main_component'], subscribe_list, collect!: {
-          timeout: timeout
-        }
-      ensure
-        unsubscribe_list = convert_status_list(status_list).map { |item| item.slice('sCI','n') }
-        @site.unsubscribe_to_status Validator.config['main_component'], unsubscribe_list
-      end
+    log "Wait for #{description}"
+    subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
+    begin
+      result = @site.subscribe_to_status Validator.config['main_component'], subscribe_list, collect!: {
+        timeout: timeout
+      }
+    ensure
+      unsubscribe_list = convert_status_list(status_list).map { |item| item.slice('sCI','n') }
+      @site.unsubscribe_to_status Validator.config['main_component'], unsubscribe_list
     end
   end
 
@@ -79,11 +77,10 @@ module Validator::StatusHelpers
   def request_status_and_confirm description, status_list, component=Validator.config['main_component']
     Validator::Site.connected do |task,supervisor,site|
       @site = site
-      log_block "Read #{description}" do
-        result = site.request_status component, convert_status_list(status_list), collect!: {
-          timeout: Validator.config['timeouts']['status_response'],
-        }
-      end
+      log "Read #{description}"
+      result = site.request_status component, convert_status_list(status_list), collect!: {
+        timeout: Validator.config['timeouts']['status_response'],
+      }
     end
   end
 end

@@ -138,21 +138,20 @@ RSpec.describe 'Site::Traffic Light Controller' do
       with_alarm_activated do
         Validator::Site.connected do |task,supervisor,site|
           component = Validator.config['components']['detector_logic'].keys.first
-          log_block "Wait for alarm" do
-            collector = site.collect_alarms num: 1, component: component, aCId: 'A0302',
-              aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']      
+          log "Wait for alarm"
+          collector = site.collect_alarms num: 1, component: component, aCId: 'A0302',
+            aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']      
 
-            alarm = collector.message
-            alarm_time = Time.parse(alarm.attributes["aTs"])
-            expect(alarm_time).to be_within(1.minute).of Time.now.utc
-            expect(alarm.attributes['rvs']).to eq([{
-              "n"=>"detector","v"=>"1"},
-              {"n"=>"type","v"=>"loop"},
-              {"n"=>"errormode","v"=>"on"},
-              {"n"=>"manual","v"=>"True"},
-              {"n"=>"logicerror","v"=>"always_off"}
-            ])
-          end
+          alarm = collector.message
+          alarm_time = Time.parse(alarm.attributes["aTs"])
+          expect(alarm_time).to be_within(1.minute).of Time.now.utc
+          expect(alarm.attributes['rvs']).to eq([{
+            "n"=>"detector","v"=>"1"},
+            {"n"=>"type","v"=>"loop"},
+            {"n"=>"errormode","v"=>"on"},
+            {"n"=>"manual","v"=>"True"},
+            {"n"=>"logicerror","v"=>"always_off"}
+          ])
         end
       end
     end

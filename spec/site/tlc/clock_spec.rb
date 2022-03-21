@@ -229,15 +229,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
-          log_block "Checking watchdog timestamp" do
-            collector = RSMP::Collector.new site, task:task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
-            collector.collect!
-            max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-            diff = Time.parse(collector.messages.first.attributes['wTs']) - CLOCK
-            diff = diff.round
-            expect(diff.abs).to be <= max_diff,
-              "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s"
-          end
+          log "Checking watchdog timestamp"
+          collector = RSMP::Collector.new site, task:task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
+          collector.collect!
+          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
+          diff = Time.parse(collector.messages.first.attributes['wTs']) - CLOCK
+          diff = diff.round
+          expect(diff.abs).to be <= max_diff,
+            "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s"
         end
       end
     end

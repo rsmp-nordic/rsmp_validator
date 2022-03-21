@@ -1,12 +1,10 @@
 module Validator::CommandHelpers
   def send_command_and_confirm parent_task, command_list, message, component=Validator.config['main_component']
     result = nil
-    log_block message do
-      result = @site.send_command component, command_list, collect!: {
-          timeout: Validator.config['timeouts']['command_response']
-        }
-    end
-    result
+    log message
+    @site.send_command component, command_list, collect!: {
+      timeout: Validator.config['timeouts']['command_response']
+    }
   end
 
   # Build a RSMP command value list from a hash
