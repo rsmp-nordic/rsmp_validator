@@ -30,14 +30,19 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. When we force the input to False
     # 5. Then the alarm should become inactive
     specify 'Alarm A0301 is raised when input is activated', :script, sxl: '>=1.0.7' do |example|
+      alarm_code_id = 'A0301'   # what alarm to expect
+      skip "alarm activation is not configured" unless Validator.config['alarm_activation']
+
+      input_nr = Validator.config['alarm_activation'][alarm_code_id] # what input to activate
+      skip "alarm activation for alarm #{alarm_code_id}  not configured" unless input_nr
+      
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
 
         # get config
-        alarm_code_id = 'A0301'                                        # what alarm to expect
-        input_nr = Validator.config['alarm_activation'][alarm_code_id] # what input to activate 
         timeout  = Validator.config['timeouts']['alarm']
 
+        # first force to true, so that we always get an alarm when we force to true
         force_input_and_confirm input:input_nr, value:'False'    #force input to false
 
         # the rsmp spec requires a specific casing of enums, but equipment uses incorrect casing
