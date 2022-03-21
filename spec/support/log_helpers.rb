@@ -4,8 +4,7 @@ module Validator
 
     # log the start of an action
     def log action
-      @log_indentation ||= 0
-      Validator.log "> #{INDENT*@log_indentation}#{action}", level: :test
+      Validator.log "> #{action}", level: :test
     end
 
     # log the start and completion/error of a block of code
