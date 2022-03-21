@@ -40,9 +40,12 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
         force_input_and_confirm input:input_nr, value:'False'    #force input to false
 
+        # the rsmp spec requires a specific casing of enums, but equipment uses incorrect casing
+        # to be able to test the alarm behaviour even when incorrect casing is used by the equipment,
+        # we use regex patterns that matches different casings.
         mapping = {
-          'True' => 'Active',    # alarm should be raised when input is activated
-          'False' => 'inActive'  # alarm should be deactivated when input is deactivated
+          'True' => /[Aa]ctive/,    # alarm should be raised when input is activated
+          'False' => /[Ii]nActive/  # alarm should be deactivated when input is deactivated
         }
 
         mapping.each_pair do |input_value, alarm_status|
@@ -50,7 +53,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           collect_task = task.async do
             collector = RSMP::AlarmCollector.new( site,
               num: 1,
-              query: { 'aCId' =>  alarm_code_id, 'aS' => alarm_status },
+              query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /[Ii]ssue/, 'aS' => alarm_status },
               timeout: timeout
             )
             collector.collect!
