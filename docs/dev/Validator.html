@@ -101,7 +101,7 @@
 <p class="children">
   
     
-      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Validator/CommandHelpers.html" title="Validator::CommandHelpers (module)">CommandHelpers</a></span>, <span class='object_link'><a href="Validator/HandshakeHelper.html" title="Validator::HandshakeHelper (module)">HandshakeHelper</a></span>, <span class='object_link'><a href="Validator/LogHelpers.html" title="Validator::LogHelpers (module)">LogHelpers</a></span>, <span class='object_link'><a href="Validator/StatusHelpers.html" title="Validator::StatusHelpers (module)">StatusHelpers</a></span>
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Validator/CommandHelpers.html" title="Validator::CommandHelpers (module)">CommandHelpers</a></span>, <span class='object_link'><a href="Validator/HandshakeHelper.html" title="Validator::HandshakeHelper (module)">HandshakeHelper</a></span>, <span class='object_link'><a href="Validator/Log.html" title="Validator::Log (module)">Log</a></span>, <span class='object_link'><a href="Validator/StatusHelpers.html" title="Validator::StatusHelpers (module)">StatusHelpers</a></span>
     
   
     
@@ -382,7 +382,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#log-class_method" title="log (class method)">.<strong>log</strong>(str, options)  &#x21d2; Object </a>
+      <a href="#log-class_method" title="log (class method)">.<strong>log</strong>(str, options = {})  &#x21d2; Object </a>
     
 
     
@@ -944,18 +944,20 @@
 87
 88
 89
-90</pre>
+90
+91</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 83</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_connection'>check_connection</span>
-  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Initial </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='embexpr_end'>}</span><span class='tstring_content'> connection check</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='label'>level:</span> <span class='symbol'>:info</span>
+  <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Validator/Log.html" title="Validator::Log (module)">Log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="Validator/Log.html#log-instance_method" title="Validator::Log#log (method)">log</a></span></span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Initial </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='embexpr_end'>}</span><span class='tstring_content'> connection check</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>==</span> <span class='symbol'>:site</span>
     <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_testee'><span class='object_link'><a href="Validator/Site.html#testee-class_method" title="Validator::Site.testee (method)">testee</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'>connected</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
   <span class='kw'>elsif</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>==</span> <span class='symbol'>:supervisor</span>
     <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Validator/Supervisor.html" title="Validator::Supervisor (class)">Supervisor</a></span></span><span class='period'>.</span><span class='id identifier rubyid_testee'><span class='object_link'><a href="Validator/Supervisor.html#testee-class_method" title="Validator::Supervisor.testee (method)">testee</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'>connected</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
   <span class='kw'>end</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -965,7 +967,7 @@
       <div class="method_details ">
   <h3 class="signature " id="log-class_method">
   
-    .<strong>log</strong>(str, options)  &#x21d2; <tt>Object</tt> 
+    .<strong>log</strong>(str, options = {})  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -989,14 +991,14 @@
       <pre class="lines">
 
 
-93
 94
-95</pre>
+95
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 93</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 94</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span> <span class='id identifier rubyid_str'>str</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span> <span class='id identifier rubyid_str'>str</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reporter'>reporter</span><span class='period'>.</span><span class='id identifier rubyid_publish'>publish</span> <span class='symbol'>:step</span><span class='comma'>,</span> <span class='label'>message:</span> <span class='id identifier rubyid_str'>str</span>
 <span class='kw'>end</span></pre>
     </td>

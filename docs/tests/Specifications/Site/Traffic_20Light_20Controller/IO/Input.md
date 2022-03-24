@@ -57,40 +57,41 @@ Validator::Site.connected do |task,supervisor,site|
   # force input to false
   status = 'True'  # forced
   inputValue = 'False'
-  force_input status, input, inputValue
+  force_input status:status, input:input, value:inputValue
   
   # verify forced = 1
   wait_for_status(@task,
-    "input #{input} is forced",
+    "input #{input} to be forced",
     [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}1/}]
   )
   # verify inputstatus = 0
   wait_for_status(@task,
-    "input #{input} is set to #{inputValue}",
+    "input #{input} to be #{inputValue}",
     [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input - 1}}0/}]
   )
   
   # force input to true
   status = 'True'  # forced
   inputValue = 'True'
-  force_input status, input, inputValue
+  force_input status:status, input:input, value:inputValue
+  
   # verify forced = 1
   wait_for_status(@task,
-    "input #{input} is forced",
+    "input #{input} to be forced",
     [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}1/}]
   )
   # verify inputstatus = 1
   wait_for_status(@task,
-    "input #{input} is set to #{inputValue}",
+    "input #{input} to be to #{inputValue}",
     [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input - 1}}1/}]
   )
   # release input
   status = 'False'  # unforced
   inputValue = 'False'
-  force_input status, input, inputValue
+  force_input status:status, input:input, value:inputValue
   # verify force = 0
   wait_for_status(@task,
-    "verify that input #{input} is unforced",
+    "input #{input} to be released",
     [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}0/}]
   )
 end
@@ -136,10 +137,8 @@ end
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  status = 'False'
-  output = 1
-  outputValue = 'True'
   prepare task, site
+  status = '1-50'
   set_trigger_level status
 end
 ```

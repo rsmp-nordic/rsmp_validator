@@ -20,29 +20,13 @@
   
   <ul class='context-specifications'>
     
-      
-      <li class='context-specification odd'><div>
-  <div class="specification">
-    
-  </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
-      prepare task, site
-      switch_normal_control
-      minutes = 1
-      switch_yellow_flash timeout_minutes: minutes
-      wait_normal_control timeout: minutes*60 + Validator.config['timeouts']['functional_position']
-    end</div> -->
-</div></li>
-      
-      
-    
   </ul>
   
   <ul class='context-subcontext'>
   
     
     
-    <li class='even'><div class='context'>
+    <li class='odd'><div class='context'>
   <div class='title'></div>
   
   
@@ -85,17 +69,17 @@
           # force input to false
           status = 'True'  # forced
           inputValue = 'False'
-          force_input status, input, inputValue
+          force_input status:status, input:input, value:inputValue
           
           # verify forced = 1
           wait_for_status(@task,
-            "input #{input} is forced",
+            "input #{input} to be forced",
             [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}1/}]
           )
 
           # verify inputstatus = 0
           wait_for_status(@task,
-            "input #{input} is set to #{inputValue}",
+            "input #{input} to be #{inputValue}",
             [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input - 1}}0/}]
           )
 
@@ -103,16 +87,17 @@
           # force input to true
           status = 'True'  # forced
           inputValue = 'True'
-          force_input status, input, inputValue
+          force_input status:status, input:input, value:inputValue
+          
           # verify forced = 1
           wait_for_status(@task,
-            "input #{input} is forced",
+            "input #{input} to be forced",
             [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}1/}]
           )
 
           # verify inputstatus = 1
           wait_for_status(@task,
-            "input #{input} is set to #{inputValue}",
+            "input #{input} to be to #{inputValue}",
             [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input - 1}}1/}]
           )
 
@@ -120,11 +105,11 @@
           # release input
           status = 'False'  # unforced
           inputValue = 'False'
-          force_input status, input, inputValue
+          force_input status:status, input:input, value:inputValue
 
           # verify force = 0
           wait_for_status(@task,
-            "verify that input #{input} is unforced",
+            "input #{input} to be released",
             [{'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}0/}]
           )
 
@@ -168,10 +153,8 @@
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
-          status = 'False'
-          output = 1
-          outputValue = 'True'
           prepare task, site
+          status = '1-50'
           set_trigger_level status
         end</div> -->
 </div></li>
@@ -241,7 +224,7 @@
   
     
     
-    <li class='odd'><div class='context'>
+    <li class='even'><div class='context'>
   <div class='title'></div>
   
   
@@ -252,7 +235,56 @@
   <div class="specification">
     
   </div>
-  <!-- <div>skip_unless_scripts_are_configured
+  <!-- <div>alarm_code_id = 'A0301'   # what alarm to expect
+      skip "alarm activation is not configured" unless Validator.config['alarm_activation']
+
+      input_nr = Validator.config['alarm_activation'][alarm_code_id]  # what input to activate
+      skip "alarm activation for alarm #{alarm_code_id}  not configured" unless input_nr
+      
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        timeout  = Validator.config['timeouts']['alarm']
+
+        # first force input to false, so we're sure to get an alarm when we afterwards force to true
+        force_input_and_confirm input:input_nr, value:'False'
+
+        # the rsmp spec requires a specific casing of enums, but some equipment uses incorrect casing.
+        # incorrect casing is usualle cuaght by the json schema validation, but in case this is disabled,
+        # we use case-insensitive regex patterns so that the tests can still be run
+        mapping = {
+          'True' => /Active/i,    # when input is forced to True, the alarm should become active
+          'False' => /inActive/i  # when input is forced to False, the alarm should become inactive
+        }
+
+        mapping.each_pair do |input_value, alarm_status|
+          log "Check that alarm #{alarm_code_id} becomes #{alarm_status.inspect} when we force input #{input_nr} to #{input_value}"
+          collect_task = task.async do  # run the collector in an async task
+            collector = RSMP::AlarmCollector.new( site,
+              num: 1,
+              query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'aS' => alarm_status },
+              timeout: timeout
+            )
+            collector.collect!
+            alarm = collector.messages.first
+            alarm_time = Time.parse(alarm.attributes["aTs"])
+            expect(alarm_time).to be_within(1.minute).of Time.now.utc
+            log "Alarm #{alarm_code_id} is now #{alarm_status.inspect}"
+          end
+          force_input_and_confirm input:input_nr, value:input_value    # force the input
+          collect_task.wait                                            # and wait for the collector to complete
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>skip "Don't yet have a reliable way of triggering alarms"
+      skip_unless_scripts_are_configured
       Validator::Site.connected do |task,supervisor,site|
         component = Validator.config['components']['detector_logic'].keys.first
         with_alarm_activated do
@@ -268,13 +300,6 @@
 
           alarm_time = Time.parse(alarm.attributes["aTs"])
           expect(alarm_time).to be_within(1.minute).of Time.now.utc
-          expect(alarm.attributes['rvs']).to eq([{
-            "n"=>"detector","v"=>"1"},
-            {"n"=>"type","v"=>"loop"},
-            {"n"=>"errormode","v"=>"on"},
-            {"n"=>"manual","v"=>"True"},
-            {"n"=>"logicerror","v"=>"always_off"}
-          ])
         end
       end</div> -->
 </div></li>
@@ -282,11 +307,12 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
-  <!-- <div>skip_unless_scripts_are_configured
+  <!-- <div>skip "Don't yet have a reliable way of triggering alarms"
+      skip_unless_scripts_are_configured
       Validator::Site.connected do |task,supervisor,site|
         component = Validator.config['components']['detector_logic'].keys.first
 
@@ -306,30 +332,30 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
-  <!-- <div>skip_unless_scripts_are_configured
+  <!-- <div>skip "Don't yet have a reliable way of triggering alarms"
+      skip_unless_scripts_are_configured
       Validator::Site.stop
       with_alarm_activated do
         Validator::Site.connected do |task,supervisor,site|
           component = Validator.config['components']['detector_logic'].keys.first
-          log_confirmation "Waiting for alarm" do
-            collector = site.collect_alarms num: 1, component: component, aCId: 'A0302',
-              aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']      
+          log "Wait for alarm"
+          collector = site.collect_alarms num: 1, component: component, aCId: 'A0302',
+            aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
 
-            alarm = collector.message
-            alarm_time = Time.parse(alarm.attributes["aTs"])
-            expect(alarm_time).to be_within(1.minute).of Time.now.utc
-            expect(alarm.attributes['rvs']).to eq([{
-              "n"=>"detector","v"=>"1"},
-              {"n"=>"type","v"=>"loop"},
-              {"n"=>"errormode","v"=>"on"},
-              {"n"=>"manual","v"=>"True"},
-              {"n"=>"logicerror","v"=>"always_off"}
-            ])
-          end
+          alarm = collector.message
+          alarm_time = Time.parse(alarm.attributes["aTs"])
+          expect(alarm_time).to be_within(1.minute).of Time.now.utc
+          expect(alarm.attributes['rvs']).to eq([{
+            "n"=>"detector","v"=>"1"},
+            {"n"=>"type","v"=>"loop"},
+            {"n"=>"errormode","v"=>"on"},
+            {"n"=>"manual","v"=>"True"},
+            {"n"=>"logicerror","v"=>"always_off"}
+          ])
         end
       end</div> -->
 </div></li>
@@ -348,7 +374,7 @@
   
     
     
-    <li class='even'><div class='context'>
+    <li class='odd'><div class='context'>
   <div class='title'></div>
   
   
@@ -564,7 +590,7 @@
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
-          Validator.log "Checking watchdog timestamp", level: :test
+          log "Checking watchdog timestamp"
           collector = RSMP::Collector.new site, task:task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
           collector.collect!
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
@@ -590,7 +616,7 @@
   
     
     
-    <li class='odd'><div class='context'>
+    <li class='even'><div class='context'>
   <div class='title'></div>
   
   
@@ -767,6 +793,22 @@
       
       
     
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        switch_normal_control
+        minutes = 1
+        switch_yellow_flash timeout_minutes: minutes
+        wait_normal_control timeout: minutes*60 + Validator.config['timeouts']['functional_position']
+      end</div> -->
+</div></li>
+      
+      
+    
   </ul>
   
   <ul class='context-subcontext'>
@@ -779,7 +821,7 @@
   
     
     
-    <li class='even'><div class='context'>
+    <li class='odd'><div class='context'>
   <div class='title'></div>
   
   
@@ -884,7 +926,7 @@
   
     
     
-    <li class='odd'><div class='context'>
+    <li class='even'><div class='context'>
   <div class='title'></div>
   
   
@@ -896,6 +938,7 @@
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        log "Subscribe to status and wait for update"
         component = Validator.config['main_component']
         status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus','uRt'=>'1' }]
         site.subscribe_to_status component, status_list, collect!: {
@@ -921,7 +964,7 @@
   
     
     
-    <li class='even'><div class='context'>
+    <li class='odd'><div class='context'>
   <div class='title'></div>
   
   
@@ -1166,7 +1209,7 @@
   
     
     
-    <li class='odd'><div class='context'>
+    <li class='even'><div class='context'>
   <div class='title'></div>
   
   
@@ -1298,7 +1341,7 @@
   
     
     
-    <li class='even'><div class='context'>
+    <li class='odd'><div class='context'>
   <div class='title'></div>
   
   
@@ -1433,7 +1476,7 @@
   
     
     
-    <li class='odd'><div class='context'>
+    <li class='even'><div class='context'>
   <div class='title'></div>
   
   
@@ -1466,7 +1509,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "manually set detector logics",
+  <!-- <div>request_status_and_confirm "detector logic forcing",
         { S0021: [:detectorlogics] }</div> -->
 </div></li>
       
@@ -1479,7 +1522,22 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        switch_detector_logic
+
+        Validator.config['components']['detector_logic'].keys.each_with_index do |component, indx|
+          force_detector_logic component, mode:'True'
+          Validator.config['main_component'] = Validator.config['main_component']
+          wait_for_status(@task,
+            "detector logic #{component} to be True",
+            [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}1/}]
+          )
+          
+          force_detector_logic component, mode:'False'
+          Validator.config['main_component'] = Validator.config['main_component']
+          wait_for_status(@task,
+            "detector logic #{component} to be False",
+            [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}0/}]
+          )
+        end
       end</div> -->
 </div></li>
       
@@ -1508,7 +1566,7 @@
   
     
     
-    <li class='even'><div class='context'>
+    <li class='odd'><div class='context'>
   <div class='title'></div>
   
   
@@ -1541,7 +1599,7 @@
   
     
     
-    <li class='odd'><div class='context'>
+    <li class='even'><div class='context'>
   <div class='title'></div>
   
   
@@ -1696,7 +1754,7 @@
   <!-- <div>timeout = Validator.config['timeouts']['disconnect']
       Validator::Site.isolated do |task,supervisor,site|
         supervisor.ignore_errors RSMP::DisconnectError do
-          Validator.log "Disabling acknowledgements, site should disconnect", level: :test
+          log "Disabling acknowledgements, site should disconnect"
           def site.acknowledge original
           end
           site.wait_for_state :disconnected, timeout: timeout
@@ -1716,7 +1774,7 @@
   <!-- <div>Validator::Site.isolated do |task,supervisor,site|
         timeout = Validator.config['timeouts']['disconnect']
         supervisor.ignore_errors RSMP::DisconnectError do
-          Validator.log "Disabling watchdogs, site should disconnect", level: :test
+          log "Disabling watchdogs, site should disconnect"
           def site.send_watchdog now=nil
           end
           site.wait_for_state :disconnected, timeout: timeout
@@ -1753,11 +1811,10 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        log_confirmation "request aggregated status" do
-          result = site.request_aggregated_status Validator.config['main_component'], collect!: {
-            timeout: Validator.config['timeouts']['status_response']
-          }
-        end
+        log "Request aggregated status"
+        result = site.request_aggregated_status Validator.config['main_component'], collect!: {
+          timeout: Validator.config['timeouts']['status_response']
+        }
       end</div> -->
 </div></li>
       

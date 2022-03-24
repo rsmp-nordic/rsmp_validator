@@ -34,11 +34,10 @@ Verify that the controller responds to an aggregated status request.
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
-  log_confirmation "request aggregated status" do
-    result = site.request_aggregated_status Validator.config['main_component'], collect!: {
-      timeout: Validator.config['timeouts']['status_response']
-    }
-  end
+  log "Request aggregated status"
+  result = site.request_aggregated_status Validator.config['main_component'], collect!: {
+    timeout: Validator.config['timeouts']['status_response']
+  }
 end
 ```
 </details>

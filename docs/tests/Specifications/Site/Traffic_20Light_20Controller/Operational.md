@@ -288,6 +288,34 @@ end
 
 
 
+## Operational yellow flash be used with a timeout of one minute
+
+Verify that we can activate yellow flash and after 1 minute goes back to NormalControl
+
+1. Given the site is connected
+2. Send the control command to switch to Normal Control, and wait for this
+2. Send the control command to switch to Yellow flash
+3. Wait for status Yellow flash
+5. Wait for automatic revert to Normal Control
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+  prepare task, site
+  switch_normal_control
+  minutes = 1
+  switch_yellow_flash timeout_minutes: minutes
+  wait_normal_control timeout: minutes*60 + Validator.config['timeouts']['functional_position']
+end
+```
+</details>
+
+
+
+
 ## Operational yellow flash can be activated with M0001
 
 Verify that we can activate yellow flash

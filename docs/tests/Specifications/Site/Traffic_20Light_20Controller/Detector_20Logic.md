@@ -32,7 +32,7 @@ Verify status S0021 manually set detector logic
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "manually set detector logics",
+request_status_and_confirm "detector logic forcing",
 { S0021: [:detectorlogics] }
 ```
 </details>
@@ -53,7 +53,21 @@ request_status_and_confirm "manually set detector logics",
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
-  switch_detector_logic
+  Validator.config['components']['detector_logic'].keys.each_with_index do |component, indx|
+    force_detector_logic component, mode:'True'
+    Validator.config['main_component'] = Validator.config['main_component']
+    wait_for_status(@task,
+      "detector logic #{component} to be True",
+      [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}1/}]
+    )
+    
+    force_detector_logic component, mode:'False'
+    Validator.config['main_component'] = Validator.config['main_component']
+    wait_for_status(@task,
+      "detector logic #{component} to be False",
+      [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}0/}]
+    )
+  end
 end
 ```
 </details>
