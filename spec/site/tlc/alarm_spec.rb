@@ -22,40 +22,42 @@ RSpec.describe 'Site::Traffic Light Controller' do
   describe 'Alarm' do
         
     # Validate that a detector logic fault A0301 is raises and removed.
-    # This test expects that the TLC is programmed so that an alarm
-    # is raise when a specific input is activated.
+    #
+    # The test expects that the TLC is programmed so that an alarm
+    # is raise when a specific input is activated. The alarm code and input nr
+    # is read from the test configuration.
+    #
     # 1. Given the site is connected
-    # 2. When we force input to True
-    # 3. Then we should receive an active alarm
+    # 2. And we have forced the input to False
+    # 2. When we force the input to True
+    # 3. Then we should receive an active alarm issue, with a reasonable timestamp
     # 4. When we force the input to False
-    # 5. Then the alarm should become inactive
+    # 5. Then the alarm issue should become inactive, with a reasonable timestamp
     specify 'Alarm A0301 is raised when input is activated', :script, sxl: '>=1.0.7' do |example|
       alarm_code_id = 'A0301'   # what alarm to expect
       skip "alarm activation is not configured" unless Validator.config['alarm_activation']
 
-      input_nr = Validator.config['alarm_activation'][alarm_code_id] # what input to activate
+      input_nr = Validator.config['alarm_activation'][alarm_code_id]  # what input to activate
       skip "alarm activation for alarm #{alarm_code_id}  not configured" unless input_nr
       
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-
-        # get config
         timeout  = Validator.config['timeouts']['alarm']
 
-        # first force to true, so that we always get an alarm when we force to true
-        force_input_and_confirm input:input_nr, value:'False'    #force input to false
+        # first force input to false, so we're sure to get an alarm when we afterwards force to true
+        force_input_and_confirm input:input_nr, value:'False'
 
-        # the rsmp spec requires a specific casing of enums, but equipment uses incorrect casing
-        # to be able to test the alarm behaviour even when incorrect casing is used by the equipment,
-        # we use regex patterns that matches different casings.
+        # the rsmp spec requires a specific casing of enums, but some equipment uses incorrect casing.
+        # incorrect casing is usualle cuaght by the json schema validation, but in case this is disabled,
+        # we use case-insensitive regex patterns so that the tests can still be run
         mapping = {
-          'True' => /Active/i,    # alarm should be raised when input is activated
-          'False' => /inActive/i  # alarm should be deactivated when input is deactivated
+          'True' => /Active/i,    # when input is forced to True, the alarm should become active
+          'False' => /inActive/i  # when input is forced to False, the alarm should become inactive
         }
 
         mapping.each_pair do |input_value, alarm_status|
-          log "Check that alarm #{alarm_code_id} becomes #{alarm_status} when we force input #{input_nr} to #{input_value}"
-          collect_task = task.async do
+          log "Check that alarm #{alarm_code_id} becomes #{alarm_status.inspect} when we force input #{input_nr} to #{input_value}"
+          collect_task = task.async do  # run the collector in an async task
             collector = RSMP::AlarmCollector.new( site,
               num: 1,
               query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'aS' => alarm_status },
@@ -65,10 +67,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
             alarm = collector.messages.first
             alarm_time = Time.parse(alarm.attributes["aTs"])
             expect(alarm_time).to be_within(1.minute).of Time.now.utc
-            log "Alarm #{alarm_code_id} is now #{alarm_status}"
+            log "Alarm #{alarm_code_id} is now #{alarm_status.inspect}"
           end
-          force_input_and_confirm input:input_nr, value:input_value
-          collect_task.wait
+          force_input_and_confirm input:input_nr, value:input_value    # force the input
+          collect_task.wait                                            # and wait for the collector to complete
         end
       end
     end
