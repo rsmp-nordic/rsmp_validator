@@ -75,7 +75,7 @@ module Validator::CommandHelpers
   end
 
   # Set functional position
-  def set_functional_position status, timeout_minutes:nil
+  def set_functional_position status, timeout_minutes:0
     require_security_codes
     command_list = build_command_list :M0001, :setValue, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -117,11 +117,12 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "Set emergency route #{route}"
   end
 
-  def disable_emergency_route
+  def disable_emergency_route route
     require_security_codes
     command_list = build_command_list :M0005, :setEmergency, {
       securityCode: Validator.config['secrets']['security_codes'][2],
-      status: 'False'
+      status: 'False',
+      emergencyroute: route
     }
     send_command_and_confirm @task, command_list, "Disable emergency route"
   end
@@ -467,7 +468,7 @@ module Validator::CommandHelpers
       ]
     )
 
-    disable_emergency_route
+    disable_emergency_route route
     wait_for_status(@task,
       "emergency route to be disabled",
       [{'sCI'=>'S0006','n'=>'status','s'=>'False'}]
