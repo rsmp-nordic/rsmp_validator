@@ -26,7 +26,7 @@ jobs:
         bundler-cache: true # runs 'bundle install' and caches installed gems
 
     - name: Run tests
-      run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/site
+      run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/site/tlc/alarm_spec.rb:175
       env:
         SITE_CONFIG: config/dynniq_ec2.yaml
 

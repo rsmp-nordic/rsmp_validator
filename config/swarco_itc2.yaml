@@ -1,5 +1,7 @@
 port: 12111
 sxl: tlc
+ntsOId: KK+AG9998=001TC000
+xNId: ''
 intervals:
   timer: 1
   watchdog: 60
@@ -40,7 +42,5 @@ secrets:
 restrict_testing:
   core_version: 3.1.2
   sxl_version: 1.0.7 
-skip_validation:
-  - Alarm
 alarm_activation:
   A0301: 152

@@ -91,5 +91,62 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
+    # Validate that alarms can be suspended. We're using A0301 in this test.
+    #
+    # 1. Given the site is connected
+    # 2. And the alarm is  resumed
+    # 3. When we suspend the alarm
+    # 4. Then we should received an alarm suspended messsage
+    # 5. When we resume the alarm
+    # 6. Then we should receive an alarm resumed message
+
+    it 'can be suspended and resumed' do
+      Validator::Site.connected do |task,supervisor,site|
+        alarm_code = 'A0301'
+
+        # first resume to make sure something happens when we suspend
+        resume = RSMP::AlarmResume.new(
+          'cId' => Validator.config['main_component'],
+          'aCId' => alarm_code
+        )
+        site.send_message resume
+
+        # now suspend the alarm while collecting responses
+        suspend = RSMP::AlarmSuspend.new(
+          'mId' => RSMP::Message.make_m_id,     # generate a message id, that can be used to listen for responses
+          'cId' => Validator.config['main_component'],
+          'aCId' => alarm_code
+        )
+        collect_task = task.async do
+          RSMP::AlarmCollector.new(site,
+            m_id: suspend.m_id,
+            num: 1,
+            query: {'aCI'=>alarm_code,'aSp'=>'Suspend','sS'=>'suspended'},
+            timeout: Validator.config['timeouts']['alarm']
+          ).collect!
+        end
+        site.send_message suspend
+        messages = collect_task.wait
+        expect(messages).to be_an(Array)
+        message = messages.first
+        expect(message).to be_a(RSMP::AlarmSuspended)
+
+        # clean up by resuming alarm
+        resume.attributes['mId'] = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for responses
+        collect_task = task.async do
+          RSMP::AlarmCollector.new(site, 
+            m_id: resume.m_id,
+            num: 1,
+            query: {'aCI'=>alarm_code,'aSp'=>'Suspend','sS'=>'notSuspended'},
+            timeout: Validator.config['timeouts']['alarm']
+          ).collect!
+        end
+        site.send_message resume
+        messages = collect_task.wait
+        expect(messages).to be_an(Array)
+        message = messages.first
+        expect(message).to be_a(RSMP::AlarmResumed)
+      end
+    end
   end
 end

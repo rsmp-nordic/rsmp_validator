@@ -130,7 +130,7 @@ jobs:
           until `echo -e "ITC\nEXIT" | nc localhost $LISTEN | grep -q -a "3-light"`; do echo Waiting...; sleep 5; done
 
       - name: Run tests
-        run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/site
+        run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/site/alarm_spec.rb:175
         env:
           SITE_CONFIG: config/swarco_itc2.yaml
 
