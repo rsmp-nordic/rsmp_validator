@@ -116,7 +116,7 @@ class Validator::Site < Validator::Testee
   def wait_for_connection
     @proxy = @node.proxies.first
     return if @proxy
-    Validator.log "Waiting for site to connect", level: :test
+    Validator::Log.log "Waiting for site to connect"
     @proxy = @node.wait_for_site(:any, timeout:config['timeouts']['connect'])
   rescue RSMP::TimeoutError
     raise RSMP::ConnectionError.new "Site did not connect within #{config['timeouts']['connect']}s"
@@ -125,8 +125,8 @@ class Validator::Site < Validator::Testee
   # Wait for an the rsmp handshake to complete
   def wait_for_handshake
     return if @proxy.ready?
-    Validator.log "Waiting for handskake to complete", level: :test
+    Validator::Log.log "Waiting for handskake to complete"
     @proxy.wait_for_state :ready, timeout:config['timeouts']['ready']
-    Validator.log "Ready", level: :test
+    Validator::Log.log "Ready"
   end
 end

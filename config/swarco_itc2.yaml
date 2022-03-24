@@ -44,3 +44,5 @@ restrict_testing:
   sxl_version: 1.0.7 
 skip_validation:
   - Alarm
+alarm_activation:
+  A0301: 152

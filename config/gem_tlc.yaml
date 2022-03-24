@@ -42,3 +42,5 @@ secrets:
   security_codes:
     1: '1111'
     2: '2222'
+alarm_activation:
+  A0301: 8

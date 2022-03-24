@@ -15,7 +15,7 @@ module Validator
     end
 
     def step notification
-      @output << colorize("  > #{notification.message}\n",:cyan)
+      @output << colorize("    #{notification.message}\n",:cyan)
     end
 
     def message notification
@@ -27,7 +27,7 @@ module Validator
     end
 
     def example_started notification
-      @output << colorize("#{notification.example.full_description}\n",:bold)
+      @output << colorize("\n#{notification.example.full_description}\n",:bold)
     end
 
     def example_passed notification # ExampleNotification

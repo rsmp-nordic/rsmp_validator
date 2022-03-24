@@ -18,7 +18,7 @@ require_relative 'support/formatters/details.rb'
 require_relative 'support/formatters/list.rb'
 
 include RSpec
-include Validator::LogHelpers
+include Validator::Log
 
 # configure RSpec
 RSpec.configure do |config|
