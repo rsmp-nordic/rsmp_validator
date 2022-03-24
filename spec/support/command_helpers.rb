@@ -75,7 +75,7 @@ module Validator::CommandHelpers
   end
 
   # Set functional position
-  def set_functional_position status, timeout_minutes:nil
+  def set_functional_position status, timeout_minutes:0
     require_security_codes
     command_list = build_command_list :M0001, :setValue, {
       securityCode: Validator.config['secrets']['security_codes'][2],
