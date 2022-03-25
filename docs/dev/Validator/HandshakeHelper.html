@@ -230,6 +230,8 @@
       <pre class="lines">
 
 
+87
+88
 89
 90
 91
@@ -237,12 +239,10 @@
 93
 94
 95
-96
-97
-98</pre>
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 89</span>
+      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 87</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_check_sequence'><span class='object_link'><a href="../top-level-namespace.html#check_sequence-instance_method" title="#check_sequence (method)">check_sequence</a></span></span> <span class='id identifier rubyid_version'>version</span>
   <span class='kw'>case</span> <span class='id identifier rubyid_version'>version</span>
@@ -401,9 +401,7 @@
 82
 83
 84
-85
-86
-87</pre>
+85</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 72</span>
@@ -418,8 +416,6 @@
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>out:MessageAck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>out:Watchdog</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:MessageAck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>in:AggregatedStatus</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>out:MessageAck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
  <span class='rbracket'>]</span>
   <span class='id identifier rubyid_got'>got</span> <span class='op'>=</span> <span class='id identifier rubyid_get_connection_message'><span class='object_link'><a href="../top-level-namespace.html#get_connection_message-instance_method" title="#get_connection_message (method)">get_connection_message</a></span></span> <span class='id identifier rubyid_version'>version</span><span class='comma'>,</span> <span class='id identifier rubyid_expected'>expected</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span>
   <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_got'>got</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_eq'>eq</span><span class='lparen'>(</span><span class='id identifier rubyid_expected'>expected</span><span class='rparen'>)</span>
