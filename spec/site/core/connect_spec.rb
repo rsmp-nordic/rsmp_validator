@@ -79,8 +79,6 @@ module Validator
         'out:MessageAck',
         'out:Watchdog',
         'in:MessageAck',
-        'in:AggregatedStatus',
-        'out:MessageAck',
      ]
       got = get_connection_message version, expected.length
       expect(got).to eq(expected)
