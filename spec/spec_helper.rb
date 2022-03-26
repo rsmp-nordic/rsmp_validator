@@ -1,5 +1,5 @@
 require 'async'
-require 'active_support/time'
+require 'active_support'
 require 'fileutils'
 require 'rsmp'
 
