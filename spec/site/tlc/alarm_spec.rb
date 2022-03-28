@@ -68,11 +68,42 @@ RSpec.describe 'Site::Traffic Light Controller' do
             alarm_time = Time.parse(alarm.attributes["aTs"])
             expect(alarm_time).to be_within(1.minute).of Time.now.utc
             log "Alarm #{alarm_code_id} is now #{alarm_status.inspect}"
+
+            if (alarm_status.inspect == 'True')
+              send_acknowledge_and_confirm
+            end
           end
           force_input_and_confirm input:input_nr, value:input_value    # force the input
           collect_task.wait                                            # and wait for the collector to complete
         end
       end
+    end
+
+    def send_acknowledge_and_confirm
+      log "Check that alarm acknowledge #{alarm_code_id} can be send and confirmed"
+      alarm_code = 'A0301'
+      m_id = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for repsonses
+      alarm = RSMP::AlarmAcknowledged.new(
+        'mId' => m_id,
+        'cId' => Validator.config['main_component'],
+        'aTs' => site.clock.to_s,
+        'aCId' => alarm_code
+      )
+      collect_task = task.async do
+        RSMP::AlarmCollector.new(site, 
+          m_id: m_id,
+          query: {'aCI'=>alarm_code},
+          timeout: Validator.config['timeouts']['alarm']
+        ).collect!
+      end
+      # note: the json schema needs to be updated,
+      # it currently requires the attributes "ack", "aS", "sS", "cat", "pri", "rvs",
+      # even when it's an alarm suspend message.
+      # as a temporary work-around, outgoing json schema validation can be disabled when sending
+      site.send_message alarm, nil, validate: false
+      messages = collect_task.wait
+      expect(messages).to be_an(Array)
+      expect(message.first).to be_a(RSMP::Alarm)
     end
 
     # Validate that a detector logic fault raises A0302.
