@@ -70,6 +70,64 @@ RSpec.describe 'Site::Traffic Light Controller' do
             expect(alarm_time).to be_within(1.minute).of Time.now.utc
             log "Alarm #{alarm_code_id} is now #{alarm_status.inspect}"
 
+          end
+          force_input_and_confirm input:input_nr, value:input_value    # force the input
+          collect_task.wait                                            # and wait for the collector to complete
+        end
+      end
+    end
+
+    # Validate that a detector logic fault A0301 can be acknowledged.
+    #
+    # The test expects that the TLC is programmed so that an alarm
+    # is raised and can be acknowledged when a specific input is activated.
+    # The alarm code and input nr is read from the test configuration.
+    #
+    # 1. Given the site is connected
+    # 2. And we have forced the input to False
+    # 2. When we force the input to True
+    # 3. Then we should receive an active alarm issue, with a reasonable timestamp
+    # 4. Then we send an alarm acknowledgment
+    # 5. Then we should recieve an active alarm acknowledment
+    # 6. When we force the input to False
+    # 7. Then the alarm issue should become inactive, with a reasonable timestamp
+    specify 'Alarm A0301 can be acknowledged when input is activated', :script, sxl: '>=1.0.7' do |example|
+      alarm_code_id = 'A0301'   # what alarm to expect
+      skip "alarm activation is not configured" unless Validator.config['alarm_activation']
+
+      input_nr = Validator.config['alarm_activation'][alarm_code_id]  # what input to activate
+      skip "alarm activation for alarm #{alarm_code_id}  not configured" unless input_nr
+      
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        timeout  = Validator.config['timeouts']['alarm']
+
+        # first force input to false, so we're sure to get an alarm when we afterwards force to true
+        force_input_and_confirm input:input_nr, value:'False'
+
+        # the rsmp spec requires a specific casing of enums, but some equipment uses incorrect casing.
+        # incorrect casing is usualle cuaght by the json schema validation, but in case this is disabled,
+        # we use case-insensitive regex patterns so that the tests can still be run
+        mapping = {
+          'True' => /Active/i,    # when input is forced to True, the alarm should become active
+          'False' => /inActive/i  # when input is forced to False, the alarm should become inactive
+        }
+
+        mapping.each_pair do |input_value, alarm_status|
+          log "Check that alarm #{alarm_code_id} becomes #{alarm_status.inspect} when we force input #{input_nr} to #{input_value}"
+          collect_task = task.async do  # run the collector in an async task
+            collector = RSMP::AlarmCollector.new( site,
+              num: 1,
+              query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'ack' => /notAcknowledged/i, 'aS' => alarm_status },
+              timeout: timeout
+            )
+            collector.collect!
+            alarm = collector.messages.first
+            alarm_time = Time.parse(alarm.attributes["aTs"])
+            component = alarm.attributes["cId"]
+            expect(alarm_time).to be_within(1.minute).of Time.now.utc
+            log "Alarm #{alarm_code_id} is now #{alarm_status.inspect}"
+
             # test acknowledge and confirm
             if (input_value == 'True')
               log "Check that alarm acknowledge #{alarm_code_id} can be send and confirmed"
