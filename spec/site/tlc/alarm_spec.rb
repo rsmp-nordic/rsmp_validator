@@ -60,12 +60,13 @@ RSpec.describe 'Site::Traffic Light Controller' do
           collect_task = task.async do  # run the collector in an async task
             collector = RSMP::AlarmCollector.new( site,
               num: 1,
-              query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'aS' => alarm_status },
+              query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'ack' => /notAcknowledged/i, 'aS' => alarm_status },
               timeout: timeout
             )
             collector.collect!
             alarm = collector.messages.first
             alarm_time = Time.parse(alarm.attributes["aTs"])
+            component = alarm.attributes["cId"]
             expect(alarm_time).to be_within(1.minute).of Time.now.utc
             log "Alarm #{alarm_code_id} is now #{alarm_status.inspect}"
 
@@ -75,15 +76,15 @@ RSpec.describe 'Site::Traffic Light Controller' do
               m_id = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for repsonses
               alarm = RSMP::AlarmAcknowledged.new(
                 'mId' => m_id,
-                'cId' => Validator.config['main_component'],
+                'cId' => component,
                 'aTs' => site.clock.to_s,
                 'aCId' => alarm_code_id
               )
               collect_task = task.async do
-                RSMP::AlarmCollector.new(site, 
-                  m_id: m_id,
-                  query: {'aCI'=>alarm_code_id},
-                  timeout: Validator.config['timeouts']['alarm']
+                RSMP::AlarmCollector.new(site,
+                  num: 1,
+                  query: {'aCId'=>alarm_code_id, 'aSp' => /Acknowledge/i, 'ack' => /Acknowledged/i, 'aS' => alarm_status},
+                  timeout: timeout
                 ).collect!
               end
               # note: the json schema needs to be updated,
