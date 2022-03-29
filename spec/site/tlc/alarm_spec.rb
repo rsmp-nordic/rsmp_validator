@@ -80,19 +80,19 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
 
     def send_acknowledge_and_confirm
+      alarm_code_id = 'A0301'
       log "Check that alarm acknowledge #{alarm_code_id} can be send and confirmed"
-      alarm_code = 'A0301'
       m_id = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for repsonses
       alarm = RSMP::AlarmAcknowledged.new(
         'mId' => m_id,
         'cId' => Validator.config['main_component'],
         'aTs' => site.clock.to_s,
-        'aCId' => alarm_code
+        'aCId' => alarm_code_id
       )
       collect_task = task.async do
         RSMP::AlarmCollector.new(site, 
           m_id: m_id,
-          query: {'aCI'=>alarm_code},
+          query: {'aCI'=>alarm_code_id},
           timeout: Validator.config['timeouts']['alarm']
         ).collect!
       end
