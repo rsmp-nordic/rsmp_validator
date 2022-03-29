@@ -69,7 +69,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
             expect(alarm_time).to be_within(1.minute).of Time.now.utc
             log "Alarm #{alarm_code_id} is now #{alarm_status.inspect}"
 
-            if (alarm_status.inspect == 'True')
+            if (input_value == 'True')
               send_acknowledge_and_confirm
             end
           end
