@@ -35,7 +35,7 @@ jobs:
       run: ssh 192.168.103.205 ./set_date.sh
 
     - name: Run tests
-      run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/site/alarm_spec.rb:78
+      run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/site/tlc/alarm_spec.rb:78
       env:
         SITE_CONFIG: config/swarco_itc2.yaml
 
