@@ -128,36 +128,38 @@ RSpec.describe 'Site::Traffic Light Controller' do
             expect(alarm_time).to be_within(1.minute).of Time.now.utc
             log "Alarm #{alarm_code_id} is now #{alarm_status.inspect}"
 
-            # test acknowledge and confirm
-            if (input_value == 'True')
-              log "Check that alarm acknowledge #{alarm_code_id} can be send and confirmed"
-              m_id = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for repsonses
-              alarm = RSMP::AlarmAcknowledged.new(
-                'mId' => m_id,
-                'cId' => component,
-                'aTs' => site.clock.to_s,
-                'aCId' => alarm_code_id
-              )
-              collect_task = task.async do
-                RSMP::AlarmCollector.new(site,
-                  num: 1,
-                  query: {'aCId'=>alarm_code_id, 'aSp' => /Acknowledge/i, 'ack' => /Acknowledged/i, 'aS' => alarm_status},
-                  timeout: timeout
-                ).collect!
-              end
-              # note: the json schema needs to be updated,
-              # it currently requires the attributes "ack", "aS", "sS", "cat", "pri", "rvs",
-              # even when it's an alarm suspend message.
-              # as a temporary work-around, outgoing json schema validation can be disabled when sending
-              site.send_message alarm, nil, validate: false
-              messages = collect_task.wait
-              expect(messages).to be_an(Array)
-              expect(message.first).to be_a(RSMP::Alarm)        
-            end
-
           end
+
           force_input_and_confirm input:input_nr, value:input_value    # force the input
           collect_task.wait                                            # and wait for the collector to complete
+
+          # test acknowledge and confirm
+          if (input_value == 'True')
+            log "Check that alarm acknowledge #{alarm_code_id} can be send and confirmed"
+            m_id = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for repsonses
+            alarm = RSMP::AlarmAcknowledged.new(
+              'mId' => m_id,
+              'cId' => component,
+              'aTs' => site.clock.to_s,
+              'aCId' => alarm_code_id
+            )
+            collect_task = task.async do
+              RSMP::AlarmCollector.new(site,
+                num: 1,
+                query: {'aCId'=>alarm_code_id, 'aSp' => /Acknowledge/i, 'ack' => /Acknowledged/i, 'aS' => alarm_status},
+                timeout: timeout
+              ).collect!
+            end
+            # note: the json schema needs to be updated,
+            # it currently requires the attributes "ack", "aS", "sS", "cat", "pri", "rvs",
+            # even when it's an alarm suspend message.
+            # as a temporary work-around, outgoing json schema validation can be disabled when sending
+            site.send_message alarm, nil, validate: false
+            messages = collect_task.wait
+            expect(messages).to be_an(Array)
+            expect(message.first).to be_a(RSMP::Alarm)        
+          end
+
         end
       end
     end
