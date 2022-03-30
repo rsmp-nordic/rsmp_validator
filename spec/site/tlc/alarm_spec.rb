@@ -81,29 +81,31 @@ RSpec.describe 'Site::Traffic Light Controller' do
       component = 'KK+AG9998=001DL003'
       alarm_status = /inActive/i
 
-      log "Check that alarm suspend #{alarm_code_id} can be send and confirmed"
-      m_id = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for repsonses
-      alarm = RSMP::AlarmSuspend.new(
-        'mId' => m_id,
-        'cId' => component,
-        'aTs' => site.clock.to_s,
-        'aCId' => alarm_code_id
-      )
-      collect_task = task.async do
-        RSMP::AlarmCollector.new(site,
-          num: 1,
-          query: {'aCId'=>alarm_code_id, 'aSp' => /Suspend/i, 'sS' => /suspended/i, 'aS' => alarm_status},
-          timeout: timeout
-        ).collect!
+      Validator::Site.connected do |task,supervisor,site|
+        log "Check that alarm suspend #{alarm_code_id} can be send and confirmed"
+        m_id = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for repsonses
+        alarm = RSMP::AlarmSuspend.new(
+          'mId' => m_id,
+          'cId' => component,
+          'aTs' => site.clock.to_s,
+          'aCId' => alarm_code_id
+        )
+        collect_task = task.async do
+          RSMP::AlarmCollector.new(site,
+            num: 1,
+            query: {'aCId'=>alarm_code_id, 'aSp' => /Suspend/i, 'sS' => /suspended/i, 'aS' => alarm_status},
+            timeout: timeout
+          ).collect!
+        end
+        # note: the json schema needs to be updated,
+        # it currently requires the attributes "ack", "aS", "sS", "cat", "pri", "rvs",
+        # even when it's an alarm suspend message.
+        # as a temporary work-around, outgoing json schema validation can be disabled when sending
+        site.send_message alarm, nil, validate: false
+        messages = collect_task.wait
+        expect(messages).to be_an(Array)
+        expect(message.first).to be_a(RSMP::Alarm)                
       end
-      # note: the json schema needs to be updated,
-      # it currently requires the attributes "ack", "aS", "sS", "cat", "pri", "rvs",
-      # even when it's an alarm suspend message.
-      # as a temporary work-around, outgoing json schema validation can be disabled when sending
-      site.send_message alarm, nil, validate: false
-      messages = collect_task.wait
-      expect(messages).to be_an(Array)
-      expect(message.first).to be_a(RSMP::Alarm)        
     end
 
     # Validate that a detector logic fault raises A0302.
