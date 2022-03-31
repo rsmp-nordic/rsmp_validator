@@ -87,6 +87,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       alarm_code_id = 'A0301'   # what alarm to expect
       component = 'KK+AG9998=001DL003'
       timeout  = Validator.config['timeouts']['alarm']
+      alarm_status = '/inActive/i'
 
       Validator::Site.connected do |task,supervisor,site|
         # test suspend
