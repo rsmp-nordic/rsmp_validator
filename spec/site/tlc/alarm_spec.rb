@@ -82,11 +82,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. We should receive an response alarm suspended, with a reasonable timestamp
     # 4. We send message alarm resume
     # 5. We should receive an response alarm notSuspended, with a reasonable timestamp
-    it 'can be suspended', :script, sxl: '>=1.0.7' do |example|
+    it 'can be suspended and resumed', :script, sxl: '>=1.0.7' do |example|
       
       alarm_code_id = 'A0301'   # what alarm to expect
       component = 'KK+AG9998=001DL003'
-      alarm_status = /inActive/i
       timeout  = Validator.config['timeouts']['alarm']
 
       Validator::Site.connected do |task,supervisor,site|
@@ -102,7 +101,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         collect_task = task.async do
           RSMP::AlarmCollector.new(site,
             num: 1,
-            query: {'aCId'=>alarm_code_id, 'aSp' => /Suspend/i, 'sS' => /suspended/i, 'aS' => alarm_status},
+            query: {'aCId'=>alarm_code_id, 'aSp' => /Issue/i, 'sS' => /suspended/i},
             timeout: timeout
           ).collect!
         end
@@ -127,7 +126,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         collect_task = task.async do
           RSMP::AlarmCollector.new(site,
             num: 1,
-            query: {'aCId'=>alarm_code_id, 'aSp' => /Resume/i, 'sS' => /notSuspended/i, 'aS' => alarm_status},
+            query: {'aCId'=>alarm_code_id, 'aSp' => /Issue/i, 'sS' => /notSuspended/i},
             timeout: timeout
           ).collect!
         end
