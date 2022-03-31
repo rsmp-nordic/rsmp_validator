@@ -101,7 +101,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         collect_task = task.async do
           RSMP::AlarmCollector.new(site,
             num: 1,
-            query: {'aCId'=>alarm_code_id, 'aSp' => /Issue/i, 'sS' => /suspended/i},
+            query: {'aCId'=>alarm_code_id, 'aSp' => /Issue/i, 'sS' => /suspended/i, 'aS' => alarm_status},
             timeout: timeout
           ).collect!
         end
@@ -126,7 +126,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         collect_task = task.async do
           RSMP::AlarmCollector.new(site,
             num: 1,
-            query: {'aCId'=>alarm_code_id, 'aSp' => /Issue/i, 'sS' => /notSuspended/i},
+            query: {'aCId'=>alarm_code_id, 'aSp' => /Issue/i, 'sS' => /notSuspended/i, 'aS' => alarm_status},
             timeout: timeout
           ).collect!
         end
