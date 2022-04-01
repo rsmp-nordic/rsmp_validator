@@ -40,4 +40,7 @@ secrets:
 restrict_testing:
   core_version: 3.1.2
   sxl_version: 1.0.13
-
+skip_validation:
+  - Alarm
+alarm_activation:
+  A0301: 152

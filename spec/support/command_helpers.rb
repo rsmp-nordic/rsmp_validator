@@ -1,12 +1,10 @@
 module Validator::CommandHelpers
   def send_command_and_confirm parent_task, command_list, message, component=Validator.config['main_component']
     result = nil
-    log_confirmation message do
-      result = @site.send_command component, command_list, collect!: {
-          timeout: Validator.config['timeouts']['command_response']
-        }
-    end
-    result
+    log message
+    @site.send_command component, command_list, collect!: {
+      timeout: Validator.config['timeouts']['command_response']
+    }
   end
 
   # Build a RSMP command value list from a hash
@@ -24,146 +22,135 @@ module Validator::CommandHelpers
   # Order a signal group to green
   def set_signal_start
     require_security_codes
-    Validator.log "Order signal group to green", level: :test
     command_list = build_command_list :M0010, :setStart, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: 'True'
     }
     indx = 0
     component = Validator.config['components']['signal_group'].keys[indx]
-    send_command_and_confirm @task, command_list, "intention to start signal group #{indx}.", component
+    send_command_and_confirm @task, command_list, "Order signal group #{indx} to green", component
   end
 
   # Order a signal group to red
   def set_signal_stop
     require_security_codes
-    Validator.log "Order signal group to red", level: :test
     command_list = build_command_list :M0011, :setStop, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: 'True'
     }
     indx = 0
     component = Validator.config['components']['signal_group'].keys[indx]
-    send_command_and_confirm @task, command_list, "intention to stop signal group #{indx}.", component
+    send_command_and_confirm @task, command_list, "Order signal group #{indx} to red", component
   end
 
   # Request series of signal groups to start/stop
   def set_signal_start_or_stop status
-    Validator.log "Request series of signal groups to start/stop", level: :test
     command_list = build_command_list :M0012, :setStart, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
     }
-    send_command_and_confirm @task, command_list,
-      "intention to request start/stop of a series of signal groups"
+    send_command_and_confirm @task, command_list, "Request series of signal groups to #{status}"
   end
 
   # Switch signal plan
   def set_plan plan
     require_security_codes
-    Validator.log "Switching to plan #{plan}", level: :test
     command_list = build_command_list :M0002, :setPlan, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: 'True',     # true = use plan nr in commone, false = use time table
       timeplan: plan
     }
-    send_command_and_confirm @task, command_list, "intention to switch to plan #{plan}"
+    send_command_and_confirm @task, command_list, "Switchto plan #{plan}"
   end
 
   # Set traffic situation
   def set_traffic_situation ts
     require_security_codes
-    Validator.log "Switching to traffic situation #{ts}", level: :test
     command_list = build_command_list :M0003, :setTrafficSituation, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       traficsituation: ts   # misspell 'traficsituation'is in the rsmp spec
 
     }
-    send_command_and_confirm @task, command_list, "intention to switch to traffic situation #{ts}"
+    send_command_and_confirm @task, command_list, "Switch to traffic situation #{ts}"
   end
 
   # Set functional position
-  def set_functional_position status, timeout_minutes:nil
+  def set_functional_position status, timeout_minutes:0
     require_security_codes
-    Validator.log "Switching to #{status}", level: :test
     command_list = build_command_list :M0001, :setValue, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
       timeout: timeout_minutes,
       intersection: 0
     }
-    send_command_and_confirm @task, command_list, "intention to switch to #{status}"
+    send_command_and_confirm @task, command_list, "Switch to functional position #{status}"
   end
 
   def set_fixed_time status
     require_security_codes
-    Validator.log "Switching to fixed time #{status}", level: :test
     command_list = build_command_list :M0007, :setFixedTime, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
     }
-    send_command_and_confirm @task, command_list, "intention to switch to fixed time #{status}"
+    send_command_and_confirm @task, command_list, "Switch to fixed time #{status}"
   end
 
   def set_restart
     require_security_codes
-    Validator.log "Restarting traffic controller", level: :test
+    log "Restarting traffic controller"
     command_list = build_command_list :M0004, :setRestart, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: 'True'
     }
     @site.send_command Validator.config['main_component'], command_list
     # if the controller restarts immediately, we will not receive a command response,
-    # so do not expect this
+    # so do not expect it
   end
 
   def set_emergency_route route
     require_security_codes
-    Validator.log "Set emergency route #{route}", level: :test
     command_list = build_command_list :M0005, :setEmergency, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: 'True',
       emergencyroute: route
     }
-    send_command_and_confirm @task, command_list, "intention to switch to emergency route #{route}"
+    send_command_and_confirm @task, command_list, "Set emergency route #{route}"
   end
 
-  def disable_emergency_route
+  def disable_emergency_route route
     require_security_codes
-    Validator.log "Disable emergency route", level: :test
     command_list = build_command_list :M0005, :setEmergency, {
       securityCode: Validator.config['secrets']['security_codes'][2],
-      status: 'False'
+      status: 'False',
+      emergencyroute: route
     }
-    send_command_and_confirm @task, command_list, "intention to switch emergency off"
+    send_command_and_confirm @task, command_list, "Disable emergency route"
   end
 
   def set_input status, input
     require_security_codes
-    Validator.log "Set input #{input}", level: :test
     command_list = build_command_list :M0006, :setInput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
       input: input
     }
-    send_command_and_confirm @task, command_list, "intention to set input #{input}"
+    send_command_and_confirm @task, command_list, "Set input #{input} to #{status}"
   end
 
   def force_detector_logic component, status:'True', mode:'True'
     require_security_codes
-    Validator.log "Force detector logic", level: :test
     command_list = build_command_list :M0008, :setForceDetectorLogic, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
       mode: mode
     }
-    send_command_and_confirm @task, command_list, "intention to force detector logic to #{mode}", component
+    send_command_and_confirm @task, command_list, "Force detector logic #{component} to #{mode}", component
   end
 
   def switch_plan plan
     set_plan plan.to_s
     wait_for_status(@task,
-      "switch to plan #{plan}",
+      "plan #{plan} to be active",
       [{'sCI'=>'S0014','n'=>'status','s'=>plan.to_s}]
     )
   end
@@ -171,7 +158,7 @@ module Validator::CommandHelpers
   def switch_traffic_situation ts
     set_traffic_situation ts
     wait_for_status(@task,
-      "switch to traffic situation #{ts}",
+      "traffic situation #{ts}",
       [{'sCI'=>'S0015','n'=>'status','s'=>ts}]
     )
   end
@@ -179,7 +166,7 @@ module Validator::CommandHelpers
   def switch_yellow_flash timeout_minutes: nil
     set_functional_position 'YellowFlash', timeout_minutes: timeout_minutes
     wait_for_status(@task,
-      "switch to yellow flash",
+      "yellow flash",
       [{'sCI'=>'S0011','n'=>'status','s'=>/^True(,True)*$/}]
     )
   end
@@ -187,30 +174,28 @@ module Validator::CommandHelpers
   def switch_dark_mode
     set_functional_position 'Dark'
     wait_for_status(@task,
-      "switch to dark mode",
+      "dark mode",
       [{'sCI'=>'S0007','n'=>'status','s'=>/^False(,False)*$/}]
     )
   end
 
   def set_series_of_inputs status
     require_security_codes
-    Validator.log "Activate a series of inputs", level: :test
     command_list = build_command_list :M0013, :setInput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
     }
-    send_command_and_confirm @task, command_list, "intention to activate a series of inputs #{status}"
+    send_command_and_confirm @task, command_list, "Set a series of inputs using #{status}"
   end
 
   def set_dynamic_bands plan, status
     require_security_codes
-    Validator.log "Set dynamic bands", level: :test
     command_list = build_command_list :M0014, :setCommands, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
       plan: plan
     }
-    send_command_and_confirm @task, command_list, "intention to set dynamic bands #{status} for plan #{plan}"
+    send_command_and_confirm @task, command_list, "Set dynamic bands to #{status} for plan #{plan}"
   end
 
   def get_dynamic_bands plan, band
@@ -230,52 +215,48 @@ module Validator::CommandHelpers
 
   def set_offset status, plan
     require_security_codes
-    Validator.log "Set dynamic bands", level: :test
     command_list = build_command_list :M0015, :setOffset, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
       plan: plan
     }
-    send_command_and_confirm @task, command_list, "intention to set offset #{plan}"
+    send_command_and_confirm @task, command_list, "Set offset for plan #{plan} to #{status}"
   end
 
   def set_week_table status
     require_security_codes
-    Validator.log "Set week table", level: :test
     command_list = build_command_list :M0016, :setWeekTable, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
     }
-    send_command_and_confirm @task, command_list, "intention to set week table #{status}"
+    send_command_and_confirm @task, command_list, "Set week table to #{status}"
   end
 
   def set_day_table status
     require_security_codes
-    Validator.log "Set time table", level: :test
     command_list = build_command_list :M0017, :setTimeTable, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
     }
-    send_command_and_confirm @task, command_list, "intention to set time table #{status}"
+    send_command_and_confirm @task, command_list, "Set time table to #{status}"
   end
 
   def set_cycle_time status, plan
     require_security_codes
-    Validator.log "Set cycle time", level: :test
     command_list = build_command_list :M0018, :setCycleTime, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
       plan: plan
     }
-    send_command_and_confirm @task, command_list, "intention to set cycle table #{plan}"
+    send_command_and_confirm @task, command_list, "Set cycle time to #{plan}"
   end
 
-  def force_input status, input, value
+  def force_input status:'True', input:, value:
     require_security_codes
     if status == 'True'
-      Validator.log "Force input #{input} to #{value}", level: :test
+      str = "Force input #{input} to #{value}"
     else
-      Validator.log "Release input #{input}", level: :test
+      str =  "Release input #{input}"
     end
     command_list = build_command_list :M0019, :setInput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -283,41 +264,38 @@ module Validator::CommandHelpers
       input: input,
       inputValue: value
     }
-    send_command_and_confirm @task, command_list,  "command to force input #{input} to #{value}"
+    send_command_and_confirm @task, command_list, str
   end
 
   def force_output status, output, value
     require_security_codes
-    Validator.log "Force output", level: :test
     command_list = build_command_list :M0020, :setOutput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status,
       output: output,
       outputValue: value
     }
-    send_command_and_confirm @task, command_list, "intention to force output #{output} to #{value}"
+    send_command_and_confirm @task, command_list, "Force output #{output} to #{value}"
   end
 
   def set_trigger_level status
     require_security_codes
-    Validator.log "Set trigger level sensitivity for loop detector", level: :test
     command_list = build_command_list :M0021, :setLevel, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: status
     }
-    send_command_and_confirm @task, command_list, "intention to set trigger level sensitivity for loop detector #{status}"
+    send_command_and_confirm @task, command_list, "Set trigger level sensitivity for loop detector to #{status}"
   end
 
   def set_security_code level
     require_security_codes
     status = "Level#{level}"
-    Validator.log "Set security code", level: :test
     command_list = build_command_list :M0103, :setSecurityCode, {
       oldSecurityCode: Validator.config['secrets']['security_codes'][level],
       newSecurityCode: Validator.config['secrets']['security_codes'][level],
       status: status
     }
-    send_command_and_confirm @task, command_list, "intention to set security code"
+    send_command_and_confirm @task, command_list, "Set security code for level #{level}"
   end
 
   def require_security_codes
@@ -345,9 +323,17 @@ module Validator::CommandHelpers
     run_script 'deactivate_alarm'
   end
 
+  def force_input_and_confirm(input:, value:)
+    force_input status: 'True', input: input.to_s, value: value
+    digit = (value == 'True' ? '1' : '0')
+    wait_for_status(@task,
+      "input #{input} to be #{value}",
+      [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input-1}}#{digit}/}] # index is 1-based, convert to 0-based fo regex
+    )
+  end
+
   def set_clock clock
     require_security_codes
-    Validator.log "Setting clock to #{clock}", level: :test
     command_list = build_command_list :M0104, :setDate, {
       securityCode: Validator.config['secrets']['security_codes'][1],
       year: clock.year,
@@ -357,12 +343,11 @@ module Validator::CommandHelpers
       minute: clock.min,
       second: clock.sec
     }
-    send_command_and_confirm @task, command_list, "intention to set clock"
+    send_command_and_confirm @task, command_list, "Set clock to #{clock}"
   end
 
   def reset_clock
     require_security_codes
-    Validator.log "Resetting clock", level: :test
     now = Time.now.utc
     command_list = build_command_list :M0104, :setDate, {
       securityCode: Validator.config['secrets']['security_codes'][1],
@@ -373,7 +358,7 @@ module Validator::CommandHelpers
       minute: now.min,
       second: now.sec
     }
-    send_command_and_confirm @task, command_list, "intention to set clock"
+    send_command_and_confirm @task, command_list, "Reset clock to #{now}"
   end
 
   def with_clock_set clock, &block
@@ -385,15 +370,16 @@ module Validator::CommandHelpers
 
 
   def wrong_security_code
-    Validator.log "Try to force detector logic with wrong security code", level: :test
+    log "Try to force detector logic with wrong security code"
     command_list = build_command_list :M0008, :setForceDetectorLogic, {
       securityCode: '1111',
       status: 'True',
       mode: 'True'
     }
     component = Validator.config['components']['detector_logic'].keys[0]
-    result = send_command_and_confirm @task, command_list, "M0008 with wrong security code", component
-    Validator.log "Command rejected as expected", level: :test
+    result = @site.send_command component, command_list, collect!: {
+      timeout: Validator.config['timeouts']['command_response']
+    }       
   end
 
   def wait_normal_control timeout: Validator.config['timeouts']['startup_sequence']
@@ -419,21 +405,21 @@ module Validator::CommandHelpers
     states = nil
 
     collector_task = @task.async do
-      @site.log "Verifying startup sequence"
+      log "Verifying startup sequence"
       collector.collect do |message,item|   # listen for status messages
         next unless item
         states = item['s']
         #p states
         status  = sequencer.check states      # check sequences
         if status == :ok
-          @site.log "Startup sequence #{states}: OK", level: :test
+          log "Startup sequence #{states}: OK"
           if sequencer.done?             # if all groups reached end?
             collector.complete           # then end collection
           else
             false                        # reject item, ie. continue collecting
           end
         else
-          @site.log "Startup sequence #{states}: Fail", level: :test
+          log "Startup sequence #{states}: Fail"
           collector.cancel status        # if sequence was incorrect then cancel collection
         end
       end
@@ -445,17 +431,16 @@ module Validator::CommandHelpers
     # subscribe, so we start getting status udates
     @site.subscribe_to_status component, subscribe_list
 
-
     case collector_task.wait  # wait for the collector to complete
     when :ok
-      @site.log "Startup sequence verified", level: :test
+      log "Startup sequence verified"
     when :timeout
       raise "Startup sequence '#{sequencer.sequence}' didn't complete in #{timeout}s, reached #{sequencer.latest}, #{sequencer.num_started} started, #{sequencer.num_done} done"
     when :cancelled
       raise "Startup sequence '#{sequencer.sequence}' not followed: #{collector.error}"
     end
 
-    wait_for_status(@task,"controlmode startup", [{'sCI'=>'S0020','n'=>'controlmode','s'=>'control'}])
+    wait_for_status(@task,"control mode to be startup", [{'sCI'=>'S0020','n'=>'controlmode','s'=>'control'}])
   ensure
     @site.unsubscribe_to_status component, unsubscribe_list  # unsubscribe
  end
@@ -468,7 +453,7 @@ module Validator::CommandHelpers
   def switch_fixed_time status
     set_fixed_time status
     wait_for_status(@task,
-      "switch to fixed time #{status}",
+      "fixed time to be #{status}",
       [{'sCI'=>'S0009','n'=>'status','s'=>/^#{status}(,#{status})*$/}]
     )
   end
@@ -476,16 +461,16 @@ module Validator::CommandHelpers
   def switch_emergency_route route
     set_emergency_route route
     wait_for_status(@task,
-      "activate emergency route",
+      "emergency route to be set to #{route}",
       [
         {'sCI'=>'S0006','n'=>'status','s'=>'True'},
         {'sCI'=>'S0006','n'=>'emergencystage','s'=>route}
       ]
     )
 
-    disable_emergency_route
+    disable_emergency_route route
     wait_for_status(@task,
-      "deactivate emergency route",
+      "emergency route to be disabled",
       [{'sCI'=>'S0006','n'=>'status','s'=>'False'}]
     )
   end
@@ -493,33 +478,15 @@ module Validator::CommandHelpers
   def switch_input indx
     set_input 'True',indx.to_s
     wait_for_status(@task,
-      "activate input #{indx}",
+      "input #{indx} to be True",
       [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx-1}}1/}] # index is 1-based, convert to 0-based fo regex
     )
 
     set_input 'False',indx.to_s
     wait_for_status(@task,
-      "deactivate input #{indx}",
+      "input #{indx} to be False",
       [{'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{indx-1}}0/}]
     )
-  end
-
-  def switch_detector_logic
-    Validator.config['components']['detector_logic'].keys.each_with_index do |component, indx|
-      force_detector_logic component, mode:'True'
-      Validator.config['main_component'] = Validator.config['main_component']
-      wait_for_status(@task,
-        "activate detector logic #{component}",
-        [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}1/}]
-      )
-      
-      force_detector_logic component, mode:'False'
-      Validator.config['main_component'] = Validator.config['main_component']
-      wait_for_status(@task,
-        "deactivate detector logic #{component}",
-        [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}0/}]
-      )
-    end
   end
 
   def prepare task, site

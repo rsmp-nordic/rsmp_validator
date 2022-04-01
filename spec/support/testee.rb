@@ -68,7 +68,7 @@ class Validator::Testee
   # Stop the rsmp supervisor
   def stop why=nil
     if @node
-      Validator.log why, level: :test if why
+      Validator::Log.log why if why
       @node.ignore_errors RSMP::DisconnectError do
         @node.stop
       end

@@ -81,16 +81,17 @@ module Validator
 
   # initial check that we have a connection to the site/supervisor
   def self.check_connection
-    self.log "Initial #{self.mode} connection check", level: :info
+    Validator::Log.log "Initial #{self.mode} connection check"
     if self.mode == :site
       Validator::Site.testee.connected {}
     elsif self.mode == :supervisor
       Validator::Supervisor.testee.connected {}
     end
+    self.log ""
   end
 
   # log to the rspec formatter
-  def self.log str, options
+  def self.log str, options={}
     self.reporter.publish :step, message: str
   end
 

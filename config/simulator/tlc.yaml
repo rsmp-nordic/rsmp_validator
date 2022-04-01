@@ -33,6 +33,11 @@ signal_plans:
       A2: '11NBBB'
       B1: 'BBB11N'
       B2: 'BBB1NB'
+inputs:
+  total: 8
+  programming:
+    8:
+      raise: A0301
 intervals:
   timer: 0.1
   watchdog: 0.1

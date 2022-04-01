@@ -229,7 +229,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do
-          Validator.log "Checking watchdog timestamp", level: :test
+          log "Checking watchdog timestamp"
           collector = RSMP::Collector.new site, task:task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
           collector.collect!
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
