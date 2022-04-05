@@ -88,6 +88,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 5. We should receive an alarm resumed message
     #
     it 'can be suspended and resumed', :script, sxl: '>=1.0.7' do |example|
+      skip "alarm activation is not configured" unless Validator.config['alarm_activation']
       Validator::Site.connected do |task,supervisor,site|
         alarm_code_id = 'A0301'   # what alarm to expect
         input_nr = Validator.config['alarm_activation'][alarm_code_id]  # what input to activate
