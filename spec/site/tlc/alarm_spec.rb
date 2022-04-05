@@ -88,43 +88,40 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 5. We should receive an alarm resumed message
     #
     it 'can be suspended and resumed', :script, sxl: '>=1.0.7' do |example|
-      # note: the json schema needs to be updated,
-      # it currently requires the attributes "ack", "aS", "sS", "cat", "pri", "rvs",
-      # even when it's an alarm suspend message.
-      # as a temporary work-around, outgoing json schema validation can be disabled when sending
       Validator::Site.connected do |task,supervisor,site|
         alarm_code_id = 'A0301'   # what alarm to expect
         input_nr = Validator.config['alarm_activation'][alarm_code_id]  # what input to activate
-        component = Validator.config['components']['detector_logics'].first
+        component = Validator.config['components']['detector_logic'].keys.first
         timeout  = Validator.config['timeouts']['alarm']
 
         # initial resume, in case the alarm is already suspended
+        log "Resume alarm #{alarm_code_id}"
         resume = RSMP::AlarmResume.new(
           'cId' => component,
           'aTs' => site.clock.to_s,
           'aCId' => alarm_code_id
         )
-        site.send_message alarm, nil, validate: false
+        site.send_message resume, nil, validate: false
 
         cases = [
-          {description:'suspended', type:AlarmSuspend, aSp:/Suspend/i, sS:/suspended/i},
-          {description:'resumed', type:AlarmResume, aSp:/Suspend/i, sS:/notSuspended/i},
+          {description:'suspended', alarm_class:RSMP::AlarmSuspend, aSp:/Suspend/i, sS:/suspended/i},
+          {description:'resumed', alarm_class:RSMP::AlarmResume, aSp:/Suspend/i, sS:/notSuspended/i},
         ]
         cases.each do |step|
-          log "Check that alarm #{alarm_code_id} can be #{description}"
+          log "Check that alarm #{alarm_code_id} can be #{step[:description]}"
           collect_task = task.async do
             RSMP::AlarmCollector.new(site,
               num: 1,
-              query: {'aCId'=>alarm_code_id, 'aSp' => aSp, 'sS' => sS},
+              query: {'aCId'=>alarm_code_id, 'aSp' => step[:aSp], 'sS' => step[:sS]},
               timeout: timeout
             ).collect!
           end
-          suspend = RSMP::AlarmSuspend.new(
+          alarm = step[:alarm_class].new(
             'cId' => component,
             'aTs' => site.clock.to_s,
             'aCId' => alarm_code_id
           )
-          site.send_message alarm, nil, validate: false
+          site.send_message alarm, nil
           messages = collect_task.wait
         end
       end
