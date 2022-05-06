@@ -1,6 +1,7 @@
 port: 12111
 sxl: tlc
 ntsOId: KK+AG9998=001TC000
+xNId: ''
 intervals:
   timer: 1
   watchdog: 60
@@ -27,15 +28,12 @@ components:
   detector_logic:
     KK+AG9998=001DL001:
 items:
-  plans: [1,2,3]
+  plans: [1,7,8]
   traffic_situations: []
   emergency_routes: [1]
   inputs: [1]
   force_input: 101
 startup_sequence: 'efg'
-scripts:
-  activate_alarm: '/home/i0davla/activate_alarm.sh'
-  deactivate_alarm: '/home/i0davla/deactivate_alarm.sh'
 secrets:
   security_codes:
     1: testcode1
