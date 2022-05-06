@@ -39,8 +39,8 @@ jobs:
         if: steps.cache-simulator.outputs.cache-hit != 'true'
         run: |
           mkdir bin
-          wget -O bin/simulator.exe "${{ secrets.ITC2_6_94_20_SIM }}"
-          wget -O bin/rootfs "${{ secrets.ITC2_FS_20170202 }}"
+          wget --quiet -O bin/simulator.exe "${{ secrets.ITC2_6_94_20_SIM }}"
+          wget --quiet -O bin/rootfs "${{ secrets.ITC2_FS_20170202 }}"
 
       - name: Install simulator
         run: |
