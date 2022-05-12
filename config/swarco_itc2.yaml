@@ -1,7 +1,5 @@
 port: 12111
 sxl: tlc
-ntsOId: KK+AG9998=001TC000
-xNId: ''
 intervals:
   timer: 1
   watchdog: 60
@@ -23,6 +21,7 @@ timeouts:
 components:
   main:
     KK+AG9998=001TC000:
+      ntsOId: KK+AG9998=001TC000
   signal_group:
     KK+AG9998=001SG001:
   detector_logic:
