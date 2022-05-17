@@ -816,13 +816,23 @@
 77
 78
 79
-80</pre>
+80
+81
+82
+83
+84
+85</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 73</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_around_each'>around_each</span> <span class='id identifier rubyid_example'>example</span>
+  <span class='id identifier rubyid_thread_local_data'>thread_local_data</span> <span class='op'>=</span> <span class='const'>RSpec</span><span class='op'>::</span><span class='const'>Support</span><span class='period'>.</span><span class='id identifier rubyid_thread_local_data'>thread_local_data</span>
   <span class='id identifier rubyid_reactor'>reactor</span><span class='period'>.</span><span class='id identifier rubyid_run'>run</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='op'>|</span>
+    <span class='comment'># rspec depends on thread-local data (which is actually fiber-local),
+</span>    <span class='comment'># but the async task runs in a different fiber. as a work-around,
+</span>    <span class='comment'># we copy the data into the current fiber-local storage
+</span>    <span class='id identifier rubyid_thread_local_data'>thread_local_data</span><span class='period'>.</span><span class='id identifier rubyid_each_pair'>each_pair</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span><span class='id identifier rubyid_value'>value</span><span class='op'>|</span> <span class='const'>RSpec</span><span class='op'>::</span><span class='const'>Support</span><span class='period'>.</span><span class='id identifier rubyid_thread_local_data'>thread_local_data</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span> <span class='rbrace'>}</span>
     <span class='id identifier rubyid_task'>task</span><span class='period'>.</span><span class='id identifier rubyid_annotate'>annotate</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>rspec</span><span class='tstring_end'>&#39;</span></span>
     <span class='id identifier rubyid_example'>example</span><span class='period'>.</span><span class='id identifier rubyid_run'>run</span>
   <span class='kw'>ensure</span>
@@ -937,18 +947,18 @@
       <pre class="lines">
 
 
-83
-84
-85
-86
-87
 88
 89
 90
-91</pre>
+91
+92
+93
+94
+95
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 83</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 88</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_connection'>check_connection</span>
   <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Validator/Log.html" title="Validator::Log (module)">Log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="Validator/Log.html#log-instance_method" title="Validator::Log#log (method)">log</a></span></span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Initial </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='embexpr_end'>}</span><span class='tstring_content'> connection check</span><span class='tstring_end'>&quot;</span></span>
@@ -991,12 +1001,12 @@
       <pre class="lines">
 
 
-94
-95
-96</pre>
+99
+100
+101</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 94</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 99</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span> <span class='id identifier rubyid_str'>str</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reporter'>reporter</span><span class='period'>.</span><span class='id identifier rubyid_publish'>publish</span> <span class='symbol'>:step</span><span class='comma'>,</span> <span class='label'>message:</span> <span class='id identifier rubyid_str'>str</span>
