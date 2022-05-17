@@ -71,7 +71,12 @@ module Validator
 
   # called by rspec when each example is being run
   def self.around_each example
+    thread_local_data = RSpec::Support.thread_local_data
     reactor.run do |task|
+      # rspec depends on thread-local data (which is actually fiber-local),
+      # but the async task runs in a different fiber. as a work-around,
+      # we copy the data into the current fiber-local storage
+      thread_local_data.each_pair { |key,value| RSpec::Support.thread_local_data[key] = value }
       task.annotate 'rspec'
       example.run
     ensure
