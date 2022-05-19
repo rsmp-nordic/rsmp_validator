@@ -163,7 +163,7 @@ module Validator::CommandHelpers
     )
   end
 
-  def switch_yellow_flash timeout_minutes: nil
+  def switch_yellow_flash timeout_minutes: 0
     set_functional_position 'YellowFlash', timeout_minutes: timeout_minutes
     wait_for_status(@task,
       "yellow flash",
