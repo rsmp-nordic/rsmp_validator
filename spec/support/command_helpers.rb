@@ -394,6 +394,17 @@ module Validator::CommandHelpers
     )
   end
 
+  def wait_normal_control_without_startup timeout: Validator.config['timeouts']['startup_sequence']
+    wait_for_status(@task,
+      "normal control on, yellow flash off, startup mode off",
+      [
+        {'sCI'=>'S0007','n'=>'status','s'=>/^True(,True)*$/},     # normal control on (=dark mode off)
+        {'sCI'=>'S0011','n'=>'status','s'=>/^False(,False)*$/}    # yellow flash off
+      ],
+      timeout: timeout
+    )
+  end
+
   def verify_startup_sequence &block
     status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus'}]
     subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>0.to_s }
