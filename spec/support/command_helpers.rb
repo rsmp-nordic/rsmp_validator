@@ -461,6 +461,11 @@ module Validator::CommandHelpers
     wait_normal_control
   end
 
+  def switch_normal_control_without_startup
+    set_functional_position 'NormalControl'
+    wait_normal_control_without_startup
+  end
+
   def switch_fixed_time status
     set_fixed_time status
     wait_for_status(@task,
