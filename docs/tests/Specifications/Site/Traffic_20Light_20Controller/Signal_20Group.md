@@ -36,7 +36,7 @@ Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   verify_startup_sequence do
     switch_yellow_flash
-    switch_normal_control
+    set_functional_position 'NormalControl'
   end
   set_functional_position 'NormalControl'
 end
