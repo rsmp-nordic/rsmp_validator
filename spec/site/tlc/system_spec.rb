@@ -10,8 +10,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Expect status response before timeout
     specify 'operator logged in/out of OP-panel is read with S0091', sxl: '>=1.0.7' do |example|
       request_status_and_confirm "operator logged in/out OP-panel",
-        { S0091: [:status, :user] }
+        { S0091: [:user] }
     end
+
 
     # Verify status S0092 operator logged in/out web-interface
     #
@@ -20,7 +21,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Expect status response before timeout
     specify 'operator logged in/out of web-interface is read with S0092', sxl: '>=1.0.7' do |example|
       request_status_and_confirm "operator logged in/out web-interface",
-        { S0092: [:status, :user] }
+        { S0092: [:user] }
     end
 
     # Verify status S0095 version of traffic controller
