@@ -33,7 +33,7 @@ Verify status S0091 operator logged in/out OP-panel
   </summary>
 ```ruby
 request_status_and_confirm "operator logged in/out OP-panel",
-{ S0091: [:status, :user] }
+{ S0091: [:user] }
 ```
 </details>
 
@@ -54,7 +54,7 @@ Verify status S0092 operator logged in/out web-interface
   </summary>
 ```ruby
 request_status_and_confirm "operator logged in/out web-interface",
-{ S0092: [:status, :user] }
+{ S0092: [:user] }
 ```
 </details>
 
