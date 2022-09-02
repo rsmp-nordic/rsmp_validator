@@ -68,16 +68,16 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 3. Then we should receive status updates
       it 'goes through received > acticated > completed', sxl: '>=1.1' do |example|
         Validator::Site.connected do |task,supervisor,site|
-          component = Validator.config['main_component']
-
+          sequence = ['received','activated', 'completed']
           # subscribe
+          component = Validator.config['main_component']
           log "Subscribing to signal priority request status updates"
           status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0','sOc'=>'True'}]
           site.subscribe_to_status component, status_list
 
           # start collector
           request_id = SecureRandom.uuid()[0..3]    # make a message id
-          num = 3
+          num = sequence.length
           states = []
           result = nil
           collector = nil
@@ -86,20 +86,18 @@ RSpec.describe 'Site::Traffic Light Controller' do
               site,
               type: "StatusUpdate",
               num: num,
-              timeout: 5,
+              timeout: Validator.config['timeouts']['priority_completion'],
               component: component
             )
 
             def search_for_request_state request_id, message
               message.attribute('sS').each do |status|
-                if status['sCI'] == 'S0033' && status['n'] == 'status'
-                  status['s'].each do |priority|
-                    if priority['r'] == request_id  # our request?
-                      state = priority['s']
-                      log "Priority request reached state '#{state}'"
-                      return state
-                    end
-                  end
+                return nil unless status['sCI'] == 'S0033' && status['n'] == 'status'
+                status['s'].each do |priority|
+                  next unless priority['r'] == request_id
+                  state = priority['s']
+                  log "Priority request reached state '#{state}'"
+                  return state
                 end
               end
               nil
@@ -107,10 +105,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
             result = collector.collect do |message|
               state = search_for_request_state request_id, message
-              if state
-                states << state
-                :keep
-              end
+              next unless state
+              states << state
+              :keep
             end
           end
 
@@ -127,13 +124,12 @@ RSpec.describe 'Site::Traffic Light Controller' do
           }
           site.send_command component, command_list
 
-          # wait for collector to complete
+          # wait for collector to complete and check result
           collect_task.wait
           expect(result).to eq(:ok)
           expect(collector.messages).to be_an(Array)
           expect(collector.messages.size).to eq(num)
-          expected = ['received','activated', 'completed']
-          expect(states).to eq(expected), "Expected states #{expected}, got #{states}"
+          expect(states).to eq(sequence), "Expected state sequence #{sequence}, got #{states}"
         ensure
           # unsubcribe
           unsubscribe_list = status_list.map { |item| item.slice('sCI','n') }
