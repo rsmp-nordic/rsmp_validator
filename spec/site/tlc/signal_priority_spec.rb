@@ -44,7 +44,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 2. And we subscribe to signal priority status updates
       # 3. When we send a signal priority request
       # 4. Then we should receive status updates
-      # %. And the request should go through the correct states
+      # 5. And the request should go through the correct states
       it 'can be subscribed to with S0033', sxl: '>=1.1' do |example|
         Validator::Site.connected do |task,supervisor,site|
           component = Validator.config['main_component']
