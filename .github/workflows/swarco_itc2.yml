@@ -27,13 +27,6 @@ jobs:
         with:
           bundler-cache: true # runs 'bundle install' and caches installed gems
 
-      - name: Cache simulator
-        id: cache-simulator
-        uses: actions/cache@v3
-        with:
-          path: bin
-          key: ${{ secrets.ITC2_6_94_20_SIM }}
-
       - name: Download simulator
         if: steps.cache-simulator.outputs.cache-hit != 'true'
         run: |
