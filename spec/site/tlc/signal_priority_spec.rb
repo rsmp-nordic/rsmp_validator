@@ -25,116 +25,106 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    describe 'Status' do
-      # Validate that signal priority status can be requested.
-      #
-      # 1. Given the site is connected
-      # 2. When we request signal priority status
-      # 3. Then we should receive an status update
-      it 'can be requested with S0033', sxl: '>=1.1' do |example|
-        Validator::Site.connected do |task,supervisor,site|
-          request_status_and_confirm "signal group status",
-            { S0033: [:status] }
-        end
+    # Validate that signal priority status can be requested.
+    #
+    # 1. Given the site is connected
+    # 2. When we request signal priority status
+    # 3. Then we should receive a status update
+    it 'status can be fetched with S0033', sxl: '>=1.1' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm "signal group status",
+          { S0033: [:status] }
       end
+    end
 
-      # Validate that signal priority status are send when priorty is requested
-      #
-      # 1. Given the site is connected
-      # 2. And we subscribe to signal priority status updates
-      # 3. When we send a signal priority request
-      # 4. Then we should receive status updates
-      # 5. And the request should go through the correct states
-      it 'can be subscribed to with S0033', sxl: '>=1.1' do |example|
-        Validator::Site.connected do |task,supervisor,site|
-          component = Validator.config['main_component']
-
-          # subscribe
-          log "Subscribing to signal priority request status updates"
-          status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0','sOc'=>'True'}]
-          site.subscribe_to_status component, status_list
-         ensure
-          # unsubcribe
-          unsubscribe_list = status_list.map { |item| item.slice('sCI','n') }
-          site.unsubscribe_to_status component, unsubscribe_list
-        end
+    # Validate that we can subscribe signal priority status
+    #
+    # 1. Given the site is connected
+    # 2. And we subscribe to signal priority status updates
+    # 4. Then we should receive an acknowledgement
+    # 5. And we should reive a status updates
+    it 'status can be subscribed to with S0033', sxl: '>=1.1' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0','sOc'=>'True'}]
+        wait_for_status task, 'signal priority status', status_list
       end
+    end
 
-      # Validate that signal priority status are send when priorty is requested
-      #
-      # 1. Given the site is connected
-      # 2. And we subscribe to signal priority status
-      # 2. When we send a signal priority request
-      # 3. Then we should receive status updates
-      it 'goes through received > acticated > completed', sxl: '>=1.1' do |example|
-        Validator::Site.connected do |task,supervisor,site|
-          sequence = ['received','activated', 'completed']
-          # subscribe
-          component = Validator.config['main_component']
-          log "Subscribing to signal priority request status updates"
-          status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0','sOc'=>'True'}]
-          site.subscribe_to_status component, status_list
+    # Validate that signal priority status are send when priorty is requested
+    #
+    # 1. Given the site is connected
+    # 2. And we subscribe to signal priority status
+    # 2. When we send a signal priority request
+    # 3. Then we should receive status updates
+    it 'state goes through received, activated, completed', sxl: '>=1.1' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        sequence = ['received','activated','completed']
+        # subscribe
+        component = Validator.config['main_component']
+        log "Subscribing to signal priority request status updates"
+        status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0','sOc'=>'True'}]
+        site.subscribe_to_status component, status_list
 
-          # start collector
-          request_id = SecureRandom.uuid()[0..3]    # make a message id
-          num = sequence.length
-          states = []
-          result = nil
-          collector = nil
-          collect_task = task.async do
-            collector = RSMP::Collector.new(
-              site,
-              type: "StatusUpdate",
-              num: num,
-              timeout: Validator.config['timeouts']['priority_completion'],
-              component: component
-            )
+        # start collector
+        request_id = SecureRandom.uuid()[0..3]    # make a message id
+        num = sequence.length
+        states = []
+        result = nil
+        collector = nil
+        collect_task = task.async do
+          collector = RSMP::Collector.new(
+            site,
+            type: "StatusUpdate",
+            num: num,
+            timeout: Validator.config['timeouts']['priority_completion'],
+            component: component
+          )
 
-            def search_for_request_state request_id, message
-              message.attribute('sS').each do |status|
-                return nil unless status['sCI'] == 'S0033' && status['n'] == 'status'
-                status['s'].each do |priority|
-                  next unless priority['r'] == request_id
-                  state = priority['s']
-                  log "Priority request reached state '#{state}'"
-                  return state
-                end
+          def search_for_request_state request_id, message
+            message.attribute('sS').each do |status|
+              return nil unless status['sCI'] == 'S0033' && status['n'] == 'status'
+              status['s'].each do |priority|
+                next unless priority['r'] == request_id
+                state = priority['s']
+                log "Priority request reached state '#{state}'"
+                return state
               end
-              nil
             end
-
-            result = collector.collect do |message|
-              state = search_for_request_state request_id, message
-              next unless state
-              states << state
-              :keep
-            end
+            nil
           end
 
-          # send request
-          log "Sending signal priority request"
-          signal_group = Validator.config['components']['signal_group'].keys.first
-          command_list = build_command_list :M0022, :requestPriority, {
-            requestId: request_id,
-            signalGroupId: signal_group,
-            type: 'new',
-            level: 7,
-            eta: 2,
-            vehicleType: 'car'
-          }
-          site.send_command component, command_list
-
-          # wait for collector to complete and check result
-          collect_task.wait
-          expect(result).to eq(:ok)
-          expect(collector.messages).to be_an(Array)
-          expect(collector.messages.size).to eq(num)
-          expect(states).to eq(sequence), "Expected state sequence #{sequence}, got #{states}"
-        ensure
-          # unsubcribe
-          unsubscribe_list = status_list.map { |item| item.slice('sCI','n') }
-          site.unsubscribe_to_status component, unsubscribe_list
+          result = collector.collect do |message|
+            state = search_for_request_state request_id, message
+            next unless state
+            states << state
+            :keep
+          end
         end
+
+        # send request
+        log "Sending signal priority request"
+        signal_group = Validator.config['components']['signal_group'].keys.first
+        command_list = build_command_list :M0022, :requestPriority, {
+          requestId: request_id,
+          signalGroupId: signal_group,
+          type: 'new',
+          level: 7,
+          eta: 2,
+          vehicleType: 'car'
+        }
+        site.send_command component, command_list
+
+        # wait for collector to complete and check result
+        collect_task.wait
+        expect(result).to eq(:ok)
+        expect(collector.messages).to be_an(Array)
+        expect(collector.messages.size).to eq(num)
+        expect(states).to eq(sequence), "Expected state sequence #{sequence}, got #{states}"
+      ensure
+        # unsubcribe
+        unsubscribe_list = status_list.map { |item| item.slice('sCI','n') }
+        site.unsubscribe_to_status component, unsubscribe_list
       end
     end
   end
