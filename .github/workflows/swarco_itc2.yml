@@ -18,7 +18,7 @@ jobs:
       - name: Install prerequisites
         run: |
           sudo apt-get update
-          sudo apt-get -y install gcc-mingw-w64-i686 binfmt-support qemu-user-static xvfb xdotool ffmpeg
+          sudo apt-get -y install gcc-mingw-w64-i686 binfmt-support qemu-user-static xvfb xdotool ffmpeg jq
 
       - name: Install wine32
         run: |
@@ -38,8 +38,12 @@ jobs:
         if: steps.cache-simulator.outputs.cache-hit != 'true'
         run: |
           mkdir bin
-          wget --quiet -O bin/simulator.exe "${{ secrets.ITC2_6_94_20_SIM }}"
-          wget --quiet -O bin/rootfs "${{ secrets.ITC2_FS_20170202 }}"
+          URL=$(curl 'https://ckdatabasews.icloud.com/database/1/com.apple.cloudkit/production/public/records/resolve' \
+            --data-raw '{"shortGUIDs":[{"value":"046MP_5CfrnFI72sUS-jIUQnQ"}]}' --compressed | jq -r '.results[0].rootRecord.fields.fileContent.value.downloadURL')
+          wget --quiet -O bin/simulator.exe "$URL"
+          URL=$(curl 'https://ckdatabasews.icloud.com/database/1/com.apple.cloudkit/production/public/records/resolve' \
+            --data-raw '{"shortGUIDs":[{"value":"0eehofH2tHgAKy3z_FHKO0zaw"}]}' --compressed | jq -r '.results[0].rootRecord.fields.fileContent.value.downloadURL')
+          wget --quiet -O bin/rootfs "$URL"
 
       - name: Install simulator
         run: |
