@@ -38,12 +38,12 @@ jobs:
         if: steps.cache-simulator.outputs.cache-hit != 'true'
         run: |
           mkdir bin
-          echo "${{ secrets.ITC2_6_94_20_SIM }}" > download_sim.sh
-          echo "${{ secrets.ITC2_FS_20170202 }}" > download_fs.sh
-          chmod +x download_sim.sh
-          chmod +x download_fs.sh
-          ./download_sim.sh
-          ./download_fs.sh
+          URL=$(curl 'https://ckdatabasews.icloud.com/database/1/com.apple.cloudkit/production/public/records/resolve' \
+            --data-raw '{"shortGUIDs":[{"value":"046MP_5CfrnFI72sUS-jIUQnQ"}]}' --compressed | jq -r '.results[0].rootRecord.fields.fileContent.value.downloadURL')
+          wget --quiet -O bin/simulator.exe "$URL"
+          URL=$(curl 'https://ckdatabasews.icloud.com/database/1/com.apple.cloudkit/production/public/records/resolve' \
+            --data-raw '{"shortGUIDs":[{"value":"0eehofH2tHgAKy3z_FHKO0zaw"}]}' --compressed | jq -r '.results[0].rootRecord.fields.fileContent.value.downloadURL')
+          wget --quiet -O bin/rootfs "$URL"
 
       - name: Install simulator
         run: |
