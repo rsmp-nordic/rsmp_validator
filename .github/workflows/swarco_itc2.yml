@@ -18,7 +18,7 @@ jobs:
       - name: Install prerequisites
         run: |
           sudo apt-get update
-          sudo apt-get -y install gcc-mingw-w64-i686 binfmt-support qemu-user-static xvfb xdotool ffmpeg
+          sudo apt-get -y install gcc-mingw-w64-i686 binfmt-support qemu-user-static xvfb xdotool ffmpeg jq
 
       - name: Install wine32
         run: |
@@ -38,8 +38,12 @@ jobs:
         if: steps.cache-simulator.outputs.cache-hit != 'true'
         run: |
           mkdir bin
-          wget --quiet -O bin/simulator.exe "${{ secrets.ITC2_6_94_20_SIM }}"
-          wget --quiet -O bin/rootfs "${{ secrets.ITC2_FS_20170202 }}"
+          echo "${{ secrets.ITC2_6_94_20_SIM }}" > download_sim.sh
+          echo "${{ secrets.ITC2_FS_20170202 }}" > download_fs.sh
+          chmod +x download_sim.sh
+          chmod +x download_fs.sh
+          ./download_sim.sh
+          ./download_fs.sh
 
       - name: Install simulator
         run: |
