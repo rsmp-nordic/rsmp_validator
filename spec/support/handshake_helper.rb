@@ -12,7 +12,7 @@ module Validator
       Validator::Site.isolated(
         'collect' => {timeout: timeout, num: length, ingoing: true, outgoing: true},
         'guest' => {
-          'rsmp_versions' => [core_version],
+          'core_versions' => [core_version],
         }
       ) do |task,supervisor,site|
         expect(site.ready?).to be true
@@ -96,4 +96,3 @@ module Validator
     end
   end
 end
-
