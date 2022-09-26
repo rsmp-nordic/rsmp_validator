@@ -81,12 +81,13 @@ RSpec.describe 'Site::Traffic Light Controller' do
             component: component
           )
 
-          def search_for_request_state request_id, message
+          def search_for_request_state request_id, message, states
             message.attribute('sS').each do |status|
               return nil unless status['sCI'] == 'S0033' && status['n'] == 'status'
               status['s'].each do |priority|
-                next unless priority['r'] == request_id
+                next unless priority['r'] == request_id  # is this our request
                 state = priority['s']
+                next unless state != states.last  # did the state change?
                 log "Priority request reached state '#{state}'"
                 return state
               end
@@ -95,25 +96,34 @@ RSpec.describe 'Site::Traffic Light Controller' do
           end
 
           result = collector.collect do |message|
-            state = search_for_request_state request_id, message
+            state = search_for_request_state request_id, message, states
             next unless state
             states << state
             :keep
           end
         end
 
-        # send request
-        log "Sending signal priority request"
-        signal_group = Validator.config['components']['signal_group'].keys.first
-        command_list = build_command_list :M0022, :requestPriority, {
-          requestId: request_id,
-          signalGroupId: signal_group,
-          type: 'new',
-          level: 7,
-          eta: 2,
-          vehicleType: 'car'
-        }
-        site.send_command component, command_list
+        def send_priority_request log, id:nil, site:, component:
+          # send an unrelated request before our request, to check that it does not interfere
+          log log
+          signal_group = Validator.config['components']['signal_group'].keys.first
+          command_list = build_command_list :M0022, :requestPriority, {
+            requestId: (id || SecureRandom.uuid()[0..3]),
+            signalGroupId: signal_group,
+            type: 'new',
+            level: 7,
+            eta: 2,
+            vehicleType: 'car'
+          }
+          site.send_command component, command_list
+        end
+
+        send_priority_request "Send an unrelated signal priority request before", 
+          site: site, component: component
+        send_priority_request "Send our signal priority request",
+          site: site, component: component, id: request_id
+        send_priority_request "Send an unrelated signal priority request after",
+          site: site, component: component
 
         # wait for collector to complete and check result
         collect_task.wait
