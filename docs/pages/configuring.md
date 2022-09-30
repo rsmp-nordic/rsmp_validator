@@ -46,19 +46,18 @@ SITE_CONFIG=config/my_site_validation_config.yaml bundle exec spec/site
 If the relevant environment variable is set, the file `config/validator.yaml` will not be read.
 
 ## Options for Site testing
-The config is used to start the local supervisor that will communicate with the site you're, but includes additional options used by the validator, like timeouts and options to restrict what tests to run.
+The config is used to start the local supervisor that will communicate with the site you're testing, but includes additional options used by the validator, like timeouts and options to restrict what tests to run.
 
 All settings except `components` and `items` can be left out, in which case the default values will be used.
 
 ```yaml
 port: 13111             # port to listen on
-ips: all                # allowed ip addresses. either 'all' or a list
-rsmp_versions: all      # allowed core version(s). either 'all' or a list
+ips: all                # allowed ip addresses. either 'all' or a list. defaults to 'all' if left out
+rsmp_versions: all      # allowed core version(s). either 'all' or a list. defaults to 'all' if left out
 sxl: tlc                # sxl of the connecting site, options are 'core' or 'tlc'
 intervals:
   timer: 1              # main timer interval (resolution), in seconds
   watchdog: 1           # how often to send watchdog messages, in seconds
-  update_date: 0        # requested update rate when subscribing to statuses, in seconds
 timeouts:
   watchdog: 2           # max time bewteen incoming watchdogs, in seconds
   acknowledgement: 2    # max time until acknowledgement is received, in seconds
@@ -72,19 +71,23 @@ timeouts:
   alarm: 1              # max time until site raises an alarm, in seconds
   disconnect: 1         # max time until site disconnects, in seconds
   shutdown: 1           # max time until site shuts down for a restart, in seconds
+  startup_sequence: 5     # max time until startup sequence completes
+  functional_position: 2  # max time until requested functional position is reached
 components:             # list of rsmp components, organized by type and name, in seconds
   main:                 # type
     TC:                 # name. note that this is an (empty) options hash
-  signal_group:
+  signal_group:         # list of signal groups to test
     A1:
     A2:
-  detector_logic:       
+  detector_logic:      # list of detector logics to test
     DL1:
 items:                  # other configurations that should be tested
-  plans: [1,2]                # list of plans
-  traffic_situations: [1,2]   # list of traffic situations
-  emergency_routes: [1]       # list of emergency route
+  plans: [1,2]                # list of plans to test
+  traffic_situations: [1,2]   # list of traffic situations to test
+  emergency_routes: [1]       # list of emergency route to test
   inputs: [1]                 # list of emergency inputs (I/O)
+  force_input: 5              # what input to force when testing input forcing
+startup_sequence: 'efg' # expected startup sequence
 restrict_testing:       # restrict what tests are run, default is to run all
   core_version: 3.1.5   # skip unless relevant for core 3.1.5
   sxl_version: 1.0.13   # skip unless relevant for sxl 1.0.13
@@ -92,6 +95,8 @@ secrets:                # place secrets or in a separate file, see below
   security_codes:       # RSMP security codes. there are no defaults for these
     1: '1111'           # level 1
     2: '2222'           # level 2
+alarm_activation:       # how to trigger alarms by forcing inputs
+  A0301: 8              # alarm A0301 can be triggered by forcing input 8
 ```
 
 The following settings will be copied into a configuration for the local supervisor: `port`, `sxl`, `intervals`, `timeouts`, `components`, `rsmp_versions`.
@@ -147,7 +152,7 @@ secrets:                # place secrets or in a separate file, see below
 ```
 
 ## SXL Option
-The `sxl` attribute of a configuration specifies what SXL to use for communication. Curently, the only valid options are:
+The `sxl` attribute of a configuration specifies what SXL to use for communication. Curently, the valid options are:
 
 - core: Generic RSMP communication. No alarms, commands or status are allowed, only core messages.
 - sxl: Traffic Light Controllers.
@@ -156,7 +161,7 @@ The sxl will choose the JSON Schema used to validate all ingoing and outgoing me
 
 Equipment that doesn't yet have a standardized SXL cannot be fully validated using the RSMP validator, because there are no tests for these types yet, and because there is no JSON Schema to validate the command and statuses for such types of equipment.
 
-However, you can still use the RSMP Validator to valiate the core part of the communication, including connecting, Aggregated Status and Watchdog messages. Use 'core' as the sxl type in the configuration and then running only the tests in the folder `spec/site/core/`. Remember to also set sxl version to version of the core specification used, e.g. 3.1.5. 
+However, you can still use the RSMP Validator to valiate the core part of the communication, including connecting, Aggregated Status and Watchdog messages. Use 'core' as the sxl type in the configuration and then running only the tests in the folder `spec/site/core/`. Remember to also set sxl version to version of the core specification used, e.g. 3.1.5.
 
 ## Components Option
 RSMP equipment has a list of RSMP components. For example a traffic light controller will have some signal groups and detector logics. In addition all RSMP equipment must have a main component.
@@ -167,7 +172,7 @@ For example, here's the component part of a configuration for a traffic light co
 
 ```yaml
 components:
-  main:                   # typer
+  main:                   # type
     KK+AG9998=001TC000:   # component id (a hash, due to the colon)
   signal_group:
     KK+AG9998=001SG001:
@@ -185,12 +190,12 @@ Note that each component must be defined as a hash in the YAML file, be using a 
 Timeouts are defined in seconds. Timeouts should be set as low as possible while, still giving the site time to respond correctly before tests times out and report errors.
 
 ## Configuring the actual site/supervisor
-You should make sure that the actual site or supervisor you want to test is configured to match the validator configuration file, i.e. that the components match and intervals and timeouts are compatible.
+You should make sure that the actual site or supervisor you want to test is configured to match the validator configuration file, e.g. that the components match and intervals and timeouts are compatible.
 
 When testing a site, you need to configure it to connect to the validator.
 This typically includes setting an ip address and port. If the site and the validator is running in the same machine, the ip address will typically be `localhost` or `127.0.0.1`.
 
-When testing a supervisor, you need to configure it to listen for connections on the same port as the validator uses, and make it does reject the connection due to firewalls, ip filtering, or rsmp site id filtering.
+When testing a supervisor, you need to configure it to listen for connections on the same port as the validator uses, and make sure the connection is not blocked due to firewalls, ip filtering, or rsmp site id filtering.
 
 RSMP Traffic Light Controllers be default communicate on port 12111, but to avoid interfering with real installations, the validator uses port 13111 by default. You can use another port if you like, just be sure to configure the equipment and the validator to use the same port.
 
