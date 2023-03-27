@@ -152,7 +152,7 @@ secrets:                # place secrets or in a separate file, see below
 ```
 
 ## SXL Option
-The `sxl` attribute of a configuration specifies what SXL to use for communication. Curently, the valid options are:
+The `sxl` attribute of a configuration specifies what SXL to use for communication. Currently, the valid options are:
 
 - core: Generic RSMP communication. No alarms, commands or status are allowed, only core messages.
 - sxl: Traffic Light Controllers.
@@ -161,7 +161,7 @@ The sxl will choose the JSON Schema used to validate all ingoing and outgoing me
 
 Equipment that doesn't yet have a standardized SXL cannot be fully validated using the RSMP validator, because there are no tests for these types yet, and because there is no JSON Schema to validate the command and statuses for such types of equipment.
 
-However, you can still use the RSMP Validator to valiate the core part of the communication, including connecting, Aggregated Status and Watchdog messages. Use 'core' as the sxl type in the configuration and then running only the tests in the folder `spec/site/core/`. Remember to also set sxl version to version of the core specification used, e.g. 3.1.5.
+However, you can still use the RSMP Validator to validate the core part of the communication, including connecting, Aggregated Status and Watchdog messages. Use 'core' as the sxl type in the configuration and then running only the tests in the folder `spec/site/core/`. Remember to also set sxl version to version of the core specification used, e.g. 3.1.5.
 
 ## Components Option
 RSMP equipment has a list of RSMP components. For example a traffic light controller will have some signal groups and detector logics. In addition all RSMP equipment must have a main component.
@@ -184,7 +184,7 @@ components:
 
 The component ids (e.g. `KK+AG9998=001TC000` in the example above) must match the components in the equipment. Otherwise tests will fail.
 
-Note that each component must be defined as a hash in the YAML file, be using a training colon. As the example above show, the hash will ususally be empty. (Items are used to configure components when you run local RSMP site, e.g. a TLC emulator.)
+Note that each component must be defined as a hash in the YAML file, be using a training colon. As the example above show, the hash will usually be empty. (Items are used to configure components when you run local RSMP site, e.g. a TLC emulator.)
 
 ## Timeouts
 Timeouts are defined in seconds. Timeouts should be set as low as possible while, still giving the site time to respond correctly before tests times out and report errors.
@@ -247,7 +247,7 @@ restrict_testing:
 
 In this case, the S0027 test above will not run, because it requires sxl 1.0.13 or higher, but we limited to 1.0.7. 
 
-Usaully you will want to set `restrict_testing` version to what the site or supervisor is actually using, but it's possible to use other values.
+Usually you will want to set `restrict_testing` version to what the site or supervisor is actually using, but it's possible to use other values.
 
 
 
