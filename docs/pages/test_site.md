@@ -74,7 +74,7 @@ Like `connected`, except that the connection is is closed after the test, before
 Use this if you somehow modify the RSMP::SiteProxy or otherwise make the current connection unstable or unusable. Because `isolated` closes the connection after the test, you ensure that the modified RSMP::SiteProxy object is discarded and following tests use a new object.
 
 ## Validator::Site.disconnected
-Disconnects the site if connected before calling the block with a single argument `task`, which is an an Async::Task.
+Disconnects the site if connected before calling the block with a single argument `task`, which is an Async::Task.
 
 ## Configurations
 The TestSite will use the following options from the test [specification]({{ site.baseurl}}{% link pages/configuring.md %}):

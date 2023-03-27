@@ -40,7 +40,7 @@ Traffic Light Controller / Clock / can be read with S0096
 ```
 
 ## Sentinel Warnings
-Sometimes invalid message are received that are not direcly related to the currently executing test. For example, alarms or statuses can be received at any time. If such messages do not conform to the RSMP JSON schema, a sentinel warning will be recorded.
+Sometimes invalid messages are received that are not directly related to the currently executing test. For example, alarms or statuses can be received at any time. If such messages do not conform to the RSMP JSON schema, a sentinel warning will be recorded.
 
 The `Brief` and `Details` formats will show sentinel warnings in the summary:
 
