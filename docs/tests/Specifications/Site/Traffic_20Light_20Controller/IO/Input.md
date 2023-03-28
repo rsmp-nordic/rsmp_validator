@@ -159,7 +159,7 @@ end
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  status = "5,4134,65;511"
+  status = "3,4143,65;12,1,4"
   prepare task, site
   set_series_of_inputs status
 end
