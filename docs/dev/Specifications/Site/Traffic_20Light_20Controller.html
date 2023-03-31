@@ -6082,7 +6082,9 @@
 24
 25
 26
-27</pre>
+27
+28
+29</pre>
           </td>
           <td>
             <pre class="code"><span class="info file"># File 'spec/site/tlc/traffic_situations_spec.rb', line 22</span>
@@ -6092,6 +6094,8 @@
       <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
         <span class='id identifier rubyid_situations'>situations</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_traffic_situation'>traffic_situation</span><span class='op'>|</span> <span class='id identifier rubyid_switch_traffic_situation'><span class='object_link'><a href="../../Validator/CommandHelpers.html#switch_traffic_situation-instance_method" title="Validator::CommandHelpers#switch_traffic_situation (method)">switch_traffic_situation</a></span></span> <span class='id identifier rubyid_traffic_situation'>traffic_situation</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='rbrace'>}</span>
+      <span class='kw'>ensure</span>
+        <span class='id identifier rubyid_unset_traffic_situation'><span class='object_link'><a href="../../Validator/CommandHelpers.html#unset_traffic_situation-instance_method" title="Validator::CommandHelpers#unset_traffic_situation (method)">unset_traffic_situation</a></span></span>
       <span class='kw'>end</span></pre>
           </td>
         </tr>
@@ -6113,7 +6117,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-traffic_situations_spec-rb-36"></a>
+    <a name="spec-site-tlc-traffic_situations_spec-rb-38"></a>
     
   </div>
 
@@ -6142,11 +6146,11 @@
             <pre class="lines">
 
 
-36
-37</pre>
+38
+39</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/traffic_situations_spec.rb', line 36</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/traffic_situations_spec.rb', line 38</span>
 
 <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>number of traffic situations</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
         <span class='lbrace'>{</span> <span class='label'>S0019:</span> <span class='lbracket'>[</span><span class='symbol'>:number</span><span class='rbracket'>]</span> <span class='rbrace'>}</span></pre>

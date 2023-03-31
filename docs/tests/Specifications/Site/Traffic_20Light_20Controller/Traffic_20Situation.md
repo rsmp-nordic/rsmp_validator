@@ -59,6 +59,8 @@ skip("No traffic situations configured") if situations.nil? || situations.empty?
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   situations.each { |traffic_situation| switch_traffic_situation traffic_situation.to_s }
+ensure
+  unset_traffic_situation
 end
 ```
 </details>
