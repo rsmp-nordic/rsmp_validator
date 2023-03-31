@@ -5,14 +5,12 @@
 # This workflow will run rspec
 
 name: Swarco ITC-3
-
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
   workflow_dispatch:
-
 jobs:
   test:
     runs-on: [ self-hosted, Windows, X64, itc3 ]
