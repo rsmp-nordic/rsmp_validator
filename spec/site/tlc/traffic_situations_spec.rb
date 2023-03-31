@@ -25,6 +25,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         situations.each { |traffic_situation| switch_traffic_situation traffic_situation.to_s }
+      ensure
+        unset_traffic_situation
       end
     end
 
