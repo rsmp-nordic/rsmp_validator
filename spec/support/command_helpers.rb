@@ -63,15 +63,36 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "Switchto plan #{plan}"
   end
 
+  def switch_traffic_situation ts
+    set_traffic_situation ts
+    wait_for_status(@task,
+      "traffic situation #{ts}",
+      [{'sCI'=>'S0015','n'=>'status','s'=>ts}]
+    )
+  end
+
   # Set traffic situation
   def set_traffic_situation ts
     require_security_codes
     command_list = build_command_list :M0003, :setTrafficSituation, {
+      status: 'True',
       securityCode: Validator.config['secrets']['security_codes'][2],
-      traficsituation: ts   # misspell 'traficsituation'is in the rsmp spec
+      traficsituation: ts   # note: the spec misspells 'traficsituation'
 
     }
     send_command_and_confirm @task, command_list, "Switch to traffic situation #{ts}"
+  end
+
+  # Unset traffic situation (switch to automatic)
+  def unset_traffic_situation
+    require_security_codes
+    command_list = build_command_list :M0003, :setTrafficSituation, {
+      status: 'False',
+      securityCode: Validator.config['secrets']['security_codes'][2],
+      traficsituation: '0'   # note: the spec misspells 'traficsituation'
+
+    }
+    send_command_and_confirm @task, command_list, "Switch to automaatic traffic situation"
   end
 
   # Set functional position
@@ -152,14 +173,6 @@ module Validator::CommandHelpers
     wait_for_status(@task,
       "plan #{plan} to be active",
       [{'sCI'=>'S0014','n'=>'status','s'=>plan.to_s}]
-    )
-  end
-
-  def switch_traffic_situation ts
-    set_traffic_situation ts
-    wait_for_status(@task,
-      "traffic situation #{ts}",
-      [{'sCI'=>'S0015','n'=>'status','s'=>ts}]
     )
   end
 
