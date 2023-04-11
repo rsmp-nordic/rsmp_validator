@@ -1,25 +1,44 @@
-RSpec.describe 'Site::Traffic Light Controller' do  
+RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::CommandHelpers
   include Validator::StatusHelpers
 
   describe "System" do
-    # Verify status S0091 operator logged in/out OP-panel
+    # Verify status S0091 operator logged in/out OP-panel  (sxl: <1.1)
     #
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'operator logged in/out of OP-panel is read with S0091', sxl: '>=1.0.7' do |example|
+    specify 'operator logged in/out of OP-panel is read with S0091', sxl: '>=1.0.7', sxl: '<1.1' do |example|
+      request_status_and_confirm "operator logged in/out OP-panel",
+        { S0091: [:status, :user] }
+    end
+
+    # Verify status S0091 operator logged in/out OP-panel (sxl: >=1.1)
+    #
+    # 1. Given the site is connected
+    # 2. Request status
+    # 3. Expect status response before timeout
+    specify 'operator logged in/out of OP-panel is read with S0091', sxl: '>=1.1' do |example|
       request_status_and_confirm "operator logged in/out OP-panel",
         { S0091: [:user] }
     end
 
-
-    # Verify status S0092 operator logged in/out web-interface
+    # Verify status S0092 operator logged in/out web-interface (sxl: <1.1)
     #
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'operator logged in/out of web-interface is read with S0092', sxl: '>=1.0.7' do |example|
+    specify 'operator logged in/out of web-interface is read with S0092', sxl: '>=1.0.7', sxl: '<1.1' do |example|
+      request_status_and_confirm "operator logged in/out web-interface",
+        { S0092: [:status, :user] }
+    end
+
+    # Verify status S0092 operator logged in/out web-interface  (sxl: >=1.1)
+    #
+    # 1. Given the site is connected
+    # 2. Request status
+    # 3. Expect status response before timeout
+    specify 'operator logged in/out of web-interface is read with S0092', sxl: '>=1.1' do |example|
       request_status_and_confirm "operator logged in/out web-interface",
         { S0092: [:user] }
     end
