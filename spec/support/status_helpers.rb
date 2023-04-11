@@ -52,7 +52,9 @@ module Validator::StatusHelpers
       timeout: Validator.config['timeouts']['command']
     update_rate = 0 unless update_rate
     log "Wait for #{description}"
-    subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s , 'sOc' => 'False'}
+    subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
+    subscribe_list.map! { |item| item.merge!('sOc' => 'False') } if use_sOc?(@site)
+
     begin
       result = @site.subscribe_to_status Validator.config['main_component'], subscribe_list, collect!: {
         timeout: timeout
@@ -83,4 +85,14 @@ module Validator::StatusHelpers
       }
     end
   end
+
+  def core_version_satisfies? site, condition
+    core_version = Gem::Version.new(site.core_version)
+    Gem::Requirement.new(condition).satisfied_by?(core_version)
+  end
+
+  def use_sOc? site
+    core_version_satisfies? site, '>=3.1.5'
+  end
+
 end
