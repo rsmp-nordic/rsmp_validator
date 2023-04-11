@@ -86,11 +86,17 @@ module Validator::StatusHelpers
     end
   end
 
+  # Check if the core version of a site proxy satisfies
+  # a version string, e.g. ">=3.1.5".
+  # Uses Gem classes to perform action checks, although this
+  # has nothing to do with gems.
   def core_version_satisfies? site, condition
     core_version = Gem::Version.new(site.core_version)
     Gem::Requirement.new(condition).satisfied_by?(core_version)
   end
 
+  # Should the sOc attribute be used?
+  # It should if the core version is 3.1.5 or higher.
   def use_sOc? site
     core_version_satisfies? site, '>=3.1.5'
   end
