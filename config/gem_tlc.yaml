@@ -43,3 +43,5 @@ secrets:
     2: '2222'
 alarm_activation:
   A0301: 8
+restrict_testing:
+  sxl_version: 1.1
