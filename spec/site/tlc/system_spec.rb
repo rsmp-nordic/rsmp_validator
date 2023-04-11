@@ -13,7 +13,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
         { S0091: [:user] }
     end
 
-
     # Verify status S0092 operator logged in/out web-interface
     #
     # 1. Given the site is connected
