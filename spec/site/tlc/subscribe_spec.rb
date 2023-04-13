@@ -1,4 +1,6 @@
 RSpec.describe 'Site::Traffic Light Controller' do
+  include Validator::StatusHelpers
+
   describe 'Subscription' do
     # Check that we can *subscribe* to status messages.
     # The test subscribes to S0001 (signal group status), because
@@ -14,8 +16,11 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         log "Subscribe to status and wait for update"
         component = Validator.config['main_component']
-        status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus','uRt'=>'1','sOc' => 'False'}]
-        site.subscribe_to_status component, status_list, collect!: {
+
+        status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus','uRt'=>'1'}]
+        status_list.map! { |item| item.merge!('sOc' => 'False') } if use_sOc?(site)
+
+         site.subscribe_to_status component, status_list, collect!: {
           timeout: Validator.config['timeouts']['status_update']
         }
       ensure
