@@ -31,8 +31,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'state is read with S0001', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "signal group status",
-        { S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "signal group status",
+          { S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }
+      end
     end
 
     # Verify that time-of-green/time-of-red can be read with S0025.
@@ -41,17 +43,19 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'red/green predictions is read with S0025', sxl: '>=1.0.13' do |example|
-      request_status_and_confirm "time-of-green/time-of-red",
-        { S0025: [
-            :minToGEstimate,
-            :maxToGEstimate,
-            :likelyToGEstimate,
-            :ToGConfidence,
-            :minToREstimate,
-            :maxToREstimate,
-            :likelyToREstimate
-        ] },
-        Validator.config['components']['signal_group'].keys.first
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "time-of-green/time-of-red",
+          { S0025: [
+              :minToGEstimate,
+              :maxToGEstimate,
+              :likelyToGEstimate,
+              :ToGConfidence,
+              :minToREstimate,
+              :maxToREstimate,
+              :likelyToREstimate
+          ] },
+          Validator.config['components']['signal_group'].keys.first
+      end
     end
 
     # 1. Verify connection
@@ -70,8 +74,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'list size is read with S0017', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "number of signal groups",
-        { S0017: [:number] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "number of signal groups",
+          { S0017: [:number] }
+      end
     end
 
     # Verify that groups follow startup sequence after a restart

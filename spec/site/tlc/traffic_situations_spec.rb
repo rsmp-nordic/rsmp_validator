@@ -9,8 +9,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     it 'is read with S0015', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "current traffic situation",
-        { S0015: [:status] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "current traffic situation",
+          { S0015: [:status] }
+      end
     end
 
     # Verify that we change traffic situtation
@@ -36,8 +38,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'list size is read with S0019', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "number of traffic situations",
-        { S0019: [:number] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "number of traffic situations",
+          { S0019: [:number] }
+      end
     end
   end
 end

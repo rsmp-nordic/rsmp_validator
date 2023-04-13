@@ -76,29 +76,18 @@ module Validator::StatusHelpers
     )
   end
 
-  def request_status_and_confirm description, status_list, component=Validator.config['main_component']
-    Validator::Site.connected do |task,supervisor,site|
-      @site = site
-      log "Read #{description}"
-      result = site.request_status component, convert_status_list(status_list), collect!: {
-        timeout: Validator.config['timeouts']['status_response'],
-      }
-    end
-  end
-
-  # Check if the core version of a site proxy satisfies
-  # a version string, e.g. ">=3.1.5".
-  # Uses Gem classes to perform action checks, although this
-  # has nothing to do with gems.
-  def core_version_satisfies? site, condition
-    core_version = Gem::Version.new(site.core_version)
-    Gem::Requirement.new(condition).satisfied_by?(core_version)
+  def request_status_and_confirm site, description, status_list, component=Validator.config['main_component']
+    @site = site
+    log "Read #{description}"
+    result = site.request_status component, convert_status_list(status_list), collect!: {
+      timeout: Validator.config['timeouts']['status_response'],
+    }
   end
 
   # Should the sOc attribute be used?
   # It should if the core version is 3.1.5 or higher.
   def use_sOc? site
-    core_version_satisfies? site, '>=3.1.5'
+    RSMP::Proxy.version_meets_requirement? site.core_version, '>=3.1.5'
   end
 
 end

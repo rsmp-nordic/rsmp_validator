@@ -12,8 +12,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 2. Request status
       # 3. Expect status response before timeout
       specify 'forcing is read with S0029', sxl: '>=1.0.13' do |example|
-        request_status_and_confirm "forced input status",
-          { S0029: [:status] }
+        Validator::Site.connected do |task,supervisor,site|
+         request_status_and_confirm site, "forced input status",
+            { S0029: [:status] }
+        end
       end
 
       # 1. Verify connection
@@ -119,8 +121,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 2. Request status
       # 3. Expect status response before timeout
       specify 'forcing is read with S0030', sxl: '>=1.0.15' do |example|
-        request_status_and_confirm "forced output status",
-          { S0030: [:status] }
+        Validator::Site.connected do |task,supervisor,site|
+          request_status_and_confirm site, "forced output status",
+            { S0030: [:status] }
+        end
       end
 
       # 1. Verify connection
