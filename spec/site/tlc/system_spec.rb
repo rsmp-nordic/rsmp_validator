@@ -9,8 +9,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'operator logged in/out of OP-panel is read with S0091', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "operator logged in/out OP-panel",
-        { S0091: [:user] }
+      Validator::Site.connected do |task,supervisor,site|
+        if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+          status_list = { S0091: [:user] }
+        else
+          status_list = { S0091: [:user, :status] }
+        end
+        request_status_and_confirm site, "operator logged in/out OP-panel", status_list
+      end
     end
 
     # Verify status S0092 operator logged in/out web-interface
@@ -19,8 +25,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'operator logged in/out of web-interface is read with S0092', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "operator logged in/out web-interface",
-        { S0092: [:user] }
+      Validator::Site.connected do |task,supervisor,site|
+        if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+          status_list = { S0092: [:user] }
+        else
+          status_list = { S0092: [:user, :status] }
+        end
+        request_status_and_confirm site, "operator logged in/out web-interface", status_list
+      end
     end
 
     # Verify status S0095 version of traffic controller
@@ -29,8 +41,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'version is read with S0095 ', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "version of traffic controller",
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "version of traffic controller",
         { S0095: [:status] }
+      end
     end
 
     # 1. Verify connection i Isolated_mode

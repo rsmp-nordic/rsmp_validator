@@ -9,8 +9,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'currently active is read with S0014', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "current time plan",
-        { S0014: [:status] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "current time plan",
+          { S0014: [:status] }
+      end
     end
 
     # Verify that we change time plan (signal program)
@@ -35,8 +37,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'list size is read with S0018', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "number of time plans",
-        { S0018: [:number] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "number of time plans",
+          { S0018: [:number] }
+      end
     end
 
     # Verify status S0022 list of time plans
@@ -45,8 +49,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'list is read with S0022', sxl: '>=1.0.13' do |example|
-      request_status_and_confirm "list of time plans",
-        { S0022: [:status] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "list of time plans",
+          { S0022: [:status] }
+      end
     end
 
     # Verify status S0026 week time table
@@ -55,8 +61,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'week table is read with S0026', sxl: '>=1.0.13'  do |example|
-      request_status_and_confirm "week time table",
-        { S0026: [:status] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "week time table",
+          { S0026: [:status] }
+      end
     end
 
     # 1. Verify connection
@@ -76,8 +84,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'day table is read with S0027', sxl: '>=1.0.13'  do |example|
-      request_status_and_confirm "command table",
-        { S0027: [:status] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "command table",
+          { S0027: [:status] }
+      end
     end
 
     # 1. Verify connection
@@ -97,8 +107,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'version is read with S0097', sxl: '>=1.0.15' do |example|
-      request_status_and_confirm "version of traffic program",
-        { S0097: [:timestamp,:checksum] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "version of traffic program",
+          { S0097: [:timestamp,:checksum] }
+      end
     end
 
     # 1. Verify connection
@@ -119,8 +131,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'dynamic bands are read with S0023', sxl: '>=1.0.13' do |example|
-      request_status_and_confirm "command table",
-        { S0023: [:status] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "command table",
+          { S0023: [:status] }
+      end
     end
 
     # 1. Verify connection
@@ -167,8 +181,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'offset is read with S0024', sxl: '>=1.0.13' do |example|
-      request_status_and_confirm "offset time",
-        { S0024: [:status] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "offset time",
+          { S0024: [:status] }
+      end
     end
 
     # 1. Verify connection
@@ -189,8 +205,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'cycle time is read with S0028', sxl: '>=1.0.13' do |example|
-      request_status_and_confirm "cycle time",
-        { S0028: [:status] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "cycle time",
+          { S0028: [:status] }
+      end
     end
 
     # 1. Verify connection

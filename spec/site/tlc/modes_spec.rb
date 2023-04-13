@@ -9,8 +9,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'control mode is read with S0020', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "control mode",
-        { S0020: [:controlmode,:intersection] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "control mode",
+          { S0020: [:controlmode,:intersection] }
+      end
     end
 
     # Verify status S0005 traffic controller starting
@@ -19,8 +21,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'startup status is read with S0005', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "traffic controller starting (true/false)",
-        { S0005: [:status] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "traffic controller starting (true/false)",
+          { S0005: [:status] }
+      end
     end
 
     # Verify status S0006 emergency stage
@@ -29,8 +33,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'emergency stage is read with S0006', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "emergency stage status",
-        { S0006: [:status,:emergencystage] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "emergency stage status",
+          { S0006: [:status,:emergencystage] }
+      end
     end
 
     # Verify status S0007 controller switched on (dark mode=off)
@@ -39,8 +45,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'switched on is read with S0007', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "controller switch on (dark mode=off)",
-        { S0007: [:status,:intersection] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "controller switch on (dark mode=off)",
+          { S0007: [:status,:intersection] }
+      end
     end
 
     # Verify status S0008 manual control
@@ -49,8 +57,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'manual control is read with S0008', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "manual control status",
-        { S0008: [:status,:intersection] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "manual control status",
+          { S0008: [:status,:intersection] }
+      end
     end
 
     # Verify status S0009 fixed time control
@@ -59,8 +69,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'fixed time control is read with S0009', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "fixed time control status",
-        { S0009: [:status,:intersection] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "fixed time control status",
+          { S0009: [:status,:intersection] }
+      end
     end
 
     # 1. Verify connection
@@ -83,8 +95,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'isolated control is read with S0010', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "isolated control status",
-        { S0010: [:status,:intersection] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "isolated control status",
+          { S0010: [:status,:intersection] }
+      end
     end
 
     # Verify status S0011 yellow flash
@@ -93,8 +107,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'yellow flash can be read with S0011', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "yellow flash status",
-        { S0011: [:status,:intersection] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "yellow flash status",
+          { S0011: [:status,:intersection] }
+      end
     end
 
     # Verify that we can activate yellow flash
@@ -138,8 +154,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'all red can be read with S0012', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "all-red status",
-        { S0012: [:status,:intersection] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "all-red status",
+          { S0012: [:status,:intersection] }
+      end
     end
 
     # Verify status S0013 police key
@@ -148,8 +166,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'police key can be read with S0013', sxl: '>=1.0.7' do |example|
-      request_status_and_confirm "police key",
-        { S0013: [:status] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "police key",
+          { S0013: [:status] }
+      end
     end
 
     # Verify that we can activate dark mode

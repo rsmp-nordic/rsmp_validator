@@ -15,15 +15,17 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     it 'can be read with S0096', sxl: '>=1.0.7'  do |example|
-      request_status_and_confirm "current date and time",
-        { S0096: [
-          :year,
-          :month,
-          :day,
-          :hour,
-          :minute,
-          :second,
-        ] }
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "current date and time",
+          { S0096: [
+            :year,
+            :month,
+            :day,
+            :hour,
+            :minute,
+            :second,
+          ] }
+      end
     end
 
     # Verify that the controller responds to M0104
