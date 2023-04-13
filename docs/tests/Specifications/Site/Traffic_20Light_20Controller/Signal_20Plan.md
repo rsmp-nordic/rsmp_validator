@@ -55,8 +55,10 @@ Verify status S0014 current time plan
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "current time plan",
-{ S0014: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "current time plan",
+    { S0014: [:status] }
+end
 ```
 </details>
 
@@ -103,8 +105,10 @@ Verify status S0028 cycle time
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "cycle time",
-{ S0028: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "cycle time",
+    { S0028: [:status] }
+end
 ```
 </details>
 
@@ -147,8 +151,10 @@ Verify status S0027 time tables
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "command table",
-{ S0027: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "command table",
+    { S0027: [:status] }
+end
 ```
 </details>
 
@@ -190,8 +196,10 @@ Verify status S0023 command table
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "command table",
-{ S0023: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "command table",
+    { S0023: [:status] }
+end
 ```
 </details>
 
@@ -267,8 +275,10 @@ Verify status S0022 list of time plans
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "list of time plans",
-{ S0022: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "list of time plans",
+    { S0022: [:status] }
+end
 ```
 </details>
 
@@ -288,8 +298,10 @@ Verify status S0018 number of time plans
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "number of time plans",
-{ S0018: [:number] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "number of time plans",
+    { S0018: [:number] }
+end
 ```
 </details>
 
@@ -309,8 +321,10 @@ Verify status S0024 offset time
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "offset time",
-{ S0024: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "offset time",
+    { S0024: [:status] }
+end
 ```
 </details>
 
@@ -353,8 +367,10 @@ Verify status S0097 version of traffic program
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "version of traffic program",
-{ S0097: [:timestamp,:checksum] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "version of traffic program",
+    { S0097: [:timestamp,:checksum] }
+end
 ```
 </details>
 
@@ -374,8 +390,10 @@ Verify status S0026 week time table
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "week time table",
-{ S0026: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "week time table",
+    { S0026: [:status] }
+end
 ```
 </details>
 

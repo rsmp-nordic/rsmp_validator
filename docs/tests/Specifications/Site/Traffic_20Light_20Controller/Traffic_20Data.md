@@ -32,20 +32,22 @@ Verify status S0204 traffic counting: classification
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "traffic counting: classification",
-{ S0204: [
-    :starttime,
-    :P,
-    :PS,
-    :L,
-    :LS,
-    :B,
-    :SP,
-    :MC,
-    :C,
-    :F
-] },
-Validator.config['components']['detector_logic'].keys.first
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "traffic counting: classification",
+    { S0204: [
+        :starttime,
+        :P,
+        :PS,
+        :L,
+        :LS,
+        :B,
+        :SP,
+        :MC,
+        :C,
+        :F
+    ] },
+    Validator.config['components']['detector_logic'].keys.first
+end
 ```
 </details>
 
@@ -65,19 +67,21 @@ Verify status S0208 traffic counting: classification
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "traffic counting: classification",
-{ S0208: [
-    :start,
-    :P,
-    :PS,
-    :L,
-    :LS,
-    :B,
-    :SP,
-    :MC,
-    :C,
-    :F
-] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "traffic counting: classification",
+    { S0208: [
+        :start,
+        :P,
+        :PS,
+        :L,
+        :LS,
+        :B,
+        :SP,
+        :MC,
+        :C,
+        :F
+    ] }
+end
 ```
 </details>
 
@@ -97,9 +101,11 @@ Verify status S0201 traffic counting: number of vehicles
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "traffic counting: number of vehicles",
-{ S0201: [:starttime,:vehicles] },
-Validator.config['components']['detector_logic'].keys.first
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "traffic counting: number of vehicles",
+    { S0201: [:starttime,:vehicles] },
+    Validator.config['components']['detector_logic'].keys.first
+end
 ```
 </details>
 
@@ -119,8 +125,10 @@ Verify status S0205 traffic counting: number of vehicles
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "traffic counting: number of vehicles",
-{ S0205: [:start,:vehicles] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "traffic counting: number of vehicles",
+    { S0205: [:start,:vehicles] }
+end
 ```
 </details>
 
@@ -140,9 +148,11 @@ Verify status S0203 traffic counting: occupancy
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "traffic counting: occupancy",
-{ S0203: [:starttime,:occupancy] },
-Validator.config['components']['detector_logic'].keys.first
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "traffic counting: occupancy",
+    { S0203: [:starttime,:occupancy] },
+    Validator.config['components']['detector_logic'].keys.first
+end
 ```
 </details>
 
@@ -162,8 +172,10 @@ Verify status S0207 traffic counting: occupancy
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "traffic counting: occupancy",
-{ S0207: [:start,:occupancy] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "traffic counting: occupancy",
+    { S0207: [:start,:occupancy] }
+end
 ```
 </details>
 
@@ -183,9 +195,11 @@ Verify status S0202 traffic counting: vehicle speed
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "traffic counting: vehicle speed",
-{ S0202: [:starttime,:speed] },
-Validator.config['components']['detector_logic'].keys.first
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "traffic counting: vehicle speed",
+    { S0202: [:starttime,:speed] },
+    Validator.config['components']['detector_logic'].keys.first
+end
 ```
 </details>
 
@@ -205,8 +219,10 @@ Verify status S0206 traffic counting: vehicle speed
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "traffic counting: vehicle speed",
-{ S0206: [:start,:speed] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "traffic counting: vehicle speed",
+    { S0206: [:start,:speed] }
+end
 ```
 </details>
 

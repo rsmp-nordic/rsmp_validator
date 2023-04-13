@@ -32,8 +32,10 @@ Verify status S0029 forced input status
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "forced input status",
-{ S0029: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+ request_status_and_confirm site, "forced input status",
+    { S0029: [:status] }
+end
 ```
 </details>
 

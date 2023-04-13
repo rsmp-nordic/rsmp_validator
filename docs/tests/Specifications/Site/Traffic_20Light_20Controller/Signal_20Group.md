@@ -132,8 +132,10 @@ Verify status S0017 number of signal groups
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "number of signal groups",
-{ S0017: [:number] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "number of signal groups",
+    { S0017: [:number] }
+end
 ```
 </details>
 
@@ -153,17 +155,19 @@ Verify that time-of-green/time-of-red can be read with S0025.
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "time-of-green/time-of-red",
-{ S0025: [
-    :minToGEstimate,
-    :maxToGEstimate,
-    :likelyToGEstimate,
-    :ToGConfidence,
-    :minToREstimate,
-    :maxToREstimate,
-    :likelyToREstimate
-] },
-Validator.config['components']['signal_group'].keys.first
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "time-of-green/time-of-red",
+    { S0025: [
+        :minToGEstimate,
+        :maxToGEstimate,
+        :likelyToGEstimate,
+        :ToGConfidence,
+        :minToREstimate,
+        :maxToREstimate,
+        :likelyToREstimate
+    ] },
+    Validator.config['components']['signal_group'].keys.first
+end
 ```
 </details>
 
@@ -204,8 +208,10 @@ Verify that signal group status can be read with S0001.
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "signal group status",
-{ S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "signal group status",
+    { S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }
+end
 ```
 </details>
 

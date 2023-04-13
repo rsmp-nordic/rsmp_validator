@@ -223,8 +223,10 @@ Each test is tagged with the core and sxl version it's relevant for. For example
 
 ```ruby
 specify 'day table is read with S0027', sxl: '>=1.0.13'  do |example|
-  request_status_and_confirm "command table",
-    { S0027: [:status] }
+  Validator::Site.connected do |task,supervisor,site|
+    request_status_and_confirm site, "command table",
+      { S0027: [:status] }
+  end
 end
 ```
 

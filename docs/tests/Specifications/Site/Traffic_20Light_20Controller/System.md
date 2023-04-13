@@ -32,8 +32,14 @@ Verify status S0091 operator logged in/out OP-panel
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "operator logged in/out OP-panel",
-{ S0091: [:user] }
+Validator::Site.connected do |task,supervisor,site|
+  if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+    status_list = { S0091: [:user] }
+  else
+    status_list = { S0091: [:user, :status] }
+  end
+  request_status_and_confirm site, "operator logged in/out OP-panel", status_list
+end
 ```
 </details>
 
@@ -53,8 +59,14 @@ Verify status S0092 operator logged in/out web-interface
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "operator logged in/out web-interface",
-{ S0092: [:user] }
+Validator::Site.connected do |task,supervisor,site|
+  if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+    status_list = { S0092: [:user] }
+  else
+    status_list = { S0092: [:user, :status] }
+  end
+  request_status_and_confirm site, "operator logged in/out web-interface", status_list
+end
 ```
 </details>
 
@@ -155,8 +167,10 @@ Verify status S0095 version of traffic controller
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "version of traffic controller",
-{ S0095: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "version of traffic controller",
+  { S0095: [:status] }
+end
 ```
 </details>
 

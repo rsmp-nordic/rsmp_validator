@@ -49,8 +49,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "forced input status",
-          { S0029: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+         request_status_and_confirm site, "forced input status",
+            { S0029: [:status] }
+        end</div> -->
 </div></li>
       
       
@@ -184,8 +186,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "forced output status",
-          { S0030: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          request_status_and_confirm site, "forced output status",
+            { S0030: [:status] }
+        end</div> -->
 </div></li>
       
       
@@ -385,15 +389,17 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "current date and time",
-        { S0096: [
-          :year,
-          :month,
-          :day,
-          :hour,
-          :minute,
-          :second,
-        ] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "current date and time",
+          { S0096: [
+            :year,
+            :month,
+            :day,
+            :hour,
+            :minute,
+            :second,
+          ] }
+      end</div> -->
 </div></li>
       
       
@@ -627,8 +633,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "control mode",
-        { S0020: [:controlmode,:intersection] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "control mode",
+          { S0020: [:controlmode,:intersection] }
+      end</div> -->
 </div></li>
       
       
@@ -638,8 +646,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "traffic controller starting (true/false)",
-        { S0005: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "traffic controller starting (true/false)",
+          { S0005: [:status] }
+      end</div> -->
 </div></li>
       
       
@@ -649,8 +659,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "emergency stage status",
-        { S0006: [:status,:emergencystage] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "emergency stage status",
+          { S0006: [:status,:emergencystage] }
+      end</div> -->
 </div></li>
       
       
@@ -660,8 +672,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "controller switch on (dark mode=off)",
-        { S0007: [:status,:intersection] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "controller switch on (dark mode=off)",
+          { S0007: [:status,:intersection] }
+      end</div> -->
 </div></li>
       
       
@@ -671,8 +685,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "manual control status",
-        { S0008: [:status,:intersection] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "manual control status",
+          { S0008: [:status,:intersection] }
+      end</div> -->
 </div></li>
       
       
@@ -682,8 +698,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "fixed time control status",
-        { S0009: [:status,:intersection] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "fixed time control status",
+          { S0009: [:status,:intersection] }
+      end</div> -->
 </div></li>
       
       
@@ -707,8 +725,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "isolated control status",
-        { S0010: [:status,:intersection] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "isolated control status",
+          { S0010: [:status,:intersection] }
+      end</div> -->
 </div></li>
       
       
@@ -718,8 +738,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "yellow flash status",
-        { S0011: [:status,:intersection] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "yellow flash status",
+          { S0011: [:status,:intersection] }
+      end</div> -->
 </div></li>
       
       
@@ -762,8 +784,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "all-red status",
-        { S0012: [:status,:intersection] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "all-red status",
+          { S0012: [:status,:intersection] }
+      end</div> -->
 </div></li>
       
       
@@ -773,8 +797,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "police key",
-        { S0013: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "police key",
+          { S0013: [:status] }
+      end</div> -->
 </div></li>
       
       
@@ -832,8 +858,14 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "operator logged in/out OP-panel",
-        { S0091: [:user] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+          status_list = { S0091: [:user] }
+        else
+          status_list = { S0091: [:user, :status] }
+        end
+        request_status_and_confirm site, "operator logged in/out OP-panel", status_list
+      end</div> -->
 </div></li>
       
       
@@ -843,8 +875,14 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "operator logged in/out web-interface",
-        { S0092: [:user] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+          status_list = { S0092: [:user] }
+        else
+          status_list = { S0092: [:user, :status] }
+        end
+        request_status_and_confirm site, "operator logged in/out web-interface", status_list
+      end</div> -->
 </div></li>
       
       
@@ -854,8 +892,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "version of traffic controller",
-        { S0095: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "version of traffic controller",
+        { S0095: [:status] }
+      end</div> -->
 </div></li>
       
       
@@ -978,8 +1018,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "current time plan",
-        { S0014: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "current time plan",
+          { S0014: [:status] }
+      end</div> -->
 </div></li>
       
       
@@ -1004,8 +1046,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "number of time plans",
-        { S0018: [:number] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "number of time plans",
+          { S0018: [:number] }
+      end</div> -->
 </div></li>
       
       
@@ -1015,8 +1059,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "list of time plans",
-        { S0022: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "list of time plans",
+          { S0022: [:status] }
+      end</div> -->
 </div></li>
       
       
@@ -1026,8 +1072,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "week time table",
-        { S0026: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "week time table",
+          { S0026: [:status] }
+      end</div> -->
 </div></li>
       
       
@@ -1051,8 +1099,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "command table",
-        { S0027: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "command table",
+          { S0027: [:status] }
+      end</div> -->
 </div></li>
       
       
@@ -1076,8 +1126,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "version of traffic program",
-        { S0097: [:timestamp,:checksum] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "version of traffic program",
+          { S0097: [:timestamp,:checksum] }
+      end</div> -->
 </div></li>
       
       
@@ -1102,8 +1154,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "command table",
-        { S0023: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "command table",
+          { S0023: [:status] }
+      end</div> -->
 </div></li>
       
       
@@ -1153,8 +1207,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "offset time",
-        { S0024: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "offset time",
+          { S0024: [:status] }
+      end</div> -->
 </div></li>
       
       
@@ -1179,8 +1235,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "cycle time",
-        { S0028: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "cycle time",
+          { S0028: [:status] }
+      end</div> -->
 </div></li>
       
       
@@ -1223,9 +1281,11 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "traffic counting: number of vehicles",
-        { S0201: [:starttime,:vehicles] },
-        Validator.config['components']['detector_logic'].keys.first</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "traffic counting: number of vehicles",
+          { S0201: [:starttime,:vehicles] },
+          Validator.config['components']['detector_logic'].keys.first
+      end</div> -->
 </div></li>
       
       
@@ -1235,8 +1295,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "traffic counting: number of vehicles",
-        { S0205: [:start,:vehicles] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "traffic counting: number of vehicles",
+          { S0205: [:start,:vehicles] }
+      end</div> -->
 </div></li>
       
       
@@ -1246,9 +1308,11 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "traffic counting: vehicle speed",
-        { S0202: [:starttime,:speed] },
-        Validator.config['components']['detector_logic'].keys.first</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "traffic counting: vehicle speed",
+          { S0202: [:starttime,:speed] },
+          Validator.config['components']['detector_logic'].keys.first
+      end</div> -->
 </div></li>
       
       
@@ -1258,8 +1322,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "traffic counting: vehicle speed",
-        { S0206: [:start,:speed] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "traffic counting: vehicle speed",
+          { S0206: [:start,:speed] }
+      end</div> -->
 </div></li>
       
       
@@ -1269,9 +1335,11 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "traffic counting: occupancy",
-        { S0203: [:starttime,:occupancy] },
-        Validator.config['components']['detector_logic'].keys.first</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "traffic counting: occupancy",
+          { S0203: [:starttime,:occupancy] },
+          Validator.config['components']['detector_logic'].keys.first
+      end</div> -->
 </div></li>
       
       
@@ -1281,8 +1349,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "traffic counting: occupancy",
-        { S0207: [:start,:occupancy] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "traffic counting: occupancy",
+          { S0207: [:start,:occupancy] }
+      end</div> -->
 </div></li>
       
       
@@ -1292,20 +1362,22 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "traffic counting: classification",
-        { S0204: [
-            :starttime,
-            :P,
-            :PS,
-            :L,
-            :LS,
-            :B,
-            :SP,
-            :MC,
-            :C,
-            :F
-        ] },
-        Validator.config['components']['detector_logic'].keys.first</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "traffic counting: classification",
+          { S0204: [
+              :starttime,
+              :P,
+              :PS,
+              :L,
+              :LS,
+              :B,
+              :SP,
+              :MC,
+              :C,
+              :F
+          ] },
+          Validator.config['components']['detector_logic'].keys.first
+      end</div> -->
 </div></li>
       
       
@@ -1315,19 +1387,21 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "traffic counting: classification",
-        { S0208: [
-            :start,
-            :P,
-            :PS,
-            :L,
-            :LS,
-            :B,
-            :SP,
-            :MC,
-            :C,
-            :F
-        ] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "traffic counting: classification",
+          { S0208: [
+              :start,
+              :P,
+              :PS,
+              :L,
+              :LS,
+              :B,
+              :SP,
+              :MC,
+              :C,
+              :F
+          ] }
+      end</div> -->
 </div></li>
       
       
@@ -1381,8 +1455,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "signal group status",
-        { S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "signal group status",
+          { S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }
+      end</div> -->
 </div></li>
       
       
@@ -1392,17 +1468,19 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "time-of-green/time-of-red",
-        { S0025: [
-            :minToGEstimate,
-            :maxToGEstimate,
-            :likelyToGEstimate,
-            :ToGConfidence,
-            :minToREstimate,
-            :maxToREstimate,
-            :likelyToREstimate
-        ] },
-        Validator.config['components']['signal_group'].keys.first</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "time-of-green/time-of-red",
+          { S0025: [
+              :minToGEstimate,
+              :maxToGEstimate,
+              :likelyToGEstimate,
+              :ToGConfidence,
+              :minToREstimate,
+              :maxToREstimate,
+              :likelyToREstimate
+          ] },
+          Validator.config['components']['signal_group'].keys.first
+      end</div> -->
 </div></li>
       
       
@@ -1425,8 +1503,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "number of signal groups",
-        { S0017: [:number] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "number of signal groups",
+          { S0017: [:number] }
+      end</div> -->
 </div></li>
       
       
@@ -1490,8 +1570,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "number of detector logics",
-        { S0016: [:number] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "number of detector logics",
+          { S0016: [:number] }
+      end</div> -->
 </div></li>
       
       
@@ -1501,8 +1583,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "detector logic status",
-        { S0002: [:detectorlogicstatus] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "detector logic status",
+          { S0002: [:detectorlogicstatus] }
+      end</div> -->
 </div></li>
       
       
@@ -1512,8 +1596,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "detector logic forcing",
-        { S0021: [:detectorlogics] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "detector logic forcing",
+          { S0021: [:detectorlogics] }
+      end</div> -->
 </div></li>
       
       
@@ -1551,8 +1637,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "loop detector sensitivity",
-        { S0031: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "loop detector sensitivity",
+          { S0031: [:status] }
+      end</div> -->
 </div></li>
       
       
@@ -1613,8 +1701,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "current traffic situation",
-        { S0015: [:status] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "current traffic situation",
+          { S0015: [:status] }
+      end</div> -->
 </div></li>
       
       
@@ -1641,8 +1731,10 @@
   <div class="specification">
     
   </div>
-  <!-- <div>request_status_and_confirm "number of traffic situations",
-        { S0019: [:number] }</div> -->
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "number of traffic situations",
+          { S0019: [:number] }
+      end</div> -->
 </div></li>
       
       

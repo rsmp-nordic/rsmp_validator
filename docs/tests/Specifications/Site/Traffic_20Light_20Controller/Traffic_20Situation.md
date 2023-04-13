@@ -32,8 +32,10 @@ Verify status S0015 current traffic situation
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "current traffic situation",
-{ S0015: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "current traffic situation",
+    { S0015: [:status] }
+end
 ```
 </details>
 
@@ -81,8 +83,10 @@ Verify status S0019 number of traffic situations
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "number of traffic situations",
-{ S0019: [:number] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "number of traffic situations",
+    { S0019: [:number] }
+end
 ```
 </details>
 

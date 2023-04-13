@@ -34,15 +34,17 @@ Verify status 0096 current date and time
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "current date and time",
-{ S0096: [
-  :year,
-  :month,
-  :day,
-  :hour,
-  :minute,
-  :second,
-] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "current date and time",
+    { S0096: [
+      :year,
+      :month,
+      :day,
+      :hour,
+      :minute,
+      :second,
+    ] }
+end
 ```
 </details>
 

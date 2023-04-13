@@ -111,20 +111,24 @@
 22
 23
 24
-25</pre>
+25
+26
+27</pre>
           </td>
           <td>
             <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 17</span>
 
-<span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>current date and time</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-        <span class='lbrace'>{</span> <span class='label'>S0096:</span> <span class='lbracket'>[</span>
-          <span class='symbol'>:year</span><span class='comma'>,</span>
-          <span class='symbol'>:month</span><span class='comma'>,</span>
-          <span class='symbol'>:day</span><span class='comma'>,</span>
-          <span class='symbol'>:hour</span><span class='comma'>,</span>
-          <span class='symbol'>:minute</span><span class='comma'>,</span>
-          <span class='symbol'>:second</span><span class='comma'>,</span>
-        <span class='rbracket'>]</span> <span class='rbrace'>}</span></pre>
+<span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
+        <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>current date and time</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+          <span class='lbrace'>{</span> <span class='label'>S0096:</span> <span class='lbracket'>[</span>
+            <span class='symbol'>:year</span><span class='comma'>,</span>
+            <span class='symbol'>:month</span><span class='comma'>,</span>
+            <span class='symbol'>:day</span><span class='comma'>,</span>
+            <span class='symbol'>:hour</span><span class='comma'>,</span>
+            <span class='symbol'>:minute</span><span class='comma'>,</span>
+            <span class='symbol'>:second</span><span class='comma'>,</span>
+          <span class='rbracket'>]</span> <span class='rbrace'>}</span>
+      <span class='kw'>end</span></pre>
           </td>
         </tr>
       </table>
@@ -145,7 +149,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-clock_spec-rb-34"></a>
+    <a name="spec-site-tlc-clock_spec-rb-36"></a>
     
   </div>
 
@@ -174,13 +178,13 @@
             <pre class="lines">
 
 
-34
-35
 36
-37</pre>
+37
+38
+39</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 34</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 36</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -206,7 +210,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-clock_spec-rb-48"></a>
+    <a name="spec-site-tlc-clock_spec-rb-50"></a>
     
   </div>
 
@@ -239,8 +243,6 @@
             <pre class="lines">
 
 
-48
-49
 50
 51
 52
@@ -275,10 +277,12 @@
 81
 82
 83
-84</pre>
+84
+85
+86</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 48</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 50</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -337,7 +341,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-clock_spec-rb-95"></a>
+    <a name="spec-site-tlc-clock_spec-rb-97"></a>
     
   </div>
 
@@ -370,8 +374,6 @@
             <pre class="lines">
 
 
-95
-96
 97
 98
 99
@@ -395,10 +397,12 @@
 117
 118
 119
-120</pre>
+120
+121
+122</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 95</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 97</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -446,7 +450,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-clock_spec-rb-132"></a>
+    <a name="spec-site-tlc-clock_spec-rb-134"></a>
     
   </div>
 
@@ -481,8 +485,6 @@
             <pre class="lines">
 
 
-132
-133
 134
 135
 136
@@ -494,10 +496,12 @@
 142
 143
 144
-145</pre>
+145
+146
+147</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 132</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 134</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -533,7 +537,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-clock_spec-rb-156"></a>
+    <a name="spec-site-tlc-clock_spec-rb-158"></a>
     
   </div>
 
@@ -566,8 +570,6 @@
             <pre class="lines">
 
 
-156
-157
 158
 159
 160
@@ -577,10 +579,12 @@
 164
 165
 166
-167</pre>
+167
+168
+169</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 156</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 158</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -614,7 +618,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-clock_spec-rb-178"></a>
+    <a name="spec-site-tlc-clock_spec-rb-180"></a>
     
   </div>
 
@@ -647,8 +651,6 @@
             <pre class="lines">
 
 
-178
-179
 180
 181
 182
@@ -658,10 +660,12 @@
 186
 187
 188
-189</pre>
+189
+190
+191</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 178</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 180</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -695,7 +699,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-clock_spec-rb-202"></a>
+    <a name="spec-site-tlc-clock_spec-rb-204"></a>
     
   </div>
 
@@ -732,8 +736,6 @@
             <pre class="lines">
 
 
-202
-203
 204
 205
 206
@@ -747,10 +749,12 @@
 214
 215
 216
-217</pre>
+217
+218
+219</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 202</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 204</span>
 
 <span class='id identifier rubyid_skip_unless_scripts_are_configured'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#skip_unless_scripts_are_configured-instance_method" title="Validator::CommandHelpers#skip_unless_scripts_are_configured (method)">skip_unless_scripts_are_configured</a></span></span>
       <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
@@ -788,7 +792,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-clock_spec-rb-228"></a>
+    <a name="spec-site-tlc-clock_spec-rb-230"></a>
     
   </div>
 
@@ -821,8 +825,6 @@
             <pre class="lines">
 
 
-228
-229
 230
 231
 232
@@ -833,10 +835,12 @@
 237
 238
 239
-240</pre>
+240
+241
+242</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 228</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/clock_spec.rb', line 230</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>

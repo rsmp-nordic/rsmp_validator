@@ -32,8 +32,10 @@ Verify status S0012 all red
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "all-red status",
-{ S0012: [:status,:intersection] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "all-red status",
+    { S0012: [:status,:intersection] }
+end
 ```
 </details>
 
@@ -53,8 +55,10 @@ Verify status S0020 control mode
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "control mode",
-{ S0020: [:controlmode,:intersection] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "control mode",
+    { S0020: [:controlmode,:intersection] }
+end
 ```
 </details>
 
@@ -100,8 +104,10 @@ Verify status S0006 emergency stage
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "emergency stage status",
-{ S0006: [:status,:emergencystage] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "emergency stage status",
+    { S0006: [:status,:emergencystage] }
+end
 ```
 </details>
 
@@ -146,8 +152,10 @@ Verify status S0009 fixed time control
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "fixed time control status",
-{ S0009: [:status,:intersection] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "fixed time control status",
+    { S0009: [:status,:intersection] }
+end
 ```
 </details>
 
@@ -167,8 +175,10 @@ Verify status S0010 isolated control
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "isolated control status",
-{ S0010: [:status,:intersection] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "isolated control status",
+    { S0010: [:status,:intersection] }
+end
 ```
 </details>
 
@@ -188,8 +198,10 @@ Verify status S0008 manual control
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "manual control status",
-{ S0008: [:status,:intersection] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "manual control status",
+    { S0008: [:status,:intersection] }
+end
 ```
 </details>
 
@@ -209,8 +221,10 @@ Verify status S0013 police key
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "police key",
-{ S0013: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "police key",
+    { S0013: [:status] }
+end
 ```
 </details>
 
@@ -230,8 +244,10 @@ Verify status S0005 traffic controller starting
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "traffic controller starting (true/false)",
-{ S0005: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "traffic controller starting (true/false)",
+    { S0005: [:status] }
+end
 ```
 </details>
 
@@ -251,8 +267,10 @@ Verify status S0007 controller switched on (dark mode=off)
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "controller switch on (dark mode=off)",
-{ S0007: [:status,:intersection] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "controller switch on (dark mode=off)",
+    { S0007: [:status,:intersection] }
+end
 ```
 </details>
 
@@ -355,8 +373,10 @@ Verify status S0011 yellow flash
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "yellow flash status",
-{ S0011: [:status,:intersection] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "yellow flash status",
+    { S0011: [:status,:intersection] }
+end
 ```
 </details>
 

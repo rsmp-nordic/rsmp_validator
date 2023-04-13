@@ -32,8 +32,10 @@ Verify status S0030 forced output status
      View Source
   </summary>
 ```ruby
-request_status_and_confirm "forced output status",
-{ S0030: [:status] }
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "forced output status",
+    { S0030: [:status] }
+end
 ```
 </details>
 
