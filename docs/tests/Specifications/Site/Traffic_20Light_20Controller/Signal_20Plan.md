@@ -358,6 +358,34 @@ end
 
 
 
+## Signal plan timeout for dynamic bands is set with M0023
+
+Verify command M0023 timeout of dynamic bands
+
+1. Verify connection
+2. When we send command to set timeout
+3. Then we should get a confirmation
+2. When we send command to disable timeout
+3. Then we should get a confirmation
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+  prepare task, site
+  status = 10
+  set_timeout_for_dynamic_bands status
+  status = 0
+  set_timeout_for_dynamic_bands status
+end
+```
+</details>
+
+
+
+
 ## Signal plan version is read with S0097
 
 Verify status S0097 version of traffic program
