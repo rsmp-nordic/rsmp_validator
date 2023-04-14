@@ -10,8 +10,12 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Expect status response before timeout
     specify 'currently active is read with S0014', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        request_status_and_confirm site, "current time plan",
-          { S0014: [:status] }
+        if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+          status_list = { S0014: [:status,:source] }
+        else
+          status_list = { S0014: [:status] }
+        end
+        request_status_and_confirm site, "current time plan", status_list
       end
     end
 
