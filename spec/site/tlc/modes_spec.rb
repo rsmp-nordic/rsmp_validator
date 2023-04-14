@@ -118,6 +118,17 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
+    # Verify status S0032 coordinated control
+    #
+    # 1. Given the site is connected
+    # 2. Request status
+    # 3. Expect status response before timeout
+    specify 'isolated control is read with S0032', sxl: '>=1.1' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        status_list = { S0032: [:status,:intersection,:source] }
+        request_status_and_confirm site, "coordinated control status", status_list
+      end
+    end
 
     # Verify status S0011 yellow flash
     #
