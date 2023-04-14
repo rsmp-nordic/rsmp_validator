@@ -179,6 +179,23 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
+    # Verify command M0023 timeout of dynamic bands
+    #
+    # 1. Verify connection
+    # 2. When we send command to set timeout
+    # 3. Then we should get a confirmation
+    # 2. When we send command to disable timeout
+    # 3. Then we should get a confirmation
+    specify 'timeout for dynamic bands is set with M0023', sxl: '>=1.1' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        status = 10
+        set_timeout_for_dynamic_bands status
+        status = 0
+        set_timeout_for_dynamic_bands status
+      end
+    end
+
     # Verify status S0024 offset time
     #
     # 1. Given the site is connected

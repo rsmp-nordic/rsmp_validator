@@ -300,6 +300,15 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "Set trigger level sensitivity for loop detector to #{status}"
   end
 
+  def set_timeout_for_dynamic_bands status
+    require_security_codes
+    command_list = build_command_list :M0023, :setTimeout, {
+      securityCode: Validator.config['secrets']['security_codes'][2],
+      status: status
+    }
+    send_command_and_confirm @task, command_list, "Set timeout for dynamic bands to #{status}"
+  end
+
   def set_security_code level
     require_security_codes
     status = "Level#{level}"
