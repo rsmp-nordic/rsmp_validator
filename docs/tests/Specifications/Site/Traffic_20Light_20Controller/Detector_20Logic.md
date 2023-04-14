@@ -100,7 +100,7 @@ end
 
 
 
-## Detector logic sensitivity is set with S0031
+## Detector logic sensitivity is read with S0031
 
 Verify status S0031 trigger level sensitivity for loop detector
 

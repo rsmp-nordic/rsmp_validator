@@ -120,11 +120,12 @@ end
 
 ## Operational fixed time control can be activated with M0007
 
-1. Verify connection
+Verify command M0007 fixed time control
 
-2. Send the control command to switch to  fixed time= true
+1. Verify connection
+2. Send command to switch to fixed time = true
 3. Wait for status = true
-4. Send control command to switch "fixed time"= true
+4. Send command to switch to fixed time = false
 5. Wait for status = false
 
 <details markdown="block">
