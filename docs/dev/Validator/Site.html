@@ -632,16 +632,16 @@
       <pre class="lines">
 
 
-107
-108
-109
-110
-111
-112
-113</pre>
+93
+94
+95
+96
+97
+98
+99</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 107</span>
+      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 93</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_build_node'>build_node</span> <span class='id identifier rubyid_options'>options</span>
   <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>Supervisor</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
@@ -695,21 +695,7 @@
 87
 88
 89
-90
-91
-92
-93
-94
-95
-96
-97
-98
-99
-100
-101
-102
-103
-104</pre>
+90</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 66</span>
@@ -738,20 +724,6 @@
   <span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_key'>key</span><span class='op'>|</span>
     <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>config &#39;timeouts/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_key'>key</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39; is missing</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span>
   <span class='kw'>end</span>
-
-
-  <span class='comment'># scripts
-</span>  <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>scripts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-    <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../Validator.html#log-class_method" title="Validator.log (method)">log</a></span></span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Warning: Script path for activating alarm is missing or empty</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_colorize'>colorize</span><span class='lparen'>(</span><span class='symbol'>:yellow</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>scripts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>activate_alarm</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-    <span class='kw'>unless</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>scripts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>activate_alarm</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-      <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_abort_with_error'>abort_with_error</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Script at </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>scripts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>activate_alarm</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'> for activating alarm is missing</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_colorize'>colorize</span><span class='lparen'>(</span><span class='symbol'>:yellow</span><span class='rparen'>)</span>
-    <span class='kw'>end</span>
-    <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../Validator.html#log-class_method" title="Validator.log (method)">log</a></span></span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Warning: Script path for deactivating alarm is missing or empty</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_colorize'>colorize</span><span class='lparen'>(</span><span class='symbol'>:yellow</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>scripts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>deactivate_alarm</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-    <span class='kw'>unless</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>scripts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>deactivate_alarm</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-      <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_abort_with_error'>abort_with_error</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Script at </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>scripts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>deactivate_alarm</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'> for deactivating alarm is missing</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_colorize'>colorize</span><span class='lparen'>(</span><span class='symbol'>:yellow</span><span class='rparen'>)</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
-
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -785,17 +757,17 @@
       <pre class="lines">
 
 
-116
-117
-118
-119
-120
-121
-122
-123</pre>
+102
+103
+104
+105
+106
+107
+108
+109</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 116</span>
+      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 102</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_for_connection'>wait_for_connection</span>
   <span class='ivar'>@proxy</span> <span class='op'>=</span> <span class='ivar'>@node</span><span class='period'>.</span><span class='id identifier rubyid_proxies'>proxies</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
@@ -837,15 +809,15 @@
       <pre class="lines">
 
 
-126
-127
-128
-129
-130
-131</pre>
+112
+113
+114
+115
+116
+117</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 126</span>
+      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 112</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_for_handshake'>wait_for_handshake</span>
   <span class='kw'>return</span> <span class='kw'>if</span> <span class='ivar'>@proxy</span><span class='period'>.</span><span class='id identifier rubyid_ready?'>ready?</span>

@@ -239,44 +239,19 @@
   <div class="specification">
     
   </div>
-  <!-- <div>alarm_code_id = 'A0301'   # what alarm to expect
-      skip "alarm activation is not configured" unless Validator.config['alarm_activation']
-
-      input_nr = Validator.config['alarm_activation'][alarm_code_id]  # what input to activate
-      skip "alarm activation for alarm #{alarm_code_id}  not configured" unless input_nr
-      
-      Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        alarm_code_id = 'A0301'
         prepare task, site
-        timeout  = Validator.config['timeouts']['alarm']
-
-        # first force input to false, so we're sure to get an alarm when we afterwards force to true
-        force_input_and_confirm input:input_nr, value:'False'
-
-        # the rsmp spec requires a specific casing of enums, but some equipment uses incorrect casing.
-        # incorrect casing is usualle cuaght by the json schema validation, but in case this is disabled,
-        # we use case-insensitive regex patterns so that the tests can still be run
-        mapping = {
-          'True' => /Active/i,    # when input is forced to True, the alarm should become active
-          'False' => /inActive/i  # when input is forced to False, the alarm should become inactive
-        }
-
-        mapping.each_pair do |input_value, alarm_status|
-          log "Check that alarm #{alarm_code_id} becomes #{alarm_status.inspect} when we force input #{input_nr} to #{input_value}"
-          collect_task = task.async do  # run the collector in an async task
-            collector = RSMP::AlarmCollector.new( site,
-              num: 1,
-              query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'aS' => alarm_status },
-              timeout: timeout
-            )
-            collector.collect!
-            alarm = collector.messages.first
-            alarm_time = Time.parse(alarm.attributes["aTs"])
-            expect(alarm_time).to be_within(1.minute).of Time.now.utc
-            log "Alarm #{alarm_code_id} is now #{alarm_status.inspect}"
-          end
-          force_input_and_confirm input:input_nr, value:input_value    # force the input
-          collect_task.wait                                            # and wait for the collector to complete
+        def verify_timestamp alarm, duration=1.minute
+          alarm_time = Time.parse(alarm.attributes["aTs"])
+          expect(alarm_time).to be_within(duration).of Time.now.utc
         end
+        deactivate = with_alarm_activated(task, site, alarm_code_id) do |alarm|   # raise alarm, by activating input
+          verify_timestamp alarm
+          log "Alarm #{alarm_code_id} is now Active"
+        end
+        verify_timestamp deactivate
+        log "Alarm #{alarm_code_id} is now Inactive"
       end</div> -->
 </div></li>
       
@@ -287,24 +262,19 @@
   <div class="specification">
     
   </div>
-  <!-- <div>skip "Don't yet have a reliable way of triggering alarms"
-      skip_unless_scripts_are_configured
-      Validator::Site.connected do |task,supervisor,site|
-        component = Validator.config['components']['detector_logic'].keys.first
-        with_alarm_activated do
-          site.log "Waiting for alarm", level: :test
-          start_time = Time.now
-          alarm_code_id = 'A0301'
-          collector = site.collect_alarms num: 1, component: component, aCId: alarm_code_id,
-            aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
-
-          alarm = collector.message
-          delay = Time.now - start_time
-          site.log "alarm confirmed after #{delay.to_i}s", level: :test
-
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        alarm_code_id = 'A0302'
+        prepare task, site
+        def verify_timestamp alarm, duration=1.minute
           alarm_time = Time.parse(alarm.attributes["aTs"])
-          expect(alarm_time).to be_within(1.minute).of Time.now.utc
+          expect(alarm_time).to be_within(duration).of Time.now.utc
         end
+        deactivate = with_alarm_activated(task, site, alarm_code_id) do |alarm|   # raise alarm, by activating input
+          verify_timestamp alarm
+          log "Alarm #{alarm_code_id} is now Active"
+        end
+        verify_timestamp deactivate
+        log "Alarm #{alarm_code_id} is now Inactive"
       end</div> -->
 </div></li>
       
@@ -315,51 +285,11 @@
   <div class="specification">
     
   </div>
-  <!-- <div>skip "Don't yet have a reliable way of triggering alarms"
-      skip_unless_scripts_are_configured
+  <!-- <div>skip "Test case not ready"
       Validator::Site.connected do |task,supervisor,site|
-        component = Validator.config['components']['detector_logic'].keys.first
-
-        with_alarm_activated do
-          site.log "Waiting for alarm", level: :test
-          start_time = Time.now
-          message, response = nil,nil
-          alarm_code_id = 'A0301'
-
-          collector = site.collect_alarms num: 1, component: component, aCId: alarm_code_id,
-            aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
-        end
-        # TODO
-      end</div> -->
-</div></li>
-      
-      
-    
-      
-      <li class='context-specification even'><div>
-  <div class="specification">
-    
-  </div>
-  <!-- <div>skip "Don't yet have a reliable way of triggering alarms"
-      skip_unless_scripts_are_configured
-      Validator::Site.stop
-      with_alarm_activated do
-        Validator::Site.connected do |task,supervisor,site|
-          component = Validator.config['components']['detector_logic'].keys.first
-          log "Wait for alarm"
-          collector = site.collect_alarms num: 1, component: component, aCId: 'A0302',
-            aSp: 'Issue', aS: 'Active', timeout: Validator.config['timeouts']['alarm']
-
-          alarm = collector.message
-          alarm_time = Time.parse(alarm.attributes["aTs"])
-          expect(alarm_time).to be_within(1.minute).of Time.now.utc
-          expect(alarm.attributes['rvs']).to eq([{
-            "n"=>"detector","v"=>"1"},
-            {"n"=>"type","v"=>"loop"},
-            {"n"=>"errormode","v"=>"on"},
-            {"n"=>"manual","v"=>"True"},
-            {"n"=>"logicerror","v"=>"always_off"}
-          ])
+        @site = site
+        with_alarm_activated task, site, 'A0301' do |alarm|
+          # TODO verify that we can acknowledge the alarm
         end
       end</div> -->
 </div></li>
@@ -568,18 +498,14 @@
   <div class="specification">
     
   </div>
-  <!-- <div>skip_unless_scripts_are_configured
-      Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        with_clock_set CLOCK do
-          component = Validator.config['components']['detector_logic'].keys.first
-          with_alarm_activated do
-            site.log "Waiting for alarm", level: :test
-            collector = site.collect_alarms task, num: 1, timeout: Validator.config['timeouts']['alarm']
+        with_clock_set CLOCK do                           # set clock
+          with_alarm_activated(task, site, 'A0301') do |alarm|   # raise alarm, by activating input
+            alarm_time = Time.parse( alarm.attributes["aTs"] )
             max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-            diff = Time.parse(collector.message.first.attributes['sTs']) - CLOCK
-            diff = diff.round
-            expect(diff.abs).to be <= max_diff,
+            diff = alarm_time - CLOCK
+            expect(diff.round.abs).to be <= max_diff,
               "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s"
           end
         end
