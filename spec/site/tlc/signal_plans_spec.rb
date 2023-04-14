@@ -184,7 +184,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Verify connection
     # 2. Send command to set timeout
     # 3. Wait for status = true
-    specify 'timeout for dynamic bands is set with M0023', sxl: '>=1.0.15' do |example|
+    specify 'timeout for dynamic bands is set with M0023', sxl: '>=1.1' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         status = 0
