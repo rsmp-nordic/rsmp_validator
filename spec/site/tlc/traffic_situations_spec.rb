@@ -11,9 +11,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     it 'is read with S0015', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
-          status_list = { S0015: [:status] }
-        else
           status_list = { S0015: [:status,:source] }
+        else
+          status_list = { S0015: [:status] }
         end
         request_status_and_confirm site, "current traffic situation", status_list
       end

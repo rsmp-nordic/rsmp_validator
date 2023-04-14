@@ -47,9 +47,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'switched on is read with S0007', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
-          status_list = { S0007: [:status,:intersection] }
-        else
           status_list = { S0007: [:status,:intersection,:source] }
+        else
+          status_list = { S0007: [:status,:intersection] }
         end
         request_status_and_confirm site, "controller switch on (dark mode=off)", status_list
       end
@@ -63,9 +63,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'manual control is read with S0008', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
-          status_list = { S0008: [:status,:intersection] }
-        else
           status_list = { S0008: [:status,:intersection,:source] }
+        else
+          status_list = { S0008: [:status,:intersection] }
         end
         request_status_and_confirm site, "manual control status", status_list
       end
@@ -79,9 +79,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'fixed time control is read with S0009', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
-          status_list = { S0009: [:status,:intersection] }
-        else
           status_list = { S0009: [:status,:intersection,:source] }
+        else
+          status_list = { S0009: [:status,:intersection] }
         end
         request_status_and_confirm site, "fixed time control status", status_list
       end
@@ -109,9 +109,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'isolated control is read with S0010', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
-          status_list = { S0010: [:status,:intersection] }
-        else
           status_list = { S0010: [:status,:intersection,:source] }
+        else
+          status_list = { S0010: [:status,:intersection] }
         end
         request_status_and_confirm site, "isolated control status", status_list
       end
@@ -126,9 +126,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'yellow flash can be read with S0011', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
-          status_list = { S0011: [:status,:intersection] }
-        else
           status_list = { S0011: [:status,:intersection,:source] }
+        else
+          status_list = { S0011: [:status,:intersection] }
         end
         request_status_and_confirm site, "yellow flash status", status_list
       end
@@ -177,9 +177,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'all red can be read with S0012', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
-          status_list = { S0012: [:status,:intersection] }
-        else
           status_list = { S0012: [:status,:intersection,:source] }
+        else
+          status_list = { S0012: [:status,:intersection] }
         end        
         request_status_and_confirm site, "all-red status", status_list
       end
