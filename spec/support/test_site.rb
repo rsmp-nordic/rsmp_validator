@@ -87,20 +87,6 @@ class Validator::Site < Validator::Testee
     ].each do |key|
       raise "config 'timeouts/#{key}' is missing" unless config['timeouts'][key]
     end
-
-
-    # scripts
-    if config['scripts']
-      Validator.log "Warning: Script path for activating alarm is missing or empty".colorize(:yellow) if config['scripts']['activate_alarm'] == {}
-      unless File.exist? config['scripts']['activate_alarm']
-        Validator.abort_with_error "Script at #{config['scripts']['activate_alarm']} for activating alarm is missing".colorize(:yellow)
-      end
-      Validator.log "Warning: Script path for deactivating alarm is missing or empty".colorize(:yellow) if config['scripts']['deactivate_alarm'] == {}
-      unless File.exist? config['scripts']['deactivate_alarm']
-        Validator.abort_with_error "Script at #{config['scripts']['deactivate_alarm']} for deactivating alarm is missing".colorize(:yellow)
-      end
-    end
-
   end
 
   # build local supervisor

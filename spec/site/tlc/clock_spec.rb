@@ -193,27 +193,25 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
 
     # Verify timestamp of alarm after changing clock
+    # The test requires the device to be programmed so that
+    # a A0301 alarm can be raise by activating a specific input, as
+    # configuted in the test config.
     #
     # 1. Given the site is connected
-    # 2. Send control command to set_clock
-    # 3. Wait for status = true
-    # 4. Trigger alarm from Script
-    # 5. Wait for alarm
-    # 6. Compare set_clock and alarm response timestamp
-    # 7. Expect the difference to be within max_diff
-    it 'is used for alarm timestamp', :script, sxl: '>=1.0.7' do |example|
-      skip_unless_scripts_are_configured
+    # 2. When we send a command to change the clock
+    # 3. And we raise an alarm, by acticate an input
+    # 4. Then we should receive an alarm
+    # 5. And the alarm timestamp should be close to the time set the clock to
+
+    it 'is used for alarm timestamp', :programming, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        with_clock_set CLOCK do
-          component = Validator.config['components']['detector_logic'].keys.first
-          with_alarm_activated do
-            site.log "Waiting for alarm", level: :test
-            collector = site.collect_alarms task, num: 1, timeout: Validator.config['timeouts']['alarm']
+        with_clock_set CLOCK do                           # set clock
+          with_alarm_activated(task, site, 'A0301') do |alarm|   # raise alarm, by activating input
+            alarm_time = Time.parse( alarm.attributes["aTs"] )
             max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-            diff = Time.parse(collector.message.first.attributes['sTs']) - CLOCK
-            diff = diff.round
-            expect(diff.abs).to be <= max_diff,
+            diff = alarm_time - CLOCK
+            expect(diff.round.abs).to be <= max_diff,
               "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s"
           end
         end

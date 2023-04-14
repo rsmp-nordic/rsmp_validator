@@ -13,7 +13,7 @@ The validator includes a growing suite of tests and can report test results in s
 ```
 % bundle exec rspec spec/site/core spec/site/tlc
 Using test config config/gem_tlc.yaml
-Run options: exclude {:rsmp=>[unless relevant for 3.1.5], :script=>true}
+Run options: exclude {:rsmp=>[unless relevant for 3.1.5]}
 ...............................................................................
 
 Finished in 6.22 seconds (files took 0.60681 seconds to load)

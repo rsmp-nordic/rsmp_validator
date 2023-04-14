@@ -35,8 +35,10 @@ signal_plans:
 inputs:
   total: 8
   programming:
-    8:
+    7:
       raise: A0301
+    8:
+      raise: A0302
 intervals:
   timer: 0.1
   watchdog: 0.1
