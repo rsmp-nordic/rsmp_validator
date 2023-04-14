@@ -33,8 +33,12 @@ Verify status S0015 current traffic situation
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  request_status_and_confirm site, "current traffic situation",
-    { S0015: [:status] }
+  if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+    status_list = { S0015: [:status,:source] }
+  else
+    status_list = { S0015: [:status] }
+  end
+  request_status_and_confirm site, "current traffic situation", status_list
 end
 ```
 </details>

@@ -33,8 +33,12 @@ Verify status S0012 all red
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  request_status_and_confirm site, "all-red status",
-    { S0012: [:status,:intersection] }
+  if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+    status_list = { S0012: [:status,:intersection,:source] }
+  else
+    status_list = { S0012: [:status,:intersection] }
+  end        
+  request_status_and_confirm site, "all-red status", status_list
 end
 ```
 </details>
@@ -153,8 +157,12 @@ Verify status S0009 fixed time control
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  request_status_and_confirm site, "fixed time control status",
-    { S0009: [:status,:intersection] }
+  if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+    status_list = { S0009: [:status,:intersection,:source] }
+  else
+    status_list = { S0009: [:status,:intersection] }
+  end
+  request_status_and_confirm site, "fixed time control status", status_list
 end
 ```
 </details>
@@ -176,8 +184,12 @@ Verify status S0010 isolated control
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  request_status_and_confirm site, "isolated control status",
-    { S0010: [:status,:intersection] }
+  if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+    status_list = { S0010: [:status,:intersection,:source] }
+  else
+    status_list = { S0010: [:status,:intersection] }
+  end
+  request_status_and_confirm site, "isolated control status", status_list
 end
 ```
 </details>
@@ -199,8 +211,12 @@ Verify status S0008 manual control
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  request_status_and_confirm site, "manual control status",
-    { S0008: [:status,:intersection] }
+  if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+    status_list = { S0008: [:status,:intersection,:source] }
+  else
+    status_list = { S0008: [:status,:intersection] }
+  end
+  request_status_and_confirm site, "manual control status", status_list
 end
 ```
 </details>
@@ -268,8 +284,12 @@ Verify status S0007 controller switched on (dark mode=off)
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  request_status_and_confirm site, "controller switch on (dark mode=off)",
-    { S0007: [:status,:intersection] }
+  if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+    status_list = { S0007: [:status,:intersection,:source] }
+  else
+    status_list = { S0007: [:status,:intersection] }
+  end
+  request_status_and_confirm site, "controller switch on (dark mode=off)", status_list
 end
 ```
 </details>
@@ -374,8 +394,12 @@ Verify status S0011 yellow flash
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  request_status_and_confirm site, "yellow flash status",
-    { S0011: [:status,:intersection] }
+  if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
+    status_list = { S0011: [:status,:intersection,:source] }
+  else
+    status_list = { S0011: [:status,:intersection] }
+  end
+  request_status_and_confirm site, "yellow flash status", status_list
 end
 ```
 </details>
