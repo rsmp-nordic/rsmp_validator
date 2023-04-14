@@ -317,23 +317,45 @@ module Validator::CommandHelpers
     end
   end
 
-  def run_script key
-    path = Validator.config.dig('scripts',key)
-    raise "No Script configured for '#{key}'" unless path
-    system(path) if path
-  end
-
-  def skip_unless_scripts_are_configured
-    unless Validator.config['scripts'] && Validator.config['scripts'].any?
-      skip "Skipping because scripts are not configured"
+  # Run a block with ana alarm acticated, then deactive the alarm
+  # The device must be programmed to activate an alarm when a specific
+  # input is acticated, and the mapping must be configured in the test config.
+  def with_alarm_activated task, site, alarm_code_id, initial_deactivation: true
+    input_nr = Validator.config.dig('alarm_activation', alarm_code_id)
+    skip "alarm activation for alarm #{alarm_code_id}  not configured" unless input_nr
+    if initial_deactivation
+      force_input_and_confirm input: input_nr, value: 'False'
     end
-  end
+    state = false
+    begin
+      collect_task = task.async do  # run the collector in an async task
+        collector = RSMP::AlarmCollector.new( site,
+          num: 1,
+          query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'aS' => /Active/i },
+          timeout: Validator.config['timeouts']['alarm']
+        )
+        collector.collect
+        collector.messages.first
+      end
+      force_input_and_confirm input: input_nr, value: 'True'
+      state = true
+      yield collect_task.wait
 
-  def with_alarm_activated
-    run_script 'activate_alarm'
-    yield
-  ensure
-    run_script 'deactivate_alarm'
+      collect_task = task.async do  # run the collector in an async task
+        collector = RSMP::AlarmCollector.new( site,
+          num: 1,
+          query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'aS' => /inActive/i },
+          timeout: Validator.config['timeouts']['alarm']
+        )
+        collector.collect
+        collector.messages.first
+      end
+      force_input_and_confirm input: input_nr, value: 'False'
+      state = false
+      collect_task.wait
+    ensure
+      force_input_and_confirm input: input_nr, value: 'False' if state == true
+    end
   end
 
   def force_input_and_confirm(input:, value:)

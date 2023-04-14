@@ -30,7 +30,7 @@ Test a site, by running tests covering the core specification:
 ```
 % bundle exec rspec spec/site/core
 Using test config config/gem_tlc.yaml
-Run options: exclude {:rsmp=>[unless relevant for 3.1.5], :script=>true}
+Run options: exclude {:rsmp=>[unless relevant for 3.1.5]}
 ....
 
 Finished in 1.01 seconds (files took 0.64491 seconds to load)
@@ -49,7 +49,7 @@ If you want to store you selection for easy reuse, add them to a file name .rspe
 % cat .rspec-local
 --pattern spec/site/*   # run tests in spec/site/
 --exclude-pattern spec/site/unknown_status_spec.rb    # skip tests in this file
---tag ~script           # exclude tests tagged with :script
+--tag ~programming           # exclude tests tagged with :programming
 ```
 
  .rspec-local is git ignored, and will therefore not be added to the repo. 
@@ -85,23 +85,21 @@ Once it's running, you can run the validator site specs, and you will see the Ru
 
 See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) documentation for details on how to run Ruby sites and supervisors.
 
-### Alarms and Scripts
+### Alarms and Programming
 Testing alarms require some way to trigger them.
 
-There's not yet any way to trigger alarms via RSMP, so some other way is required. Some equipment provide other interfaces that makes it possible to trigger alarms.
-
-If you can provide a script that can trigger the relevant alarms in the equipment, you can use this in tests. Such scripts are configured by adding `scripts` item in the validator config:
+There's not yet any way to trigger alarms directly via RSMP. But often you can program the equipment to raise an alarm when a specific input is activated. If that's the case, use the `alarm_activcation` item in the validator config to specify which input activates which alarm:
 
 ```yaml
-scripts:
-  activate_alarm: '/some/path/activate_alarm.sh'
-  deactivate_alarm: '/some/path/deactivate_alarm.sh'
+alarm_activation:
+  A0301: 7
+  A0302: 8
 ```
 
-Otherwise you should probably skip the test by passing the `--tag ~script` as an option to the `rspec` command:
+Tests that rely on device programming are tagged with :programming. If the device cannot be programmed to raise alarm on input activation, you should skip tests that rely on this, by passing the `--tag ~programming` as an option to the `rspec` command:
 
 ```
-% bundle exec rspec spec/site/ --tag ~script
+% bundle exec rspec spec/site/ --tag ~programming
 ```
  
 ## RSpec Helpers and Options
