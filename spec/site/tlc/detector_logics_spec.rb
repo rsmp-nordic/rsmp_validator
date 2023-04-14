@@ -69,7 +69,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'sensitivity is set with S0031', sxl: '>=1.0.15' do |example|
+    specify 'sensitivity is read with S0031', sxl: '>=1.0.15' do |example|
       Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "loop detector sensitivity",
           { S0031: [:status] }
