@@ -32,7 +32,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Then we should receive a status update
     it 'status can be fetched with S0033', sxl: '>=1.1' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        request_status_and_confirm "signal group status",
+        request_status_and_confirm site, "signal group status",
           { S0033: [:status] }
       end
     end
