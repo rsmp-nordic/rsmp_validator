@@ -23,6 +23,7 @@ Tests for Traffic Light Controllers.
 - [Operational]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Operational.md %})
 - [Signal Group]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Signal_20Group.md %})
 - [Signal Plan]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Signal_20Plan.md %})
+- [Signal Priority]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Signal_20Priority.md %})
 - [Subscription]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Subscription.md %})
 - [System]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/System.md %})
 - [Traffic Data]({{ site.baseurl }}{% link tests/Specifications/Site/Traffic_20Light_20Controller/Traffic_20Data.md %})

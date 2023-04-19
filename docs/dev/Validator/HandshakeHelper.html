@@ -80,7 +80,7 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>spec/site/core/connect_spec.rb</dd>
+    <dd>spec/support/handshake_helper.rb</dd>
   </dl>
   
 </div>
@@ -151,7 +151,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Validate the connection sequence for core 3.1.1, 3.1.2 and 3.1.3     In these earliser version of core, both the site and and the supervisor sends a Version message simulatenously as soon as the connection is opened, and then acknowledged.</p>
+<p>Validate the connection sequence for core 3.1.1, 3.1.2 and 3.1.3 In these earliser version of core, both the site and and the supervisor sends a Version message simulatenously as soon as the connection is opened, and then acknowledged.</p>
 </div></span>
   
 </li>
@@ -242,7 +242,7 @@
 96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 87</span>
+      <pre class="code"><span class="info file"># File 'spec/support/handshake_helper.rb', line 87</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_check_sequence'><span class='object_link'><a href="../top-level-namespace.html#check_sequence-instance_method" title="#check_sequence (method)">check_sequence</a></span></span> <span class='id identifier rubyid_version'>version</span>
   <span class='kw'>case</span> <span class='id identifier rubyid_version'>version</span>
@@ -271,9 +271,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Validate the connection sequence for core 3.1.1, 3.1.2 and 3.1.3 </p>
-
-<p>In these earliser version of core, both the site and and the supervisor sends a Version message simulatenously as soon as the connection is opened, and then acknowledged. We therefore cannot expect a specific sequence of the first four messages, but we can check that the set of messages is correct The same is the case with the next four messages, which is the exchange of Watchdogs</p>
+<p>Validate the connection sequence for core 3.1.1, 3.1.2 and 3.1.3 In these earliser version of core, both the site and and the supervisor sends a Version message simulatenously as soon as the connection is opened, and then acknowledged. We therefore cannot expect a specific sequence of the first four messages, but we can check that the set of messages is correct The same is the case with the next four messages, which is the exchange of Watchdogs</p>
 
 
   </div>
@@ -322,7 +320,7 @@
 67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 36</span>
+      <pre class="code"><span class="info file"># File 'spec/support/handshake_helper.rb', line 36</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_check_sequence_3_1_1_to_3_1_3'>check_sequence_3_1_1_to_3_1_3</span> <span class='id identifier rubyid_core_version'>core_version</span>
   <span class='id identifier rubyid_expected_version_messages'>expected_version_messages</span> <span class='op'>=</span> <span class='lbracket'>[</span>
@@ -404,7 +402,7 @@
 85</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 72</span>
+      <pre class="code"><span class="info file"># File 'spec/support/handshake_helper.rb', line 72</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_check_sequence_3_1_4_or_later'>check_sequence_3_1_4_or_later</span> <span class='id identifier rubyid_version'>version</span>
   <span class='id identifier rubyid_expected'>expected</span> <span class='op'>=</span> <span class='lbracket'>[</span>
@@ -474,7 +472,7 @@
 27</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/site/core/connect_spec.rb', line 8</span>
+      <pre class="code"><span class="info file"># File 'spec/support/handshake_helper.rb', line 8</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_get_connection_message'><span class='object_link'><a href="../top-level-namespace.html#get_connection_message-instance_method" title="#get_connection_message (method)">get_connection_message</a></span></span> <span class='id identifier rubyid_core_version'>core_version</span><span class='comma'>,</span> <span class='id identifier rubyid_length'>length</span>
   <span class='id identifier rubyid_timeout'>timeout</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ready</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
