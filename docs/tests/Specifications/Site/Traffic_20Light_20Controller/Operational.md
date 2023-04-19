@@ -69,6 +69,29 @@ end
 
 
 
+## Operational coordinated control is read with S0032
+
+Verify status S0032 coordinated control
+
+1. Given the site is connected
+2. Request status
+3. Expect status response before timeout
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+  status_list = { S0032: [:status,:intersection,:source] }
+  request_status_and_confirm site, "coordinated control status", status_list
+end
+```
+</details>
+
+
+
+
 ## Operational dark mode can be activated with M0001
 
 Verify that we can activate dark mode
