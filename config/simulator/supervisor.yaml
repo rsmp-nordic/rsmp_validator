@@ -11,5 +11,5 @@ log:
   id: true
   port: true
   json: true
-  acknowledgements: false
-  watchdogs: false
+  acknowledgements: true
+  watchdogs: true
