@@ -44,14 +44,22 @@ class Validator::Supervisor < Validator::Testee
 
   def wait_for_connection
     Validator::Log.log "Waiting for connection to supervisor"
-    @proxy = @node.wait_for_supervisor(:any, config['timeouts']['connect'])
-    @proxy.wait_for_state :ready, timeout: config['timeouts']['connect']
-  rescue RSMP::TimeoutError
-    raise RSMP::ConnectionError.new "Could not connect to supervisor within #{config['timeouts']['connect']}s"
+    @proxy = @node.find_supervisor :any
+    begin
+      # wait for proxy to be connected (or ready)
+      @proxy.wait_for_state [:connected,:ready], timeout: config['timeouts']['connect']
+    rescue RSMP::TimeoutError
+      raise RSMP::ConnectionError.new "Could not connect to supervisor within #{config['timeouts']['connect']}s"
+    end
   end
 
   def wait_for_handshake
-    @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
+    begin
+      # wait for handshake to be completed
+      @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
+    rescue RSMP::TimeoutError
+      raise RSMP::ConnectionError.new "Handshake didn't complete within #{config['timeouts']['ready']}s"
+    end
   end
 
 end

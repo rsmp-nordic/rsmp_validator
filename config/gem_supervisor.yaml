@@ -26,6 +26,7 @@ intervals:
   timer: 0.1
   watchdog: 0.1
   reconnect: 0.1
+  after_connect: 0.2
 timeouts:
   connect: 1
   ready: 1
