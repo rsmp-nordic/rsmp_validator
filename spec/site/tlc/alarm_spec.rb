@@ -80,13 +80,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # The alarm code and input nr is read from the test configuration.
     #
     # 1. Given the site is connected
-    # 2. And we have forced the input to False
-    # 2. When we force the input to True
-    # 3. Then we should receive an active alarm issue, with a reasonable timestamp
-    # 4. Then we send an alarm acknowledgment
-    # 5. Then we should recieve an active alarm acknowledment
-    # 6. When we force the input to False
-    # 7. Then the alarm issue should become inactive, with a reasonable timestamp
+    # 2. When we trigger an alarm
+    # 2. Then we should receive an unacknowledged alarm issue 
+    # 4. When we acknowledge the alarm
+    # 5. Then we should recieve an acknowledged alarm issue
 
     specify 'A0301 can be acknowledged when input is activated', :programming, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
