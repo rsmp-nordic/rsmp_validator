@@ -75,18 +75,60 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
     # Validate that an alarm can be acknowledged.
     #
+    # The test expects that the TLC is programmed so that an detector logic fault
+    # alarm A0301 is raised and can be acknowledged when a specific input is activated.
+    # The alarm code and input nr is read from the test configuration.
+    #
     # 1. Given the site is connected
-    # 2. When we raise an alarm, by acticating an input
-    # 3. Then we should receive an alarm
-    # 4. When we acknowledgement the alarm
-    # 5. Then we should receive a confirmation
+    # 2. And we have forced the input to False
+    # 2. When we force the input to True
+    # 3. Then we should receive an active alarm issue, with a reasonable timestamp
+    # 4. Then we send an alarm acknowledgment
+    # 5. Then we should recieve an active alarm acknowledment
+    # 6. When we force the input to False
+    # 7. Then the alarm issue should become inactive, with a reasonable timestamp
 
-    it 'can be acknowledged', :programming do |example|
-      skip "Test case not ready"
+    specify 'A0301 can be acknowledged when input is activated', :programming, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        @site = site
-        with_alarm_activated task, site, 'A0301' do |alarm|
-          # TODO verify that we can acknowledge the alarm
+        prepare task, site
+        alarm_code_id = 'A0301'   # what alarm to expect
+        timeout  = Validator.config['timeouts']['alarm']
+
+        log "Activating alarm #{alarm_code_id}"
+        deactivate = with_alarm_activated(task, site, alarm_code_id) do |alarm|   # raise alarm, by activating input
+          log "Alarm #{alarm_code_id} is now active"
+
+          # verify timestamp
+          alarm_time = Time.parse(alarm.attributes["aTs"])
+          expect(alarm_time).to be_within(1.minute).of Time.now.utc
+
+          # test acknowledge and confirm
+          log "Acknowledge alarm #{alarm_code_id}"
+
+          collect_task = task.async do
+            RSMP::AlarmCollector.new(site,
+              num: 1,
+              query: {'aCId'=>alarm_code_id, 'aSp' => /Issue/i, 'ack' => /Acknowledged/i, 'aS' => 'Active'},
+              timeout: timeout
+            ).collect!
+          end
+
+          m_id = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for repsonses
+          alarm = RSMP::AlarmAcknowledged.new(
+            'mId' => m_id,
+            'cId' => Validator.config['main_component'],
+            'aTs' => site.clock.to_s,
+            'aCId' => alarm_code_id
+          )
+
+          ## note: the json schema needs to be updated,
+          ## it currently requires the attributes "ack", "aS", "sS", "cat", "pri", "rvs",
+          ## even when it's an alarm suspend message.
+          ## as a temporary work-around, outgoing json schema validation can be disabled when sending
+          site.send_message alarm, nil, validate: false
+          messages = collect_task.wait
+          expect(messages).to be_an(Array)
+          expect(messages.first).to be_a(RSMP::Alarm)
         end
       end
     end
