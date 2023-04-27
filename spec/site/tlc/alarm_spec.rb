@@ -125,13 +125,18 @@ RSpec.describe 'Site::Traffic Light Controller' do
             timeout: Validator.config['timeouts']['alarm']
           ).collect!
         end
-        site.send_message suspend
-        messages = collect_task.wait
-        expect(messages).to be_an(Array)
-        message = messages.first
-        expect(message).to be_a(RSMP::AlarmSuspended)
+        begin
+          site.send_message suspend
+          messages = collect_task.wait
+          expect(messages).to be_an(Array)
+          message = messages.first
+          expect(message).to be_a(RSMP::AlarmSuspended)
+        rescue
+          site.send_message resume    # clean up by resuming alarm
+          raise
+        end
 
-        # clean up by resuming alarm
+          # clean up by resuming alarm
         resume.attributes['mId'] = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for responses
         collect_task = task.async do
           RSMP::AlarmCollector.new(site, 
