@@ -118,11 +118,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
             'aCId' => alarm_code_id
           )
 
-          ## note: the json schema needs to be updated,
-          ## it currently requires the attributes "ack", "aS", "sS", "cat", "pri", "rvs",
-          ## even when it's an alarm suspend message.
-          ## as a temporary work-around, outgoing json schema validation can be disabled when sending
-          site.send_message alarm, nil, validate: false
+          site.send_message alarm, nil
           messages = collect_task.wait
           expect(messages).to be_an(Array)
           expect(messages.first).to be_a(RSMP::Alarm)
