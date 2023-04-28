@@ -331,7 +331,7 @@ module Validator::CommandHelpers
   # input is acticated, and the mapping must be configured in the test config.
   def with_alarm_activated task, site, alarm_code_id, initial_deactivation: true
     input_nr = Validator.config.dig('alarm_activation', alarm_code_id)
-    skip "alarm activation for alarm #{alarm_code_id}  not configured" unless input_nr
+    skip "alarm activation for alarm #{alarm_code_id} not configured" unless input_nr
     if initial_deactivation
       force_input_and_confirm input: input_nr, value: 'False'
     end
