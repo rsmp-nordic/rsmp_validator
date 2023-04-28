@@ -71,7 +71,8 @@ Validator::Site.connected do |task,supervisor,site|
   # subscribe
   component = Validator.config['main_component']
   log "Subscribing to signal priority request status updates"
-  status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0','sOc'=>'True'}]
+  status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
+  status_list.map! { |item| item.merge!('sOc' => 'True') } if use_sOc?(site)
   site.subscribe_to_status component, status_list
   # start collector
   request_id = SecureRandom.uuid()[0..3]    # make a message id
@@ -183,7 +184,8 @@ Validate that we can subscribe signal priority status
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
-  status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0','sOc'=>'True'}]
+  status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
+  status_list.map! { |item| item.merge!('sOc' => 'True') } if use_sOc?(site)
   wait_for_status task, 'signal priority status', status_list
 end
 ```
