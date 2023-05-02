@@ -7,7 +7,7 @@ General documentation is written as Markdown files and is structured as a Jekyll
 
 The RSpec test suite is documented in the code, and extracted using YARD, which then generates a HTML site which is publushed as part of the Jekyll site.
 
-Changes to documentation are committed to the `master` branch. GitHub actions then use the branches `docs` and `gh-pages` to rebuild and publish documentation.
+Changes to documentation are committed to the `docs` branch, or directly to the `master` branch. GitHub actions then use the `gh-pages` branch to rebuild and publish documentation.
 
 ## Jekyll
 The general documenentation is written in Markdown and structured as a Jekyll site located in docs/. It's deployed on Github Pages, using the branch gh-pages as publishing source.
