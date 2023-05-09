@@ -12,7 +12,7 @@ This section explains how to run the RSMP Validator using Docker. You can also [
 ## Setup
 1. Download and install [Docker](https://www.docker.com).
 
-2. Download the Docker image with `docker pull ghcr.io/rsmp-nordic/rsmp_validator:docker`. You can find the [available docker images on github](https://github.com/rsmp-nordic/rsmp_validator/pkgs/container/rsmp_validator).
+2. Download the Docker image with `docker pull ghcr.io/rsmp-nordic/rsmp_validator:master`. You can find the [available docker images on github](https://github.com/rsmp-nordic/rsmp_validator/pkgs/container/rsmp_validator).
 
 
 2. Create a local folder for storing validator configurations. It will serve the same purpose as the [config folder](https://rsmp-nordic.org/rsmp_validator/config/) when you install manually.
