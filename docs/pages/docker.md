@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Docker
-permalink: /install/
+permalink: /docker/
 parent: Getting Started
 nav_order: 1
 ---
