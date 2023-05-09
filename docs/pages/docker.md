@@ -1,12 +1,12 @@
 ---
 layout: page
-title: Installation
+title: Docker
 permalink: /install/
 parent: Getting Started
 nav_order: 1
 ---
 
-# Docker
+# Running with Docker
 This section explains how to run the RSMP Validator using Docker. You can also [install locally]({{ site.baseurl}}{% link pages/installing.md %}).
 
 ## Setup
