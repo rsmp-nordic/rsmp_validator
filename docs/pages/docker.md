@@ -23,7 +23,7 @@ This section explains how to run the RSMP Validator using Docker. You can also [
 ](https://rsmp-nordic.org/rsmp_validator/config/#choosing-what-config-to-use) when you run the validator).
 
 
-## Run tests from the terminal
+## Run from the terminal
 You run tests by starting the container and running `rspec` inside it. To make your config files available to the container, it must be mounted, identified by its absolute path. If you're inside the folder you can use `$PWD` to get the path:
 
 `% docker container run -it --name rsmp_validator -v $PWD -p 12111:12111 rsmp_validator spec/site/tlc`
@@ -35,11 +35,28 @@ You can pass custom options to docker or the validator, e.g. to run a specific t
 `% docker container run -it --name rsmp_validator -v $PWD -p 12111:12111 rsmp_validator --format Validator::Brief --tags "~slow" spec/site/tlc/detector_logics_spec.rb:31`
 
 
-## Run tests from Docker Destop
+## Run from Docker Desktop
 If you're using Docker Desktop, find `rsmp_validator` in the images tab and press `Run`, and Select *Optional settings* using the following settings:
+
    * Ports: `12111` 
    * Volumes:
      * Host path: *Select the folder you created in step 1*
      * Container Path: `/config`
 
-Start the container. By default the container will run `bundle exec rspec spec/site/tlc`, which will run all TLC (Traffic Light Controller) tests.
+Start the container.
+
+By default the container will run `bundle exec rspec spec/site/tlc`, which will run all TLC (Traffic Light Controller) tests.
+
+## Default test set
+The ENTRYPOINT directive in the Dockerfile defines the command to run, while the CMD directive contains arguments passed to the command:
+
+`
+ENTRYPOINT [ "bundle", "exec", "rspec" ]
+CMD [ "spec/site/core spec/site/tlc" ]
+`
+
+Because the RSMP Validator is based on the RSpec test framework, running the container run `rspec` command. `bundle exec rspec` is used to ensure that the correct Ruby gems are available.
+
+The folder `spec/site/core` contains site core tests which applies to all types of equipment, while the folder `spec/site/tlc` contains the tests for Traffic Light Controllers (TLCs).
+
+To change the set of tests run, you could modifify the CMD directive in the Dockerfile and rebuild the image. But usually it's easier to just override the CMD directive when running the container.
