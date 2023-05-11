@@ -9,11 +9,9 @@ nav_order: 1
 # Running with Docker
 This section explains how to run the RSMP Validator using Docker. You can also [install locally]({{ site.baseurl}}{% link pages/installing.md %}).
 
+
 ## Setup
 1. Download and install [Docker](https://www.docker.com).
-
-2. Download the Docker image with `docker pull ghcr.io/rsmp-nordic/rsmp_validator:master`. You can find the [available docker images on github](https://github.com/rsmp-nordic/rsmp_validator/pkgs/container/rsmp_validator).
-
 
 2. Create a local folder for storing validator configurations. It will serve the same purpose as the [config folder](https://rsmp-nordic.org/rsmp_validator/config/) when you install manually.
 
@@ -23,40 +21,63 @@ This section explains how to run the RSMP Validator using Docker. You can also [
 ](https://rsmp-nordic.org/rsmp_validator/config/#choosing-what-config-to-use) when you run the validator).
 
 
-## Run from the terminal
-You run tests by starting the container and running `rspec` inside it. To make your config files available to the container, it must be mounted, identified by its absolute path. If you're inside the folder you can use `$PWD` to get the path:
 
-`% docker container run -it --name rsmp_validator -v $PWD -p 12111:12111 rsmp_validator spec/site/tlc`
+## Run from the Terminal
+You run the validator be starting the container. You must mount the config folder you create above, so the validator can read files in it. Assuming the config folder you created is at ./config, you can use $PWD to construct the absolute path:
 
-By default the validator uses port 12111 when testing rsmp sites, and 14111 when testing supervisors. The port must be mapped using the `-p` option, as shown above.
+`% docker run --rm --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 rsmp_validator`
 
-You can pass custom options to docker or the validator, e.g. to run a specific test, filter tests by tags or use a custom reporting format:
+By default the validator listens on port 13111 when testing rsmp sites. The port must be mapped using the `-p` option, as shown above.
 
-`% docker container run -it --name rsmp_validator -v $PWD -p 12111:12111 rsmp_validator --format Validator::Brief --tags "~slow" spec/site/tlc/detector_logics_spec.rb:31`
+### Custom Arguments
+You can pass custom options to the validator, e.g. to run specific tests, filter tests by tags or use a custom reporting format.
+
+Use the detailed log format:
+
+`% docker run --rm --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 rsmp_validator spec/site/core --format Validator::Details`
+
+Run a specific test:
+
+`docker container run -it --name rsmp_validator -v $PWD/config -p 12111:12111 rsmp_validator spec/site/tlc/detector_logics_spec.rb:31`
+
+See [running]({{ site.baseurl}}{% link pages/running.md %}) for more info regarding options.
+
+
+### Log Files
+By default, the validator produce a single output which will be send to the terminal. If you like you can direct this output to a file to keep it.
+
+The validator also has the option to produce multiple outputs, directing some to files. When running with Docker, this would by default be to files inside the container. As soon as you remove the container, these files will be lost.
+
+If you want to persists these extra log files, you can mount a log folder, and use it to persiste log files:
+
+`docker run --rm --name rsmp_validator -it -v $PWD/config:/config -v $PWD/log:/log -p 13111:13111 rsmp_validator spec/site/core --format Validator::Brief --format Validator::Details --out log/validation.log`
+
+Here we mount the local folder `./log` to `/log` in the container. The first `--format Validator::Brief` will output to the terminal. The second `--format Validator::Details --out log/validation.log` specify an additional output format which will be stored to the file `log/validation.log`. Since this is in a mounted host folder, the log file will be kept after the container is deleted.
 
 
 ## Run from Docker Desktop
-If you're using Docker Desktop, find `rsmp_validator` in the images tab and press `Run`, and Select *Optional settings* using the following settings:
+You can also run tests from Docker Desktop. Find `rsmp_validator` in the images tab and press `Run`, Select *Optional settings* and then enter:
 
-   * Ports: `12111` 
+   * Ports: `13111`
    * Volumes:
      * Host path: *Select the folder you created in step 1*
      * Container Path: `/config`
 
-Start the container.
+Start the container by cliking 'Run'. The log output is shown in Docker Desktop.
 
-By default the container will run `bundle exec rspec spec/site/tlc`, which will run all TLC (Traffic Light Controller) tests.
 
 ## Default test set
-The ENTRYPOINT directive in the Dockerfile defines the command to run, while the CMD directive contains arguments passed to the command:
+By default the container will run tests in these two folders:
 
-`
-ENTRYPOINT [ "bundle", "exec", "rspec" ]
-CMD [ "spec/site/core spec/site/tlc" ]
-`
+- `spec/site/core`: tests covering the RSMP Core spec, which apply to all types of sites (equipment).
+- `spec/site/tlc`: test for TLCs (Traffic Light Controller).
 
-Because the RSMP Validator is based on the RSpec test framework, running the container run `rspec` command. `bundle exec rspec` is used to ensure that the correct Ruby gems are available.
+This default set of tests is defined in the CMD directive of the Dockerfile used to build the Docker image.
 
-The folder `spec/site/core` contains site core tests which applies to all types of equipment, while the folder `spec/site/tlc` contains the tests for Traffic Light Controllers (TLCs).
+To change the set of tests run, you could modifify the CMD directive in the Dockerfile and rebuild the image. But usually it's easier to just override pass custom arguments to the `docker run` command, as shown above.
 
-To change the set of tests run, you could modifify the CMD directive in the Dockerfile and rebuild the image. But usually it's easier to just override the CMD directive when running the container.
+
+## Available Images
+The latest commit of the master branch is available under the docker tags `latest`, and also as `master`.
+
+Our docker images are publish on Github Container Registry. Check the [available images on github](https://github.com/rsmp-nordic/rsmp_validator/pkgs/container/rsmp_validator).
