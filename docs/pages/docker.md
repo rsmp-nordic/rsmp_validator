@@ -25,7 +25,7 @@ This section explains how to run the RSMP Validator using Docker. You can also [
 ## Run from the Terminal
 You run the validator be starting the container. You must mount the config folder you create above, so the validator can read files in it. Assuming the config folder you created is at ./config, you can use $PWD to construct the absolute path:
 
-`% docker run --rm --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 rsmp_validator`
+`% docker run --rm --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator`
 
 By default the validator listens on port 13111 when testing rsmp sites. The port must be mapped using the `-p` option, as shown above.
 
@@ -34,11 +34,11 @@ You can pass custom options to the validator, e.g. to run specific tests, filter
 
 Use the detailed log format:
 
-`% docker run --rm --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 rsmp_validator spec/site/core --format Validator::Details`
+`% docker run --rm --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/core --format Validator::Details`
 
 Run a specific test:
 
-`docker container run -it --name rsmp_validator -v $PWD/config -p 12111:12111 rsmp_validator spec/site/tlc/detector_logics_spec.rb:31`
+`docker container run -it --name rsmp_validator -v $PWD/config -p 12111:12111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/tlc/detector_logics_spec.rb:31`
 
 See [running]({{ site.baseurl}}{% link pages/running.md %}) for more info regarding options.
 
@@ -50,7 +50,7 @@ The validator also has the option to produce multiple outputs, directing some to
 
 If you want to persists these extra log files, you can mount a log folder, and use it to persiste log files:
 
-`docker run --rm --name rsmp_validator -it -v $PWD/config:/config -v $PWD/log:/log -p 13111:13111 rsmp_validator spec/site/core --format Validator::Brief --format Validator::Details --out log/validation.log`
+`docker run --rm --name rsmp_validator -it -v $PWD/config:/config -v $PWD/log:/log -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/core --format Validator::Brief --format Validator::Details --out log/validation.log`
 
 Here we mount the local folder `./log` to `/log` in the container. The first `--format Validator::Brief` will output to the terminal. The second `--format Validator::Details --out log/validation.log` specify an additional output format which will be stored to the file `log/validation.log`. Since this is in a mounted host folder, the log file will be kept after the container is deleted.
 
