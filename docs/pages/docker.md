@@ -35,7 +35,7 @@ After running, you can start the container again to re-run the same set of test 
 To run with different options, remove the container and run again with different options. You can pass `--rm` when running to automatically remove the container after each completion. See the Docker docs for more info about managing containers.
 
 ### Custom Options
-You can pass custom options to the validator, e.g. to run specific tests, filter tests by tags or use a custom reporting format.
+You can pass [custom options]({{ site.baseurl}}{% link pages/running.md %}) to the validator, e.g. to run specific tests, filter tests by tags or use a custom reporting format.
 
 Use the detailed log format:
 
@@ -44,8 +44,6 @@ Use the detailed log format:
 Run a specific test:
 
 `% docker run --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/tlc/detector_logics_spec.rb:31`
-
-See [running]({{ site.baseurl}}{% link pages/running.md %}) for more info regarding options.
 
 
 ### Log Files
