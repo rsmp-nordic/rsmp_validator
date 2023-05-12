@@ -21,24 +21,29 @@ This section explains how to run the RSMP Validator using Docker. You can also [
 ](https://rsmp-nordic.org/rsmp_validator/config/#choosing-what-config-to-use) when you run the validator).
 
 
-
 ## Run from the Terminal
 You run the validator be starting the container. You must mount the config folder you create above, so the validator can read files in it. Assuming the config folder you created is at ./config, you can use $PWD to construct the absolute path:
 
-`% docker run --rm --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator`
+`% docker run --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator`
 
 By default the validator listens on port 13111 when testing rsmp sites. The port must be mapped using the `-p` option, as shown above.
 
-### Custom Arguments
+After running, you can start the container again to re-run the same set of test and options with:
+
+`% docker start -a rsmp_validator`
+
+To run with different options, remove the container and run again with different options. You can pass `--rm` when running to automatically remove the container after each completion. See the Docker docs for more info about managing containers.
+
+### Custom Options
 You can pass custom options to the validator, e.g. to run specific tests, filter tests by tags or use a custom reporting format.
 
 Use the detailed log format:
 
-`% docker run --rm --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/core --format Validator::Details`
+`% docker run --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/core --format Validator::Details`
 
 Run a specific test:
 
-`docker container run -it --name rsmp_validator -v $PWD/config -p 12111:12111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/tlc/detector_logics_spec.rb:31`
+`% docker run --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/tlc/detector_logics_spec.rb:31`
 
 See [running]({{ site.baseurl}}{% link pages/running.md %}) for more info regarding options.
 
@@ -46,13 +51,10 @@ See [running]({{ site.baseurl}}{% link pages/running.md %}) for more info regard
 ### Log Files
 By default, the validator produce a single output which will be send to the terminal. If you like you can direct this output to a file to keep it.
 
-The validator also has the option to produce multiple outputs, directing some to files. When running with Docker, this would by default be to files inside the container. As soon as you remove the container, these files will be lost.
+The validator also has the option to produce [mulitple outputs]({{ site.baseurl}}{% link pages/output.md %}), directing some to files. When running with Docker, this would by default be to files inside the container. If you remove the container, the files will be lost. If you want to persists these extra log files on the host, you can mount a log folder and write logs to it:
 
-If you want to persists these extra log files, you can mount a log folder, and use it to persiste log files:
+`% docker run --name rsmp_validator -it -v $PWD/config:/config -v $PWD/log:/log -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/core --format Validator::Brief --format Validator::Details --out log/validation.log`
 
-`docker run --rm --name rsmp_validator -it -v $PWD/config:/config -v $PWD/log:/log -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/core --format Validator::Brief --format Validator::Details --out log/validation.log`
-
-Here we mount the local folder `./log` to `/log` in the container. The first `--format Validator::Brief` will output to the terminal. The second `--format Validator::Details --out log/validation.log` specify an additional output format which will be stored to the file `log/validation.log`. Since this is in a mounted host folder, the log file will be kept after the container is deleted.
 
 
 ## Run from Docker Desktop
