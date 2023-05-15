@@ -7,7 +7,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         log "Requesting non-existing status S0000"
         status_list = convert_status_list( S0000:[:status] )
         result = site.request_status Validator.config['main_component'], status_list,
-          collect: { timeout: Validator.config['timeouts']['command_response'] },
+          collect: { timeout: Validator.config['timeouts']['status_response'] },
           validate: false
         collector = result[:collector]
         expect(collector).to be_an(RSMP::Collector)
@@ -23,7 +23,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         log "Requesting non-existing status S0001 name"
         status_list = convert_status_list( S0001:[:bad] )
         result = site.request_status Validator.config['main_component'], status_list,
-          collect: { timeout: Validator.config['timeouts']['command_response'] },
+          collect: { timeout: Validator.config['timeouts']['status_response'] },
           validate: false
                 collector = result[:collector]
         expect(collector).to be_an(RSMP::Collector)
