@@ -145,7 +145,7 @@ module Validator::CommandHelpers
       status: 'False',
       emergencyroute: route
     }
-    send_command_and_confirm @task, command_list, "Disable emergency route"
+    send_command_and_confirm @task, command_list, "Disable emergency route #{route}"
   end
 
   def set_input status, input
@@ -519,7 +519,7 @@ module Validator::CommandHelpers
   def switch_emergency_route route
     set_emergency_route route
     wait_for_status(@task,
-      "emergency route to be set to #{route}",
+      "emergency route #{route} to be enabled",
       [
         {'sCI'=>'S0006','n'=>'status','s'=>'True'},
         {'sCI'=>'S0006','n'=>'emergencystage','s'=>route}
@@ -528,8 +528,11 @@ module Validator::CommandHelpers
 
     disable_emergency_route route
     wait_for_status(@task,
-      "emergency route to be disabled",
-      [{'sCI'=>'S0006','n'=>'status','s'=>'False'}]
+      "emergency route #{route} to be disabled",
+      [
+        {'sCI'=>'S0006','n'=>'status','s'=>'False'},
+        {'sCI'=>'S0006','n'=>'emergencystage','s'=>route}
+      ]
     )
   end
 
