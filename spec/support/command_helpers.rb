@@ -355,7 +355,7 @@ module Validator::CommandHelpers
           query: { 'aCId' =>  alarm_code_id, 'aSp' =>  alarm_specialization, 'aS' => alarm_active },
           timeout: Validator.config['timeouts']['alarm']
         )
-        collector.collect
+        collector.collect!
         collector.messages.first
       end
       force_input_and_confirm input: input_nr, value: 'True'
@@ -368,7 +368,7 @@ module Validator::CommandHelpers
           query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'aS' => alarm_inactive },
           timeout: Validator.config['timeouts']['alarm']
         )
-        collector.collect
+        collector.collect!
         collector.messages.first
       end
       force_input_and_confirm input: input_nr, value: 'False'
