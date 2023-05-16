@@ -337,13 +337,25 @@ module Validator::CommandHelpers
     end
     state = false
     begin
+      if RSMP::Proxy.version_meets_requirement? site.core_version, '>=3.2'
+        # from core 3.2 all enum matching must be match exactly
+        alarm_specialization = /Issue/
+        alarm_active = /Active/
+        alarm_inactive = /inActive/
+      else
+        # before 3.2 match is done case-insensitively
+        alarm_specialization = /issue/i
+        alarm_active = /active/i
+        alarm_inactive = /inactive/i
+      end
+
       collect_task = task.async do  # run the collector in an async task
         collector = RSMP::AlarmCollector.new( site,
           num: 1,
-          query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'aS' => /Active/i },
+          query: { 'aCId' =>  alarm_code_id, 'aSp' =>  alarm_specialization, 'aS' => alarm_active },
           timeout: Validator.config['timeouts']['alarm']
         )
-        collector.collect
+        collector.collect!
         collector.messages.first
       end
       force_input_and_confirm input: input_nr, value: 'True'
@@ -353,10 +365,10 @@ module Validator::CommandHelpers
       collect_task = task.async do  # run the collector in an async task
         collector = RSMP::AlarmCollector.new( site,
           num: 1,
-          query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'aS' => /inActive/i },
+          query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'aS' => alarm_inactive },
           timeout: Validator.config['timeouts']['alarm']
         )
-        collector.collect
+        collector.collect!
         collector.messages.first
       end
       force_input_and_confirm input: input_nr, value: 'False'
