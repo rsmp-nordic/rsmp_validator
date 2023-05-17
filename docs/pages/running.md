@@ -92,8 +92,9 @@ There's not yet any way to trigger alarms directly via RSMP. But often you can p
 
 ```yaml
 alarm_activation:
-  A0301: 7
-  A0302: 8
+  A0302: 
+    input: 7
+    component: DL1
 ```
 
 Tests that rely on device programming are tagged with :programming. If the device cannot be programmed to raise alarm on input activation, you should skip tests that rely on this, by passing the `--tag ~programming` as an option to the `rspec` command:

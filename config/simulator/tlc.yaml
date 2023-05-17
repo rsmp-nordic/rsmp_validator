@@ -37,7 +37,7 @@ inputs:
   total: 8
   programming:
     7:
-      raise_alarm: A0301
+      raise_alarm: A0302
       component: DL1
 intervals:
   timer: 0.1

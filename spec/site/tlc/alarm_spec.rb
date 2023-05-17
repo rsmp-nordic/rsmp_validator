@@ -15,7 +15,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
   describe 'Alarm' do
         
-    # Validate that a detector logic fault A0301 is raises and cleared.
+    # Validate that a detector logic fault A0302 is raises and cleared.
     #
     # The test requires that the device is programmed so that the alarm
     # is raise when a specific input is activated, as specified in the
@@ -27,9 +27,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. When we force the input to False
     # 5. Then the alarm issue should become inactive, with a timestamp close to now
 
-    specify 'Alarm A0301 is raised when input is activated', :programming, sxl: '>=1.0.7' do |example|
+    specify 'Alarm A0302 is raised when input is activated', :programming, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        alarm_code_id = 'A0301'
+        alarm_code_id = 'A0302'
         prepare task, site
         def verify_timestamp alarm, duration=1.minute
           alarm_time = Time.parse(alarm.attributes["aTs"])
@@ -44,7 +44,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    # Validate that a detector logic fault A0301 is raises and cleared.
+    # Validate that a detector logic fault A0302 is raises and cleared.
     #
     # The test requires that the device is programmed so that the alarm
     # is raise when a specific input is activated, as specified in the
@@ -56,9 +56,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. When we force the input to False
     # 5. Then the alarm issue should become inactive, with a timestamp close to now
 
-    specify 'A0301 can be raised', :programming, sxl: '>=1.0.7' do |example|
+    specify 'A0302 can be raised', :programming, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        alarm_code_id = 'A0301'
+        alarm_code_id = 'A0302'
         prepare task, site
         def verify_timestamp alarm, duration=1.minute
           alarm_time = Time.parse(alarm.attributes["aTs"])
@@ -76,7 +76,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # Validate that an alarm can be acknowledged.
     #
     # The test expects that the TLC is programmed so that an detector logic fault
-    # alarm A0301 is raised and can be acknowledged when a specific input is activated.
+    # alarm A0302 is raised and can be acknowledged when a specific input is activated.
     # The alarm code and input nr is read from the test configuration.
     #
     # 1. Given the site is connected
@@ -85,10 +85,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. When we acknowledge the alarm
     # 5. Then we should recieve an acknowledged alarm issue
 
-    specify 'A0301 can be acknowledged', :programming, sxl: '>=1.0.7' do |example|
+    specify 'A0302 can be acknowledged', :programming, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        alarm_code_id = 'A0301'   # what alarm to expect
+        alarm_code_id = 'A0302'   # what alarm to expect
         timeout  = Validator.config['timeouts']['alarm']
 
         log "Activating alarm #{alarm_code_id}"
@@ -131,7 +131,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    # Validate that alarms can be suspended. We're using A0301 in this test.
+    # Validate that alarms can be suspended. We're using A0302 in this test.
     #
     # 1. Given the site is connected
     # 2. And the alarm is  resumed
@@ -140,9 +140,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 5. When we resume the alarm
     # 6. Then we should receive an alarm resumed message
 
-    it 'A0301 can be suspended and resumed' do
+    it 'A0302 can be suspended and resumed' do
       Validator::Site.connected do |task,supervisor,site|
-        alarm_code = 'A0301'
+        alarm_code = 'A0302'
         component_id = Validator.config['main_component']
         # first resume to make sure something happens when we suspend
         resume = RSMP::AlarmResume.new(

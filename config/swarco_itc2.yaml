@@ -43,6 +43,6 @@ restrict_testing:
   core_version: 3.1.2
   sxl_version: 1.0.7 
 alarm_activation:
-  A0301: 
+  A0302: 
     input: 152
     component: KK+AG9998=001DL001
