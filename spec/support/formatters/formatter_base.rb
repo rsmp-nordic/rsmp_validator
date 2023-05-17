@@ -32,7 +32,7 @@ module Validator
 
     def dump_sentinel_warnings
       warnings = Validator::Testee.sentinel_errors
-      if warnings.any?      
+      if warnings.any?
         @output << "\n\nSentinel warnings:\n\n"
         warnings.each.with_index(1) do |warning,i|
           @output << colorize("#{i.to_s.rjust(4)}) #{warning.class}\n",:yellow)

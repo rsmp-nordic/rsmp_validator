@@ -24,7 +24,7 @@ module YARD::CodeObjects
         end
         parts.shift if parts.size > 1
         parts.join(' ')
-      end  
+      end
     end
   end
 end

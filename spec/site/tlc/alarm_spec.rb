@@ -14,7 +14,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
   # because validator is meant for automated testing.
 
   describe 'Alarm' do
-        
     # Validate that a detector logic fault A0302 is raises and cleared.
     #
     # The test requires that the device is programmed so that the alarm
@@ -81,7 +80,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     #
     # 1. Given the site is connected
     # 2. When we trigger an alarm
-    # 2. Then we should receive an unacknowledged alarm issue 
+    # 2. Then we should receive an unacknowledged alarm issue
     # 4. When we acknowledge the alarm
     # 5. Then we should recieve an acknowledged alarm issue
 
@@ -184,7 +183,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         # clean up by resuming alarm
         resume.attributes['mId'] = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for responses
         collect_task = task.async do
-          RSMP::AlarmCollector.new(site, 
+          RSMP::AlarmCollector.new(site,
             m_id: resume.m_id,
             num: 1,
             query: {'aCI'=>alarm_code_id,'aSp'=>'Suspend','sS'=>'notSuspended'},

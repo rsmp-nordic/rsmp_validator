@@ -24,7 +24,7 @@ module Validator
       @output <<  colorize("#{indent}#{notification.example.description}\n",:success)
     end
 
-    def example_failed notification   
+    def example_failed notification
       @output << colorize("#{indent}#{notification.example.description}",:failure)
 
       # expect { }.not_to raise_error might raise an RSpec::Expectations::ExpectationNotMetError,

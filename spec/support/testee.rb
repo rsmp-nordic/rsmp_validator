@@ -6,7 +6,7 @@ require 'rsmp'
 require 'colorize'
 require 'rspec/expectations'
 
-class Validator::Testee 
+class Validator::Testee
   include RSpec::Matchers
 
   @@sentinel_errors = []

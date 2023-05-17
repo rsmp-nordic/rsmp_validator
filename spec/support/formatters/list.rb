@@ -12,7 +12,7 @@ module Validator
       @output << colorize("#{notification.example.full_description}\n",:success)
     end
 
-    def example_failed notification   
+    def example_failed notification
       @output << colorize("#{notification.example.full_description}\n",:failure)
     end
   end

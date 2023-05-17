@@ -321,7 +321,7 @@ module Validator::CommandHelpers
   end
 
   def require_security_codes
-    unless Validator.config.dig 'secrets', 'security_codes' 
+    unless Validator.config.dig 'secrets', 'security_codes'
       skip "Security codes are not configured"
     end
   end
@@ -448,7 +448,7 @@ module Validator::CommandHelpers
     component = Validator.config['components']['detector_logic'].keys[0]
     result = @site.send_command component, command_list, collect!: {
       timeout: Validator.config['timeouts']['command_response']
-    }       
+    }
   end
 
   def wait_normal_control timeout: Validator.config['timeouts']['startup_sequence']

@@ -34,7 +34,7 @@ module Validator
       @output << colorize("    Passed\n\n",:success)
     end
 
-    def example_failed notification   
+    def example_failed notification
       # RSpec::Core::Formatters::ExceptionPresenter is a private class which
       # should not really be used by us, but the snippet extraction and backtrace
       # processing seems rather cumbersome to reimplement

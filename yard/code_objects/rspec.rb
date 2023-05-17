@@ -1,5 +1,5 @@
 module YARD::CodeObjects
-  module RSpec 
+  module RSpec
     class Specs < YARD::CodeObjects::NamespaceObject
       def type
         :rspec
