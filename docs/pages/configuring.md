@@ -96,7 +96,9 @@ secrets:                # place secrets or in a separate file, see below
     1: '1111'           # level 1
     2: '2222'           # level 2
 alarm_activation:       # how to trigger alarms by forcing inputs
-  A0301: 8              # alarm A0301 can be triggered by forcing input 8
+  A0303:                # alarm A0302
+    input: 7            # can be triggered by forcing input 8
+    component: DL1      # and will active on component DL1
 ```
 
 The following settings will be copied into a configuration for the local supervisor: `port`, `sxl`, `intervals`, `timeouts`, `components`, `rsmp_versions`.
