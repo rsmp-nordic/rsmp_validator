@@ -330,8 +330,11 @@ module Validator::CommandHelpers
   # The device must be programmed to activate an alarm when a specific
   # input is acticated, and the mapping must be configured in the test config.
   def with_alarm_activated task, site, alarm_code_id, initial_deactivation: true
-    input_nr = Validator.config.dig('alarm_activation', alarm_code_id)
-    skip "alarm activation for alarm #{alarm_code_id} not configured" unless input_nr
+    action = Validator.config.dig('alarm_activation', alarm_code_id)
+    skip "alarm activation of #{alarm_code_id} is not configured" unless action
+    input_nr = action['input']
+    skip "alarm activation of #{alarm_code_id} has no input configured" unless input_nr
+    component_id = action['component'] || Validator.config['main_component']
     if initial_deactivation
       force_input_and_confirm input: input_nr, value: 'False'
     end
@@ -352,7 +355,12 @@ module Validator::CommandHelpers
       collect_task = task.async do  # run the collector in an async task
         collector = RSMP::AlarmCollector.new( site,
           num: 1,
-          query: { 'aCId' =>  alarm_code_id, 'aSp' =>  alarm_specialization, 'aS' => alarm_active },
+          query: { 
+            'cId' => component_id,
+            'aCId' =>  alarm_code_id,
+            'aSp' =>  alarm_specialization,
+            'aS' => alarm_active
+          },
           timeout: Validator.config['timeouts']['alarm']
         )
         collector.collect!
@@ -360,12 +368,17 @@ module Validator::CommandHelpers
       end
       force_input_and_confirm input: input_nr, value: 'True'
       state = true
-      yield collect_task.wait
+      yield collect_task.wait, component_id
 
       collect_task = task.async do  # run the collector in an async task
         collector = RSMP::AlarmCollector.new( site,
           num: 1,
-          query: { 'aCId' =>  alarm_code_id, 'aSp' =>  /Issue/i, 'aS' => alarm_inactive },
+          query: {
+            'cId' => component_id,
+            'aCId' =>  alarm_code_id,
+            'aSp' =>  /Issue/i,
+            'aS' => alarm_inactive
+          },
           timeout: Validator.config['timeouts']['alarm']
         )
         collector.collect!
@@ -373,7 +386,7 @@ module Validator::CommandHelpers
       end
       force_input_and_confirm input: input_nr, value: 'False'
       state = false
-      collect_task.wait
+      return collect_task.wait, component_id
     ensure
       force_input_and_confirm input: input_nr, value: 'False' if state == true
     end

@@ -194,7 +194,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
     # Verify timestamp of alarm after changing clock
     # The test requires the device to be programmed so that
-    # a A0301 alarm can be raise by activating a specific input, as
+    # a A0302 alarm can be raise by activating a specific input, as
     # configuted in the test config.
     #
     # 1. Given the site is connected
@@ -207,7 +207,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         with_clock_set CLOCK do                           # set clock
-          with_alarm_activated(task, site, 'A0301') do |alarm|   # raise alarm, by activating input
+          with_alarm_activated(task, site, 'A0302') do |alarm|   # raise alarm, by activating input
             alarm_time = Time.parse( alarm.attributes["aTs"] )
             max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
             diff = alarm_time - CLOCK

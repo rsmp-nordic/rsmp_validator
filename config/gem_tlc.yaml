@@ -43,7 +43,8 @@ secrets:
     1: '1111'
     2: '2222'
 alarm_activation:
-  A0301: 7
-  A0302: 8
+  A0302: 
+    input: 7
+    component: DL1
 restrict_testing:
 #  sxl_version: 1.1
