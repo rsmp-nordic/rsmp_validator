@@ -38,6 +38,7 @@ inputs:
   programming:
     7:
       raise: A0301
+      component: DL1
 intervals:
   timer: 0.1
   watchdog: 0.1
