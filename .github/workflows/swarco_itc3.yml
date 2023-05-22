@@ -7,7 +7,7 @@
 name: Swarco ITC-3
 on:
   push:
-    branches: [ equipment ]
+    pull_request: [ equipment ]
   schedule:
     # schedule runs only on the default branch. time is in UTC.
     # * is a special character in YAML so you have to quote this string.

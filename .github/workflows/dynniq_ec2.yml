@@ -6,7 +6,7 @@
 
 name: Dynniq EC-2
 on:
-  push:
+  pull_request:
     branches: [ equipment ]
   schedule:
     # schedule runs only on the default branch. time is in UTC.
