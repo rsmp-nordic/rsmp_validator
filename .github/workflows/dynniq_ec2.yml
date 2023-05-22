@@ -8,9 +8,9 @@ name: Dynniq EC-2
 on:
   push:
     branches: [ equipment ]
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron:  '0 11 * * *'
+  schedule: # schedule runs only on the default branch
+    # * is a special character in YAML so you have to quote this string. time is in UTC.
+    - cron:  '*/5 * * * *'
 
 jobs:
   test:
