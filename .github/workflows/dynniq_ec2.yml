@@ -7,9 +7,9 @@
 name: Dynniq EC-2
 on:
   push:
-    branches: [ master ]
+    branches: [ equipment ]
   pull_request:
-    branches: [ master ]
+    branches: [ equipment ]
 jobs:
   test:
     runs-on: [ self-hosted, Windows, X64, ec2 ]

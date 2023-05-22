@@ -1,9 +1,9 @@
 name: Swarco ITC-2
 on:
   push:
-    branches: [ master ]
+    branches: [ equipment ]
   pull_request:
-    branches: [ master ]
+    branches: [ equipment ]
 jobs:
   test:
     runs-on: ubuntu-latest

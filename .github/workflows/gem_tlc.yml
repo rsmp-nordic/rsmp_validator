@@ -7,9 +7,9 @@
 name: Gem TLC
 on:
   push:
-    branches: [ master ]
+    branches: [ master, equipment ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, equipment ]
 jobs:
   test:
     timeout-minutes: 10
