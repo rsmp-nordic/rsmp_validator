@@ -9,8 +9,8 @@ on:
   push:
     branches: [ equipment ]
   schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron:  '30 11 * * *'
+    # * is a special character in YAML so you have to quote this string. time is in UTC
+    - cron:  '0 11 * * *'
 jobs:
   test:
     runs-on: [ self-hosted, Windows, X64, itc3 ]
