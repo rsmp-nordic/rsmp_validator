@@ -8,17 +8,17 @@ name: Dynniq EC-2
 on:
   push:
     branches: [ equipment ]
-  schedule: # schedule runs only on the default branch
-    # * is a special character in YAML so you have to quote this string. time is in UTC.
-    - cron:  '*/5 * * * *'
-
+  schedule:
+    # schedule runs only on the default branch. time is in UTC.
+    # * is a special character in YAML so you have to quote this string.
+    # run every night at 3:45AM UTC.
+    - cron:  '45 3 * * *'
 jobs:
   test:
     runs-on: [ self-hosted, Windows, X64, ec2 ]
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
-
     - name: Install Ruby and gems
       uses: ruby/setup-ruby@v1
       env:

@@ -9,8 +9,10 @@ on:
   push:
     branches: [ equipment ]
   schedule:
-    # * is a special character in YAML so you have to quote this string. time is in UTC
-    - cron:  '0 11 * * *'
+    # schedule runs only on the default branch. time is in UTC.
+    # * is a special character in YAML so you have to quote this string.
+    # run every night at 3:45AM UTC.
+    - cron:  '45 3 * * *'
 jobs:
   test:
     runs-on: [ self-hosted, Windows, X64, itc3 ]
