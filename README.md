@@ -9,3 +9,15 @@ Test are written as RSpec specifications and it's easy to add new tests if neede
 
 # Documentation
 See the [detailed documentation](https://rsmp-nordic.github.io/rsmp_validator).
+
+# Test Hub
+The RSMP Validator tests are run daily against a set of Traffic Light Controllers and emulators. Here's the latest status.
+
+[![Gem TLC](https://github.com/rsmp-nordic/rsmp_validator/actions/workflows/gem_tlc.yml/badge.svg?branch=master)](https://github.com/rsmp-nordic/rsmp_validator/actions/workflows/gem_tlc.yml)
+[![Dynniq EC-2](https://github.com/rsmp-nordic/rsmp_validator/actions/workflows/dynniq_ec2.yml/badge.svg?branch=master)](https://github.com/rsmp-nordic/rsmp_validator/actions/workflows/dynniq_ec2.yml)
+[![Swarco ITC-2](https://github.com/rsmp-nordic/rsmp_validator/actions/workflows/swarco_itc2.yml/badge.svg?branch=master)](https://github.com/rsmp-nordic/rsmp_validator/actions/workflows/swarco_itc2.yml)
+[![Swarco ITC-3](https://github.com/rsmp-nordic/rsmp_validator/actions/workflows/swarco_itc3.yml/badge.svg?branch=master)](https://github.com/rsmp-nordic/rsmp_validator/actions/workflows/swarco_itc3.yml)
+
+Note: Until the RMSP Validator reaches version 1.0, test results are preliminary.
+
+If you're a supplier with  equipment that you would like included in our Test Hub, please contact the [RSMP Nordic secretariat](https://rsmp-nordic.org/contact/).
