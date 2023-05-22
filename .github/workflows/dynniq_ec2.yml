@@ -8,8 +8,6 @@ name: Dynniq EC-2
 on:
   push:
     branches: [ equipment ]
-  pull_request:
-    branches: [ equipment ]
   schedule:
     # * is a special character in YAML so you have to quote this string
     - cron:  '30 11 * * *'

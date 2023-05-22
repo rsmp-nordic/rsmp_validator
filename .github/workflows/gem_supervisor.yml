@@ -8,8 +8,6 @@ name: Gem supervisor
 on:
   push:
     branches: [ master, equipment ]
-  pull_request:
-    branches: [ master, equipment ]
 jobs:
   test:
     timeout-minutes: 10
