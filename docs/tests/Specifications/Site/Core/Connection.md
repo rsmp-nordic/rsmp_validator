@@ -27,8 +27,8 @@ rather than the more common Validator::Site.connect.
 
 ## Connection is closed if watchdogs are not acknowledged
 
-1. Given the site is new and connected
-2. When site watchdog acknowledgement method is changed to do nothing
+1. Given the site has just connected
+2. When our supervisor does not acknowledge watchdogs
 3. Then the site should disconnect
 
 <details markdown="block">
@@ -37,12 +37,17 @@ rather than the more common Validator::Site.connect.
   </summary>
 ```ruby
 timeout = Validator.config['timeouts']['disconnect']
-Validator::Site.isolated do |task,supervisor,site|
+Validator::Site.isolated do |task,supervisor,site_proxy|
   supervisor.ignore_errors RSMP::DisconnectError do
-    log "Disabling acknowledgements, site should disconnect"
-    def site.acknowledge original
+    log "Disabling watchdog acknowledgements, site should disconnect"
+    def site_proxy.acknowledge original
+      if original.is_a? RSMP::Watchdog
+        log "Not acknowledgning watchdog", message: original
+      else
+        super
+      end
     end
-    site.wait_for_state :disconnected, timeout: timeout
+    site_proxy.wait_for_state :disconnected, timeout: timeout
   end
 rescue RSMP::TimeoutError
   raise "Site did not disconnect within #{timeout}s"
@@ -53,11 +58,11 @@ end
 
 
 
-## Connection is closed if watchdogs are not received
+## Connection is not closed if watchdogs are not received
 
-1. Given the site is new and connected
-2. When site watchdog sending method is changed to do nothing
-3. Then the supervisor should disconnect
+1. Given the site has just connected
+2. When our supervisor stops sending watchdogs
+3. Then the site should not disconnect
 
 <details markdown="block">
   <summary>
@@ -66,14 +71,16 @@ end
 ```ruby
 Validator::Site.isolated do |task,supervisor,site|
   timeout = Validator.config['timeouts']['disconnect']
-  supervisor.ignore_errors RSMP::DisconnectError do
-    log "Disabling watchdogs, site should disconnect"
-    def site.send_watchdog now=nil
-    end
+  wait_task = task.async do
     site.wait_for_state :disconnected, timeout: timeout
+    raise RSMP::DisconnectError
+  rescue RSMP::TimeoutError
+    # ok, no disconnect happened
   end
-rescue RSMP::TimeoutError
-  raise "Site did not disconnect within #{timeout}s"
+  log "Stop sending watchdogs, site should not disconnect"
+  def site.send_watchdog now=nil
+  end
+  wait_task.wait
 end
 ```
 </details>
