@@ -23,7 +23,7 @@ jobs:
           sudo apt-get -y install wine32
 
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
