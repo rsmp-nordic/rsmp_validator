@@ -1,15 +1,13 @@
 name: Swarco ITC-2
 on:
-  pull_request:
+  push:
     branches: [ equipment ]
   schedule:
-    # schedule runs only on the default branch. time is in UTC.
-    # * is a special character in YAML so you have to quote this string.
-    # run every night at 3:45AM UTC.
-    - cron:  '45 0 * * *'
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '30 11 * * *'
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Install prerequisites
         run: |

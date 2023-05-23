@@ -5,7 +5,9 @@
 # This workflow will run rspec
 
 name: Gem supervisor
-on: push
+on:
+  push:
+    branches: [ master, equipment ]
 jobs:
   test:
     timeout-minutes: 10
