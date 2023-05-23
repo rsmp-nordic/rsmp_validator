@@ -19,12 +19,11 @@ jobs:
       - name: Install wine32
         run: |
           sudo dpkg --add-architecture i386
+          sudo mkdir -p /etc/apt/keyrings
           sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
-          wget -nc https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
-          sudo mv winehq-jammy.sources /etc/apt/sources.list.d/
+          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/$(lsb_release -sc)/winehq-$(lsb_release -sc).sources
           sudo apt-get update
-          sudo apt-get -y install wine32
+          sudo apt-get -y install --install-recommends winehq-stable
 
       - name: Checkout repo
         uses: actions/checkout@v3
