@@ -115,6 +115,20 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
 
     describe 'Output' do
+      # 1. Given the site is connected
+      # 2. When we subscribe to S0004
+      # 3. We should receive a status updated
+      # 4. And the outputstatus attribute should be a digit string
+      specify 'can be read with S0004', sxl: '>=1.0.7' do |example|
+        Validator::Site.connected do |task,supervisor,site|
+          prepare task, site
+          wait_for_status(@task,
+            "S0003 status",
+            [{'sCI'=>'S0004','n'=>'outputstatus','s'=>/^[01]*/}]
+          )
+        end
+      end
+
       # Verify status S0030 forced output status
       #
       # 1. Given the site is connected
