@@ -19,8 +19,8 @@ jobs:
       - name: Install wine32
         run: |
           sudo dpkg --add-architecture i386
-          wget -nc https://dl.winehq.org/wine-builds/winehq.key
-          sudo mv winehq.key /usr/share/keyrings/winehq-archive.key
+          sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
           wget -nc https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
           sudo mv winehq-jammy.sources /etc/apt/sources.list.d/
           sudo apt-get update
