@@ -18,7 +18,7 @@ jobs:
     runs-on: [ self-hosted, Windows, X64, ec2 ]
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Install Ruby and gems
       uses: ruby/setup-ruby@v1
       env:
