@@ -5,9 +5,7 @@
 # This workflow will run rspec
 
 name: Gem TLC
-on:
-  push:
-    branches: [ master, equipment ]
+on: push
 jobs:
   test:
     timeout-minutes: 10

@@ -6,11 +6,13 @@
 
 name: Swarco ITC-3
 on:
-  push:
+  pull_request:
     branches: [ equipment ]
   schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron:  '30 11 * * *'
+    # schedule runs only on the default branch. time is in UTC.
+    # * is a special character in YAML so you have to quote this string.
+    # run every night at 3:45AM UTC.
+    - cron:  '45 0 * * *'
 jobs:
   test:
     runs-on: [ self-hosted, Windows, X64, itc3 ]
