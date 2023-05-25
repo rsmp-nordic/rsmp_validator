@@ -214,7 +214,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'offset is set with M0015', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
         plan = 1
-        status = 255
+        status = 99
         prepare task, site
         set_offset status, plan
       end
