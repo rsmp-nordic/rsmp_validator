@@ -9,7 +9,7 @@ on:
     - cron:  '45 0 * * *'
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Install prerequisites
         run: |
@@ -18,9 +18,10 @@ jobs:
 
       - name: Install wine32
         run: |
+          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
           sudo dpkg --add-architecture i386
-          sudo apt-get update
-          sudo apt-get -y install wine32
+          sudo apt-get update -qq
+          sudo apt-get install -yqq --allow-downgrades libc6:i386 libgcc-s1:i386 libstdc++6:i386 wine
 
       - name: Checkout repo
         uses: actions/checkout@v3
