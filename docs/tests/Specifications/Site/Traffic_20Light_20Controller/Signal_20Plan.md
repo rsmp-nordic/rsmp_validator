@@ -348,7 +348,7 @@ end
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   plan = 1
-  status = 255
+  status = 99
   prepare task, site
   set_offset status, plan
 end
