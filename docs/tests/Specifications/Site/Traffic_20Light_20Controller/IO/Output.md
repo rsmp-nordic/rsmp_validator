@@ -19,6 +19,31 @@ grand_parent: Traffic Light Controller
 - TOC
 {:toc}
 
+## Output can be read with S0004
+
+1. Given the site is connected
+2. When we subscribe to S0004
+3. We should receive a status updated
+4. And the outputstatus attribute should be a digit string
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+  prepare task, site
+  wait_for_status(@task,
+    "S0003 status",
+    [{'sCI'=>'S0004','n'=>'outputstatus','s'=>/^[01]*/}]
+  )
+end
+```
+</details>
+
+
+
+
 ## Output forcing is read with S0030
 
 Verify status S0030 forced output status
