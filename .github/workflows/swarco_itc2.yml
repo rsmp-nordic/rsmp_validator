@@ -148,14 +148,14 @@ jobs:
 
       - name: Upload validation.log
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: rspec validation
           path: log/validation_itc2_*.log
 
       - name: Upload screencast
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: screencast
           path: output.mkv

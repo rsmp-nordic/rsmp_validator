@@ -44,14 +44,14 @@ jobs:
     
     - name: Upload validation.log
       if: always()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rspec validation
         path: log/validation_ruby_*.log
     
     - name: Upload simulator.log
       if: always()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: simulator log
         path: simulator.log
