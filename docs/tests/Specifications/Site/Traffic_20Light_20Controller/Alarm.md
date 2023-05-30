@@ -66,7 +66,7 @@ Validator::Site.connected do |task,supervisor,site|
           'aCId' => alarm_code_id,
           'aSp' => /Issue/i,
           'ack' => /Acknowledged/i,
-          'aS' => 'Active'
+          'aS' => /Active/i
         },
         timeout: timeout
       ).collect!
