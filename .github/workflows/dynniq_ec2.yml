@@ -7,7 +7,7 @@
 name: Dynniq EC-2
 on:
   pull_request:
-    branches: [ equipment ]
+    types: [ labeled ]
   schedule:
     # schedule runs only on the default branch. time is in UTC.
     # * is a special character in YAML so you have to quote this string.
@@ -15,6 +15,7 @@ on:
     - cron:  '45 0 * * *'
 jobs:
   test:
+    if: ${{ github.event.label.name == 'equipment' }}
     runs-on: [ self-hosted, Windows, X64, ec2 ]
     steps:
     - name: Check out repository
