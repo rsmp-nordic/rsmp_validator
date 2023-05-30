@@ -109,7 +109,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
                 'aCId' => alarm_code_id,
                 'aSp' => /Issue/i,
                 'ack' => /Acknowledged/i,
-                'aS' => 'Active'
+                'aS' => /Active/i
               },
               timeout: timeout
             ).collect!
