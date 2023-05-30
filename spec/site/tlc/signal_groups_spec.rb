@@ -85,7 +85,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected
     # 2. And has just been restarted
     # 3. Then all signal groups should follow the startup sequence
-    it 'follows startup sequence after restart', sxl: '>=1.0.7' do |example|
+    it 'follows startup sequence after restart', sxl: '>=1.0.7', functional: true do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         supervisor.ignore_errors RSMP::DisconnectError do
@@ -103,7 +103,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected and in yellow flash mode
     # 2. When we activate normal control
     # 3. All signal groups should go through e, f and g
-    it 'follow startup sequence after yellow flash', sxl: '>=1.0.7' do |example|
+    it 'follow startup sequence after yellow flash', sxl: '>=1.0.7', functional: true do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         verify_startup_sequence do
