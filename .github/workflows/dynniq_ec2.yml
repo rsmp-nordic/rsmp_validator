@@ -15,7 +15,7 @@ on:
     - cron:  '45 0 * * *'
 jobs:
   test:
-    if: ${{ github.event.label.name == 'equipment' }}
+    if: ${{ github.event_name == 'schedule' || github.event.label.name == 'equipment' }}
     runs-on: [ self-hosted, Windows, X64, ec2 ]
     steps:
     - name: Check out repository
