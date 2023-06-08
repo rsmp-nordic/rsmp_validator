@@ -146,19 +146,22 @@ Validate that alarms can be suspended. We're using A0302 in this test.
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  alarm_code = 'A0302'
-  component_id = Validator.config['main_component']
+  alarm_code_id = 'A0302'
+  action = Validator.config.dig('alarms', alarm_code_id)
+  skip "alarm #{alarm_code_id} is not configured" unless action
+  component_id = action['component']
+  skip "alarm #{alarm_code_id} has no component configured" unless component_id
   # first resume to make sure something happens when we suspend
   resume = RSMP::AlarmResume.new(
     'cId' => component_id,
-    'aCId' => alarm_code
+    'aCId' => alarm_code_id
   )
   site.send_message resume
   # now suspend the alarm while collecting responses
   suspend = RSMP::AlarmSuspend.new(
     'mId' => RSMP::Message.make_m_id,     # generate a message id, that can be used to listen for responses
     'cId' => component_id,
-    'aCId' => alarm_code
+    'aCId' => alarm_code_id
   )
   collect_task = task.async do
     RSMP::AlarmCollector.new(site,
@@ -166,7 +169,7 @@ Validator::Site.connected do |task,supervisor,site|
       num: 1,
       query: {
         'cId' => component_id,
-        'aCI' => alarm_code,
+        'aCI' => alarm_code_id,
         'aSp' => 'Suspend',
         'sS' => 'suspended'
       },
@@ -189,7 +192,7 @@ Validator::Site.connected do |task,supervisor,site|
     RSMP::AlarmCollector.new(site, 
       m_id: resume.m_id,
       num: 1,
-      query: {'aCI'=>alarm_code,'aSp'=>'Suspend','sS'=>'notSuspended'},
+      query: {'aCI'=>alarm_code_id,'aSp'=>'Suspend','sS'=>'notSuspended'},
       timeout: Validator.config['timeouts']['alarm']
     ).collect!
   end
