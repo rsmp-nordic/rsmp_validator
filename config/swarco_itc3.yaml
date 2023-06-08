@@ -42,7 +42,7 @@ restrict_testing:
   sxl_version: 1.0.13
 skip_validation:
   - Alarm
-alarm_activation:
+alarms:
   A0302: 
-    input: 152
+    activation_input: 152
     component: KK+AG9998=001DL001

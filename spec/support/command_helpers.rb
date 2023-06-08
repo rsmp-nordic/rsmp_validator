@@ -330,10 +330,10 @@ module Validator::CommandHelpers
   # The device must be programmed to activate an alarm when a specific
   # input is acticated, and the mapping must be configured in the test config.
   def with_alarm_activated task, site, alarm_code_id, initial_deactivation: true
-    action = Validator.config.dig('alarm_activation', alarm_code_id)
-    skip "alarm activation of #{alarm_code_id} is not configured" unless action
-    input_nr = action['input']
-    skip "alarm activation of #{alarm_code_id} has no input configured" unless input_nr
+    action = Validator.config.dig('alarms', alarm_code_id)
+    skip "alarm #{alarm_code_id} is not configured" unless action
+    input_nr = action['activation_input']
+    skip "alarm #{alarm_code_id} has no activation input configured" unless input_nr
     component_id = action['component'] || Validator.config['main_component']
     if initial_deactivation
       force_input_and_confirm input: input_nr, value: 'False'

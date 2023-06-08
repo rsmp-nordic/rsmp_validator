@@ -42,9 +42,9 @@ secrets:
   security_codes:
     1: '1111'
     2: '2222'
-alarm_activation:
+alarms:
   A0302: 
-    input: 7
+    activation_input: 7
     component: DL1
 restrict_testing:
 #  sxl_version: 1.1
