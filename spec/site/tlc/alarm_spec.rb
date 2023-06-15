@@ -107,7 +107,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
               num: 1,
               query: {
                 'aCId' => alarm_code_id,
-                'aSp' => /Issue/i,
+                'aSp' => /Acknowledge/i,
                 'ack' => /Acknowledged/i,
                 'aS' => /Active/i
               },
@@ -115,15 +115,11 @@ RSpec.describe 'Site::Traffic Light Controller' do
             ).collect!
           end
 
-          m_id = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for repsonses
-          alarm = RSMP::AlarmAcknowledged.new(
-            'mId' => m_id,
+          site.send_message RSMP::AlarmAcknowledged.new(
             'cId' => component_id,
             'aTs' => site.clock.to_s,
             'aCId' => alarm_code_id
           )
-
-          site.send_message alarm, nil
           messages = collect_task.wait
           expect(messages).to be_an(Array)
           expect(messages.first).to be_a(RSMP::Alarm)
