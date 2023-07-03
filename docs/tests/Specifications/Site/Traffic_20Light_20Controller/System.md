@@ -113,7 +113,12 @@ end
 
 ## System security code is rejected when incorrect
 
-
+Verify that the site responds with NotAck if we send incorrect security cdoes.
+RThis hehaviour is defined in SXL >= 1.1. For earlier versions,
+The behaviour is undefined.
+1. Given the site is connected
+2. When we send a M0008 command with incorrect security codes
+3. Then we should received a NotAck
 
 <details markdown="block">
   <summary>

@@ -3555,7 +3555,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-system_spec-rb-91"></a>
+    <a name="spec-site-tlc-system_spec-rb-97"></a>
     Traffic Light Controller System security code is rejected when incorrect
   </div>
 
@@ -3563,6 +3563,15 @@
     
     <div class="docstring">
       
+<p>Verify that the site responds with NotAck if we send incorrect security cdoes. RThis hehaviour is defined in SXL &gt;= 1.1. For earlier versions, The behaviour is undefined.</p>
+<ol><li>
+<p>Given the site is connected</p>
+</li><li>
+<p>When we send a M0008 command with incorrect security codes</p>
+</li><li>
+<p>Then we should received a NotAck</p>
+</li></ol>
+
     </div>
 
     <div style="clear: both;"></div>
@@ -3575,13 +3584,13 @@
             <pre class="lines">
 
 
-91
-92
-93
-94</pre>
+97
+98
+99
+100</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/system_spec.rb', line 91</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/system_spec.rb', line 97</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
