@@ -115,7 +115,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
             ).collect!
           end
 
-          site.send_message RSMP::AlarmAcknowledged.new(
+          site.send_message RSMP::AlarmAcknowledge.new(
             'cId' => component_id,
             'aTs' => site.clock.to_s,
             'aCId' => alarm_code_id
