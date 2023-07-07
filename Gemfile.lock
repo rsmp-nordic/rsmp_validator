@@ -42,7 +42,7 @@ GEM
       colorize (~> 0.8.1)
       rsmp_schema (~> 0.4.0)
       thor (~> 1.2.2)
-    rsmp_schema (0.4.2)
+    rsmp_schema (0.4.3)
       json_schemer (~> 0.2.21)
       thor (~> 1.2.1)
     rspec (3.12.0)
