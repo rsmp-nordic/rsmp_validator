@@ -24,7 +24,7 @@ grand_parent: Site
 Verify that the controller responds to an aggregated status request.
 
 1. Given the site is connected
-2. Request aggregated status 
+2. Request aggregated status
 3. Expect aggregated status response before timeout
 
 <details markdown="block">

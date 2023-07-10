@@ -396,7 +396,7 @@
         # clean up by resuming alarm
         resume.attributes['mId'] = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for responses
         collect_task = task.async do
-          RSMP::AlarmCollector.new(site, 
+          RSMP::AlarmCollector.new(site,
             m_id: resume.m_id,
             num: 1,
             query: {'aCI'=>alarm_code_id,'aSp'=>'Suspend','sS'=>'notSuspended'},
@@ -497,12 +497,12 @@
           )
 
           max_diff =
-            Validator.config['timeouts']['command_response'] + 
+            Validator.config['timeouts']['command_response'] +
             Validator.config['timeouts']['status_response']
 
           diff = received - CLOCK
           diff = diff.round
-          expect(diff.abs).to be <= max_diff, 
+          expect(diff.abs).to be <= max_diff,
             "Clock reported by S0096 is off by #{diff}s, should be within #{max_diff}s"
         end
       end</div> -->
@@ -536,7 +536,7 @@
 
           max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
           diff = Time.parse(collector.messages.first.attributes['sTs']) - CLOCK
-          diff = diff.round          
+          diff = diff.round
           expect(diff.abs).to be <= max_diff,
             "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s"
         end
@@ -865,7 +865,7 @@
           status_list = { S0012: [:status,:intersection,:source] }
         else
           status_list = { S0012: [:status,:intersection] }
-        end        
+        end
         request_status_and_confirm site, "all-red status", status_list
       end</div> -->
 </div></li>
@@ -1880,7 +1880,7 @@
           site.send_command component, command_list
         end
 
-        send_priority_request "Send an unrelated signal priority request before", 
+        send_priority_request "Send an unrelated signal priority request before",
           site: site, component: component
         send_priority_request "Send our signal priority request",
           site: site, component: component, id: request_id

@@ -122,7 +122,7 @@ Validator::Site.connected do |task,supervisor,site|
     }
     site.send_command component, command_list
   end
-  send_priority_request "Send an unrelated signal priority request before", 
+  send_priority_request "Send an unrelated signal priority request before",
     site: site, component: component
   send_priority_request "Send our signal priority request",
     site: site, component: component, id: request_id

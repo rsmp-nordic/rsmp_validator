@@ -175,7 +175,7 @@ Validator::Site.connected do |task,supervisor,site|
     collector = result[:collector]
     max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
     diff = Time.parse(collector.messages.first.attributes['sTs']) - CLOCK
-    diff = diff.round          
+    diff = diff.round
     expect(diff.abs).to be <= max_diff,
       "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s"
   end
@@ -227,11 +227,11 @@ Validator::Site.connected do |task,supervisor,site|
       'UTC'
     )
     max_diff =
-      Validator.config['timeouts']['command_response'] + 
+      Validator.config['timeouts']['command_response'] +
       Validator.config['timeouts']['status_response']
     diff = received - CLOCK
     diff = diff.round
-    expect(diff.abs).to be <= max_diff, 
+    expect(diff.abs).to be <= max_diff,
       "Clock reported by S0096 is off by #{diff}s, should be within #{max_diff}s"
   end
 end
