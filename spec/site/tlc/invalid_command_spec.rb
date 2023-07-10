@@ -22,6 +22,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         result = site.send_command '', command_list,
           collect: { timeout: Validator.config['timeouts']['command_response'] },
           validate: false     # disable validation of outgoing message
+        )
         collector = result[:collector]
         expect(collector).to be_an(RSMP::Collector)
         expect(collector.status).to eq(:ok)
