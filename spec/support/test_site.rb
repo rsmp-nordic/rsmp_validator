@@ -1,6 +1,6 @@
 # Helper class for testing RSMP sites
 #
-# The class is a singleton g class, meaning there will only ever be 
+# The class is a singleton g class, meaning there will only ever be
 # one instance.
 #
 # The class runs an RSMP supervisor (which the site connects to)
@@ -9,10 +9,10 @@
 # is maintained across test.
 #
 # However, the reactor is paused between tests, to give RSpec a chance
-# 
+#
 # Only one site is expected to connect to the supervisor. The first
 # site connecting will be the one that tests communicate with.
-# 
+#
 # to run.
 #
 # Each RSpec test is run inside a separate Async task.
@@ -23,7 +23,7 @@
 # The class provides a few methods to wait for the site to connect.
 # These methods all take a block, which is where you should put
 # you test code.
-# 
+#
 # RSpec.describe "Traffic Light Controller" do
 #   it 'my test' do |example|
 #     Validator::Site.connected do |task,supervisor,site|

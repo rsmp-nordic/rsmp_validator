@@ -73,7 +73,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
     # 1. Verify connection
     # 2. Send control command to set  week_table
-    # 3. Wait for status = true  
+    # 3. Wait for status = true
     specify 'week table is set with M0016', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
         status = "0-1,6-2"
@@ -96,7 +96,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
     # 1. Verify connection
     # 2. Send control command to set time_table
-    # 3. Wait for status = true  
+    # 3. Wait for status = true
     specify 'day table is set with M0017', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
         status = "12-1-12-59,1-0-23-12"
@@ -119,7 +119,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
     # 1. Verify connection
     # 2. Send control command to set cycle time
-    # 3. Wait for status = true  
+    # 3. Wait for status = true
     it 'M0018 set cycle time', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
         status = 5
@@ -210,7 +210,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
     # 1. Verify connection
     # 2. Send control command to set dynamic_bands
-    # 3. Wait for status = true  
+    # 3. Wait for status = true
     specify 'offset is set with M0015', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
         plan = 1
@@ -234,7 +234,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
     # 1. Verify connection
     # 2. Send control command to set cycle time
-    # 3. Wait for status = true  
+    # 3. Wait for status = true
     specify 'cycle time is set with M0018', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
         status = 5

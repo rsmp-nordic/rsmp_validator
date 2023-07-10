@@ -41,8 +41,8 @@ secrets:
     2: testcode2
 restrict_testing:
   core_version: 3.1.2
-  sxl_version: 1.0.7 
+  sxl_version: 1.0.7
 alarms:
-  A0302: 
+  A0302:
     component: KK+AG9998=001DL001
     activation_input: 152

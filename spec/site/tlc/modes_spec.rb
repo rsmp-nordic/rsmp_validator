@@ -192,7 +192,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           status_list = { S0012: [:status,:intersection,:source] }
         else
           status_list = { S0012: [:status,:intersection] }
-        end        
+        end
         request_status_and_confirm site, "all-red status", status_list
       end
     end

@@ -1,6 +1,6 @@
 RSpec.describe 'Supervisor' do
   
-  # Validate behaviour related to aggregated status messages 
+  # Validate behaviour related to aggregated status messages
   describe 'Aggregated Status' do
 
   # Validate that the supervisor responds correctly when we send an aggregated status message

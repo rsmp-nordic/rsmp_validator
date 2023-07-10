@@ -1,4 +1,4 @@
-RSpec.describe 'Site::Traffic Light Controller' do  
+RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::CommandHelpers
   include Validator::StatusHelpers
 
@@ -7,7 +7,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     #
     # 1. Verify connection
     # 2. Send control command to start signalgrup, set_signal_start= true, include security_code
-    # 3. Wait for status = true  
+    # 3. Wait for status = true
     it 'is ordered to green with M0010', :important, sxl: '>=1.0.8' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
@@ -17,7 +17,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
     # 1. Verify connection
     # 2. Send control command to stop signalgrup, set_signal_start= false, include security_code
-    # 3. Wait for status = true  
+    # 3. Wait for status = true
     it 'is ordered to red with M0011', :important, sxl: '>=1.0.8' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
@@ -60,7 +60,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
     # 1. Verify connection
     # 2. Send control command to start or stop a serie of signalgroups
-    # 3. Wait for status = true  
+    # 3. Wait for status = true
     specify 'series can be started/stopped with M0012', :important, sxl: '>=1.0.8' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site

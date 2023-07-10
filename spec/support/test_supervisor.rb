@@ -1,5 +1,5 @@
 # Experimental:
-# Helper class for testing RSMP supervisors 
+# Helper class for testing RSMP supervisors
 
 require 'rsmp'
 require 'singleton'
