@@ -8,7 +8,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     #
     # 1. Given the site is connected
     # 2. When we send a command with an unknown component id
-    # 3. Then the site return a command response with age=undefined
+    # 3. Then the site should return a command response with age=undefined
 
     it 'return a command response with age=undefined' do |example|
       Validator::Site.connected do |task,supervisor,site|
@@ -46,8 +46,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
     #
     # 1. Given the site is connected
     # 2. When we send a non-existing M0000 command
-    # 3. Then the site return NotAck
-    
+    # 3. Then the site should return NotAck
+
     it 'returns NotAck' do |example|
       Validator::Site.connected do |task,supervisor,site|
         log "Sending non-existing command M0000"
@@ -64,6 +64,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
   end
 
   context 'receiving a command with a missing attribute' do
+
+    # Verify that site returns NotAck when receiving a command
+    # with a mising command attribute
+    #
+    # 1. Given the site is connected
+    # 2. When we send an M0001 command with 'status' missing
+    # 3. Then the site return NotAck
+
     it 'returns NotAck' do |example|
       Validator::Site.connected do |task,supervisor,site|
         log "Sending M0001 with 'status' attribute missing"
@@ -85,6 +93,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
   end
 
   context 'receiving a command with a bad command name n' do
+
+    # Verify that site returns NotAck when receiving a command
+    # with an unknown command name
+    #
+    # 1. Given the site is connected
+    # 2. When we send an M0001 command with 'bad' as command name
+    # 3. Then the site should return NotAck
+
     it 'returns NotAck' do |example|
       Validator::Site.connected do |task,supervisor,site|
         log "Sending M0001"
