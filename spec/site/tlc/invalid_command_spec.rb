@@ -19,7 +19,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
           timeout: 0,
           intersection: 0
         }
-        result = site.send_command Validator.config['main_component'], command_list,
+        # Note: the rsmp tlc emulator automatically adds compoents that it
+        # doesn't know, so you don't have to configure them manually in the supervisor
+        # However, it will refuse to add a component with an empty string ''.
+        result = site.send_command '', command_list,
           collect: { timeout: Validator.config['timeouts']['command_response'] },
           validate: false     # disable validation of outgoing message
         collector = result[:collector]
