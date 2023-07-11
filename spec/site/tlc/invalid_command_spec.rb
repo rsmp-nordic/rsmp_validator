@@ -3,14 +3,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
   context 'receiving an command with an unknown component id' do
 
-    # Verify that site reponds with NotAck when receive a command
-    # with an unknown component id
+    # Verify that site reponds with NotAck when receiving a command
+    # request with an unknown component id
     #
     # 1. Given the site is connected
     # 2. When we send a command with an unknown component id
     # 3. Then the site should return a command response with age=undefined
 
-    it 'return a command response with age=undefined' do |example|
+    it 'returns a command response with age=undefined' do |example|
       Validator::Site.connected do |task,supervisor,site|
         log "Sending M0001"
         command_list = build_command_list :M0001, :setValue, {
@@ -19,9 +19,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
           timeout: 0,
           intersection: 0
         }
-        # Note: the rsmp tlc emulator automatically adds compoents that it
-        # doesn't know, so you don't have to configure them manually in the supervisor
-        # However, it will refuse to add a component with an empty string ''.
         result = site.send_command '', command_list,
           collect: { timeout: Validator.config['timeouts']['command_response'] },
           validate: false     # disable validation of outgoing message
@@ -40,7 +37,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
   end
 
-  context 'receiving an unknown command code id' do
+  context 'receiving an unknown command request code id' do
 
     # Verify that site returns NotAck when receiving an unknown command
     #
@@ -63,13 +60,13 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
   end
 
-  context 'receiving a command with a missing attribute' do
+  context 'receiving a command request with a missing attribute' do
 
     # Verify that site returns NotAck when receiving a command
-    # with a mising command attribute
+    # request with a missing command attribute
     #
     # 1. Given the site is connected
-    # 2. When we send an M0001 command with 'status' missing
+    # 2. When we send an M0001 command with the 'status' attribute missing
     # 3. Then the site return NotAck
 
     it 'returns NotAck' do |example|
@@ -92,7 +89,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
   end
 
-  context 'receiving a command with a bad command name n' do
+  context 'receiving a command request with a bad command name' do
 
     # Verify that site returns NotAck when receiving a command
     # with an unknown command name
