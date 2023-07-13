@@ -8,7 +8,7 @@ The validator is based on RSpec and written in Ruby. It uses the `rsmp` gem to h
 Test are written as RSpec specifications and it's easy to add new tests if needed.
 
 # Documentation
-See the [detailed documentation](https://rsmp-nordic.github.io/rsmp_validator).
+See the [detailed documentation](https://rsmp-nordic.github.io/rsmp_validator/).
 
 # Test Hub
 The RSMP Validator tests are run daily against a set of Traffic Light Controllers and emulators. Here's the latest status.
