@@ -15,13 +15,15 @@ RSpec.describe 'Site::Traffic Light Controller' do
         log "Sending M0001"
         command_list = build_command_list :M0001, :setValue, {
           securityCode: Validator.config['secrets']['security_codes'][2],
-          status: 'NormalControl',
           timeout: 0,
-          intersection: 0
+          intersection: 0,
+          status: 'NormalControl'
         }
-        result = site.send_command '', command_list,
+        result = site.send_command(
+          'bad', command_list,
           collect: { timeout: Validator.config['timeouts']['command_response'] },
           validate: false     # disable validation of outgoing message
+        )
         collector = result[:collector]
         expect(collector).to be_an(RSMP::Collector)
         expect(collector.status).to eq(:ok)
@@ -48,8 +50,11 @@ RSpec.describe 'Site::Traffic Light Controller' do
     it 'returns NotAck' do |example|
       Validator::Site.connected do |task,supervisor,site|
         log "Sending non-existing command M0000"
-        command_list = build_command_list :M0000, :bad, {}
+        command_list = build_command_list :M0000, :wrong, {
+          status: 'wrong'
+        }
         result = site.send_command Validator.config['main_component'], command_list,
+          securityCode: Validator.config['secrets']['security_codes'][2],
           collect: { timeout: Validator.config['timeouts']['command_response'] },
           validate: false     # disable validation of outgoing message
         collector = result[:collector]
@@ -71,9 +76,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
     it 'returns NotAck' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        log "Sending M0001 with 'status' attribute missing"
+        log "Sending M0001 with empty 'status' attribute"
         command_list = build_command_list :M0001, :setValue, {
-            securityCode: '1111',
+            securityCode: Validator.config['secrets']['security_codes'][2],
             intersection: '0',
             timeout: '0'
             # intentionally not setting 'status'
@@ -102,10 +107,11 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         log "Sending M0001"
         # for M0001, cO should be :setValue, here we use the incorrect :bad
-        command_list = build_command_list :M0001, :bad, {
-            securityCode: '1111',
+        command_list = build_command_list :M0001, :wrong, {
+            securityCode: Validator.config['secrets']['security_codes'][2],
             intersection: '0',
-            timeout: '0'
+            timeout: '0',
+            status: 'NormalControl'
         }
         result = site.send_command Validator.config['main_component'], command_list,
           collect: { timeout: Validator.config['timeouts']['command_response'] },
