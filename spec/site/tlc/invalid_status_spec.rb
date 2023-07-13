@@ -3,8 +3,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
   context 'receiving a status request with an unknown component id' do
 
-    # Verify that site reponds with NotAck when receive a status request
-    # with an unknown component id
+    # Verify that site reponds with q=undefined when receiving a
+    # status request with an unknown component id
     #
     # 1. Given the site is connected
     # 2. When we send a status request with an unknown component id
