@@ -6,7 +6,7 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    async (2.6.2)
+    async (2.6.3)
       console (~> 1.10)
       fiber-annotation
       io-event (~> 1.1)
@@ -15,7 +15,7 @@ GEM
       async
     colorize (0.8.1)
     concurrent-ruby (1.2.2)
-    console (1.17.2)
+    console (1.21.0)
       fiber-annotation
       fiber-local
     diff-lcs (1.5.0)
@@ -26,7 +26,7 @@ GEM
     hana (1.3.7)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
-    io-event (1.2.2)
+    io-event (1.2.3)
     json_schemer (0.2.25)
       ecma-re-validator (~> 0.3)
       hana (~> 1.3)
@@ -36,7 +36,7 @@ GEM
     minitest (5.18.0)
     rake (13.0.6)
     regexp_parser (2.8.1)
-    rsmp (0.20.6)
+    rsmp (0.20.7)
       async (~> 2.6.2)
       async-io (~> 1.35.0)
       colorize (~> 0.8.1)
