@@ -264,12 +264,14 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "Set cycle time to #{plan}"
   end
 
-  def force_input status:'True', input:, value:
+  def force_input input:, status:'True', value: 'True', validate:true
     require_security_codes
     if status == 'True'
       str = "Force input #{input} to #{value}"
+      wait_str = "input #{input} to be forced to #{value}"
     else
       str =  "Release input #{input}"
+      wait_str = "input #{input} to be released"
     end
     command_list = build_command_list :M0019, :setInput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -278,9 +280,22 @@ module Validator::CommandHelpers
       inputValue: value
     }
     send_command_and_confirm @task, command_list, str
+
+    if status == 'True'
+      input_status_str = value == 'True' ? '1' : '0'
+      wait_for_status(@task, wait_str, [
+        {'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}1/},
+        {'sCI'=>'S0003','n'=>'inputstatus','s'=>/^.{#{input - 1}}#{input_status_str}/}
+      ])
+    else
+      wait_for_status(@task, wait_str, [
+        {'sCI'=>'S0029','n'=>'status','s'=>/^.{#{input - 1}}0/}
+      ])
+    end
+
   end
 
-  def force_output status, output, value
+  def force_output output:, status:, value:'True', validate:true
     require_security_codes
     command_list = build_command_list :M0020, :setOutput, {
       securityCode: Validator.config['secrets']['security_codes'][2],
@@ -393,7 +408,7 @@ module Validator::CommandHelpers
   end
 
   def force_input_and_confirm(input:, value:)
-    force_input status: 'True', input: input.to_s, value: value
+    force_input status: 'True', input: input, value: value
     digit = (value == 'True' ? '1' : '0')
     wait_for_status(@task,
       "input #{input} to be #{value}",
