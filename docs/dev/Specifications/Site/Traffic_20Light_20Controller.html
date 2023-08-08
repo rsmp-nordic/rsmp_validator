@@ -113,20 +113,20 @@
       <li class='context-specification'><div class="specification">
   <div class="heading ">
     <a name="spec-site-tlc-io_spec-rb-14"></a>
-    Traffic Light Controller IO Input forcing is read with S0029
+    Traffic Light Controller IO Input is read with S0003
   </div>
 
   <div class="details method_details_list">
     
     <div class="docstring">
       
-<p>Verify status S0029 forced input status</p>
+<p>Verify that we can read input status with S0003</p>
 <ol><li>
 <p>Given the site is connected</p>
 </li><li>
-<p>Request status</p>
+<p>When we read input with S0029</p>
 </li><li>
-<p>Expect status response before timeout</p>
+<p>Then we should receive a valid response</p>
 </li></ol>
 
     </div>
@@ -148,6 +148,67 @@
           </td>
           <td>
             <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 14</span>
+
+<span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
+         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>input status</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+            <span class='lbrace'>{</span> <span class='label'>S0003:</span> <span class='lbracket'>[</span><span class='symbol'>:inputstatus</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
+        <span class='kw'>end</span></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+
+    <div style="clear: both;"></div>
+    
+  </div>
+
+  <!-- Captures the collapsed state -->
+  <div class="attributes" style="display:none;">
+    <input type="hidden" name="collapsed" value="false">
+  </div>
+
+</div></li> 
+    
+      
+      <li class='context-specification'><div class="specification">
+  <div class="heading ">
+    <a name="spec-site-tlc-io_spec-rb-25"></a>
+    Traffic Light Controller IO Input forcing is read with S0029
+  </div>
+
+  <div class="details method_details_list">
+    
+    <div class="docstring">
+      
+<p>Verify that we can read forced input status with S0029</p>
+<ol><li>
+<p>Given the site is connected</p>
+</li><li>
+<p>When we read input with S0029</p>
+</li><li>
+<p>Then we should receive a valid response</p>
+</li></ol>
+
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <!-- Source Code -->
+    <div style="float: left;">
+      <table class="source_code">
+        <tr>
+          <td>
+            <pre class="lines">
+
+
+25
+26
+27
+28</pre>
+          </td>
+          <td>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 25</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
          <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>forced input status</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -173,19 +234,23 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-io_spec-rb-24"></a>
+    <a name="spec-site-tlc-io_spec-rb-38"></a>
     Traffic Light Controller IO Input forcing is set with M0019
   </div>
 
   <div class="details method_details_list">
     
     <div class="docstring">
-      <ol><li>
-<p>Verify connection</p>
+      
+<p>Verify that we can force input with M0019</p>
+<ol><li>
+<p>Given the site is connected</p>
 </li><li>
-<p>Send control command to set force input</p>
+<p>And the input is forced off</p>
 </li><li>
-<p>Wait for status = true</p>
+<p>When we force the input on</p>
+</li><li>
+<p>Then S0003 should show the input on</p>
 </li></ol>
 
     </div>
@@ -200,20 +265,6 @@
             <pre class="lines">
 
 
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
 38
 39
 40
@@ -224,93 +275,21 @@
 45
 46
 47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77</pre>
+48</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 24</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 38</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
-
           <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
-
-          <span class='id identifier rubyid_input'>input</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>items</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>force_input</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-
-          <span class='comment'># force input to false
-</span>          <span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>True</span><span class='tstring_end'>&#39;</span></span>  <span class='comment'># forced
-</span>          <span class='id identifier rubyid_inputValue'>inputValue</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>False</span><span class='tstring_end'>&#39;</span></span>
-          <span class='id identifier rubyid_force_input'><span class='object_link'><a href="../../Validator/CommandHelpers.html#force_input-instance_method" title="Validator::CommandHelpers#force_input (method)">force_input</a></span></span> <span class='label'>status:</span><span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='label'>input:</span><span class='id identifier rubyid_input'>input</span><span class='comma'>,</span> <span class='label'>value:</span><span class='id identifier rubyid_inputValue'>inputValue</span>
-          
-          <span class='comment'># verify forced = 1
-</span>          <span class='id identifier rubyid_wait_for_status'><span class='object_link'><a href="../../Validator/StatusHelpers.html#wait_for_status-instance_method" title="Validator::StatusHelpers#wait_for_status (method)">wait_for_status</a></span></span><span class='lparen'>(</span><span class='ivar'>@task</span><span class='comma'>,</span>
-            <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>input </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_input'>input</span><span class='embexpr_end'>}</span><span class='tstring_content'> to be forced</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-            <span class='lbracket'>[</span><span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>sCI</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>S0029</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>n</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>status</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>s</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^.{</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_input'>input</span> <span class='op'>-</span> <span class='int'>1</span><span class='embexpr_end'>}</span><span class='tstring_content'>}1</span><span class='regexp_end'>/</span></span><span class='rbrace'>}</span><span class='rbracket'>]</span>
-          <span class='rparen'>)</span>
-
-          <span class='comment'># verify inputstatus = 0
-</span>          <span class='id identifier rubyid_wait_for_status'><span class='object_link'><a href="../../Validator/StatusHelpers.html#wait_for_status-instance_method" title="Validator::StatusHelpers#wait_for_status (method)">wait_for_status</a></span></span><span class='lparen'>(</span><span class='ivar'>@task</span><span class='comma'>,</span>
-            <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>input </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_input'>input</span><span class='embexpr_end'>}</span><span class='tstring_content'> to be </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_inputValue'>inputValue</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-            <span class='lbracket'>[</span><span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>sCI</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>S0003</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>n</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>inputstatus</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>s</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^.{</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_input'>input</span> <span class='op'>-</span> <span class='int'>1</span><span class='embexpr_end'>}</span><span class='tstring_content'>}0</span><span class='regexp_end'>/</span></span><span class='rbrace'>}</span><span class='rbracket'>]</span>
-          <span class='rparen'>)</span>
-
-          
-          <span class='comment'># force input to true
-</span>          <span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>True</span><span class='tstring_end'>&#39;</span></span>  <span class='comment'># forced
-</span>          <span class='id identifier rubyid_inputValue'>inputValue</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>True</span><span class='tstring_end'>&#39;</span></span>
-          <span class='id identifier rubyid_force_input'><span class='object_link'><a href="../../Validator/CommandHelpers.html#force_input-instance_method" title="Validator::CommandHelpers#force_input (method)">force_input</a></span></span> <span class='label'>status:</span><span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='label'>input:</span><span class='id identifier rubyid_input'>input</span><span class='comma'>,</span> <span class='label'>value:</span><span class='id identifier rubyid_inputValue'>inputValue</span>
-          
-          <span class='comment'># verify forced = 1
-</span>          <span class='id identifier rubyid_wait_for_status'><span class='object_link'><a href="../../Validator/StatusHelpers.html#wait_for_status-instance_method" title="Validator::StatusHelpers#wait_for_status (method)">wait_for_status</a></span></span><span class='lparen'>(</span><span class='ivar'>@task</span><span class='comma'>,</span>
-            <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>input </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_input'>input</span><span class='embexpr_end'>}</span><span class='tstring_content'> to be forced</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-            <span class='lbracket'>[</span><span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>sCI</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>S0029</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>n</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>status</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>s</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^.{</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_input'>input</span> <span class='op'>-</span> <span class='int'>1</span><span class='embexpr_end'>}</span><span class='tstring_content'>}1</span><span class='regexp_end'>/</span></span><span class='rbrace'>}</span><span class='rbracket'>]</span>
-          <span class='rparen'>)</span>
-
-          <span class='comment'># verify inputstatus = 1
-</span>          <span class='id identifier rubyid_wait_for_status'><span class='object_link'><a href="../../Validator/StatusHelpers.html#wait_for_status-instance_method" title="Validator::StatusHelpers#wait_for_status (method)">wait_for_status</a></span></span><span class='lparen'>(</span><span class='ivar'>@task</span><span class='comma'>,</span>
-            <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>input </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_input'>input</span><span class='embexpr_end'>}</span><span class='tstring_content'> to be to </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_inputValue'>inputValue</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-            <span class='lbracket'>[</span><span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>sCI</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>S0003</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>n</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>inputstatus</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>s</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^.{</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_input'>input</span> <span class='op'>-</span> <span class='int'>1</span><span class='embexpr_end'>}</span><span class='tstring_content'>}1</span><span class='regexp_end'>/</span></span><span class='rbrace'>}</span><span class='rbracket'>]</span>
-          <span class='rparen'>)</span>
-
-
-          <span class='comment'># release input
-</span>          <span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>False</span><span class='tstring_end'>&#39;</span></span>  <span class='comment'># unforced
-</span>          <span class='id identifier rubyid_inputValue'>inputValue</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>False</span><span class='tstring_end'>&#39;</span></span>
-          <span class='id identifier rubyid_force_input'><span class='object_link'><a href="../../Validator/CommandHelpers.html#force_input-instance_method" title="Validator::CommandHelpers#force_input (method)">force_input</a></span></span> <span class='label'>status:</span><span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='label'>input:</span><span class='id identifier rubyid_input'>input</span><span class='comma'>,</span> <span class='label'>value:</span><span class='id identifier rubyid_inputValue'>inputValue</span>
-
-          <span class='comment'># verify force = 0
-</span>          <span class='id identifier rubyid_wait_for_status'><span class='object_link'><a href="../../Validator/StatusHelpers.html#wait_for_status-instance_method" title="Validator::StatusHelpers#wait_for_status (method)">wait_for_status</a></span></span><span class='lparen'>(</span><span class='ivar'>@task</span><span class='comma'>,</span>
-            <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>input </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_input'>input</span><span class='embexpr_end'>}</span><span class='tstring_content'> to be released</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-            <span class='lbracket'>[</span><span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>sCI</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>S0029</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>n</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>status</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>s</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^.{</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_input'>input</span> <span class='op'>-</span> <span class='int'>1</span><span class='embexpr_end'>}</span><span class='tstring_content'>}0</span><span class='regexp_end'>/</span></span><span class='rbrace'>}</span><span class='rbracket'>]</span>
-          <span class='rparen'>)</span>
-
+          <span class='id identifier rubyid_inputs'>inputs</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>items</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>inputs</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+          <span class='id identifier rubyid_skip'>skip</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>No inputs configured</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_inputs'>inputs</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_inputs'>inputs</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+          <span class='id identifier rubyid_inputs'>inputs</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_input'>input</span><span class='op'>|</span>
+            <span class='id identifier rubyid_force_input'><span class='object_link'><a href="../../Validator/CommandHelpers.html#force_input-instance_method" title="Validator::CommandHelpers#force_input (method)">force_input</a></span></span> <span class='label'>input:</span> <span class='id identifier rubyid_input'>input</span><span class='comma'>,</span> <span class='label'>status:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>True</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>value:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>False</span><span class='tstring_end'>&#39;</span></span>
+            <span class='id identifier rubyid_force_input'><span class='object_link'><a href="../../Validator/CommandHelpers.html#force_input-instance_method" title="Validator::CommandHelpers#force_input (method)">force_input</a></span></span> <span class='label'>input:</span> <span class='id identifier rubyid_input'>input</span><span class='comma'>,</span> <span class='label'>status:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>True</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>value:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>True</span><span class='tstring_end'>&#39;</span></span>
+          <span class='kw'>ensure</span>
+            <span class='id identifier rubyid_force_input'><span class='object_link'><a href="../../Validator/CommandHelpers.html#force_input-instance_method" title="Validator::CommandHelpers#force_input (method)">force_input</a></span></span> <span class='label'>input:</span> <span class='id identifier rubyid_input'>input</span><span class='comma'>,</span> <span class='label'>status:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>False</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>validate:</span> <span class='kw'>false</span>
+          <span class='kw'>end</span>
         <span class='kw'>end</span></pre>
           </td>
         </tr>
@@ -332,21 +311,25 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-io_spec-rb-85"></a>
+    <a name="spec-site-tlc-io_spec-rb-59"></a>
     Traffic Light Controller IO Input is activated with M0006
   </div>
 
   <div class="details method_details_list">
     
     <div class="docstring">
-      <ol><li>
-<p>Verify connection</p>
+      
+<p>Verify that we can activate input with M0006</p>
+<ol><li>
+<p>Given the site is connected</p>
 </li><li>
-<p>Verify that there is a <a href="&#39;validator&#39;">Validator.config</a> with a input</p>
+<p>When we activate input with M0006</p>
 </li><li>
-<p>Send control command to switch input</p>
+<p>Then S0003 should show the input is active</p>
 </li><li>
-<p>Wait for status “input” = requested</p>
+<p>When we deactivate input with M0006</p>
+</li><li>
+<p>Then S0003 should show the input is inactive</p>
 </li></ol>
 
     </div>
@@ -361,19 +344,21 @@
             <pre class="lines">
 
 
-85
-86
-87
-88
-89
-90</pre>
+59
+60
+61
+62
+63
+64
+65</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 85</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 59</span>
 
-<span class='id identifier rubyid_inputs'>inputs</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>items</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>inputs</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-        <span class='id identifier rubyid_skip'>skip</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>No inputs configured</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_inputs'>inputs</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_inputs'>inputs</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
-        <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
+<span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
+          <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
+          <span class='id identifier rubyid_inputs'>inputs</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>items</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>inputs</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+          <span class='id identifier rubyid_skip'>skip</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>No inputs configured</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_inputs'>inputs</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_inputs'>inputs</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
           <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
           <span class='id identifier rubyid_inputs'>inputs</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_input'>input</span><span class='op'>|</span> <span class='id identifier rubyid_switch_input'><span class='object_link'><a href="../../Validator/CommandHelpers.html#switch_input-instance_method" title="Validator::CommandHelpers#switch_input (method)">switch_input</a></span></span> <span class='id identifier rubyid_input'>input</span> <span class='rbrace'>}</span>
         <span class='kw'>end</span></pre>
@@ -397,15 +382,17 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-io_spec-rb-97"></a>
+    <a name="spec-site-tlc-io_spec-rb-73"></a>
     Traffic Light Controller IO Input series is activated with M0013
   </div>
 
   <div class="details method_details_list">
     
     <div class="docstring">
-      <ol><li>
-<p>Verify connection</p>
+      
+<p>Verify that we can acticate/deactivate a series of inputs with M0013</p>
+<ol><li>
+<p>Given the site is connected</p>
 </li><li>
 <p>Send control command to set a serie of input</p>
 </li><li>
@@ -424,18 +411,22 @@
             <pre class="lines">
 
 
-97
-98
-99
-100
-101</pre>
+73
+74
+75
+76
+77
+78
+79</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 97</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 73</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
-          <span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>3,4143,65;12,1,4</span><span class='tstring_end'>&quot;</span></span>
           <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
+          <span class='id identifier rubyid_inputs'>inputs</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>items</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>inputs</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+          <span class='id identifier rubyid_skip'>skip</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>No inputs configured</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_inputs'>inputs</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_inputs'>inputs</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+          <span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1,3,12;5,5,10</span><span class='tstring_end'>&quot;</span></span>
           <span class='id identifier rubyid_set_series_of_inputs'><span class='object_link'><a href="../../Validator/CommandHelpers.html#set_series_of_inputs-instance_method" title="Validator::CommandHelpers#set_series_of_inputs (method)">set_series_of_inputs</a></span></span> <span class='id identifier rubyid_status'>status</span>
         <span class='kw'>end</span></pre>
           </td>
@@ -458,19 +449,21 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-io_spec-rb-108"></a>
+    <a name="spec-site-tlc-io_spec-rb-87"></a>
     Traffic Light Controller IO Input sensitivity is set with M0021
   </div>
 
   <div class="details method_details_list">
     
     <div class="docstring">
-      <ol><li>
-<p>Verify connection</p>
+      
+<p>Verify that input sensitivity can be set with M0021</p>
+<ol><li>
+<p>Given the site is connected</p>
 </li><li>
-<p>Send control command to set trigger level</p>
+<p>When we set sensitivity with M0021</p>
 </li><li>
-<p>Wait for status = true</p>
+<p>Then we receive a confirmation</p>
 </li></ol>
 
     </div>
@@ -485,14 +478,14 @@
             <pre class="lines">
 
 
-108
-109
-110
-111
-112</pre>
+87
+88
+89
+90
+91</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 108</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 87</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
           <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -545,14 +538,16 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-io_spec-rb-122"></a>
-    Traffic Light Controller IO Output can be read with S0004
+    <a name="spec-site-tlc-io_spec-rb-102"></a>
+    Traffic Light Controller IO Output is read with S0004
   </div>
 
   <div class="details method_details_list">
     
     <div class="docstring">
-      <ol><li>
+      
+<p>Verify that  output status can be read with S0004</p>
+<ol><li>
 <p>Given the site is connected</p>
 </li><li>
 <p>When we subscribe to S0004</p>
@@ -574,23 +569,19 @@
             <pre class="lines">
 
 
-122
-123
-124
-125
-126
-127
-128</pre>
+102
+103
+104
+105
+106</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 122</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 102</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
           <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
-          <span class='id identifier rubyid_wait_for_status'><span class='object_link'><a href="../../Validator/StatusHelpers.html#wait_for_status-instance_method" title="Validator::StatusHelpers#wait_for_status (method)">wait_for_status</a></span></span><span class='lparen'>(</span><span class='ivar'>@task</span><span class='comma'>,</span>
-            <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>S0003 status</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-            <span class='lbracket'>[</span><span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>sCI</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>S0004</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>n</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>outputstatus</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>s</span><span class='tstring_end'>&#39;</span></span><span class='op'>=&gt;</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^[01]*</span><span class='regexp_end'>/</span></span><span class='rbrace'>}</span><span class='rbracket'>]</span>
-          <span class='rparen'>)</span>
+          <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>output status</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+            <span class='lbrace'>{</span> <span class='label'>S0004:</span> <span class='lbracket'>[</span><span class='symbol'>:outputstatus</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
         <span class='kw'>end</span></pre>
           </td>
         </tr>
@@ -612,7 +603,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-io_spec-rb-137"></a>
+    <a name="spec-site-tlc-io_spec-rb-114"></a>
     Traffic Light Controller IO Output forcing is read with S0030
   </div>
 
@@ -620,7 +611,7 @@
     
     <div class="docstring">
       
-<p>Verify status S0030 forced output status</p>
+<p>Verify that forced output status can be read with S0030</p>
 <ol><li>
 <p>Given the site is connected</p>
 </li><li>
@@ -641,15 +632,17 @@
             <pre class="lines">
 
 
-137
-138
-139
-140</pre>
+114
+115
+116
+117
+118</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 137</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 114</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
+          <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
           <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>forced output status</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
             <span class='lbrace'>{</span> <span class='label'>S0030:</span> <span class='lbracket'>[</span><span class='symbol'>:status</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
         <span class='kw'>end</span></pre>
@@ -673,17 +666,19 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-io_spec-rb-147"></a>
+    <a name="spec-site-tlc-io_spec-rb-126"></a>
     Traffic Light Controller IO Output forcing is set with M0020
   </div>
 
   <div class="details method_details_list">
     
     <div class="docstring">
-      <ol><li>
-<p>Verify connection</p>
+      
+<p>Verify that output can be forced with M0020</p>
+<ol><li>
+<p>Given the site is connected</p>
 </li><li>
-<p>Send control command to set force ounput</p>
+<p>When we force output with M0020</p>
 </li><li>
 <p>Wait for status = true</p>
 </li></ol>
@@ -700,24 +695,32 @@
             <pre class="lines">
 
 
-147
-148
-149
-150
-151
-152
-153</pre>
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 147</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 126</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
-          <span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>False</span><span class='tstring_end'>&#39;</span></span>
-          <span class='id identifier rubyid_output'>output</span> <span class='op'>=</span> <span class='int'>1</span>
-          <span class='id identifier rubyid_outputValue'>outputValue</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>True</span><span class='tstring_end'>&#39;</span></span>
           <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
-          <span class='id identifier rubyid_force_output'><span class='object_link'><a href="../../Validator/CommandHelpers.html#force_output-instance_method" title="Validator::CommandHelpers#force_output (method)">force_output</a></span></span> <span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='id identifier rubyid_output'>output</span><span class='comma'>,</span> <span class='id identifier rubyid_outputValue'>outputValue</span>
-        <span class='kw'>end</span></pre>
+          <span class='id identifier rubyid_outputs'>outputs</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>items</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>outputs</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+          <span class='id identifier rubyid_skip'>skip</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>No outputs configured</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_outputs'>outputs</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_outputs'>outputs</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+          <span class='id identifier rubyid_outputs'>outputs</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_output'>output</span><span class='op'>|</span>
+            <span class='id identifier rubyid_force_output'><span class='object_link'><a href="../../Validator/CommandHelpers.html#force_output-instance_method" title="Validator::CommandHelpers#force_output (method)">force_output</a></span></span> <span class='label'>output:</span> <span class='id identifier rubyid_output'>output</span><span class='comma'>,</span> <span class='label'>status:</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>True</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>value:</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>True</span><span class='tstring_end'>&#39;</span></span>
+            <span class='id identifier rubyid_force_output'><span class='object_link'><a href="../../Validator/CommandHelpers.html#force_output-instance_method" title="Validator::CommandHelpers#force_output (method)">force_output</a></span></span> <span class='label'>output:</span> <span class='id identifier rubyid_output'>output</span><span class='comma'>,</span> <span class='label'>status:</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>True</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>value:</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>False</span><span class='tstring_end'>&#39;</span></span>
+          <span class='kw'>ensure</span>
+            <span class='id identifier rubyid_force_output'><span class='object_link'><a href="../../Validator/CommandHelpers.html#force_output-instance_method" title="Validator::CommandHelpers#force_output (method)">force_output</a></span></span> <span class='label'>output:</span> <span class='id identifier rubyid_output'>output</span><span class='comma'>,</span> <span class='label'>status:</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>False</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>validate:</span> <span class='kw'>false</span>
+          <span class='kw'>end</span>
+       <span class='kw'>end</span></pre>
           </td>
         </tr>
       </table>

@@ -19,8 +19,61 @@ grand_parent: Traffic Light Controller
 - TOC
 {:toc}
 
-## Output can be read with S0004
+## Output forcing is read with S0030
 
+Verify that forced output status can be read with S0030
+1. Given the site is connected
+2. Request status
+3. Expect status response before timeout
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+  prepare task, site
+  request_status_and_confirm site, "forced output status",
+    { S0030: [:status] }
+end
+```
+</details>
+
+
+
+
+## Output forcing is set with M0020
+
+Verify that output can be forced with M0020
+1. Given the site is connected
+2. When we force output with M0020
+3. Wait for status = true
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+   prepare task, site
+   outputs = Validator.config['items']['outputs']
+   skip("No outputs configured") if outputs.nil? || outputs.empty?
+   outputs.each do |output|
+     force_output output: output, status:'True', value:'True'
+     force_output output: output, status:'True', value:'False'
+   ensure
+     force_output output: output, status:'False', validate: false
+   end
+end
+```
+</details>
+
+
+
+
+## Output is read with S0004
+
+Verify that  output status can be read with S0004
 1. Given the site is connected
 2. When we subscribe to S0004
 3. We should receive a status updated
@@ -33,57 +86,8 @@ grand_parent: Traffic Light Controller
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
-  wait_for_status(@task,
-    "S0003 status",
-    [{'sCI'=>'S0004','n'=>'outputstatus','s'=>/^[01]*/}]
-  )
-end
-```
-</details>
-
-
-
-
-## Output forcing is read with S0030
-
-Verify status S0030 forced output status
-
-1. Given the site is connected
-2. Request status
-3. Expect status response before timeout
-
-<details markdown="block">
-  <summary>
-     View Source
-  </summary>
-```ruby
-Validator::Site.connected do |task,supervisor,site|
-  request_status_and_confirm site, "forced output status",
-    { S0030: [:status] }
-end
-```
-</details>
-
-
-
-
-## Output forcing is set with M0020
-
-1. Verify connection
-2. Send control command to set force ounput
-3. Wait for status = true
-
-<details markdown="block">
-  <summary>
-     View Source
-  </summary>
-```ruby
-Validator::Site.connected do |task,supervisor,site|
-  status = 'False'
-  output = 1
-  outputValue = 'True'
-  prepare task, site
-  force_output status, output, outputValue
+  request_status_and_confirm site, "output status",
+    { S0004: [:outputstatus] }
 end
 ```
 </details>
