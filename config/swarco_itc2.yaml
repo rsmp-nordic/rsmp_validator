@@ -32,8 +32,8 @@ items:
   plans: [1,7,8]
   traffic_situations: []
   emergency_routes: [1]
-  inputs: [1]
-  force_input: 101
+  inputs: [1,101]
+  outputs: [1,2]
 startup_sequence: 'efg'
 secrets:
   security_codes:
