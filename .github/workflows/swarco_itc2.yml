@@ -59,7 +59,7 @@ jobs:
       - name: Install simulator. part 2
         run: |
           echo "${{ secrets.ITC2_RING }}" > ring
-          echo "${{ secrets.ITC2_INSTALL2 }}" > install2.sh
+          echo "${{ secrets.ITC2_INSTALL3 }}" > install2.sh
           chmod +x install2.sh
           ./install2.sh
 
