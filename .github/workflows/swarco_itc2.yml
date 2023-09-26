@@ -7,6 +7,7 @@ on:
     # * is a special character in YAML so you have to quote this string.
     # run every night at 3:45AM UTC.
     - cron:  '45 0 * * *'
+  workflow_dispatch:
 jobs:
   test:
     if: ${{ github.event_name == 'schedule' || github.event.label.name == 'equipment' }}
