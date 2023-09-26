@@ -40,7 +40,7 @@ jobs:
             --data-raw '{"shortGUIDs":[{"value":"046MP_5CfrnFI72sUS-jIUQnQ"}]}' --compressed | jq -r '.results[0].rootRecord.fields.fileContent.value.downloadURL')
           wget --quiet -O bin/simulator.exe "$URL"
           URL=$(curl 'https://ckdatabasews.icloud.com/database/1/com.apple.cloudkit/production/public/records/resolve' \
-            --data-raw '{"shortGUIDs":[{"value":"0eehofH2tHgAKy3z_FHKO0zaw"}]}' --compressed | jq -r '.results[0].rootRecord.fields.fileContent.value.downloadURL')
+            --data-raw '{"shortGUIDs":[{"value":"0a2lnTCZoFGOgw6z6CCS87x1Q"}]}' --compressed | jq -r '.results[0].rootRecord.fields.fileContent.value.downloadURL')
           wget --quiet -O bin/rootfs "$URL"
 
       - name: Install simulator
