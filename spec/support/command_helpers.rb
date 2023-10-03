@@ -128,14 +128,22 @@ module Validator::CommandHelpers
     # so do not expect it
   end
 
-  def set_emergency_route route
+  def set_emergency_route route, state
+    if state
+      enable_emergency_route route
+    else
+      disable_emergency_route route
+    end
+  end
+
+  def enable_emergency_route route
     require_security_codes
     command_list = build_command_list :M0005, :setEmergency, {
       securityCode: Validator.config['secrets']['security_codes'][2],
       status: 'True',
       emergencyroute: route
     }
-    send_command_and_confirm @task, command_list, "Set emergency route #{route}"
+    send_command_and_confirm @task, command_list, "Enable emergency route #{route}"
   end
 
   def disable_emergency_route route
@@ -541,26 +549,6 @@ module Validator::CommandHelpers
     wait_for_status(@task,
       "fixed time to be #{status}",
       [{'sCI'=>'S0009','n'=>'status','s'=>/^#{status}(,#{status})*$/}]
-    )
-  end
-
-  def switch_emergency_route route
-    set_emergency_route route
-    wait_for_status(@task,
-      "emergency route #{route} to be enabled",
-      [
-        {'sCI'=>'S0006','n'=>'status','s'=>'True'},
-        {'sCI'=>'S0006','n'=>'emergencystage','s'=>route}
-      ]
-    )
-
-    disable_emergency_route route
-    wait_for_status(@task,
-      "emergency route #{route} to be disabled",
-      [
-        {'sCI'=>'S0006','n'=>'status','s'=>'False'},
-        {'sCI'=>'S0006','n'=>'emergencystage','s'=>route}
-      ]
     )
   end
 

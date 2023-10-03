@@ -4,7 +4,7 @@ supervisors:
   - ip: 127.0.0.1
     port: 13111
 sxl: tlc
-sxl_version: 1.1
+sxl_version: 1.2
 components:
   main:
     TC:

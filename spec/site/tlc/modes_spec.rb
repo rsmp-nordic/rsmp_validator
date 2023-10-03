@@ -27,18 +27,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    # Verify status S0006 emergency stage
-    #
-    # 1. Given the site is connected
-    # 2. Request status
-    # 3. Expect status response before timeout
-    specify 'emergency stage is read with S0006', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
-        request_status_and_confirm site, "emergency stage status",
-          { S0006: [:status,:emergencystage] }
-      end
-    end
-
     # Verify status S0007 controller switched on (dark mode=off)
     #
     # 1. Given the site is connected
