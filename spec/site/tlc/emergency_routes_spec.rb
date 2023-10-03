@@ -38,7 +38,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
       def set_and_check_emergecy_states task, emergency_routes, state
         emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, state }
-        wait_for_status(task, "emergency route #{emergency_routes.last} to be enabled", a
+        wait_for_status(task, "emergency route #{emergency_routes.last} to be enabled",
           [
             {'sCI'=>'S0006','n'=>'status','s'=>(state ? 'True' : 'False')},
             {'sCI'=>'S0006','n'=>'emergencystage','s'=>emergency_routes.last.to_s}
@@ -71,10 +71,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
       def set_and_check_emergecy_states task, emergency_routes, state
         emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, state }
+        routes = emergency_routes.map {|i| {'id'=>i.to_s} }
         wait_for_status(task, "emergency routes #{emergency_routes.to_s} to be enabled",
           [
-            {'sCI'=>'S0035','n'=>'status','s'=>[state ? 'True' : 'False']*emergency_routes.size},
-            {'sCI'=>'S0035','n'=>'emergencyroutes','s'=>emergency_routes}
+            {'sCI'=>'S0035','n'=>'emergencyroutes','s'=>routes}
           ]
         )
       end
