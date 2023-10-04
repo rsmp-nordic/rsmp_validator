@@ -36,7 +36,7 @@ GEM
     minitest (5.18.0)
     rake (13.0.6)
     regexp_parser (2.8.1)
-    rsmp (0.22.0)
+    rsmp (0.23.0)
       async (~> 2.6.4)
       async-io (~> 1.36.0)
       colorize (~> 0.8.1)
