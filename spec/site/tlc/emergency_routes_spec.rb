@@ -23,7 +23,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'emergency route is read with S0035', sxl: '>=1.2' do |example|
       Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "emergency route status",
-          { S0035: [:status,:emergencyroutes] }
+          { S0035: [:emergencyroutes] }
       end
     end
 
@@ -66,26 +66,32 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 5. Then we should receive the list of active routes.
 
     specify 'emergency route is read with S0035', sxl: '>=1.2' do |example|
-      emergency_routes = Validator.config['items']['emergency_routes']
-      skip("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
-
-      def set_and_check_emergecy_states task, emergency_routes, state
-        emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, state }
+      def enable_routes task, emergency_routes
+        emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, true }
         routes = emergency_routes.map {|i| {'id'=>i.to_s} }
         wait_for_status(task, "emergency routes #{emergency_routes.to_s} to be enabled",
-          [
-            {'sCI'=>'S0035','n'=>'emergencyroutes','s'=>routes}
-          ]
+          [ {'sCI'=>'S0035','n'=>'emergencyroutes','s'=>routes} ]
         )
       end
 
+      def disable_routes task, emergency_routes
+        emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, false }
+        routes = []
+        wait_for_status(task, "emergency routes #{emergency_routes.to_s} to be disabled",
+          [ {'sCI'=>'S0035','n'=>'emergencyroutes','s'=>routes} ]
+        )
+      end
+
+      emergency_routes = Validator.config['items']['emergency_routes']
+      skip("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
+
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        set_and_check_emergecy_states task, emergency_routes, false
+        disable_routes task, emergency_routes
         begin
-          set_and_check_emergecy_states task, emergency_routes, true
+          enable_routes task, emergency_routes
         ensure
-          set_and_check_emergecy_states task, emergency_routes, false
+          disable_routes task, emergency_routes
         end
       end
     end
