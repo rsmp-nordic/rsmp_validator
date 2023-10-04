@@ -36,11 +36,12 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
 
     # Verify status S0018 number of time plans
+    # Deprecated from 1.2, use S0022 instead.
     #
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'list size is read with S0018', sxl: '>=1.0.7' do |example|
+    specify 'list size is read with S0018', sxl: ['>=1.0.7','<1.2'] do |example|
       Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "number of time plans",
           { S0018: [:number] }
