@@ -47,4 +47,4 @@ alarms:
     activation_input: 7
     component: DL1
 restrict_testing:
-  #sxl_version: 1.2
+  sxl_version: 1.2
