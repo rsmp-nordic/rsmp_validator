@@ -27,15 +27,15 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    # Verify status S0006 emergency stage
+    # Verify status S0005 traffic controller starting by intersection
     #
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'emergency stage is read with S0006', sxl: '>=1.0.7' do |example|
+    specify 'startup status is read with S0005', sxl: '>=1.2' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        request_status_and_confirm site, "emergency stage status",
-          { S0006: [:status,:emergencystage] }
+        request_status_and_confirm site, "traffic controller starting (true/false)",
+          { S0005: [:statusByIntersection] }
       end
     end
 
