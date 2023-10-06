@@ -27,6 +27,18 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
+    # Verify status S0005 traffic controller starting by intersection
+    #
+    # 1. Given the site is connected
+    # 2. Request status
+    # 3. Expect status response before timeout
+    specify 'startup status is read with S0005', sxl: '>=1.2' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "traffic controller starting (true/false)",
+          { S0005: [:statusByIntersection] }
+      end
+    end
+
     # Verify status S0007 controller switched on (dark mode=off)
     #
     # 1. Given the site is connected
