@@ -47,7 +47,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
-        status_list.map! { |item| item.merge!('sOc' => 'True') } if use_sOc?(site)
+        status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)
         wait_for_status task, 'signal priority status', status_list
       end
     end
@@ -65,7 +65,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         component = Validator.config['main_component']
         log "Subscribing to signal priority request status updates"
         status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
-        status_list.map! { |item| item.merge!('sOc' => 'True') } if use_sOc?(site)
+        status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)
         site.subscribe_to_status component, status_list
 
         # start collector
