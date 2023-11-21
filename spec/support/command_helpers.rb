@@ -489,7 +489,7 @@ module Validator::CommandHelpers
   def verify_startup_sequence &block
     status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus'}]
     subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>0.to_s }
-    subscribe_list.map! { |item| item.merge!('sOc' => 'False') } if use_sOc?(@site)
+    subscribe_list.map! { |item| item.merge!('sOc' => false) } if use_sOc?(@site)
 
     unsubscribe_list = convert_status_list(status_list)
     component = Validator.config['main_component']

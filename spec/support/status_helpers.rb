@@ -53,7 +53,7 @@ module Validator::StatusHelpers
     update_rate = 0 unless update_rate
     log "Wait for #{description}"
     subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
-    subscribe_list.map! { |item| item.merge!('sOc' => 'False') } if use_sOc?(@site)
+    subscribe_list.map! { |item| item.merge!('sOc' => false) } if use_sOc?(@site)
 
     begin
       result = @site.subscribe_to_status Validator.config['main_component'], subscribe_list, collect!: {
