@@ -11,7 +11,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 1. Given the site is connected
       # 2. When we read input with S0029
       # 3. Then we should receive a valid response
-      specify 'is read with S0003' do |example|
+      specify 'is read with S0003', sxl: '<1.2' do |example|
         Validator::Site.connected do |task,supervisor,site|
          request_status_and_confirm site, "input status",
             { S0003: [:inputstatus] }
@@ -99,7 +99,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 2. When we subscribe to S0004
       # 3. We should receive a status updated
       # 4. And the outputstatus attribute should be a digit string
-      specify 'is read with S0004', sxl: '>=1.0.7' do |example|
+      specify 'is read with S0004', sxl: ['>=1.0.7','<1.2'] do |example|
         Validator::Site.connected do |task,supervisor,site|
           prepare task, site
           request_status_and_confirm site, "output status",
