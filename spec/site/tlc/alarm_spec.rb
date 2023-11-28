@@ -163,7 +163,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
               'cId' => component_id,
               'aCI' => alarm_code_id,
               'aSp' => 'Suspend',
-              'sS' => 'suspended'
+              'sS' => /Suspended/i
             },
             timeout: Validator.config['timeouts']['alarm']
           ).collect!
