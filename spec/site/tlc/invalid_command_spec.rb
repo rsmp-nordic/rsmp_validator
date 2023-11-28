@@ -10,7 +10,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send a command with an unknown component id
     # 3. Then the site should return a command response with age=undefined
 
-    it 'returns a command response with age=undefined' do |example|
+    it 'returns a command response with age=undefined', core: '>=3.1.3' do |example|
       Validator::Site.connected do |task,supervisor,site|
         log "Sending M0001"
         command_list = build_command_list :M0001, :setValue, {
