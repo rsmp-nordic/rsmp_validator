@@ -129,7 +129,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # Validate that alarms can be suspended. We're using A0302 in this test.
     #
     # 1. Given the site is connected
-    # 2. And the alarm is  resumed
+    # 2. And the alarm is resumed
     # 3. When we suspend the alarm
     # 4. Then we should received an alarm suspended messsage
     # 5. When we resume the alarm
