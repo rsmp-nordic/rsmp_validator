@@ -7,13 +7,25 @@ RSpec.describe 'Site::Traffic Light Controller' do
   describe 'IO' do
     describe 'Input' do
 
-      # Verify that we can read input status with S0003
+      # Verify that we can read input status with S0003, extendedinputstatus attribute
       # 1. Given the site is connected
       # 2. When we read input with S0029
       # 3. Then we should receive a valid response
       specify 'is read with S0003', sxl: '<1.2' do |example|
         Validator::Site.connected do |task,supervisor,site|
-         request_status_and_confirm site, "input status",
+          puts site.sxl_version
+          request_status_and_confirm site, "input status",
+            { S0003: [:inputstatus,:extendedinputstatus] }
+        end
+      end
+
+      # Verify that we can read input status with S0003
+      # 1. Given the site is connected
+      # 2. When we read input with S0029
+      # 3. Then we should receive a valid response
+      specify 'is read with S0003', sxl: '>=1.2' do |example|
+        Validator::Site.connected do |task,supervisor,site|
+          request_status_and_confirm site, "input status",
             { S0003: [:inputstatus] }
         end
       end
@@ -24,7 +36,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 3. Then we should receive a valid response
       specify 'forcing is read with S0029', sxl: '>=1.0.13' do |example|
         Validator::Site.connected do |task,supervisor,site|
-         request_status_and_confirm site, "forced input status",
+          request_status_and_confirm site, "forced input status",
             { S0029: [:status] }
         end
       end
