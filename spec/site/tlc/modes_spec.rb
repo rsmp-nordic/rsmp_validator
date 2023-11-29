@@ -46,11 +46,19 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Expect status response before timeout
     specify 'switched on is read with S0007', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
-          status_list = { S0007: [:status,:intersection,:source] }
-        else
-          status_list = { S0007: [:status,:intersection] }
-        end
+        status_list = { S0007: [:status,:intersection] }
+        request_status_and_confirm site, "controller switch on (dark mode=off)", status_list
+      end
+    end
+
+    # Verify status S0007 controller switched on, source attribute
+    #
+    # 1. Given the site is connected
+    # 2. Request status
+    # 3. Expect status response before timeout
+    specify 'switched on is read with S0007', sxl: '>=1.1' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        status_list = { S0007: [:status,:intersection,:source] }
         request_status_and_confirm site, "controller switch on (dark mode=off)", status_list
       end
     end
