@@ -106,12 +106,25 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
 
     describe 'Output' do
-      # Verify that  output status can be read with S0004
+      # Verify that  output status can be read with S0004, extended output status
       # 1. Given the site is connected
       # 2. When we subscribe to S0004
       # 3. We should receive a status updated
       # 4. And the outputstatus attribute should be a digit string
       specify 'is read with S0004', sxl: ['>=1.0.7','<1.2'] do |example|
+        Validator::Site.connected do |task,supervisor,site|
+          prepare task, site
+          request_status_and_confirm site, "output status",
+            { S0004: [:outputstatus,:extendedoutputstatus] }
+        end
+      end
+
+      # Verify that  output status can be read with S0004
+      # 1. Given the site is connected
+      # 2. When we subscribe to S0004
+      # 3. We should receive a status updated
+      # 4. And the outputstatus attribute should be a digit string
+      specify 'is read with S0004', sxl: ['>=1.2'] do |example|
         Validator::Site.connected do |task,supervisor,site|
           prepare task, site
           request_status_and_confirm site, "output status",
