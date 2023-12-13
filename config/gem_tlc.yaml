@@ -20,6 +20,7 @@ timeouts:
   startup_sequence: 5
   functional_position: 2
   priority_completion: 5
+  yellow_flash: 2
 components:
   main:
     TC:

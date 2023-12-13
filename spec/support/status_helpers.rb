@@ -66,7 +66,6 @@ module Validator::StatusHelpers
   end
 
   def wait_for_groups state, timeout:
-    timeout = 10
     regex = /^#{state}+$/
     wait_for_status(@task,
       "Wait for all groups to go to yellow flash",
