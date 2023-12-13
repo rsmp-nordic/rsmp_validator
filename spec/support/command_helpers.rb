@@ -455,6 +455,13 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "Reset clock to #{now}"
   end
 
+  def stop_sending_watchdogs(site)
+    # monkey-patch the site object by redefining
+    # the send_watchdog method to do nothing
+    def site.send_watchdog now=nil
+    end
+  end
+
   def with_clock_set clock, &block
     result = set_clock clock
     yield result

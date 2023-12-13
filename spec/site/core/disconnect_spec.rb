@@ -1,4 +1,5 @@
 RSpec.describe 'Site::Core' do
+  include Validator::CommandHelpers
 
   # Check that the site closed the connection as required when faced with
   # various types of incorrect behaviour from our side.
@@ -37,6 +38,7 @@ RSpec.describe 'Site::Core' do
     it 'is not closed if watchdogs are not received', sxl: '>=1.0.7', slow: true do |example|
       Validator::Site.isolated do |task,supervisor,site|
         timeout = Validator.config['timeouts']['disconnect']
+
         wait_task = task.async do
           site.wait_for_state :disconnected, timeout: timeout
           raise RSMP::DisconnectError
@@ -45,9 +47,9 @@ RSpec.describe 'Site::Core' do
         end
 
         log "Stop sending watchdogs, site should not disconnect"
-        def site.send_watchdog now=nil
+        site.with_watchdog_disabled do
+          wait_task.wait
         end
-        wait_task.wait
       end
     end
   end
