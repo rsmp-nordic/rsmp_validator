@@ -20,6 +20,7 @@ timeouts:
   shutdown: 180
   startup_sequence: 180
   functional_position: 240
+  yellow_flash: 60
 components:
   main:
     KK+AG9998=001TC000:
