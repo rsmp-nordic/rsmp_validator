@@ -84,12 +84,14 @@ module Validator::CommandHelpers
   end
 
   # Unset traffic situation (switch to automatic)
+  # The spec does not state what traficsituation to use when unsetting,
+  # here we're using 1. (Allowed range is 1-255)
   def unset_traffic_situation
     require_security_codes
     command_list = build_command_list :M0003, :setTrafficSituation, {
       status: 'False',
       securityCode: Validator.config['secrets']['security_codes'][2],
-      traficsituation: '0'   # note: the spec misspells 'traficsituation'
+      traficsituation: '1'   # note: the spec misspells 'traficsituation'
 
     }
     send_command_and_confirm @task, command_list, "Switch to automaatic traffic situation"
