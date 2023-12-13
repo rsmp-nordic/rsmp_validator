@@ -38,6 +38,7 @@ RSpec.describe 'Site::Core' do
     it 'is not closed if watchdogs are not received', sxl: '>=1.0.7', slow: true do |example|
       Validator::Site.isolated do |task,supervisor,site|
         timeout = Validator.config['timeouts']['disconnect']
+
         wait_task = task.async do
           site.wait_for_state :disconnected, timeout: timeout
           raise RSMP::DisconnectError
@@ -46,8 +47,9 @@ RSpec.describe 'Site::Core' do
         end
 
         log "Stop sending watchdogs, site should not disconnect"
-        stop_sending_watchdogs(site)
-        wait_task.wait
+        site.with_watchdog_disabled do
+          wait_task.wait
+        end
       end
     end
   end
