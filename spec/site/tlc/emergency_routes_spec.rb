@@ -36,23 +36,25 @@ RSpec.describe 'Site::Traffic Light Controller' do
       emergency_routes = Validator.config['items']['emergency_routes']
       skip("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
 
-      def set_and_check_emergecy_states task, emergency_routes, state
-        emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, state }
+      def set_emergency_states task, emergency_routes, state
+        emergency_routes.each do |emergency_route|
+          set_emergency_route emergency_route.to_s, state
+        end
         wait_for_status(task, "emergency route #{emergency_routes.last} to be enabled",
           [
             {'sCI'=>'S0006','n'=>'status','s'=>(state ? 'True' : 'False')},
-            {'sCI'=>'S0006','n'=>'emergencystage','s'=>emergency_routes.last.to_s}
+            {'sCI'=>'S0006','n'=>'emergencystage','s'=>(state ? emergency_routes.last.to_s : '0')}
           ]
         )
-      end
+     end
 
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        set_and_check_emergecy_states task, emergency_routes, false
+        set_emergency_states task, emergency_routes, false
         begin
-          set_and_check_emergecy_states task, emergency_routes, true
+          set_emergency_states task, emergency_routes, true
         ensure
-          set_and_check_emergecy_states task, emergency_routes, false
+          set_emergency_states task, emergency_routes, false
         end
       end
     end
@@ -65,7 +67,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. When we request the current emergency routes with S035.
     # 5. Then we should receive the list of active routes.
 
-    specify 'emergency route is read with S0035', sxl: '>=1.2' do |example|
+    specify 'emergency routes can be activated with M0005 and read with S0035', sxl: '>=1.2' do |example|
       def enable_routes task, emergency_routes
         emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, true }
         routes = emergency_routes.map {|i| {'id'=>i.to_s} }
@@ -77,12 +79,13 @@ RSpec.describe 'Site::Traffic Light Controller' do
       def disable_routes task, emergency_routes
         emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, false }
         routes = []
-        wait_for_status(task, "emergency routes #{emergency_routes.to_s} to be disabled",
+        wait_for_status(task, "all emergency routes to be disabled",
           [ {'sCI'=>'S0035','n'=>'emergencyroutes','s'=>routes} ]
         )
       end
 
       emergency_routes = Validator.config['items']['emergency_routes']
+
       skip("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
 
       Validator::Site.connected do |task,supervisor,site|
