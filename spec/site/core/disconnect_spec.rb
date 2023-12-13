@@ -1,4 +1,5 @@
 RSpec.describe 'Site::Core' do
+  include Validator::CommandHelpers
 
   # Check that the site closed the connection as required when faced with
   # various types of incorrect behaviour from our side.
@@ -45,8 +46,7 @@ RSpec.describe 'Site::Core' do
         end
 
         log "Stop sending watchdogs, site should not disconnect"
-        def site.send_watchdog now=nil
-        end
+        stop_sending_watchdogs(site)
         wait_task.wait
       end
     end
