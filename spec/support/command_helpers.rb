@@ -563,6 +563,62 @@ module Validator::CommandHelpers
     )
   end
 
+  def suspend_alarm site, task, cId:, aCId:, collect:
+    suspend = RSMP::AlarmSuspend.new(
+      'mId' => RSMP::Message.make_m_id,  # generate a message id, that can be used to listen for responses
+      'cId' => cId,
+      'aCId' => aCId
+    )
+    if collect
+      collect_task = task.async do
+        RSMP::AlarmCollector.new(site,
+          m_id: suspend.m_id,
+          num: 1,
+          query: {
+            'cId' => cId,
+            'aCI' => aCId,
+            'aSp' => 'Suspend',
+            'sS' => /^Suspended/i
+          },
+          timeout: Validator.config['timeouts']['alarm']
+        ).collect!
+      end
+      site.send_message suspend
+      return suspend, collect_task.wait.first
+    else
+      site.send_message suspend
+      suspend
+    end
+  end
+
+  def resume_alarm site, task, cId:, aCId:, collect:
+    resume = RSMP::AlarmResume.new(
+      'mId' => RSMP::Message.make_m_id,     # generate a message id, that can be used to listen for responses
+      'cId' => cId,
+      'aCId' => aCId
+    )
+    if collect
+      collect_task = task.async do
+        RSMP::AlarmCollector.new(site,
+          m_id: resume.m_id,
+          num: 1,
+          query: {
+            'cId' => cId,
+            'aCI'=>aCId,
+            'aSp'=>'Suspend',
+            'sS'=>/^notSuspended/i
+          },
+          timeout: Validator.config['timeouts']['alarm']
+        ).collect!
+      end
+      site.send_message resume
+      return resume, collect_task.wait.first
+    else
+      site.send_message resume
+      resume
+    end
+  end
+
   def prepare task, site
     @task = task
     @site = site

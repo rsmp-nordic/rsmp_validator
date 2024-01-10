@@ -142,59 +142,22 @@ RSpec.describe 'Site::Traffic Light Controller' do
         skip "alarm #{alarm_code_id} is not configured" unless action
         component_id = action['component']
         skip "alarm #{alarm_code_id} has no component configured" unless component_id
-        # first resume to make sure something happens when we suspend
-        resume = RSMP::AlarmResume.new(
-          'cId' => component_id,
-          'aCId' => alarm_code_id
-        )
-        site.send_message resume
 
-        # now suspend the alarm while collecting responses
-        suspend = RSMP::AlarmSuspend.new(
-          'mId' => RSMP::Message.make_m_id,     # generate a message id, that can be used to listen for responses
-          'cId' => component_id,
-          'aCId' => alarm_code_id
-        )
-        collect_task = task.async do
-          RSMP::AlarmCollector.new(site,
-            m_id: suspend.m_id,
-            num: 1,
-            query: {
-              'cId' => component_id,
-              'aCI' => alarm_code_id,
-              'aSp' => 'Suspend',
-              'sS' => /Suspended/i
-            },
-            timeout: Validator.get_config('timeouts','alarm')
-          ).collect!
-        end
+        # first resume alarm to make sure something happens when we suspend
+        resume_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: false
 
         begin
-          site.send_message suspend
-          messages = collect_task.wait
-          expect(messages).to be_an(Array)
-          message = messages.first
-          expect(message).to be_a(RSMP::AlarmSuspended)
-        rescue
-          site.send_message resume    # clean up by resuming alarm
-          raise
-        end
+          # suspend alarm
+          request, response = suspend_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: true
+          expect(response).to be_a(RSMP::AlarmSuspended)
 
-        # clean up by resuming alarm
-        resume.attributes['mId'] = RSMP::Message.make_m_id  # generate a message id, that can be used to listen for responses
-        collect_task = task.async do
-          RSMP::AlarmCollector.new(site,
-            m_id: resume.m_id,
-            num: 1,
-            query: {'aCI'=>alarm_code_id,'aSp'=>'Suspend','sS'=>'notSuspended'},
-            timeout: Validator.get_config('timeouts','alarm')
-          ).collect!
+          # resume alarm
+          request, response = resume_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: true
+          expect(response).to be_a(RSMP::AlarmResumed)
+        ensure
+          # always end with resuming alarm
+          resume_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: false
         end
-        site.send_message resume
-        messages = collect_task.wait
-        expect(messages).to be_an(Array)
-        message = messages.first
-        expect(message).to be_a(RSMP::AlarmResumed)
       end
     end
   end
