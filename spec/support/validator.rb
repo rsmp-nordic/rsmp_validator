@@ -305,11 +305,15 @@ module Validator
     if value
       value
     else
-      default = options[:default]
       path_name = path.inspect
+
+      default = options[:default]
+      assume = options[:assume]
       if default
         self.warning "Config #{path_name} not found, using default: #{default}"
         default
+      elsif assume
+        assume
       else
         raise RuntimeError.new("Config #{path_name} is missing")
       end

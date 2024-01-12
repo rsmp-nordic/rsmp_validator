@@ -58,6 +58,7 @@ sxl: tlc                # sxl of the connecting site, options are 'core' or 'tlc
 intervals:
   timer: 1              # main timer interval (resolution), in seconds
   watchdog: 1           # how often to send watchdog messages, in seconds
+
 timeouts:
   watchdog: 2           # max time bewteen incoming watchdogs, in seconds
   acknowledgement: 2    # max time until acknowledgement is received, in seconds
@@ -73,6 +74,7 @@ timeouts:
   shutdown: 1           # max time until site shuts down for a restart, in seconds
   startup_sequence: 5     # max time until startup sequence completes
   functional_position: 2  # max time until requested functional position is reached
+  yellow_flash: 2         # max time until yellow flash is activated
 components:             # list of rsmp components, organized by type and name, in seconds
   main:                 # type
     TC:                 # name. note that this is an (empty) options hash
@@ -89,8 +91,8 @@ items:                  # other configurations that should be tested
   force_input: 5              # what input to force when testing input forcing
 startup_sequence: 'efg' # expected startup sequence
 restrict_testing:       # restrict what tests are run, default is to run all
-  core_version: 3.1.5   # skip unless relevant for core 3.1.5
-  sxl_version: 1.0.13   # skip unless relevant for sxl 1.0.13
+  core_version: 3.2.1   # skip unless relevant for core 3.2.1
+  sxl_version: 1.1      # skip unless relevant for sxl 1.1
 secrets:                # place secrets or in a separate file, see below
   security_codes:       # RSMP security codes. there are no defaults for these
     1: '1111'           # level 1
@@ -119,7 +121,7 @@ supervisors:          # what supervisor the local site should connect to
   - ip: 127.0.0.1       # ip
     port: 13111         # port
 sxl: tlc                # sxl to use, options are 'core' or 'tlc'
-sxl_version: 1.0.15     # sxl version to use
+sxl_version: 1.1        # sxl version to use
 components:           # components of local site, organized by type and name
   main:                 # type
     TC:                 # name
@@ -145,8 +147,8 @@ timeouts:             # timeouts
   watchdog: 0.2         # max time between receiving watchdogs, in seconds
   acknowledgement: 0.2  # max time unless a message we send is acknowledged, in seconds
 restrict_testing:       # restrict what tests are run, default is to run all
-  core_version: 3.1.5   # skip unless relevant for core 3.1.5
-  sxl_version: 1.0.13   # skip unless relevant for sxl 1.0.13
+  core_version: 3.2.1   # skip unless relevant for core 3.2.1
+  sxl_version: 1.1      # skip unless relevant for sxl 1.1
 secrets:                # place secrets or in a separate file, see below
   security_codes:       # RSMP security codes. there are no defaults for these
     1: '1111'           # level 1

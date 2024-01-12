@@ -15,13 +15,13 @@ RSpec.describe 'Site::Traffic Light Controller' do
     it 'can be turned on and off for S0001' do |example|
       Validator::Site.connected do |task,supervisor,site|
         log "Subscribe to status and wait for update"
-        component = Validator.config['main_component']
+        component = Validator.get_config('main_component')
 
         status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus','uRt'=>'1'}]
         status_list.map! { |item| item.merge!('sOc' => false) } if use_sOc?(site)
 
          site.subscribe_to_status component, status_list, collect!: {
-          timeout: Validator.config['timeouts']['status_update']
+          timeout: Validator.get_config('timeouts','status_update')
         }
       ensure
         unsubscribe_list = status_list.map { |item| item.slice('sCI','n') }

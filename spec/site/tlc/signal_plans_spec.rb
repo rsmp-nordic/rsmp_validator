@@ -23,11 +23,11 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # We try switching all programs configured
     #
     # 1. Given the site is connected
-    # 2. Verify that there is a Validator.config['validator'] with a time plan
+    # 2. Verify that there is a Validator.get_config('validator') with a time plan
     # 3. Send command to switch time plan
     # 4. Wait for status "Current timeplan" = requested time plan
     specify 'currently active is set with M0002', sxl: '>=1.0.7' do |example|
-      plans = Validator.config['items']['plans']
+      plans = Validator.get_config('items','plans')
       skip("No time plans configured") if plans.nil? || plans.empty?
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site

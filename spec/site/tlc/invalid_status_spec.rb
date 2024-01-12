@@ -17,7 +17,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         result = site.request_status(
           'bad',
           status_list,
-          collect: { timeout: Validator.config['timeouts']['status_response'] },
+          collect: { timeout: Validator.get_config('timeouts','status_response') },
           validate: false
         )
         collector = result[:collector]
@@ -48,8 +48,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
         log "Requesting non-existing status S0000"
         status_list = convert_status_list( S0000:[:status] )
         result = site.request_status(
-          Validator.config['main_component'], status_list,
-          collect: { timeout: Validator.config['timeouts']['status_response'] },
+          Validator.get_config('main_component'), status_list,
+          collect: { timeout: Validator.get_config('timeouts','status_response') },
           validate: false
         )
         collector = result[:collector]
@@ -72,8 +72,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
         log "Requesting S0001 with non-existing status name"
         status_list = convert_status_list( S0001:[:bad] )
         result = site.request_status(
-          Validator.config['main_component'], status_list,
-          collect: { timeout: Validator.config['timeouts']['status_response'] },
+          Validator.get_config('main_component'), status_list,
+          collect: { timeout: Validator.get_config('timeouts','status_response') },
           validate: false
         )
         collector = result[:collector]

@@ -88,7 +88,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         alarm_code_id = 'A0302'   # what alarm to expect
-        timeout  = Validator.config['timeouts']['alarm']
+        timeout  = Validator.get_config('timeouts','alarm')
 
         log "Activating alarm #{alarm_code_id}"
         deactivate, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id|   # raise alarm, by activating input
@@ -165,7 +165,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
               'aSp' => 'Suspend',
               'sS' => /Suspended/i
             },
-            timeout: Validator.config['timeouts']['alarm']
+            timeout: Validator.get_config('timeouts','alarm')
           ).collect!
         end
 
@@ -187,7 +187,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
             m_id: resume.m_id,
             num: 1,
             query: {'aCI'=>alarm_code_id,'aSp'=>'Suspend','sS'=>'notSuspended'},
-            timeout: Validator.config['timeouts']['alarm']
+            timeout: Validator.get_config('timeouts','alarm')
           ).collect!
         end
         site.send_message resume

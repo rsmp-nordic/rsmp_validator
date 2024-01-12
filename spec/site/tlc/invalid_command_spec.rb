@@ -14,7 +14,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         log "Sending M0001"
         command_list = build_command_list :M0001, :setValue, {
-          securityCode: Validator.config['secrets']['security_codes'][2],
+          securityCode: Validator.get_config('secrets','security_codes',2),
           status: 'NormalControl',
           timeout: 0,
           intersection: 0
@@ -22,7 +22,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         result = site.send_command(
           'bad',
           command_list,
-          collect: { timeout: Validator.config['timeouts']['command_response'] },
+          collect: { timeout: Validator.get_config('timeouts','command_response') },
           validate: false     # disable validation of outgoing message
         )
         collector = result[:collector]
@@ -52,8 +52,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         log "Sending non-existing command M0000"
         command_list = build_command_list :M0000, :bad, {}
-        result = site.send_command Validator.config['main_component'], command_list,
-          collect: { timeout: Validator.config['timeouts']['command_response'] },
+        result = site.send_command Validator.get_config('main_component'), command_list,
+          collect: { timeout: Validator.get_config('timeouts','command_response') },
           validate: false     # disable validation of outgoing message
         collector = result[:collector]
         expect(collector).to be_an(RSMP::Collector)
@@ -81,8 +81,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
             timeout: '0'
             # intentionally not setting 'status'
         }
-        result = site.send_command Validator.config['main_component'], command_list,
-          collect: { timeout: Validator.config['timeouts']['command_response'] },
+        result = site.send_command Validator.get_config('main_component'), command_list,
+          collect: { timeout: Validator.get_config('timeouts','command_response') },
           validate: false   # disable validation of outgoing message
         collector = result[:collector]
         expect(collector).to be_an(RSMP::Collector)
@@ -110,8 +110,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
             intersection: '0',
             timeout: '0'
         }
-        result = site.send_command Validator.config['main_component'], command_list,
-          collect: { timeout: Validator.config['timeouts']['command_response'] },
+        result = site.send_command Validator.get_config('main_component'), command_list,
+          collect: { timeout: Validator.get_config('timeouts','command_response') },
           validate: false   # disable validation of outgoing message
         collector = result[:collector]
         expect(collector).to be_an(RSMP::Collector)

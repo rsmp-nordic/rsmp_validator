@@ -6,7 +6,7 @@ module Validator
     # Wait for the site to connect and collect a specified number of messages,
     # which can then be analysed.
     def get_connection_message core_version, length
-      timeout = Validator.config['timeouts']['ready']
+      timeout = Validator.get_config('timeouts','ready')
       got = nil
 
       Validator::Site.isolated(

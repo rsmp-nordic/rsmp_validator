@@ -50,7 +50,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       specify 'forcing is set with M0019', sxl: '>=1.0.13' do |example|
         Validator::Site.connected do |task,supervisor,site|
           prepare task, site
-          inputs = Validator.config['items']['inputs']
+          inputs = Validator.get_config('items','inputs')
           skip("No inputs configured") if inputs.nil? || inputs.empty?
           inputs.each do |input|
             force_input input: input, status: 'True', value: 'False'
@@ -71,7 +71,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       it 'is activated with M0006', sxl: '>=1.0.7' do |example|
         Validator::Site.connected do |task,supervisor,site|
           prepare task, site
-          inputs = Validator.config['items']['inputs']
+          inputs = Validator.get_config('items','inputs')
           skip("No inputs configured") if inputs.nil? || inputs.empty?
           prepare task, site
           inputs.each { |input| switch_input input }
@@ -85,7 +85,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       specify 'series is activated with M0013', sxl: '>=1.0.8' do |example|
         Validator::Site.connected do |task,supervisor,site|
           prepare task, site
-          inputs = Validator.config['items']['inputs']
+          inputs = Validator.get_config('items','inputs')
           skip("No inputs configured") if inputs.nil? || inputs.empty?
           status = "1,3,12;5,5,10"
           set_series_of_inputs status
@@ -151,7 +151,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       specify 'forcing is set with M0020', sxl: '>=1.0.15' do |example|
         Validator::Site.connected do |task,supervisor,site|
           prepare task, site
-          outputs = Validator.config['items']['outputs']
+          outputs = Validator.get_config('items','outputs')
           skip("No outputs configured") if outputs.nil? || outputs.empty?
           outputs.each do |output|
             force_output output: output, status:'True', value:'True'

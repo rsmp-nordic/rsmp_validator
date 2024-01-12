@@ -10,7 +10,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Then we should receive an acknowledgement
     it 'can be requested with M0022', sxl: '>=1.1' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        signal_group = Validator.config['components']['signal_group'].keys.first
+        signal_group = Validator.get_config('components','signal_group').keys.first
         command_list = build_command_list :M0022, :requestPriority, {
           requestId: SecureRandom.uuid()[0..3],
           signalGroupId: signal_group,
@@ -62,7 +62,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         sequence = ['received','activated','completed']
         # subscribe
-        component = Validator.config['main_component']
+        component = Validator.get_config('main_component')
         log "Subscribing to signal priority request status updates"
         status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
         status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)
@@ -79,7 +79,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
             site,
             type: "StatusUpdate",
             num: num,
-            timeout: Validator.config['timeouts']['priority_completion'],
+            timeout: Validator.get_config('timeouts','priority_completion'),
             component: component
           )
 
@@ -108,7 +108,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         def send_priority_request log, id:nil, site:, component:
           # send an unrelated request before our request, to check that it does not interfere
           log log
-          signal_group = Validator.config['components']['signal_group'].keys.first
+          signal_group = Validator.get_config('components','signal_group').keys.first
           command_list = build_command_list :M0022, :requestPriority, {
             requestId: (id || SecureRandom.uuid()[0..3]),
             signalGroupId: signal_group,
