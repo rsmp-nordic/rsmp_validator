@@ -4,7 +4,7 @@ module Validator
   class Details < FormatterBase
     RSpec::Core::Formatters.register self, :start, :dump_pending, :dump_failures, :close,
       :dump_summary, :example_started, :example_passed, :example_failed, :example_pending,
-      :message, :log, :step, :example_group_started, :example_group_finished
+      :message, :log, :warning, :step, :example_group_started, :example_group_finished
 
     def start notification
       @output << "\n"
@@ -12,6 +12,10 @@ module Validator
 
     def log notification
       @output << "    #{notification.message}\n"
+    end
+
+    def warning notification
+      @output << colorize("    Warning: #{notification.message}\n",:yellow)
     end
 
     def step notification

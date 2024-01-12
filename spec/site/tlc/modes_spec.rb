@@ -179,7 +179,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'yellow flash affects all signal groups', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        timeout =  Validator.config['timeouts']['yellow_flash']
+        timeout =  Validator.get_config('timeouts','yellow_flash', default: 10)
 
         switch_yellow_flash
         wait_for_groups 'c', timeout: timeout      # c mean s yellow flash

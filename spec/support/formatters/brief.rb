@@ -4,10 +4,14 @@ module Validator
   class Brief < FormatterBase
     RSpec::Core::Formatters.register self, :start, :dump_pending, :dump_failures, :close,
       :dump_summary, :example_passed, :example_failed, :example_pending,
-      :example_group_started, :example_group_finished
+      :example_group_started, :example_group_finished, :warning
 
     def indent
       ' '*(@groups.count*2)
+    end
+
+    def warning notification
+      @output << colorize("    Warning: #{notification.message}\n",:yellow)
     end
 
     def example_group_started notification
