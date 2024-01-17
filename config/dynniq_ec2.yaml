@@ -15,7 +15,6 @@ timeouts:
   command_response: 180
   alarm: 60
   disconnect: 120
-  shutdown: 180
   startup_sequence: 60
   functional_position: 30
   yellow_flash: 60

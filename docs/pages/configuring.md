@@ -71,7 +71,6 @@ timeouts:
   command_response: 1   # max time until site responds to a command request, in seconds
   alarm: 1              # max time until site raises an alarm, in seconds
   disconnect: 1         # max time until site disconnects, in seconds
-  shutdown: 1           # max time until site shuts down for a restart, in seconds
   startup_sequence: 5     # max time until startup sequence completes
   functional_position: 2  # max time until requested functional position is reached
   yellow_flash: 2         # max time until yellow flash is activated

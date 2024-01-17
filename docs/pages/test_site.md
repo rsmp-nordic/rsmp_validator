@@ -66,7 +66,7 @@ Use this unless there's a specific reason to use one of the other methods. A seq
 ## Validator::Site.reconnected
 Disconnects the site if connected, then waits until the site is connected before calling the block.
 
-Use this if your test specifically needs to start with a fresh connection. But be aware that a fresh connection does not guarantee that the equipment will be in a pristine state. The equipment is not restart or otherwise be reset.
+Use this if your test specifically needs to start with a fresh connection. But be aware that a fresh connection does not guarantee that the equipment will be in a pristine state. The equipment is not restarted or otherwise reset.
 
 ## Validator::Site.isolated
 Like `connected`, except that the connection is is closed after the test, before the next test is run.

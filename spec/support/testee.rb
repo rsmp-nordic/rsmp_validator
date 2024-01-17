@@ -33,9 +33,9 @@ class Validator::Testee
 
   # Disconnects the site if connected, then waits until the site is connected
   # before calling the block.
-  #U se this if your test specifically needs to start with a fresh connection.
+  # Use this if your test specifically needs to start with a fresh connection.
   # But be aware that a fresh connection does not guarantee that the equipment
-  # will be in a pristine state. The equipment is not restart or otherwise be
+  # will be in a pristine state. The equipment is not restarted or otherwise
   # reset.
   def reconnected options={}, &block
     stop 'Reconnecting'
