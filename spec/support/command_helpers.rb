@@ -118,18 +118,6 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "Switch to fixed time #{status}"
   end
 
-  def set_restart
-    require_security_codes
-    log "Restarting traffic controller"
-    command_list = build_command_list :M0004, :setRestart, {
-      securityCode: Validator.get_config('secrets','security_codes',2),
-      status: 'True'
-    }
-    @site.send_command Validator.get_config('main_component'), command_list
-    # if the controller restarts immediately, we will not receive a command response,
-    # so do not expect it
-  end
-
   def set_emergency_route route, state
     if state
       enable_emergency_route route
@@ -528,7 +516,7 @@ module Validator::CommandHelpers
       end
     end
 
-    # let block take other actions, like restarting the site, change control mode, etc.
+    # let block take other actions, like activating yellow flash, change control mode, etc.
     yield
 
     # subscribe, so we start getting status udates
