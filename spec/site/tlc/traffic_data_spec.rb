@@ -11,7 +11,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: number of vehicles",
           { S0201: [:starttime,:vehicles] },
-          Validator.config['components']['detector_logic'].keys.first
+          Validator.get_config('components','detector_logic').keys.first
       end
     end
 
@@ -36,7 +36,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: vehicle speed",
           { S0202: [:starttime,:speed] },
-          Validator.config['components']['detector_logic'].keys.first
+          Validator.get_config('components','detector_logic').keys.first
       end
     end
 
@@ -61,7 +61,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: occupancy",
           { S0203: [:starttime,:occupancy] },
-          Validator.config['components']['detector_logic'].keys.first
+          Validator.get_config('components','detector_logic').keys.first
       end
     end
 
@@ -97,7 +97,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
               :C,
               :F
           ] },
-          Validator.config['components']['detector_logic'].keys.first
+          Validator.get_config('components','detector_logic').keys.first
       end
     end
 

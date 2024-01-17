@@ -25,8 +25,8 @@ RSpec.describe "Traffic Light Controller" do
       expect {
         # request a non-existing status
         status_list = convert_status_list( S0000:[:status] )
-        site.request_status Validator.config['main_component'], status_list, collect: {
-          timeout: Validator.config['timeouts']['command_response']
+        site.request_status Validator.get_config('main_component'), status_list, collect: {
+          timeout: Validator.get_config('timeouts','command_response')
         },
         # normally we can't send S0000 because JSON Schema validation
         # will prevent it, but we can disable it for testing purposes

@@ -6,7 +6,7 @@ RSpec.describe 'Supervisor' do
       Validator::Supervisor.isolated(
         'rsmp_versions' => [core_version],
         'collect' => {
-          timeout: Validator.config['timeouts']['ready'],
+          timeout: Validator.get_config('timeouts','ready'),
           num: length,
           ingoing: true,
           outgoing: true

@@ -100,6 +100,11 @@ module Validator
     self.reporter.publish :step, message: str
   end
 
+  # log to the rspec formatter
+  def self.warning str, options={}
+    self.reporter.publish :warning, message: str
+  end
+
   private
 
   # print and error to STDERR and exit with an error
@@ -292,6 +297,26 @@ module Validator
         "[unless relevant for #{Validator.config.dig('restrict_testing','sxl_version')}]"
       end
       rspec_config.filter_run_excluding sxl: sxl_filter
+    end
+  end
+
+  def self.get_config(*path, **options)
+    value = Validator.config.dig(*path)
+    if value
+      value
+    else
+      path_name = path.inspect
+
+      default = options[:default]
+      assume = options[:assume]
+      if default
+        self.warning "Config #{path_name} not found, using default: #{default}"
+        default
+      elsif assume
+        assume
+      else
+        raise RuntimeError.new("Config #{path_name} is missing")
+      end
     end
   end
 end

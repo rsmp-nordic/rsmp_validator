@@ -54,7 +54,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
               :maxToREstimate,
               :likelyToREstimate
           ] },
-          Validator.config['components']['signal_group'].keys.first
+          Validator.get_config('components','signal_group').keys.first
       end
     end
 
@@ -91,8 +91,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
         supervisor.ignore_errors RSMP::DisconnectError do
           verify_startup_sequence do
             set_restart
-            site.wait_for_state :disconnected, timeout: Validator.config['timeouts']['shutdown']
-            site.wait_for_state :ready, timeout: Validator.config['timeouts']['ready']
+            site.wait_for_state :disconnected, timeout: Validator.get_config('timeouts','shutdown')
+            site.wait_for_state :ready, timeout: Validator.get_config('timeouts','ready')
           end
         end
       end

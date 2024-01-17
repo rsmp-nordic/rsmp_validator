@@ -22,7 +22,7 @@ module Validator::StatusHelpers
   end
 
   def unsubscribe_from_all
-    @site.unsubscribe_to_status Validator.config['main_component'], [
+    @site.unsubscribe_to_status Validator.get_config('main_component'), [
       {'sCI'=>'S0015','n'=>'status'},
       {'sCI'=>'S0014','n'=>'status'},
       {'sCI'=>'S0011','n'=>'status'},
@@ -42,26 +42,26 @@ module Validator::StatusHelpers
 
   def verify_status parent_task, description, status_list
     log description
-    @site.request_status Validator.config['main_component'], convert_status_list(status_list), collect!: {
-      timeout: Validator.config['timeouts']['status_update']
+    @site.request_status Validator.get_config('main_component'), convert_status_list(status_list), collect!: {
+      timeout: Validator.get_config('timeouts','status_update', assume: 0)
     }
   end
 
   def wait_for_status parent_task, description, status_list,
-      update_rate: Validator.config['intervals']['status_update'],
-      timeout: Validator.config['timeouts']['command']
+      update_rate: Validator.get_config('intervals','status_update', assume: 0),
+      timeout: Validator.get_config('timeouts','command')
     update_rate = 0 unless update_rate
     log "Wait for #{description}"
     subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
     subscribe_list.map! { |item| item.merge!('sOc' => false) } if use_sOc?(@site)
 
     begin
-      result = @site.subscribe_to_status Validator.config['main_component'], subscribe_list, collect!: {
+      result = @site.subscribe_to_status Validator.get_config('main_component'), subscribe_list, collect!: {
         timeout: timeout
       }
     ensure
       unsubscribe_list = convert_status_list(status_list).map { |item| item.slice('sCI','n') }
-      @site.unsubscribe_to_status Validator.config['main_component'], unsubscribe_list
+      @site.unsubscribe_to_status Validator.get_config('main_component'), unsubscribe_list
     end
   end
 
@@ -75,11 +75,11 @@ module Validator::StatusHelpers
     )
   end
 
-  def request_status_and_confirm site, description, status_list, component=Validator.config['main_component']
+  def request_status_and_confirm site, description, status_list, component=Validator.get_config('main_component')
     @site = site
     log "Read #{description}"
     result = site.request_status component, convert_status_list(status_list), collect!: {
-      timeout: Validator.config['timeouts']['status_response'],
+      timeout: Validator.get_config('timeouts','status_response'),
     }
   end
 

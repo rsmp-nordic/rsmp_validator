@@ -33,7 +33,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send M0005 to set emergency route.
     # 3. Then we should get a command responds confirming the change.
     it 'can be activated with M0005 and read with S0006', sxl: ['>=1.0.7','<1.2'] do |example|
-      emergency_routes = Validator.config['items']['emergency_routes']
+      emergency_routes = Validator.get_config('items','emergency_routes')
       skip("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
 
       def set_emergency_states task, emergency_routes, state
@@ -84,7 +84,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         )
       end
 
-      emergency_routes = Validator.config['items']['emergency_routes']
+      emergency_routes = Validator.get_config('items','emergency_routes')
 
       skip("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
 
