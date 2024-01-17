@@ -46,35 +46,6 @@ end
 
 
 
-## Signal group follows startup sequence after restart
-
-Verify that groups follow startup sequence after a restart
-
-1. Given the site is connected
-2. And has just been restarted
-3. Then all signal groups should follow the startup sequence
-
-<details markdown="block">
-  <summary>
-     View Source
-  </summary>
-```ruby
-Validator::Site.connected do |task,supervisor,site|
-  prepare task, site
-  supervisor.ignore_errors RSMP::DisconnectError do
-    verify_startup_sequence do
-      set_restart
-      site.wait_for_state :disconnected, timeout: Validator.config['timeouts']['shutdown']
-      site.wait_for_state :ready, timeout: Validator.config['timeouts']['ready']
-    end
-  end
-end
-```
-</details>
-
-
-
-
 ## Signal group is ordered to green with M0010
 
 Validate that a signal group can be ordered to green using the M0010 command.
@@ -166,7 +137,7 @@ Validator::Site.connected do |task,supervisor,site|
         :maxToREstimate,
         :likelyToREstimate
     ] },
-    Validator.config['components']['signal_group'].keys.first
+    Validator.get_config('components','signal_group').keys.first
 end
 ```
 </details>

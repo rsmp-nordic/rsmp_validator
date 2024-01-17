@@ -32,7 +32,7 @@ Verify that we can read forced input status with S0029
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
- request_status_and_confirm site, "forced input status",
+  request_status_and_confirm site, "forced input status",
     { S0029: [:status] }
 end
 ```
@@ -56,7 +56,7 @@ Verify that we can force input with M0019
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
-  inputs = Validator.config['items']['inputs']
+  inputs = Validator.get_config('items','inputs')
   skip("No inputs configured") if inputs.nil? || inputs.empty?
   inputs.each do |input|
     force_input input: input, status: 'True', value: 'False'
@@ -87,7 +87,7 @@ Verify that we can activate input with M0006
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
-  inputs = Validator.config['items']['inputs']
+  inputs = Validator.get_config('items','inputs')
   skip("No inputs configured") if inputs.nil? || inputs.empty?
   prepare task, site
   inputs.each { |input| switch_input input }
@@ -111,7 +111,7 @@ Verify that we can read input status with S0003
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
- request_status_and_confirm site, "input status",
+  request_status_and_confirm site, "input status",
     { S0003: [:inputstatus] }
 end
 ```
@@ -157,7 +157,7 @@ Verify that we can acticate/deactivate a series of inputs with M0013
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
-  inputs = Validator.config['items']['inputs']
+  inputs = Validator.get_config('items','inputs')
   skip("No inputs configured") if inputs.nil? || inputs.empty?
   status = "1,3,12;5,5,10"
   set_series_of_inputs status

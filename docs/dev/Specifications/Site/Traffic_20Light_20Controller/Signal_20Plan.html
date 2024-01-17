@@ -155,7 +155,7 @@
 <ol><li>
 <p>Given the site is connected</p>
 </li><li>
-<p>Verify that there is a <a href="&#39;validator&#39;">Validator.config</a> with a time plan</p>
+<p>Verify that there is a Validator.get_config(‘validator’) with a time plan</p>
 </li><li>
 <p>Send command to switch time plan</p>
 </li><li>
@@ -184,7 +184,7 @@
           <td>
             <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 29</span>
 
-<span class='id identifier rubyid_plans'>plans</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'><span class='object_link'><a href="../../../Validator.html#config-class_method" title="Validator.config (method)">config</a></span></span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>items</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>plans</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+<span class='id identifier rubyid_plans'>plans</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_get_config'>get_config</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>items</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>plans</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
       <span class='id identifier rubyid_skip'>skip</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>No time plans configured</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_plans'>plans</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_plans'>plans</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
       <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -210,7 +210,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-43"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-44"></a>
     Traffic Light Controller Signal Plan list size is read with S0018
   </div>
 
@@ -218,7 +218,7 @@
     
     <div class="docstring">
       
-<p>Verify status S0018 number of time plans</p>
+<p>Verify status S0018 number of time plans Deprecated from 1.2, use S0022 instead.</p>
 <ol><li>
 <p>Given the site is connected</p>
 </li><li>
@@ -239,13 +239,13 @@
             <pre class="lines">
 
 
-43
 44
 45
-46</pre>
+46
+47</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 43</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 44</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>number of time plans</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -271,7 +271,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-55"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-56"></a>
     Traffic Light Controller Signal Plan list is read with S0022
   </div>
 
@@ -300,13 +300,13 @@
             <pre class="lines">
 
 
-55
 56
 57
-58</pre>
+58
+59</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 55</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 56</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>list of time plans</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -332,7 +332,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-67"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-68"></a>
     Traffic Light Controller Signal Plan week table is read with S0026
   </div>
 
@@ -361,13 +361,13 @@
             <pre class="lines">
 
 
-67
 68
 69
-70</pre>
+70
+71</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 67</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 68</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>week time table</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -393,7 +393,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-77"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-78"></a>
     Traffic Light Controller Signal Plan week table is set with M0016
   </div>
 
@@ -420,14 +420,14 @@
             <pre class="lines">
 
 
-77
 78
 79
 80
-81</pre>
+81
+82</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 77</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 78</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>0-1,6-2</span><span class='tstring_end'>&quot;</span></span>
@@ -454,7 +454,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-90"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-91"></a>
     Traffic Light Controller Signal Plan day table is read with S0027
   </div>
 
@@ -483,13 +483,13 @@
             <pre class="lines">
 
 
-90
 91
 92
-93</pre>
+93
+94</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 90</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 91</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>command table</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -515,7 +515,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-100"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-101"></a>
     Traffic Light Controller Signal Plan day table is set with M0017
   </div>
 
@@ -542,14 +542,14 @@
             <pre class="lines">
 
 
-100
 101
 102
 103
-104</pre>
+104
+105</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 100</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 101</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>12-1-12-59,1-0-23-12</span><span class='tstring_end'>&quot;</span></span>
@@ -576,7 +576,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-113"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-114"></a>
     Traffic Light Controller Signal Plan version is read with S0097
   </div>
 
@@ -605,13 +605,13 @@
             <pre class="lines">
 
 
-113
 114
 115
-116</pre>
+116
+117</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 113</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 114</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>version of traffic program</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -637,7 +637,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-123"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-124"></a>
     Traffic Light Controller Signal Plan M0018 set cycle time
   </div>
 
@@ -664,15 +664,15 @@
             <pre class="lines">
 
 
-123
 124
 125
 126
 127
-128</pre>
+128
+129</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 123</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 124</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='int'>5</span>
@@ -700,7 +700,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-137"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-138"></a>
     Traffic Light Controller Signal Plan dynamic bands are read with S0023
   </div>
 
@@ -729,13 +729,13 @@
             <pre class="lines">
 
 
-137
 138
 139
-140</pre>
+140
+141</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 137</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 138</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>command table</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -761,7 +761,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-147"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-148"></a>
     Traffic Light Controller Signal Plan dynamic bands are set with M0014
   </div>
 
@@ -788,15 +788,15 @@
             <pre class="lines">
 
 
-147
 148
 149
 150
 151
-152</pre>
+152
+153</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 147</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 148</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_plan'>plan</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1</span><span class='tstring_end'>&quot;</span></span>
@@ -824,7 +824,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-163"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-164"></a>
     Traffic Light Controller Signal Plan dynamic bands values can be changed and read back
   </div>
 
@@ -857,7 +857,6 @@
             <pre class="lines">
 
 
-163
 164
 165
 166
@@ -872,10 +871,11 @@
 175
 176
 177
-178</pre>
+178
+179</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 163</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 164</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -913,7 +913,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-189"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-190"></a>
     Traffic Light Controller Signal Plan timeout for dynamic bands is set with M0023
   </div>
 
@@ -946,16 +946,16 @@
             <pre class="lines">
 
 
-189
 190
 191
 192
 193
 194
-195</pre>
+195
+196</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 189</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 190</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -984,7 +984,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-204"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-205"></a>
     Traffic Light Controller Signal Plan offset is read with S0024
   </div>
 
@@ -1013,13 +1013,13 @@
             <pre class="lines">
 
 
-204
 205
 206
-207</pre>
+207
+208</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 204</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 205</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>offset time</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -1045,7 +1045,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-214"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-215"></a>
     Traffic Light Controller Signal Plan offset is set with M0015
   </div>
 
@@ -1072,15 +1072,15 @@
             <pre class="lines">
 
 
-214
 215
 216
 217
 218
-219</pre>
+219
+220</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 214</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 215</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_plan'>plan</span> <span class='op'>=</span> <span class='int'>1</span>
@@ -1108,7 +1108,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-228"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-229"></a>
     Traffic Light Controller Signal Plan cycle time is read with S0028
   </div>
 
@@ -1137,13 +1137,13 @@
             <pre class="lines">
 
 
-228
 229
 230
-231</pre>
+231
+232</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 228</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 229</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>cycle time</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -1169,7 +1169,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_plans_spec-rb-238"></a>
+    <a name="spec-site-tlc-signal_plans_spec-rb-239"></a>
     Traffic Light Controller Signal Plan cycle time is set with M0018
   </div>
 
@@ -1196,15 +1196,15 @@
             <pre class="lines">
 
 
-238
 239
 240
 241
 242
-243</pre>
+243
+244</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 238</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_plans_spec.rb', line 239</span>
 
 <span class='const'><span class='object_link'><a href="../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='int'>5</span>

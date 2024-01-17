@@ -118,29 +118,6 @@ end
 
 
 
-## Operational emergency stage is read with S0006
-
-Verify status S0006 emergency stage
-
-1. Given the site is connected
-2. Request status
-3. Expect status response before timeout
-
-<details markdown="block">
-  <summary>
-     View Source
-  </summary>
-```ruby
-Validator::Site.connected do |task,supervisor,site|
-  request_status_and_confirm site, "emergency stage status",
-    { S0006: [:status,:emergencystage] }
-end
-```
-</details>
-
-
-
-
 ## Operational fixed time control can be activated with M0007
 
 Verify command M0007 fixed time control
@@ -273,7 +250,7 @@ end
 
 ## Operational startup status is read with S0005
 
-Verify status S0005 traffic controller starting
+Verify status S0005 traffic controller starting by intersection
 
 1. Given the site is connected
 2. Request status
@@ -286,7 +263,7 @@ Verify status S0005 traffic controller starting
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   request_status_and_confirm site, "traffic controller starting (true/false)",
-    { S0005: [:status] }
+    { S0005: [:statusByIntersection] }
 end
 ```
 </details>
@@ -296,7 +273,7 @@ end
 
 ## Operational switched on is read with S0007
 
-Verify status S0007 controller switched on (dark mode=off)
+Verify status S0007 controller switched on, source attribute
 
 1. Given the site is connected
 2. Request status
@@ -308,11 +285,7 @@ Verify status S0007 controller switched on (dark mode=off)
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
-    status_list = { S0007: [:status,:intersection,:source] }
-  else
-    status_list = { S0007: [:status,:intersection] }
-  end
+  status_list = { S0007: [:status,:intersection,:source] }
   request_status_and_confirm site, "controller switch on (dark mode=off)", status_list
 end
 ```
@@ -338,7 +311,7 @@ Verify that we can yellow flash causes all groups to go to state 'c'
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
-  timeout =  10
+  timeout =  Validator.get_config('timeouts','yellow_flash')
   switch_yellow_flash
   wait_for_groups 'c', timeout: timeout      # c mean s yellow flash
   switch_normal_control
@@ -370,7 +343,7 @@ Validator::Site.connected do |task,supervisor,site|
   switch_normal_control
   minutes = 1
   switch_yellow_flash timeout_minutes: minutes
-  wait_normal_control timeout: minutes*60 + Validator.config['timeouts']['functional_position']
+  wait_normal_control timeout: minutes*60 + Validator.get_config('timeouts','functional_position')
 end
 ```
 </details>

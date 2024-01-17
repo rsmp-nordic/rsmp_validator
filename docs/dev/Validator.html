@@ -471,6 +471,30 @@
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#warning-class_method" title="warning (class method)">.<strong>warning</strong>(str, options = {})  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>log to the rspec formatter.</p>
+</div></span>
+  
+</li>
+
+      
     </ul>
   
     <h2>
@@ -1156,6 +1180,48 @@
   <span class='id identifier rubyid_settings'>settings</span> <span class='op'>=</span> <span class='id identifier rubyid_settings'>settings</span><span class='period'>.</span><span class='id identifier rubyid_deep_merge'>deep_merge</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>log</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>log</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_initialize_logging'>initialize_logging</span> <span class='label'>log_settings:</span> <span class='id identifier rubyid_settings'>settings</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reporter'>reporter</span> <span class='op'>=</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span><span class='period'>.</span><span class='id identifier rubyid_reporter'>reporter</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="warning-class_method">
+  
+    .<strong>warning</strong>(str, options = {})  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>log to the rspec formatter</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+<table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+104
+105
+106</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 104</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_warning'>warning</span> <span class='id identifier rubyid_str'>str</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reporter'>reporter</span><span class='period'>.</span><span class='id identifier rubyid_publish'>publish</span> <span class='symbol'>:warning</span><span class='comma'>,</span> <span class='label'>message:</span> <span class='id identifier rubyid_str'>str</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>

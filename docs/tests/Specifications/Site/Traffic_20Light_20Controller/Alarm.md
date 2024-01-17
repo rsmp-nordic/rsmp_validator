@@ -50,7 +50,7 @@ The alarm code and input nr is read from the test configuration.
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   alarm_code_id = 'A0302'   # what alarm to expect
-  timeout  = Validator.config['timeouts']['alarm']
+  timeout  = Validator.get_config('timeouts','alarm')
   log "Activating alarm #{alarm_code_id}"
   deactivate, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id|   # raise alarm, by activating input
     log "Alarm #{alarm_code_id} is now active on component #{component_id}"
@@ -131,7 +131,7 @@ end
 Validate that alarms can be suspended. We're using A0302 in this test.
 
 1. Given the site is connected
-2. And the alarm is  resumed
+2. And the alarm is resumed
 3. When we suspend the alarm
 4. Then we should received an alarm suspended messsage
 5. When we resume the alarm
@@ -168,9 +168,9 @@ Validator::Site.connected do |task,supervisor,site|
         'cId' => component_id,
         'aCI' => alarm_code_id,
         'aSp' => 'Suspend',
-        'sS' => 'suspended'
+        'sS' => /Suspended/i
       },
-      timeout: Validator.config['timeouts']['alarm']
+      timeout: Validator.get_config('timeouts','alarm')
     ).collect!
   end
   begin
@@ -190,7 +190,7 @@ Validator::Site.connected do |task,supervisor,site|
       m_id: resume.m_id,
       num: 1,
       query: {'aCI'=>alarm_code_id,'aSp'=>'Suspend','sS'=>'notSuspended'},
-      timeout: Validator.config['timeouts']['alarm']
+      timeout: Validator.get_config('timeouts','alarm')
     ).collect!
   end
   site.send_message resume

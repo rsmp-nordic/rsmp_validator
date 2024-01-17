@@ -36,7 +36,7 @@ rather than the more common Validator::Site.connect.
      View Source
   </summary>
 ```ruby
-timeout = Validator.config['timeouts']['disconnect']
+timeout = Validator.get_config('timeouts','disconnect')
 Validator::Site.isolated do |task,supervisor,site_proxy|
   supervisor.ignore_errors RSMP::DisconnectError do
     log "Disabling watchdog acknowledgements, site should disconnect"
@@ -70,7 +70,7 @@ end
   </summary>
 ```ruby
 Validator::Site.isolated do |task,supervisor,site|
-  timeout = Validator.config['timeouts']['disconnect']
+  timeout = Validator.get_config('timeouts','disconnect')
   wait_task = task.async do
     site.wait_for_state :disconnected, timeout: timeout
     raise RSMP::DisconnectError
@@ -78,9 +78,9 @@ Validator::Site.isolated do |task,supervisor,site|
     # ok, no disconnect happened
   end
   log "Stop sending watchdogs, site should not disconnect"
-  def site.send_watchdog now=nil
+  site.with_watchdog_disabled do
+    wait_task.wait
   end
-  wait_task.wait
 end
 ```
 </details>

@@ -56,7 +56,7 @@ Verify that output can be forced with M0020
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
    prepare task, site
-   outputs = Validator.config['items']['outputs']
+   outputs = Validator.get_config('items','outputs')
    skip("No outputs configured") if outputs.nil? || outputs.empty?
    outputs.each do |output|
      force_output output: output, status:'True', value:'True'

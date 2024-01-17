@@ -33,7 +33,7 @@ Validate that a signal priority can be requested.
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  signal_group = Validator.config['components']['signal_group'].keys.first
+  signal_group = Validator.get_config('components','signal_group').keys.first
   command_list = build_command_list :M0022, :requestPriority, {
     requestId: SecureRandom.uuid()[0..3],
     signalGroupId: signal_group,
@@ -69,10 +69,10 @@ Validate that signal priority status are send when priorty is requested
 Validator::Site.connected do |task,supervisor,site|
   sequence = ['received','activated','completed']
   # subscribe
-  component = Validator.config['main_component']
+  component = Validator.get_config('main_component')
   log "Subscribing to signal priority request status updates"
   status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
-  status_list.map! { |item| item.merge!('sOc' => 'True') } if use_sOc?(site)
+  status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)
   site.subscribe_to_status component, status_list
   # start collector
   request_id = SecureRandom.uuid()[0..3]    # make a message id
@@ -85,7 +85,7 @@ Validator::Site.connected do |task,supervisor,site|
       site,
       type: "StatusUpdate",
       num: num,
-      timeout: Validator.config['timeouts']['priority_completion'],
+      timeout: Validator.get_config('timeouts','priority_completion'),
       component: component
     )
     def search_for_request_state request_id, message, states
@@ -111,7 +111,7 @@ Validator::Site.connected do |task,supervisor,site|
   def send_priority_request log, id:nil, site:, component:
     # send an unrelated request before our request, to check that it does not interfere
     log log
-    signal_group = Validator.config['components']['signal_group'].keys.first
+    signal_group = Validator.get_config('components','signal_group').keys.first
     command_list = build_command_list :M0022, :requestPriority, {
       requestId: (id || SecureRandom.uuid()[0..3]),
       signalGroupId: signal_group,
@@ -185,7 +185,7 @@ Validate that we can subscribe signal priority status
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
-  status_list.map! { |item| item.merge!('sOc' => 'True') } if use_sOc?(site)
+  status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)
   wait_for_status task, 'signal priority status', status_list
 end
 ```

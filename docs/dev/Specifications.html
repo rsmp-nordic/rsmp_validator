@@ -50,7 +50,7 @@
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
-         request_status_and_confirm site, "input status",
+          request_status_and_confirm site, "input status",
             { S0003: [:inputstatus] }
         end</div> -->
 </div></li>
@@ -63,8 +63,8 @@
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
-         request_status_and_confirm site, "forced input status",
-            { S0029: [:status] }
+          request_status_and_confirm site, "input status",
+            { S0003: [:inputstatus] }
         end</div> -->
 </div></li>
       
@@ -76,8 +76,21 @@
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          request_status_and_confirm site, "forced input status",
+            { S0029: [:status] }
+        end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
           prepare task, site
-          inputs = Validator.config['items']['inputs']
+          inputs = Validator.get_config('items','inputs')
           skip("No inputs configured") if inputs.nil? || inputs.empty?
           inputs.each do |input|
             force_input input: input, status: 'True', value: 'False'
@@ -91,13 +104,13 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
           prepare task, site
-          inputs = Validator.config['items']['inputs']
+          inputs = Validator.get_config('items','inputs')
           skip("No inputs configured") if inputs.nil? || inputs.empty?
           prepare task, site
           inputs.each { |input| switch_input input }
@@ -107,13 +120,13 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
           prepare task, site
-          inputs = Validator.config['items']['inputs']
+          inputs = Validator.get_config('items','inputs')
           skip("No inputs configured") if inputs.nil? || inputs.empty?
           status = "1,3,12;5,5,10"
           set_series_of_inputs status
@@ -123,7 +136,7 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
@@ -175,8 +188,8 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
           prepare task, site
-          request_status_and_confirm site, "forced output status",
-            { S0030: [:status] }
+          request_status_and_confirm site, "output status",
+            { S0004: [:outputstatus] }
         end</div> -->
 </div></li>
       
@@ -189,7 +202,21 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
           prepare task, site
-          outputs = Validator.config['items']['outputs']
+          request_status_and_confirm site, "forced output status",
+            { S0030: [:status] }
+        end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+          prepare task, site
+          outputs = Validator.get_config('items','outputs')
           skip("No outputs configured") if outputs.nil? || outputs.empty?
           outputs.each do |output|
             force_output output: output, status:'True', value:'True'
@@ -280,7 +307,7 @@
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         alarm_code_id = 'A0302'   # what alarm to expect
-        timeout  = Validator.config['timeouts']['alarm']
+        timeout  = Validator.get_config('timeouts','alarm')
 
         log "Activating alarm #{alarm_code_id}"
         deactivate, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id|   # raise alarm, by activating input
@@ -352,9 +379,9 @@
               'cId' => component_id,
               'aCI' => alarm_code_id,
               'aSp' => 'Suspend',
-              'sS' => 'suspended'
+              'sS' => /Suspended/i
             },
-            timeout: Validator.config['timeouts']['alarm']
+            timeout: Validator.get_config('timeouts','alarm')
           ).collect!
         end
 
@@ -376,7 +403,7 @@
             m_id: resume.m_id,
             num: 1,
             query: {'aCI'=>alarm_code_id,'aSp'=>'Suspend','sS'=>'notSuspended'},
-            timeout: Validator.config['timeouts']['alarm']
+            timeout: Validator.get_config('timeouts','alarm')
           ).collect!
         end
         site.send_message resume
@@ -447,97 +474,41 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        with_clock_set CLOCK do
-          status_list = { S0096: [
-            :year,
-            :month,
-            :day,
-            :hour,
-            :minute,
-            :second,
-          ] }
-          result = site.request_status Validator.config['main_component'], convert_status_list(status_list), collect!: {
-            timeout: Validator.config['timeouts']['status_update']
-          }
-          collector = result[:collector]
-          status = status_list.keys.first.to_s
-
-          received = Time.new(
-            collector.query_result( {"sCI" => status, "n" => "year"} )['s'],
-            collector.query_result( {"sCI" => status, "n" => "month"} )['s'],
-            collector.query_result( {"sCI" => status, "n" => "day"} )['s'],
-            collector.query_result( {"sCI" => status, "n" => "hour"} )['s'],
-            collector.query_result( {"sCI" => status, "n" => "minute"} )['s'],
-            collector.query_result( {"sCI" => status, "n" => "second"} )['s'],
-            'UTC'
-          )
-
-          max_diff =
-            Validator.config['timeouts']['command_response'] +
-            Validator.config['timeouts']['status_response']
-
-          diff = received - CLOCK
-          diff = diff.round
-          expect(diff.abs).to be <= max_diff,
-            "Clock reported by S0096 is off by #{diff}s, should be within #{max_diff}s"
-        end
-      end</div> -->
-</div></li>
-      
-      
-    
-      
-      <li class='context-specification even'><div>
-  <div class="specification">
-    
-  </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
-        prepare task, site
-        with_clock_set CLOCK do
-          status_list = { S0096: [
-            :year,
-            :month,
-            :day,
-            :hour,
-            :minute,
-            :second,
-          ] }
-          
-          result = site.request_status Validator.config['main_component'],
-            convert_status_list(status_list),
-            collect!: {
-              timeout: Validator.config['timeouts']['status_response']
+        site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
+          with_clock_set CLOCK do
+            status_list = { S0096: [
+              :year,
+              :month,
+              :day,
+              :hour,
+              :minute,
+              :second,
+            ] }
+            result = site.request_status Validator.get_config('main_component'), convert_status_list(status_list), collect!: {
+              timeout: Validator.get_config('timeouts','status_update')
             }
-          collector = result[:collector]
+            collector = result[:collector]
+            status = status_list.keys.first.to_s
 
-          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-          diff = Time.parse(collector.messages.first.attributes['sTs']) - CLOCK
-          diff = diff.round
-          expect(diff.abs).to be <= max_diff,
-            "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s"
-        end
-      end</div> -->
-</div></li>
-      
-      
-    
-      
-      <li class='context-specification odd'><div>
-  <div class="specification">
-    
-  </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
-        prepare task, site
-        with_clock_set CLOCK do
-          result = site.request_aggregated_status Validator.config['main_component'], collect!: {
-            timeout: Validator.config['timeouts']['status_response']
-          }
-          collector = result[:collector]
-          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-          diff = Time.parse(collector.messages.first.attributes['aSTS']) - CLOCK
-          diff = diff.round
-          expect(diff.abs).to be <= max_diff,
-            "Timestamp of aggregated status is off by #{diff}s, should be within #{max_diff}s"
+            received = Time.new(
+              collector.query_result( {"sCI" => status, "n" => "year"} )['s'],
+              collector.query_result( {"sCI" => status, "n" => "month"} )['s'],
+              collector.query_result( {"sCI" => status, "n" => "day"} )['s'],
+              collector.query_result( {"sCI" => status, "n" => "hour"} )['s'],
+              collector.query_result( {"sCI" => status, "n" => "minute"} )['s'],
+              collector.query_result( {"sCI" => status, "n" => "second"} )['s'],
+              'UTC'
+            )
+
+            max_diff =
+              Validator.get_config('timeouts','command_response') +
+              Validator.get_config('timeouts','status_response')
+
+            diff = received - CLOCK
+            diff = diff.round
+            expect(diff.abs).to be <= max_diff,
+              "Clock reported by S0096 is off by #{diff}s, should be within #{max_diff}s"
+          end
         end
       end</div> -->
 </div></li>
@@ -551,55 +522,29 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        with_clock_set CLOCK do
-          result = set_functional_position 'NormalControl'
-          collector = result[:collector]
-          max_diff = Validator.config['timeouts']['command_response'] * 2
-          diff = Time.parse(collector.messages.first.attributes['cTS']) - CLOCK
-          diff = diff.round
-          expect(diff.abs).to be <= max_diff,
-            "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s"
-        end
-      end</div> -->
-</div></li>
-      
-      
-    
-      
-      <li class='context-specification odd'><div>
-  <div class="specification">
-    
-  </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
-        prepare task, site
-        with_clock_set CLOCK do
-          result = set_functional_position 'NormalControl'
-          collector = result[:collector]
-          max_diff = Validator.config['timeouts']['command_response']
-          diff = Time.parse(collector.messages.first.attributes['cTS']) - CLOCK
-          diff = diff.round
-          expect(diff.abs).to be <= max_diff,
-            "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s"
-        end
-      end</div> -->
-</div></li>
-      
-      
-    
-      
-      <li class='context-specification even'><div>
-  <div class="specification">
-    
-  </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
-        prepare task, site
-        with_clock_set CLOCK do                           # set clock
-          with_alarm_activated(task, site, 'A0302') do |alarm|   # raise alarm, by activating input
-            alarm_time = Time.parse( alarm.attributes["aTs"] )
-            max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-            diff = alarm_time - CLOCK
-            expect(diff.round.abs).to be <= max_diff,
-              "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s"
+        site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
+          with_clock_set CLOCK do
+            status_list = { S0096: [
+              :year,
+              :month,
+              :day,
+              :hour,
+              :minute,
+              :second,
+            ] }
+
+            result = site.request_status Validator.get_config('main_component'),
+              convert_status_list(status_list),
+              collect!: {
+                timeout: Validator.get_config('timeouts','status_response')
+              }
+            collector = result[:collector]
+
+            max_diff = Validator.get_config('timeouts','command_response') + Validator.get_config('timeouts','status_response')
+            diff = Time.parse(collector.messages.first.attributes['sTs']) - CLOCK
+            diff = diff.round
+            expect(diff.abs).to be <= max_diff,
+              "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s"
           end
         end
       end</div> -->
@@ -614,15 +559,111 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        with_clock_set CLOCK do
-          log "Checking watchdog timestamp"
-          collector = RSMP::Collector.new site, task:task, type: "Watchdog", num: 1, timeout: Validator.config['timeouts']['watchdog']
-          collector.collect!
-          max_diff = Validator.config['timeouts']['command_response'] + Validator.config['timeouts']['status_response']
-          diff = Time.parse(collector.messages.first.attributes['wTs']) - CLOCK
-          diff = diff.round
-          expect(diff.abs).to be <= max_diff,
-            "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s"
+        site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
+          with_clock_set CLOCK do
+            result = site.request_aggregated_status Validator.get_config('main_component'), collect!: {
+              timeout: Validator.get_config('timeouts','status_response')
+            }
+            collector = result[:collector]
+            max_diff = Validator.get_config('timeouts','command_response') + Validator.get_config('timeouts','status_response')
+            diff = Time.parse(collector.messages.first.attributes['aSTS']) - CLOCK
+            diff = diff.round
+            expect(diff.abs).to be <= max_diff,
+              "Timestamp of aggregated status is off by #{diff}s, should be within #{max_diff}s"
+          end
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
+          with_clock_set CLOCK do
+            result = set_functional_position 'NormalControl'
+            collector = result[:collector]
+            max_diff = Validator.get_config('timeouts','command_response') * 2
+            diff = Time.parse(collector.messages.first.attributes['cTS']) - CLOCK
+            diff = diff.round
+            expect(diff.abs).to be <= max_diff,
+              "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s"
+          end
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
+          with_clock_set CLOCK do
+            result = set_functional_position 'NormalControl'
+            collector = result[:collector]
+            max_diff = Validator.get_config('timeouts','command_response')
+            diff = Time.parse(collector.messages.first.attributes['cTS']) - CLOCK
+            diff = diff.round
+            expect(diff.abs).to be <= max_diff,
+              "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s"
+          end
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
+          with_clock_set CLOCK do                           # set clock
+            with_alarm_activated(task, site, 'A0302') do |alarm|   # raise alarm, by activating input
+              alarm_time = Time.parse( alarm.attributes["aTs"] )
+              max_diff = Validator.get_config('timeouts','command_response') + Validator.get_config('timeouts','status_response')
+              diff = alarm_time - CLOCK
+              expect(diff.round.abs).to be <= max_diff,
+                "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s"
+            end
+          end
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
+          with_clock_set CLOCK do
+            log "Checking watchdog timestamp"
+            collector = RSMP::Collector.new site, task:task, type: "Watchdog", num: 1, timeout: Validator.get_config('timeouts','watchdog')
+            collector.collect!
+            max_diff = Validator.get_config('timeouts','command_response') + Validator.get_config('timeouts','status_response')
+            diff = Time.parse(collector.messages.first.attributes['wTs']) - CLOCK
+            diff = diff.round
+            expect(diff.abs).to be <= max_diff,
+              "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s"
+          end
         end
       end</div> -->
 </div></li>
@@ -667,7 +708,7 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic controller starting (true/false)",
-          { S0005: [:status] }
+          { S0005: [:statusByIntersection] }
       end</div> -->
 </div></li>
       
@@ -679,8 +720,8 @@
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
-        request_status_and_confirm site, "emergency stage status",
-          { S0006: [:status,:emergencystage] }
+        request_status_and_confirm site, "traffic controller starting (true/false)",
+          { S0005: [:statusByIntersection] }
       end</div> -->
 </div></li>
       
@@ -692,11 +733,7 @@
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
-        if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
-          status_list = { S0007: [:status,:intersection,:source] }
-        else
-          status_list = { S0007: [:status,:intersection] }
-        end
+        status_list = { S0007: [:status,:intersection,:source] }
         request_status_and_confirm site, "controller switch on (dark mode=off)", status_list
       end</div> -->
 </div></li>
@@ -705,6 +742,19 @@
     
       
       <li class='context-specification odd'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        status_list = { S0007: [:status,:intersection,:source] }
+        request_status_and_confirm site, "controller switch on (dark mode=off)", status_list
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
@@ -721,7 +771,7 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
@@ -738,7 +788,7 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
@@ -752,7 +802,7 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
@@ -769,7 +819,7 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
@@ -782,7 +832,7 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
@@ -799,7 +849,7 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
@@ -813,13 +863,13 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        timeout =  10
+        timeout =  Validator.get_config('timeouts','yellow_flash')
 
         switch_yellow_flash
         wait_for_groups 'c', timeout: timeout      # c mean s yellow flash
@@ -832,7 +882,7 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
@@ -849,7 +899,7 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
@@ -862,7 +912,7 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
@@ -876,7 +926,7 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
@@ -885,7 +935,7 @@
         switch_normal_control
         minutes = 1
         switch_yellow_flash timeout_minutes: minutes
-        wait_normal_control timeout: minutes*60 + Validator.config['timeouts']['functional_position']
+        wait_normal_control timeout: minutes*60 + Validator.get_config('timeouts','functional_position')
       end</div> -->
 </div></li>
       
@@ -961,33 +1011,6 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.isolated do |task,supervisor,site|
-        prepare task, site
-        supervisor.ignore_errors RSMP::DisconnectError do
-          set_restart
-          site.wait_for_state :disconnected, timeout: Validator.config['timeouts']['shutdown']
-        end
-      end
-
-      # NOTE
-      # when a remote site closes the connection, our site proxy object will stop.
-      # when the site reconnects, a new site proxy object will be created.
-      # this means we can't wait for the old site to become ready
-      # it also means we need a new Validator::Site.
-      Validator::Site.isolated do |task,supervisor,site|
-        prepare task, site
-        site.wait_for_state :ready, timeout: Validator.config['timeouts']['ready']
-        wait_normal_control
-      end</div> -->
-</div></li>
-      
-      
-    
-      
-      <li class='context-specification odd'><div>
-  <div class="specification">
-    
-  </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         set_security_code 1
@@ -998,7 +1021,7 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
@@ -1035,13 +1058,13 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         log "Subscribe to status and wait for update"
-        component = Validator.config['main_component']
+        component = Validator.get_config('main_component')
 
         status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus','uRt'=>'1'}]
-        status_list.map! { |item| item.merge!('sOc' => 'False') } if use_sOc?(site)
+        status_list.map! { |item| item.merge!('sOc' => false) } if use_sOc?(site)
 
          site.subscribe_to_status component, status_list, collect!: {
-          timeout: Validator.config['timeouts']['status_update']
+          timeout: Validator.get_config('timeouts','status_update')
         }
       ensure
         unsubscribe_list = status_list.map { |item| item.slice('sCI','n') }
@@ -1091,7 +1114,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>plans = Validator.config['items']['plans']
+  <!-- <div>plans = Validator.get_config('items','plans')
       skip("No time plans configured") if plans.nil? || plans.empty?
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
@@ -1360,7 +1383,7 @@
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: number of vehicles",
           { S0201: [:starttime,:vehicles] },
-          Validator.config['components']['detector_logic'].keys.first
+          Validator.get_config('components','detector_logic').keys.first
       end</div> -->
 </div></li>
       
@@ -1387,7 +1410,7 @@
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: vehicle speed",
           { S0202: [:starttime,:speed] },
-          Validator.config['components']['detector_logic'].keys.first
+          Validator.get_config('components','detector_logic').keys.first
       end</div> -->
 </div></li>
       
@@ -1414,7 +1437,7 @@
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: occupancy",
           { S0203: [:starttime,:occupancy] },
-          Validator.config['components']['detector_logic'].keys.first
+          Validator.get_config('components','detector_logic').keys.first
       end</div> -->
 </div></li>
       
@@ -1452,7 +1475,7 @@
               :C,
               :F
           ] },
-          Validator.config['components']['detector_logic'].keys.first
+          Validator.get_config('components','detector_logic').keys.first
       end</div> -->
 </div></li>
       
@@ -1555,7 +1578,7 @@
               :maxToREstimate,
               :likelyToREstimate
           ] },
-          Validator.config['components']['signal_group'].keys.first
+          Validator.get_config('components','signal_group').keys.first
       end</div> -->
 </div></li>
       
@@ -1589,25 +1612,6 @@
     
       
       <li class='context-specification odd'><div>
-  <div class="specification">
-    
-  </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
-        prepare task, site
-        supervisor.ignore_errors RSMP::DisconnectError do
-          verify_startup_sequence do
-            set_restart
-            site.wait_for_state :disconnected, timeout: Validator.config['timeouts']['shutdown']
-            site.wait_for_state :ready, timeout: Validator.config['timeouts']['ready']
-          end
-        end
-      end</div> -->
-</div></li>
-      
-      
-    
-      
-      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
@@ -1688,16 +1692,14 @@
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
 
-        Validator.config['components']['detector_logic'].keys.each_with_index do |component, indx|
+        Validator.get_config('components','detector_logic').keys.each_with_index do |component, indx|
           force_detector_logic component, mode:'True'
-          Validator.config['main_component'] = Validator.config['main_component']
           wait_for_status(@task,
             "detector logic #{component} to be True",
             [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}1/}]
           )
           
           force_detector_logic component, mode:'False'
-          Validator.config['main_component'] = Validator.config['main_component']
           wait_for_status(@task,
             "detector logic #{component} to be False",
             [{'sCI'=>'S0002','n'=>'detectorlogicstatus','s'=>/^.{#{indx}}0/}]
@@ -1745,7 +1747,7 @@
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
-        signal_group = Validator.config['components']['signal_group'].keys.first
+        signal_group = Validator.get_config('components','signal_group').keys.first
         command_list = build_command_list :M0022, :requestPriority, {
           requestId: SecureRandom.uuid()[0..3],
           signalGroupId: signal_group,
@@ -1783,7 +1785,7 @@
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
-        status_list.map! { |item| item.merge!('sOc' => 'True') } if use_sOc?(site)
+        status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)
         wait_for_status task, 'signal priority status', status_list
       end</div> -->
 </div></li>
@@ -1798,10 +1800,10 @@
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         sequence = ['received','activated','completed']
         # subscribe
-        component = Validator.config['main_component']
+        component = Validator.get_config('main_component')
         log "Subscribing to signal priority request status updates"
         status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
-        status_list.map! { |item| item.merge!('sOc' => 'True') } if use_sOc?(site)
+        status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)
         site.subscribe_to_status component, status_list
 
         # start collector
@@ -1815,7 +1817,7 @@
             site,
             type: "StatusUpdate",
             num: num,
-            timeout: Validator.config['timeouts']['priority_completion'],
+            timeout: Validator.get_config('timeouts','priority_completion'),
             component: component
           )
 
@@ -1844,7 +1846,7 @@
         def send_priority_request log, id:nil, site:, component:
           # send an unrelated request before our request, to check that it does not interfere
           log log
-          signal_group = Validator.config['components']['signal_group'].keys.first
+          signal_group = Validator.get_config('components','signal_group').keys.first
           command_list = build_command_list :M0022, :requestPriority, {
             requestId: (id || SecureRandom.uuid()[0..3]),
             signalGroupId: signal_group,
@@ -1901,11 +1903,93 @@
   <div class="specification">
     
   </div>
-  <!-- <div>emergency_routes = Validator.config['items']['emergency_routes']
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "emergency route status",
+          { S0006: [:status,:emergencystage] }
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "emergency route status",
+          { S0035: [:emergencyroutes] }
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification odd'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>emergency_routes = Validator.get_config('items','emergency_routes')
       skip("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
+
+      def set_emergency_states task, emergency_routes, state
+        emergency_routes.each do |emergency_route|
+          set_emergency_route emergency_route.to_s, state
+        end
+        wait_for_status(task, "emergency route #{emergency_routes.last} to be enabled",
+          [
+            {'sCI'=>'S0006','n'=>'status','s'=>(state ? 'True' : 'False')},
+            {'sCI'=>'S0006','n'=>'emergencystage','s'=>(state ? emergency_routes.last.to_s : '0')}
+          ]
+        )
+     end
+
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        emergency_routes.each { |emergency_route| switch_emergency_route emergency_route.to_s }
+        set_emergency_states task, emergency_routes, false
+        begin
+          set_emergency_states task, emergency_routes, true
+        ensure
+          set_emergency_states task, emergency_routes, false
+        end
+      end</div> -->
+</div></li>
+      
+      
+    
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>def enable_routes task, emergency_routes
+        emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, true }
+        routes = emergency_routes.map {|i| {'id'=>i.to_s} }
+        wait_for_status(task, "emergency routes #{emergency_routes.to_s} to be enabled",
+          [ {'sCI'=>'S0035','n'=>'emergencyroutes','s'=>routes} ]
+        )
+      end
+
+      def disable_routes task, emergency_routes
+        emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, false }
+        routes = []
+        wait_for_status(task, "all emergency routes to be disabled",
+          [ {'sCI'=>'S0035','n'=>'emergencyroutes','s'=>routes} ]
+        )
+      end
+
+      emergency_routes = Validator.get_config('items','emergency_routes')
+
+      skip("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
+
+      Validator::Site.connected do |task,supervisor,site|
+        prepare task, site
+        disable_routes task, emergency_routes
+        begin
+          enable_routes task, emergency_routes
+        ensure
+          disable_routes task, emergency_routes
+        end
       end</div> -->
 </div></li>
       
@@ -1951,7 +2035,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>situations = Validator.config['items']['traffic_situations']
+  <!-- <div>situations = Validator.get_config('items','traffic_situations')
       skip("No traffic situations configured") if situations.nil? || situations.empty?
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
@@ -2095,7 +2179,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>timeout = Validator.config['timeouts']['disconnect']
+  <!-- <div>timeout = Validator.get_config('timeouts','disconnect')
       Validator::Site.isolated do |task,supervisor,site_proxy|
         supervisor.ignore_errors RSMP::DisconnectError do
           log "Disabling watchdog acknowledgements, site should disconnect"
@@ -2121,7 +2205,8 @@
     
   </div>
   <!-- <div>Validator::Site.isolated do |task,supervisor,site|
-        timeout = Validator.config['timeouts']['disconnect']
+        timeout = Validator.get_config('timeouts','disconnect')
+
         wait_task = task.async do
           site.wait_for_state :disconnected, timeout: timeout
           raise RSMP::DisconnectError
@@ -2130,9 +2215,9 @@
         end
 
         log "Stop sending watchdogs, site should not disconnect"
-        def site.send_watchdog now=nil
+        site.with_watchdog_disabled do
+          wait_task.wait
         end
-        wait_task.wait
       end</div> -->
 </div></li>
       
@@ -2164,8 +2249,8 @@
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         log "Request aggregated status"
-        result = site.request_aggregated_status Validator.config['main_component'], collect!: {
-          timeout: Validator.config['timeouts']['status_response']
+        result = site.request_aggregated_status Validator.get_config('main_component'), collect!: {
+          timeout: Validator.get_config('timeouts','status_response')
         }
       end</div> -->
 </div></li>
@@ -2284,12 +2369,12 @@
     
   </div>
   <!-- <div>Validator::Supervisor.connected do |task,site,supervisor_proxy|
-        component = site.find_component Validator.config['main_component']
+        component = site.find_component Validator.get_config('main_component')
 
         # setting ':collect' will cause set_aggregated_status() to wait for the
         # outgoing aggregated status is acknowledged
         component.set_aggregated_status :high_priority_alarm, collect!: {
-          timeout: Validator.config['timeouts']['acknowledgement'],
+          timeout: Validator.get_config('timeouts','acknowledgement'),
           num: 1
         }
       end</div> -->
