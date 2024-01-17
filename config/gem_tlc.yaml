@@ -16,7 +16,6 @@ timeouts:
   command_response: 1
   alarm: 1
   disconnect: 1
-  shutdown: 1
   startup_sequence: 5
   functional_position: 2
   priority_completion: 5

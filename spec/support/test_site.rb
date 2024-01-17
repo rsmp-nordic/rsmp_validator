@@ -83,7 +83,6 @@ class Validator::Site < Validator::Testee
       'command_response',
       'alarm',
       'disconnect',
-      'shutdown'
     ].each do |key|
       raise "config 'timeouts/#{key}' is missing" unless config['timeouts'][key]
     end
