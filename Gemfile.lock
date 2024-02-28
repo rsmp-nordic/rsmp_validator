@@ -62,7 +62,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.9.1)
-    yard (0.9.34)
+    yard (0.9.35)
 
 PLATFORMS
   arm64-darwin-22
