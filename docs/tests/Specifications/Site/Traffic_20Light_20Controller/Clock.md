@@ -90,7 +90,7 @@ Verify command response timestamp after changing clock
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
-    with_clock_set CLOCK do
+    with_clock_set site, CLOCK do
       result = set_functional_position 'NormalControl'
       collector = result[:collector]
       max_diff = Validator.get_config('timeouts','command_response') * 2
@@ -125,7 +125,7 @@ Verify command response timestamp after changing clock
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
-    with_clock_set CLOCK do
+    with_clock_set site, CLOCK do
       result = set_functional_position 'NormalControl'
       collector = result[:collector]
       max_diff = Validator.get_config('timeouts','command_response')
@@ -160,7 +160,7 @@ Verify status response timestamp after changing clock
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
-    with_clock_set CLOCK do
+    with_clock_set site, CLOCK do
       status_list = { S0096: [
         :year,
         :month,
@@ -207,7 +207,7 @@ Verify status S0096 clock after changing clock
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
-    with_clock_set CLOCK do
+    with_clock_set site, CLOCK do
       status_list = { S0096: [
         :year,
         :month,
@@ -265,7 +265,7 @@ Verify aggregated status response timestamp after changing clock
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
-    with_clock_set CLOCK do
+    with_clock_set site, CLOCK do
       result = site.request_aggregated_status Validator.get_config('main_component'), collect!: {
         timeout: Validator.get_config('timeouts','status_response')
       }
@@ -305,7 +305,7 @@ configuted in the test config.
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
-    with_clock_set CLOCK do                           # set clock
+    with_clock_set site, CLOCK do                           # set clock
       with_alarm_activated(task, site, 'A0302') do |alarm|   # raise alarm, by activating input
         alarm_time = Time.parse( alarm.attributes["aTs"] )
         max_diff = Validator.get_config('timeouts','command_response') + Validator.get_config('timeouts','status_response')
@@ -340,7 +340,7 @@ Verify timestamp of watchdog after changing clock
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
-    with_clock_set CLOCK do
+    with_clock_set site, CLOCK do
       log "Checking watchdog timestamp"
       collector = RSMP::Collector.new site, task:task, type: "Watchdog", num: 1, timeout: Validator.get_config('timeouts','watchdog')
       collector.collect!
