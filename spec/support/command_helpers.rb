@@ -450,8 +450,9 @@ module Validator::CommandHelpers
     end
   end
 
-  def with_clock_set clock, &block
+  def with_clock_set site, clock, &block
     result = set_clock clock
+    site.clear_alarm_timestamps
     yield result
   ensure
     reset_clock
