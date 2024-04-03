@@ -19,7 +19,7 @@ jobs:
     runs-on: [ self-hosted, Windows, X64, itc3 ]
     steps:
     - name: Check out repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install Ruby and gems
       uses: ruby/setup-ruby@v1
@@ -45,7 +45,7 @@ jobs:
 
     - name: Upload validation.log
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: rspec validation
+        name: rspec-validation
         path: log/validation_itc3_*.log
