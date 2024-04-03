@@ -46,12 +46,12 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: rspec-validation-${{ matrix.runs-on }}
+        name: rspec-validation-${{ matrix.os }}
         path: log/validation_ruby_*.log
 
     - name: Upload simulator.log
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: simulator-log-${{ matrix.runs-on }}
+        name: simulator-log-${{ matrix.os }}
         path: simulator.log
