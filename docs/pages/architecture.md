@@ -111,7 +111,7 @@ RSpec.describe "Traffic Light Controller" do
     it 'is used for watchdog timestamp', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        with_clock_set CLOCK do
+        with_clock_set site, CLOCK do
           Validator.log "Checking watchdog timestamp", level: :test
           response = site.collect type: "Watchdog", num: 1, timeout: Validator.get_config('timeouts','watchdog')
           max_diff = Validator.get_config('timeouts','command_response') + Validator.get_config('timeouts','status_response')
