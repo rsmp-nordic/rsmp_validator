@@ -47,5 +47,5 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: rspec validation
+        name: rspec-validation
         path: log/validation_itc3_*.log
