@@ -16,15 +16,13 @@ on:
 jobs:
   test:
     if: ${{ github.event_name == 'schedule' || github.event.label.name == 'equipment' }}
-    runs-on: [ self-hosted, Windows, X64, itc3 ]
+    runs-on: [ self-hosted, Linux, X64, itc3 ]
     steps:
     - name: Check out repository
       uses: actions/checkout@v4
 
     - name: Install Ruby and gems
       uses: ruby/setup-ruby@v1
-      env:
-        ImageOS: win19
       with:
         bundler-cache: true # runs 'bundle install' and caches installed gems
 
