@@ -4,7 +4,7 @@ intervals:
   timer: 1
   watchdog: 60
 timeouts:
-  watchdog: 3600    # ITC-3 does not send watchdogs at all if other message are send
+  watchdog: 3600    # ITC-3 does not send watchdogs at all if other message are send 
   acknowledgement: 60
   connect: 120
   ready: 60
