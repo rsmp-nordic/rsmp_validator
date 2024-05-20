@@ -39,8 +39,7 @@ jobs:
     - name: Rename validation.log
       if: always()
       run: |
-        $date=Get-Date -Format 'yyyy-MM-dd_HH-mm'
-        mv log/validation.log log/validation_itc3_$date.log
+        mv log/validation.log log/validation_ruby_$(date +%F_%H-%M-%S).log
 
     - name: Upload validation.log
       if: always()

@@ -1,48 +1,50 @@
 port: 12111
-sxl: tlc
-intervals:
-  timer: 1
+sxl: tlc      # Traffic Light Controller. We are testing a site, not a server.
+intervals:   
+  timer: 1    # main validator timer resolution in seconds
+  watchdog: 20 # send watchdog every x seconds
+timeouts:     # Timeouts used when waiting for messages from site.
   watchdog: 60
-timeouts:
-  watchdog: 3600    # ITC-3 does not send watchdogs at all if other message are send
   acknowledgement: 60
-  connect: 120
+  connect: 120 # Max time to wait for rsmp site to connect to server.
   ready: 60
-  status_response: 60
-  status_update: 60
+  status_response: 120
+  status_update: 120
   subscribe: 60
-  command: 180
-  command_response: 180
+  command: 60
+  command_response: 60
   alarm: 60
-  disconnect: 120
-  startup_sequence: 180
-  functional_position: 30
+  disconnect: 60
+  shutdown: 60
+  startup_sequence: 60
+  functional_position: 60
   yellow_flash: 60
 components:
   main:
-    KK+AG9998=001TC000:
-  signal_group:
-    KK+AG9998=001SG001:
-  detector_logic:
-    KK+AG9998=001DL001:
-    KK+AG9998=001DL002:
+    AA+BBCCC=DDDEEFFF:
+  signal_group:         # Each signal group must be specified manually
+    AA+BBCCC=DDDSG001:
+  detector_logic:       # Each detector logic must be specified manually
+    AA+BBCCC=DDDDL001:
+    AA+BBCCC=DDDDL002:
+    AA+BBCCC=DDDDL003:
 items:
-  plans: [1,7,8]
-  traffic_situations: []
+  plans: [1,2,3,4]
+  traffic_situations: [1]
   emergency_routes: [1]
-  inputs: [1,101]
-  outputs: [1,2]
+  inputs: [1]
+  force_input: 1
 startup_sequence: 'efg'
 secrets:
   security_codes:
-    1: testcode1
-    2: testcode2
+    1: default
+    2: default
 restrict_testing:
-  core_version: 3.1.2
+  core_version: 3.1.5
   sxl_version: 1.0.13
 skip_validation:
   - Alarm
 alarms:
   A0302: 
-    activation_input: 152
-    component: KK+AG9998=001DL001
+    activation_input: 2   # input 2 activates the control block
+    component: AA+BBCCC=DDDDL002  # detector logic 2 is set to error by control block.
