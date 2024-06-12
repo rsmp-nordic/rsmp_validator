@@ -5,7 +5,7 @@ supervisors:
     port: 13111
 core_versions: '3.2.1'
 sxl: tlc
-sxl_version: '1.2'
+sxl_version: '1.2.1'
 components:
   main:
     TC:
