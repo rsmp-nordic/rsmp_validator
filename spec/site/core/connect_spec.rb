@@ -69,7 +69,7 @@ RSpec.describe 'Site::Core' do
     # 3. Then the handshake messages should be in the specified sequence corresponding to version 3.1.5
     # 4. And the connection sequence should be complete
     it 'is correct for rsmp version 3.2.1',  core: '3.2.1' do |example|
-      check_sequence '3.2'
+      check_sequence '3.2.1'
     end
   end
 end
