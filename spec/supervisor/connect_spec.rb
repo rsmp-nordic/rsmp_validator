@@ -74,7 +74,7 @@ RSpec.describe 'Supervisor' do
       case version
       when '3.1.1', '3.1.2', '3.1.3'
         check_sequence_3_1_1 version
-      when '3.1.4', '3.1.5'
+      when '3.1.4', '3.1.5', '3.2', '3.2.1'
         check_sequence_3_1_4 version
       else
         raise "Unkown rsmp version #{version}"
@@ -130,5 +130,25 @@ RSpec.describe 'Supervisor' do
     it 'exchanges correct connection sequence of rsmp version 3.1.5', core: '3.1.5' do |example|
       check_sequence '3.1.5'
     end
-  end
+
+    # Verify the connection sequence when using rsmp core 3.2
+    #
+    # 1. Given the site is connected and using core 3.2
+    # 2. Send and receive handshake messages
+    # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
+    # 4. Expect the connection sequence to be complete
+    it 'exchanges correct connection sequence of rsmp version 3.2', core: '3.2' do |example|
+      check_sequence '3.2'
+    end
+
+    # Verify the connection sequence when using rsmp core 3.2.1
+    #
+    # 1. Given the site is connected and using core 3.2.1
+    # 2. Send and receive handshake messages
+    # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
+    # 4. Expect the connection sequence to be complete
+    it 'exchanges correct connection sequence of rsmp version 3.2.1', core: '3.2.1' do |example|
+      check_sequence '3.2.1'
+    end
+end
 end

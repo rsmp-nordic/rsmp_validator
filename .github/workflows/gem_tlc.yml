@@ -21,7 +21,7 @@ jobs:
     - name: Install Ruby and gems
       uses: ruby/setup-ruby@v1
       with:
-        # ruby-version is not needed because we have a .ruby-version file
+        # ruby-version is not needed because we have a .tool-versions file
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
     - name: Start TLC in background
