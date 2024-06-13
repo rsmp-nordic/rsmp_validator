@@ -988,93 +988,6 @@
       <li class='context-specification'><div class="specification">
   <div class="heading ">
     <a name="spec-site-tlc-alarm_spec-rb-58"></a>
-    Traffic Light Controller Alarm A0302 can be raised
-  </div>
-
-  <div class="details method_details_list">
-    
-    <div class="docstring">
-      
-<p>Validate that a detector logic fault A0302 is raises and cleared.</p>
-
-<p>The test requires that the device is programmed so that the alarm is raise when a specific input is activated, as specified in the test configuration.</p>
-<ol><li>
-<p>Given the site is connected</p>
-</li><li>
-<p>When we force the input to True</p>
-</li><li>
-<p>Then an alarm should be raised, with a timestamp close to now</p>
-</li><li>
-<p>When we force the input to False</p>
-</li><li>
-<p>Then the alarm issue should become inactive, with a timestamp close to now</p>
-</li></ol>
-
-    </div>
-
-    <div style="clear: both;"></div>
-
-    <!-- Source Code -->
-    <div style="float: left;">
-      <table class="source_code">
-        <tr>
-          <td>
-            <pre class="lines">
-
-
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71</pre>
-          </td>
-          <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/alarm_spec.rb', line 58</span>
-
-<span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
-        <span class='id identifier rubyid_alarm_code_id'>alarm_code_id</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>A0302</span><span class='tstring_end'>&#39;</span></span>
-        <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
-        <span class='kw'>def</span> <span class='id identifier rubyid_verify_timestamp'>verify_timestamp</span> <span class='id identifier rubyid_alarm'>alarm</span><span class='comma'>,</span> <span class='id identifier rubyid_duration'>duration</span><span class='op'>=</span><span class='int'>1</span><span class='period'>.</span><span class='id identifier rubyid_minute'>minute</span>
-          <span class='id identifier rubyid_alarm_time'>alarm_time</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_alarm'>alarm</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>aTs</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
-          <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_alarm_time'>alarm_time</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_within'>be_within</span><span class='lparen'>(</span><span class='id identifier rubyid_duration'>duration</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_of'>of</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='period'>.</span><span class='id identifier rubyid_utc'>utc</span>
-        <span class='kw'>end</span>
-        <span class='id identifier rubyid_deactivate'>deactivate</span><span class='comma'>,</span> <span class='id identifier rubyid_component_id'>component_id</span> <span class='op'>=</span> <span class='id identifier rubyid_with_alarm_activated'><span class='object_link'><a href="../../Validator/CommandHelpers.html#with_alarm_activated-instance_method" title="Validator::CommandHelpers#with_alarm_activated (method)">with_alarm_activated</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='id identifier rubyid_alarm_code_id'>alarm_code_id</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_alarm'>alarm</span><span class='comma'>,</span><span class='id identifier rubyid_component_id'>component_id</span><span class='op'>|</span>   <span class='comment'># raise alarm, by activating input
-</span>          <span class='id identifier rubyid_verify_timestamp'>verify_timestamp</span> <span class='id identifier rubyid_alarm'>alarm</span>
-          <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Alarm </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_alarm_code_id'>alarm_code_id</span><span class='embexpr_end'>}</span><span class='tstring_content'> is now Active on component </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_component_id'>component_id</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-        <span class='kw'>end</span>
-        <span class='id identifier rubyid_verify_timestamp'>verify_timestamp</span> <span class='id identifier rubyid_deactivate'>deactivate</span>
-        <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Alarm </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_alarm_code_id'>alarm_code_id</span><span class='embexpr_end'>}</span><span class='tstring_content'> is now Inactive on component </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_component_id'>component_id</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-      <span class='kw'>end</span></pre>
-          </td>
-        </tr>
-      </table>
-    </div>
-    
-
-    <div style="clear: both;"></div>
-    
-  </div>
-
-  <!-- Captures the collapsed state -->
-  <div class="attributes" style="display:none;">
-    <input type="hidden" name="collapsed" value="false">
-  </div>
-
-</div></li> 
-    
-      
-      <li class='context-specification'><div class="specification">
-  <div class="heading ">
-    <a name="spec-site-tlc-alarm_spec-rb-87"></a>
     Traffic Light Controller Alarm A0302 can be acknowledged
   </div>
 
@@ -1109,6 +1022,35 @@
             <pre class="lines">
 
 
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
 87
 88
 89
@@ -1118,39 +1060,10 @@
 93
 94
 95
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125</pre>
+96</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/alarm_spec.rb', line 87</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/alarm_spec.rb', line 58</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -1211,7 +1124,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-alarm_spec-rb-138"></a>
+    <a name="spec-site-tlc-alarm_spec-rb-109"></a>
     Traffic Light Controller Alarm A0302 can be suspended and resumed
   </div>
 
@@ -1246,32 +1159,32 @@
             <pre class="lines">
 
 
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
-150
-151
-152
-153
-154
-155
-156
-157
-158
-159
-160</pre>
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/alarm_spec.rb', line 138</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/alarm_spec.rb', line 109</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_alarm_code_id'>alarm_code_id</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>A0302</span><span class='tstring_end'>&#39;</span></span>

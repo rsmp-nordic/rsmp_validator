@@ -282,29 +282,6 @@
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
-        alarm_code_id = 'A0302'
-        prepare task, site
-        def verify_timestamp alarm, duration=1.minute
-          alarm_time = Time.parse(alarm.attributes["aTs"])
-          expect(alarm_time).to be_within(duration).of Time.now.utc
-        end
-        deactivate, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm,component_id|   # raise alarm, by activating input
-          verify_timestamp alarm
-          log "Alarm #{alarm_code_id} is now Active on component #{component_id}"
-        end
-        verify_timestamp deactivate
-        log "Alarm #{alarm_code_id} is now Inactive on component #{component_id}"
-      end</div> -->
-</div></li>
-      
-      
-    
-      
-      <li class='context-specification odd'><div>
-  <div class="specification">
-    
-  </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         alarm_code_id = 'A0302'   # what alarm to expect
         timeout  = Validator.get_config('timeouts','alarm')
@@ -348,7 +325,7 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
