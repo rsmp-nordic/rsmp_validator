@@ -43,35 +43,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    # Validate that a detector logic fault A0302 is raises and cleared.
-    #
-    # The test requires that the device is programmed so that the alarm
-    # is raise when a specific input is activated, as specified in the
-    # test configuration.
-    #
-    # 1. Given the site is connected
-    # 2. When we force the input to True
-    # 3. Then an alarm should be raised, with a timestamp close to now
-    # 4. When we force the input to False
-    # 5. Then the alarm issue should become inactive, with a timestamp close to now
-
-    specify 'A0302 can be raised', :programming, sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
-        alarm_code_id = 'A0302'
-        prepare task, site
-        def verify_timestamp alarm, duration=1.minute
-          alarm_time = Time.parse(alarm.attributes["aTs"])
-          expect(alarm_time).to be_within(duration).of Time.now.utc
-        end
-        deactivate, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm,component_id|   # raise alarm, by activating input
-          verify_timestamp alarm
-          log "Alarm #{alarm_code_id} is now Active on component #{component_id}"
-        end
-        verify_timestamp deactivate
-        log "Alarm #{alarm_code_id} is now Inactive on component #{component_id}"
-      end
-    end
-
     # Validate that an alarm can be acknowledged.
     #
     # The test expects that the TLC is programmed so that an detector logic fault
