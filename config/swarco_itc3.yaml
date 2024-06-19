@@ -34,6 +34,7 @@ items:
   emergency_routes: [1]
   inputs: [1]
   force_input: 1
+  outputs: [1]
 startup_sequence: 'efg'
 secrets:
   security_codes:
