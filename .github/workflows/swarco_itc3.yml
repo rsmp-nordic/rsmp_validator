@@ -11,8 +11,8 @@ on:
   schedule:
     # schedule runs only on the default branch. time is in UTC.
     # * is a special character in YAML so you have to quote this string.
-    # run every night at 3:45AM UTC.
-    - cron:  '45 0 * * *'
+    # run every night at 22:00 UTC.
+    - cron:  '0 22 * * *'
 jobs:
   test:
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event.label.name == 'testhub' }}
