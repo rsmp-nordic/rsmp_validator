@@ -6,9 +6,8 @@
 
 name: Swarco ITC-3
 on:
-  pull_request:
+  push:
     types: [ labeled ]
-  workflow_dispatch:
   schedule:
     # schedule runs only on the default branch. time is in UTC.
     # * is a special character in YAML so you have to quote this string.
@@ -16,7 +15,7 @@ on:
     - cron:  '45 0 * * *'
 jobs:
   test:
-    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event.label.name == 'equipment' }}
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event.label.name == 'testhub' }}
     runs-on: [ self-hosted, Linux, X64, itc3 ]
     steps:
     - name: Check out repository
