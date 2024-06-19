@@ -15,7 +15,7 @@ on:
     - cron:  '0 22 * * *'
 jobs:
   test:
-    if: ${{ github.event_name == 'schedule' || github.event.label.name == 'testhub' }}
+    if: ${{ github.event_name == 'schedule' || github.event.pull_request.labels.*.name == 'testhub' }}
     runs-on: [ self-hosted, Linux, X64, itc3 ]
     steps:
     - name: Check out repository
