@@ -41,7 +41,7 @@ secrets:
     2: default
 restrict_testing:
   core_version: 3.1.5
-  sxl_version: 1.0.13
+  sxl_version: 1.0.15
 skip_validation:
   - Alarm
 alarms:
