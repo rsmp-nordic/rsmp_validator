@@ -90,8 +90,8 @@ items:                  # other configurations that should be tested
   force_input: 5              # what input to force when testing input forcing
 startup_sequence: 'efg' # expected startup sequence
 restrict_testing:       # restrict what tests are run, default is to run all
-  core_version: 3.2.1   # skip unless relevant for core 3.2.1
-  sxl_version: 1.1      # skip unless relevant for sxl 1.1
+  core_version: 3.2.2   # skip unless relevant for core 3.2.2
+  sxl_version: 1.2.1      # skip unless relevant for sxl 1.2.1
 secrets:                # place secrets or in a separate file, see below
   security_codes:       # RSMP security codes. there are no defaults for these
     1: '1111'           # level 1
@@ -146,8 +146,8 @@ timeouts:             # timeouts
   watchdog: 0.2         # max time between receiving watchdogs, in seconds
   acknowledgement: 0.2  # max time unless a message we send is acknowledged, in seconds
 restrict_testing:       # restrict what tests are run, default is to run all
-  core_version: 3.2.1   # skip unless relevant for core 3.2.1
-  sxl_version: 1.1      # skip unless relevant for sxl 1.1
+  core_version: 3.2.2   # skip unless relevant for core 3.2.2
+  sxl_version: 1.2.1    # skip unless relevant for sxl 1.2.1
 secrets:                # place secrets or in a separate file, see below
   security_codes:       # RSMP security codes. there are no defaults for these
     1: '1111'           # level 1
