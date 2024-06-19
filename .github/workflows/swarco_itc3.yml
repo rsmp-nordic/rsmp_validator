@@ -11,7 +11,7 @@ on:
   schedule:
     # schedule runs only on the default branch. time is in UTC.
     # * is a special character in YAML so you have to quote this string.
-    # run every night at 22:00 UTC.
+    # run every night at 10:00PM UTC.
     - cron:  '0 22 * * *'
 jobs:
   test:
