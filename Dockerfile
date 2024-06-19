@@ -1,5 +1,5 @@
 FROM ruby:latest
-COPY .ruby-version .rspec Gemfile Gemfile.lock LICENSE ./
+COPY .tool-versions .rspec Gemfile Gemfile.lock LICENSE ./
 COPY spec spec
 RUN bundle install
 EXPOSE 13111
