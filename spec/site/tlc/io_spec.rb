@@ -13,7 +13,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 3. Then we should receive a valid response
       specify 'is read with S0003', sxl: '<1.2' do |example|
         Validator::Site.connected do |task,supervisor,site|
-          puts site.sxl_version
           request_status_and_confirm site, "input status",
             { S0003: [:inputstatus,:extendedinputstatus] }
         end

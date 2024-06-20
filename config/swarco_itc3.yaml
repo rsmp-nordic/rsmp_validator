@@ -34,6 +34,7 @@ items:
   emergency_routes: [1]
   inputs: [1]
   force_input: 1
+  outputs: [1]
 startup_sequence: 'efg'
 secrets:
   security_codes:
@@ -41,7 +42,7 @@ secrets:
     2: default
 restrict_testing:
   core_version: 3.1.5
-  sxl_version: 1.0.13
+  sxl_version: 1.0.15
 skip_validation:
   - Alarm
 alarms:
