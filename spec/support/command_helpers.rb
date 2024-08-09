@@ -493,7 +493,7 @@ module Validator::CommandHelpers
     component = Validator.get_config('main_component')
     timeout = Validator.get_config('timeouts','startup_sequence')
     collector = RSMP::StatusCollector.new @site, status_list, timeout: timeout
-    sequencer = Validator::StatusHelpers::SequenceHelper.new Validator.get_config('startup_sequence')
+    sequencer = Validator::StatusHelpers::SignalGroupSequenceHelper.new Validator.get_config('startup_sequence')
     states = nil
 
     collector_task = @task.async do

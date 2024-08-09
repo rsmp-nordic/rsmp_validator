@@ -52,92 +52,52 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    # Validate that signal priority status are send when priorty is requested
+    # Validate that a signal priority completes when we cancel it.
     #
     # 1. Given the site is connected
     # 2. And we subscribe to signal priority status
-    # 2. When we send a signal priority request
-    # 3. Then we should receive status updates
-    it 'state goes through received, activated, completed', sxl: '>=1.1' do |example|
+    # 3. When we send a signal priority request
+    # 4. Then the request state should become 'received'
+    # 5. Then the request state should become 'activated'
+    # 6. When we cancel the request
+    # 7. Then the state should become 'completed'
+
+    it 'state reaches completed', sxl: '>=1.1' do |example|
       Validator::Site.connected do |task,supervisor,site|
         sequence = ['received','activated','completed']
-        # subscribe
+        timeout = Validator.get_config('timeouts','priority_completion')
         component = Validator.get_config('main_component')
-        log "Subscribing to signal priority request status updates"
-        status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
-        status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)
-        site.subscribe_to_status component, status_list
+        signal_group_id = Validator.get_config('components','signal_group').keys.first
+        prio = Validator::StatusHelpers::SignalPriorityRequestHelper.new(
+          site,
+          component: component,
+          signal_group_id: signal_group_id,
+          timeout: timeout,
+          task: task
+        )
 
-        # start collector
-        request_id = SecureRandom.uuid()[0..3]    # make a message id
-        num = sequence.length
-        states = []
-        result = nil
-        collector = nil
-        collect_task = task.async do
-          collector = RSMP::Collector.new(
-            site,
-            type: "StatusUpdate",
-            num: num,
-            timeout: Validator.get_config('timeouts','priority_completion'),
-            component: component
-          )
+        prio.run do
+          log "Before: Send an unrelated signal priority"
+          #prio.request_unrelated
 
-          def search_for_request_state request_id, message, states
-            message.attribute('sS').each do |status|
-              return nil unless status['sCI'] == 'S0033' && status['n'] == 'status'
-              status['s'].each do |priority|
-                next unless priority['r'] == request_id  # is this our request
-                state = priority['s']
-                next unless state != states.last  # did the state change?
-                log "Priority request reached state '#{state}'"
-                return state
-              end
-            end
-            nil
-          end
+          log "Send signal priority request, wait for reception."
+          prio.request
 
-          result = collector.collect do |message|
-            state = search_for_request_state request_id, message, states
-            next unless state
-            states << state
-            :keep
-          end
+          log "After: Send an unrelated signal priority request"
+          #prio.request_unrelated
+
+          prio.expect :received
+          log "Signal priority request was received, wait for activation."
+
+          prio.expect :activated
+          log "Signal priority request was activated, now cancel it and wait for completion."
+
+          prio.cancel
+          prio.expect :completed
+          log "Signal priority request was completed."
         end
-
-        def send_priority_request log, id:nil, site:, component:
-          # send an unrelated request before our request, to check that it does not interfere
-          log log
-          signal_group = Validator.get_config('components','signal_group').keys.first
-          command_list = build_command_list :M0022, :requestPriority, {
-            requestId: (id || SecureRandom.uuid()[0..3]),
-            signalGroupId: signal_group,
-            type: 'new',
-            level: 7,
-            eta: 2,
-            vehicleType: 'car'
-          }
-          site.send_command component, command_list
-        end
-
-        send_priority_request "Send an unrelated signal priority request before",
-          site: site, component: component
-        send_priority_request "Send our signal priority request",
-          site: site, component: component, id: request_id
-        send_priority_request "Send an unrelated signal priority request after",
-          site: site, component: component
-
-        # wait for collector to complete and check result
-        collect_task.wait
-        expect(result).to eq(:ok)
-        expect(collector.messages).to be_an(Array)
-        expect(collector.messages.size).to eq(num)
-        expect(states).to eq(sequence), "Expected state sequence #{sequence}, got #{states}"
-      ensure
-        # unsubcribe
-        unsubscribe_list = status_list.map { |item| item.slice('sCI','n') }
-        site.unsubscribe_to_status component, unsubscribe_list
       end
     end
+
   end
 end
