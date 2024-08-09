@@ -4,7 +4,7 @@
 # documentation.
 # This workflow will run rspec
 
-name: La Semaphorica Cartesio
+name: La Semaforica Cartesio
 on:
   pull_request:
     types: [ opened, reopened, synchronize, labeled ]
@@ -29,7 +29,7 @@ jobs:
     - name: Run tests
       run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/site/tlc
       env:
-        SITE_CONFIG: config/semaphorica_cartesio.yaml
+        SITE_CONFIG: config/semaforica_cartesio.yaml
 
     - name: Show detailed log
       if: always()
