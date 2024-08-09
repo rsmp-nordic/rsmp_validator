@@ -1,0 +1,78 @@
+port: 12111
+ips: all
+sxl: tlc      # Traffic Light Controller. We are testing a site, not a server.
+intervals:   
+  timer: 1    # main validator timer resolution in seconds
+  watchdog: 60 # send watchdog every x seconds
+timeouts:     # Timeouts used when waiting for messages from site.
+  watchdog: 60
+  acknowledgement: 60
+  connect: 120 # Max time to wait for rsmp site to connect to server.
+  ready: 60
+  status_response: 120
+  status_update: 120
+  subscribe: 60
+  command: 60
+  command_response: 60
+  alarm: 60
+  disconnect: 60
+  shutdown: 60
+  startup_sequence: 60
+  functional_position: 60
+  yellow_flash: 60
+  priority_completion: 60
+components:
+  main:
+    CAR_TC_001:
+  signal_group:         # Each signal group must be specified manually
+    CAR_SG_001:
+    CAR_SG_002:
+    CAR_SG_003:
+    CAR_SG_004:
+    CAR_SG_005:
+    CAR_SG_006:
+    CAR_SG_007:
+    CAR_SG_008:
+    CAR_SG_009:
+    CAR_SG_010:
+    CAR_SG_011:
+    CAR_SG_012:
+    CAR_SG_013:
+    CAR_SG_014:
+    CAR_SG_015:
+  detector_logic:       # Each detector logic must be specified manually
+    CAR_DL_001:
+    CAR_DL_002:
+    CAR_DL_003:
+    CAR_DL_004:
+    CAR_DL_005:
+    CAR_DL_006:
+    CAR_DL_007:
+    CAR_DL_008:
+    CAR_DL_009:
+    CAR_DL_010:
+    CAR_DL_011:
+    CAR_DL_012:
+    CAR_DL_013:
+    CAR_DL_014:
+    CAR_DL_015:
+    CAR_DL_016:
+items:
+  plans: [1,2,3,4]
+  traffic_situations: [1,2,3,4]
+  emergency_routes: [1]
+  inputs: [1,2,3,4]
+  force_input: 1
+  outputs: [1,2,3,4]
+startup_sequence: 'efg'
+secrets:
+  security_codes:
+    1: 1234
+    2: 12341234
+restrict_testing:
+  core_version: 3.1.5
+  sxl_version: 1.0.15
+alarms:
+  A0302: 
+    activation_input: 16   # input 2 activates the control block
+    component: CAR_DL_016  # detector logic 2 is set to error by control block.
