@@ -4,7 +4,7 @@
 # documentation.
 # This workflow will run rspec
 
-name: La Semaforica Cartesio
+name: La Semaforica TECSEN Cartesio
 on:
   pull_request:
     types: [ opened, reopened, synchronize, labeled ]
