@@ -104,7 +104,7 @@ module Validator::CommandHelpers
       securityCode: Validator.get_config('secrets','security_codes',2),
       status: status,
       timeout: timeout_minutes,
-      intersection: 0
+      intersection: 0,
     }
     send_command_and_confirm @task, command_list, "Switch to functional position #{status}"
   end
@@ -216,7 +216,7 @@ module Validator::CommandHelpers
       timeout: Validator.get_config('timeouts','status_update', default: 0)
     }
     collector = result[:collector]
-    collector.queries.first.got['s'].split(',').each do |item|
+    collector.matchers.first.got['s'].split(',').each do |item|
       some_plan, some_band, value = *item.split('-')
       return value.to_i if some_plan.to_i == plan.to_i && some_band.to_i == band.to_i
     end
@@ -368,7 +368,7 @@ module Validator::CommandHelpers
       collect_task = task.async do  # run the collector in an async task
         collector = RSMP::AlarmCollector.new( site,
           num: 1,
-          query: { 
+          matcher: { 
             'cId' => component_id,
             'aCId' =>  alarm_code_id,
             'aSp' =>  alarm_specialization,
@@ -386,7 +386,7 @@ module Validator::CommandHelpers
       collect_task = task.async do  # run the collector in an async task
         collector = RSMP::AlarmCollector.new( site,
           num: 1,
-          query: {
+          matcher: {
             'cId' => component_id,
             'aCId' =>  alarm_code_id,
             'aSp' =>  /Issue/i,
@@ -575,7 +575,7 @@ module Validator::CommandHelpers
         RSMP::AlarmCollector.new(site,
           m_id: suspend.m_id,
           num: 1,
-          query: {
+          matcher: {
             'cId' => cId,
             'aCI' => aCId,
             'aSp' => 'Suspend',
@@ -603,7 +603,7 @@ module Validator::CommandHelpers
         RSMP::AlarmCollector.new(site,
           m_id: resume.m_id,
           num: 1,
-          query: {
+          matcher: {
             'cId' => cId,
             'aCI'=>aCId,
             'aSp'=>'Suspend',

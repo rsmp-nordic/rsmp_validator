@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'rsmp', path: '/Users/emiltin/Documents/code/rsmp'
+gem 'rsmp'
 gem 'activesupport'
 
 group :development do

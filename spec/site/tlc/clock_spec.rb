@@ -71,12 +71,12 @@ RSpec.describe 'Site::Traffic Light Controller' do
             status = status_list.keys.first.to_s
 
             received = Time.new(
-              collector.query_result( {"sCI" => status, "n" => "year"} )['s'],
-              collector.query_result( {"sCI" => status, "n" => "month"} )['s'],
-              collector.query_result( {"sCI" => status, "n" => "day"} )['s'],
-              collector.query_result( {"sCI" => status, "n" => "hour"} )['s'],
-              collector.query_result( {"sCI" => status, "n" => "minute"} )['s'],
-              collector.query_result( {"sCI" => status, "n" => "second"} )['s'],
+              collector.matcher_result( {"sCI" => status, "n" => "year"} )['s'],
+              collector.matcher_result( {"sCI" => status, "n" => "month"} )['s'],
+              collector.matcher_result( {"sCI" => status, "n" => "day"} )['s'],
+              collector.matcher_result( {"sCI" => status, "n" => "hour"} )['s'],
+              collector.matcher_result( {"sCI" => status, "n" => "minute"} )['s'],
+              collector.matcher_result( {"sCI" => status, "n" => "second"} )['s'],
               'UTC'
             )
 

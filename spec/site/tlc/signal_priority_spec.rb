@@ -62,9 +62,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 6. When we cancel the request
     # 7. Then the state should become 'completed'
 
-    it 'state reaches completed', sxl: '>=1.1' do |example|
+    it 'becomes completed when cancelled', sxl: '>=1.1' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        sequence = ['received','activated','completed']
         timeout = Validator.get_config('timeouts','priority_completion')
         component = Validator.get_config('main_component')
         signal_group_id = Validator.get_config('components','signal_group').keys.first
@@ -77,14 +76,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
         )
 
         prio.run do
-          log "Before: Send an unrelated signal priority"
-          #prio.request_unrelated
+          log "Before: Send unrelated signal priority request."
+          prio.request_unrelated
 
           log "Send signal priority request, wait for reception."
           prio.request
 
-          log "After: Send an unrelated signal priority request"
-          #prio.request_unrelated
+          log "After: Send unrelated signal priority request."
+          prio.request_unrelated
 
           prio.expect :received
           log "Signal priority request was received, wait for activation."
@@ -92,9 +91,57 @@ RSpec.describe 'Site::Traffic Light Controller' do
           prio.expect :activated
           log "Signal priority request was activated, now cancel it and wait for completion."
 
+
           prio.cancel
           prio.expect :completed
           log "Signal priority request was completed."
+        end
+      end
+    end
+
+    # Validate that a signal priority times out if not cancelled.
+    #
+    # 1. Given the site is connected
+    # 2. And we subscribe to signal priority status
+    # 3. When we send a signal priority request
+    # 4. Then the request state should become 'received'
+    # 5. Then the request state should become 'activated'
+    # 6. When we do not cancel the request
+    # 7. Then the state should become 'stale'
+
+    it 'becomes stale if not cancelled', sxl: '>=1.1' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        timeout = Validator.get_config('timeouts','priority_completion')
+        component = Validator.get_config('main_component')
+        signal_group_id = Validator.get_config('components','signal_group').keys.first
+        prio = Validator::StatusHelpers::SignalPriorityRequestHelper.new(
+          site,
+          component: component,
+          signal_group_id: signal_group_id,
+          timeout: timeout,
+          task: task
+        )
+
+        prio.run do
+          log "Before: Send unrelated signal priority request."
+          prio.request_unrelated
+
+          log "Send signal priority request, wait for reception."
+          prio.request
+
+          log "After: Send unrelated signal priority request."
+          prio.request_unrelated
+
+          prio.expect :received
+          log "Signal priority request was received, wait for activation."
+
+          prio.expect :activated
+          log "Signal priority request was activated, wait for it to become stale."
+
+
+          # don't cancel request, it should then become stale by itself
+          prio.expect :stale
+          log "Signal priority request became stale."
         end
       end
     end

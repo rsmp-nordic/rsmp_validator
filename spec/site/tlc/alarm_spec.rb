@@ -75,7 +75,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           collect_task = task.async do
             RSMP::AlarmCollector.new(site,
               num: 1,
-              query: {
+              matcher: {
                 'aCId' => alarm_code_id,
                 'aSp' => /Acknowledge/i,
                 'ack' => /Acknowledged/i,

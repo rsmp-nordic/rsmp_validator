@@ -1,7 +1,7 @@
 module Validator::StatusHelpers
 
   # Match a specific status response or update
-  class S0033Query < RSMP::StatusQuery
+  class S0033Matcher < RSMP::StatusMatcher
 
     attr_accessor :state
     def initialize want, request_id:, state: nil
@@ -11,7 +11,7 @@ module Validator::StatusHelpers
       @latest_state = nil
     end
 
-    # Match a status value against a query
+    # Match a status value against a matcher
     def match? item
       super_matched = super(item)
       if super_matched == true
@@ -23,7 +23,7 @@ module Validator::StatusHelpers
           false
         end
       else
-        super_match
+        super_matched
       end
     end
 
@@ -55,7 +55,7 @@ module Validator::StatusHelpers
       @component = component
       @signal_group_id = signal_group_id
       @request_id = SecureRandom.uuid()[0..3]
-      @query = S0033Query.new({"cCI"=>"S0033", "q"=>"recent"}, request_id: @request_id)
+      @matcher = S0033Matcher.new({"cCI"=>"S0033", "q"=>"recent"}, request_id: @request_id)
       @subscribe_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
       @subscribe_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(@site)
       @unsubscribe_list = [{'sCI'=>'S0033','n'=>'status'}]
@@ -111,7 +111,7 @@ module Validator::StatusHelpers
     end
 
     def expect state
-      @query.state = state
+      @matcher.state = state
       message = wait_for_message timeout: @timeout
     rescue RSMP::TimeoutError
       raise RSMP::TimeoutError.new("Priority request did not reach state #{state} within #{@timeout}s")
@@ -120,7 +120,7 @@ module Validator::StatusHelpers
     private
 
     def accept_message? message
-      super && get_items(message).any? {|item| @query.match?(item) }
+      super && get_items(message).any? {|item| @matcher.match?(item) }
     end
 
     def start
