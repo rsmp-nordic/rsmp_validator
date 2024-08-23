@@ -62,7 +62,7 @@ Validator::Site.connected do |task,supervisor,site|
     collect_task = task.async do
       RSMP::AlarmCollector.new(site,
         num: 1,
-        query: {
+        matcher: {
           'aCId' => alarm_code_id,
           'aSp' => /Acknowledge/i,
           'ack' => /Acknowledged/i,
