@@ -1,5 +1,5 @@
 module Validator::StatusHelpers
-  class SequenceHelper
+  class SignalGroupSequenceHelper
     attr_reader :sequence, :latest
 
     def initialize sequence

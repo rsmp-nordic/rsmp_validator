@@ -10,7 +10,8 @@ require_relative 'support/test_site'
 require_relative 'support/test_supervisor'
 require_relative 'support/command_helpers'
 require_relative 'support/status_helpers'
-require_relative 'support/sequence_helper'
+require_relative 'support/signal_group_sequence_helper'
+require_relative 'support/signal_priority_request_helper'
 require_relative 'support/log_helpers'
 require_relative 'support/handshake_helper'
 require_relative 'support/formatters/report_stream.rb'
@@ -18,6 +19,7 @@ require_relative 'support/formatters/formatter_base.rb'
 require_relative 'support/formatters/brief.rb'
 require_relative 'support/formatters/details.rb'
 require_relative 'support/formatters/list.rb'
+require_relative 'support/formatters/steps.rb'
 
 include RSpec
 include Validator::Log
