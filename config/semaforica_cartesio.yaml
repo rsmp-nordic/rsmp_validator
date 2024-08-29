@@ -70,8 +70,8 @@ secrets:
     1: 1234
     2: 12341234
 restrict_testing:
-  core_version: 3.1.5
-  sxl_version: 1.0.15
+  core_version: 3.2.2
+  sxl_version: 1.2.1
 alarms:
   A0302: 
     activation_input: 16   # input 2 activates the control block
