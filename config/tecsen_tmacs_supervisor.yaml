@@ -1,0 +1,44 @@
+type: tlc
+site_id: CAR_TC_001
+ntsOId: CAR_TC_001
+supervisors:
+  - ip: rsmp.tmacs.it
+    port: 12111
+sxl: tlc
+sxl_version: 1.2.1
+components:
+  main:
+    CAR_TC_001:
+      cycle_time: 120
+  signal_group:
+    CAR_SG_001:
+      plan: '11NBBB'
+    CAR_SG_002:
+      plan: '1NBBBB'
+    CAR_SG_003:
+      plan: 'BBB11N'
+    CAR_SG_004:
+      plan: 'BBB1NB'
+  detector_logic:
+    CAR_DL_001:
+    CAR_DL_002:
+    CAR_DL_003:
+    CAR_DL_004:
+    CAR_DL_005:
+intervals:
+  timer: 1
+  watchdog: 60
+  reconnect: 10
+timeouts:
+  connect: 30
+  ready: 10
+  watchdog: 60
+  acknowledgement: 1
+  disconnects: 60
+secrets:
+  security_codes:
+    1: '1111'
+    2: '2222'
+restrict_testing:
+  core_version: 3.2.2
+  sxl_version: 1.2.1
