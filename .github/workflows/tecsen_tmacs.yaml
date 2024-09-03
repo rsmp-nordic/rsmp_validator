@@ -1,0 +1,52 @@
+# GitHub action for testing the TMAC supervisor system using the RSMP Validator
+
+name: TMacs
+on:
+  pull_request:
+    types: [ opened, reopened, synchronize, labeled ]
+  schedule:
+    # schedule runs only on the default branch. time is in UTC.
+    # * is a special character in YAML so you have to quote this string.
+    # run every night at 10:00PM UTC.
+    - cron:  '0 22 * * *'
+jobs:
+  test:
+    if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
+    timeout-minutes: 10
+    runs-on: [ self-hosted, Linux, X64, tmacs ]
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install Ruby and gems
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+
+    - name: Run tests
+      shell: bash
+      run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/supervisor
+      env:
+        SUPERVISOR_CONFIG: config/tecsen_tmacs_supervisor.yaml
+
+    - name: Show detailed log
+      if: always()
+      run: cat log/validation.log
+
+    - name: Rename validation.log
+      if: always()
+      run: mv log/validation.log log/validation_tmacs_$(date +%F_%H-%M-%S).log
+
+    - name: Upload validation.log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: rspec-validation-${{ matrix.os }}
+        path: log/validation_ruby_*.log
+
+    - name: Upload simulator.log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: simulator-log-${{ matrix.os }}
+        path: simulator.log
