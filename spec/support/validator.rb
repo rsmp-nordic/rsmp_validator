@@ -195,6 +195,21 @@ module Validator
     # timeouts
     self.abort_with_error "Error: config 'timeouts' settings is missing or empty" if config['timeouts'] == {}
 
+    # core version
+    config['core_version'] =
+      ENV['CORE_VERSION'] ||
+      config['core_version'] ||
+      RSMP::Schema.latest_core_version
+
+    if config['core_version'] == 'latest'
+      config['core_version'] = RSMP::Schema.latest_core_version
+    end
+
+    known_versions = RSMP::Schema.core_versions
+    unless known_versions.include?(config['core_version'])
+      self.abort_with_error "Unknown core version #{config['core_version']}, must be one of [#{known_versions.join(', ')}]."
+    end
+ 
     self.load_secrets config_path
   end
 
@@ -256,18 +271,16 @@ module Validator
     elsif self.mode == :supervisor
       Validator::Supervisor.testee = Validator::Supervisor.new
     else
-      raise "Unknown test mode: #{self.mode}"
+      self.abort_with_error "Unknown test mode: #{self.mode}"
     end
   end
 
   # setup rspec filters to support filtering by RSMP core and SXL version tags
   def self.setup_filters rspec_config
-    core_version = Validator.config.dig('restrict_testing','core_version')
-    sxl_version = Validator.config.dig('restrict_testing','sxl_version')
-
     # enable filtering by rsmp core version tags like '>=3.1.2'
     # Gem::Requirement and Gem::Version classed are used to do the version matching,
     # but this otherwise has nothing to do with Gems
+    core_version = Validator.config.dig('core_version')
     if core_version
       core_version = Gem::Version.new core_version
       core_filter = -> (v) {
@@ -277,7 +290,7 @@ module Validator
       # so we get more useful display of the filter option when we
       # run rspec on the command line
       def core_filter.inspect
-        "[unless relevant for #{Validator.config.dig('restrict_testing','core_version')}]"
+        "[unless relevant for #{Validator.config.dig('core_version')}]"
       end
       rspec_config.filter_run_excluding core: core_filter
     end
@@ -285,6 +298,7 @@ module Validator
     # enable filtering by sxl version tags like '>=1.0.7'
     # Gem::Requirement and Gem::Version classed are used to do the version matching,
     # but this otherwise has nothing to do with Gems
+    sxl_version = Validator.config.dig('restrict_testing','sxl_version')
     if sxl_version
       sxl_version = Gem::Version.new sxl_version
       sxl_filter = -> (v) {
