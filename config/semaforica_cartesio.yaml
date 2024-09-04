@@ -1,4 +1,4 @@
-port: 12111
+port: 13111
 ips: all
 sxl: tlc      # Traffic Light Controller. We are testing a site, not a server.
 intervals:   
