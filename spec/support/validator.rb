@@ -196,18 +196,26 @@ module Validator
     self.abort_with_error "Error: config 'timeouts' settings is missing or empty" if config['timeouts'] == {}
 
     # core version
-    config['core_version'] =
+    core_version =
       ENV['CORE_VERSION'] ||
       config['core_version'] ||
       RSMP::Schema.latest_core_version
 
-    if config['core_version'] == 'latest'
-      config['core_version'] = RSMP::Schema.latest_core_version
+    if core_version == 'latest'
+      core_version = RSMP::Schema.latest_core_version
     end
 
     known_versions = RSMP::Schema.core_versions
-    unless known_versions.include?(config['core_version'])
-      self.abort_with_error "Unknown core version #{config['core_version']}, must be one of [#{known_versions.join(', ')}]."
+
+    # 3.2 will match 3.2.0
+    normalized_core_version = known_versions.map {|v| Gem::Version.new(v) }.sort.reverse.detect do |v|
+      Gem::Requirement.new(core_version).satisfied_by?(v)
+    end
+
+    if normalized_core_version
+      config['core_version'] = normalized_core_version.to_s
+    else
+      self.abort_with_error "Unknown core version #{core_version}, must be one of [#{known_versions.join(', ')}]."
     end
  
     self.load_secrets config_path
