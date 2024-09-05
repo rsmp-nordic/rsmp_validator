@@ -17,10 +17,11 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
 
     # Verify that current emergency routes can be read with S0035.
+    # Requires core >= 3.2 since it uses the array data type.
     # 1. Given the site is connected.
     # 2. When we request S0035.
     # 3. Then we should receive a status response.
-    specify 'emergency route is read with S0035', sxl: '>=1.2' do |example|
+    specify 'emergency route is read with S0035', sxl: '>=1.2', core: '>=3.2' do |example|
       Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "emergency route status",
           { S0035: [:emergencyroutes] }
@@ -67,7 +68,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. When we request the current emergency routes with S035.
     # 5. Then we should receive the list of active routes.
 
-    specify 'emergency routes can be activated with M0005 and read with S0035', sxl: '>=1.2' do |example|
+    specify 'emergency routes can be activated with M0005 and read with S0035', sxl: '>=1.2', core: '>=3.2' do |example|
       def enable_routes task, emergency_routes
         emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, true }
         routes = emergency_routes.map {|i| {'id'=>i.to_s} }
