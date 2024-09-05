@@ -1,4 +1,5 @@
 port: 12111
+core_version: '3.2.0'
 sxl: tlc      # Traffic Light Controller. We are testing a site, not a server.
 intervals:   
   timer: 1    # main validator timer resolution in seconds
