@@ -3,12 +3,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::StatusHelpers
 
   describe "Signal Priority" do
+    # Signal requests require core >= 3.2 because they uses the Array data type.
+
     # Validate that a signal priority can be requested.
     #
     # 1. Given the site is connected
     # 2. When we send a signal priority request
     # 3. Then we should receive an acknowledgement
-    it 'can be requested with M0022', sxl: '>=1.1' do |example|
+    it 'can be requested with M0022', sxl: '>=1.1', core: '>=3.2' do |example|
       Validator::Site.connected do |task,supervisor,site|
         signal_group = Validator.get_config('components','signal_group').keys.first
         command_list = build_command_list :M0022, :requestPriority, {
@@ -30,7 +32,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected
     # 2. When we request signal priority status
     # 3. Then we should receive a status update
-    it 'status can be fetched with S0033', sxl: '>=1.1' do |example|
+    it 'status can be fetched with S0033', sxl: '>=1.1', core: '>=3.2' do |example|
       Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "signal group status",
           { S0033: [:status] }
@@ -43,7 +45,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. And we subscribe to signal priority status updates
     # 4. Then we should receive an acknowledgement
     # 5. And we should reive a status updates
-    it 'status can be subscribed to with S0033', sxl: '>=1.1' do |example|
+    it 'status can be subscribed to with S0033', sxl: '>=1.1', core: '>=3.2' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
         status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
@@ -62,7 +64,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 6. When we cancel the request
     # 7. Then the state should become 'completed'
 
-    it 'becomes completed when cancelled', sxl: '>=1.1' do |example|
+    it 'becomes completed when cancelled', sxl: '>=1.1', core: '>=3.2' do |example|
       Validator::Site.connected do |task,supervisor,site|
         timeout = Validator.get_config('timeouts','priority_completion')
         component = Validator.get_config('main_component')
@@ -109,7 +111,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 6. When we do not cancel the request
     # 7. Then the state should become 'stale'
 
-    it 'becomes stale if not cancelled', sxl: '>=1.1' do |example|
+    it 'becomes stale if not cancelled', sxl: '>=1.1', core: '>=3.2' do |example|
       Validator::Site.connected do |task,supervisor,site|
         timeout = Validator.get_config('timeouts','priority_completion')
         component = Validator.get_config('main_component')
