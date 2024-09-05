@@ -4,13 +4,13 @@ RSpec.describe 'Site::Traffic Light Controller' do
   context 'receiving a status request with an unknown component id' do
 
     # Verify that site reponds with q=undefined when receiving a
-    # status request with an unknown component id
+    # status request with an unknown component id.
     #
     # 1. Given the site is connected
     # 2. When we send a status request with an unknown component id
     # 3. Then the site should return a status response with q=undefined
 
-    it 'return a command response with age=undefined' do |example|
+    it 'return a command response with age=undefined', core: '>=3.1.3' do |example|
       Validator::Site.connected do |task,supervisor,site|
         log "Sending M0001 with bad component id"
         status_list = convert_status_list( S0001:[:signalgroupstatus] )
