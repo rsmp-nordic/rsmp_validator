@@ -14,7 +14,7 @@ on:
     # run every night at 10:00PM UTC.
     - cron:  '0 22 * * *'
 jobs:
-  test:
+  validator:
     if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
     runs-on: [ self-hosted, Linux, X64, itc3 ]
     steps:

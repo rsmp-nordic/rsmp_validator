@@ -48,7 +48,6 @@ alarms:
     component: DL1
 restrict_testing:
   sxl_version: 1.2.1
-  core_version: 3.2.2
 log:
   watchdogs: false
   acknowledgements: false
