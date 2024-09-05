@@ -14,7 +14,6 @@ jobs:
     if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
     timeout-minutes: 10
     strategy:
-      fail-fast: false
       matrix:
         core: ['3.2.2']
     runs-on: [ self-hosted, Linux, X64, tmacs ]
