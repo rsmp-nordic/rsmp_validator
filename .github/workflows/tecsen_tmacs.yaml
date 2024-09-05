@@ -10,11 +10,28 @@ on:
     # run every night at 10:00PM UTC.
     - cron:  '0 22 * * *'
 jobs:
-  test:
+  validator:
     if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
     timeout-minutes: 10
+      fail-fast: false
+      matrix:
+        core: ['3.2.2']
     runs-on: [ self-hosted, Linux, X64, tmacs ]
-    steps:
+
+   steps:
+    - name: Set log id
+      shell: bash
+      id: log_id
+      run: |
+        echo "LOG_ID=\
+        tecsen-tmacs-\
+        core-${{ matrix.core }}-\
+        run-\
+        ${{ github.run_id }}-\
+        ${{ github.run_number }}-\
+        ${{ github.run_attempt }}\
+        " >> $GITHUB_OUTPUT
+
     - name: Checkout repo
       uses: actions/checkout@v4
 
@@ -25,28 +42,23 @@ jobs:
 
     - name: Run tests
       shell: bash
-      run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/supervisor
+      run: |
+        bundle exec rspec spec/supervisor \
+        --format Validator::Brief \
+        --format Validator::Details \
+        --out validator-${{ steps.log_id.outputs.LOG_ID }}.log
+
       env:
         SUPERVISOR_CONFIG: config/tecsen_tmacs_supervisor.yaml
 
     - name: Show detailed log
-      if: always()
-      run: cat log/validation.log
+      shell: bash
+      if: always() # even if previous steps failed
+      run: cat validator-${{ steps.log_id.outputs.LOG_ID }}.log
 
-    - name: Rename validation.log
-      if: always()
-      run: mv log/validation.log log/validation_tmacs_$(date +%F_%H-%M-%S).log
-
-    - name: Upload validation.log
+    - name: Upload validator.log
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: rspec-validation-${{ matrix.os }}
-        path: log/validation_ruby_*.log
-
-    - name: Upload simulator.log
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: simulator-log-${{ matrix.os }}
-        path: simulator.log
+        name: validator-${{ steps.log_id.outputs.LOG_ID }}.log
+        path: validator-${{ steps.log_id.outputs.LOG_ID }}.log
