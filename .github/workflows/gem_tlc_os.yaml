@@ -4,7 +4,7 @@
 # documentation.
 # This workflow will run rspec
 
-name: Gem TLC
+name: Gem TLC OS matrix
 on: push
 jobs:
   test:
@@ -23,6 +23,8 @@ jobs:
         echo "LOG_ID=\
         gem-tlc-\
         ${{ matrix.os }}-\
+        core-latest-\
+        run-\
         ${{ github.run_id }}-\
         ${{ github.run_number }}-\
         ${{ github.run_attempt }}\
