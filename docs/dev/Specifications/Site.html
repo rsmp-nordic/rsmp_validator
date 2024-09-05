@@ -2186,7 +2186,7 @@
     
     <div class="docstring">
       
-<p>Verify status S0005 traffic controller starting by intersection</p>
+<p>Verify status S0005 traffic controller starting by intersection statusByIntersection requires core &gt;= 3.2, since it uses the array data type.</p>
 <ol><li>
 <p>Given the site is connected</p>
 </li><li>
@@ -2247,7 +2247,7 @@
     
     <div class="docstring">
       
-<p>Verify status S0005 traffic controller starting by intersection</p>
+<p>Verify status S0005 traffic controller starting by intersection statusByIntersection requires core &gt;= 3.2, since it uses the array data type.</p>
 <ol><li>
 <p>Given the site is connected</p>
 </li><li>
@@ -2300,7 +2300,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-47"></a>
+    <a name="spec-site-tlc-modes_spec-rb-48"></a>
     Traffic Light Controller Operational switched on is read with S0007
   </div>
 
@@ -2329,13 +2329,13 @@
             <pre class="lines">
 
 
-47
 48
 49
-50</pre>
+50
+51</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 47</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 48</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_status_list'>status_list</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>S0007:</span> <span class='lbracket'>[</span><span class='symbol'>:status</span><span class='comma'>,</span><span class='symbol'>:intersection</span><span class='comma'>,</span><span class='symbol'>:source</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
@@ -2361,7 +2361,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-47"></a>
+    <a name="spec-site-tlc-modes_spec-rb-48"></a>
     Traffic Light Controller Operational switched on is read with S0007
   </div>
 
@@ -2390,13 +2390,13 @@
             <pre class="lines">
 
 
-47
 48
 49
-50</pre>
+50
+51</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 47</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 48</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_status_list'>status_list</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>S0007:</span> <span class='lbracket'>[</span><span class='symbol'>:status</span><span class='comma'>,</span><span class='symbol'>:intersection</span><span class='comma'>,</span><span class='symbol'>:source</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
@@ -2422,7 +2422,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-71"></a>
+    <a name="spec-site-tlc-modes_spec-rb-72"></a>
     Traffic Light Controller Operational manual control is read with S0008
   </div>
 
@@ -2451,17 +2451,17 @@
             <pre class="lines">
 
 
-71
 72
 73
 74
 75
 76
 77
-78</pre>
+78
+79</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 71</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 72</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='kw'>if</span> <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>Proxy</span><span class='period'>.</span><span class='id identifier rubyid_version_meets_requirement?'>version_meets_requirement?</span><span class='lparen'>(</span> <span class='id identifier rubyid_site'>site</span><span class='period'>.</span><span class='id identifier rubyid_sxl_version'>sxl_version</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&gt;=1.1</span><span class='tstring_end'>&#39;</span></span> <span class='rparen'>)</span>
@@ -2491,7 +2491,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-87"></a>
+    <a name="spec-site-tlc-modes_spec-rb-88"></a>
     Traffic Light Controller Operational fixed time control is read with S0009
   </div>
 
@@ -2520,17 +2520,17 @@
             <pre class="lines">
 
 
-87
 88
 89
 90
 91
 92
 93
-94</pre>
+94
+95</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 87</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 88</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='kw'>if</span> <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>Proxy</span><span class='period'>.</span><span class='id identifier rubyid_version_meets_requirement?'>version_meets_requirement?</span><span class='lparen'>(</span> <span class='id identifier rubyid_site'>site</span><span class='period'>.</span><span class='id identifier rubyid_sxl_version'>sxl_version</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&gt;=1.1</span><span class='tstring_end'>&#39;</span></span> <span class='rparen'>)</span>
@@ -2560,7 +2560,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-105"></a>
+    <a name="spec-site-tlc-modes_spec-rb-106"></a>
     Traffic Light Controller Operational fixed time control can be activated with M0007
   </div>
 
@@ -2593,14 +2593,14 @@
             <pre class="lines">
 
 
-105
 106
 107
 108
-109</pre>
+109
+110</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 105</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 106</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -2627,7 +2627,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-118"></a>
+    <a name="spec-site-tlc-modes_spec-rb-119"></a>
     Traffic Light Controller Operational isolated control is read with S0010
   </div>
 
@@ -2656,17 +2656,17 @@
             <pre class="lines">
 
 
-118
 119
 120
 121
 122
 123
 124
-125</pre>
+125
+126</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 118</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 119</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='kw'>if</span> <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>Proxy</span><span class='period'>.</span><span class='id identifier rubyid_version_meets_requirement?'>version_meets_requirement?</span><span class='lparen'>(</span> <span class='id identifier rubyid_site'>site</span><span class='period'>.</span><span class='id identifier rubyid_sxl_version'>sxl_version</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&gt;=1.1</span><span class='tstring_end'>&#39;</span></span> <span class='rparen'>)</span>
@@ -2696,7 +2696,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-134"></a>
+    <a name="spec-site-tlc-modes_spec-rb-135"></a>
     Traffic Light Controller Operational coordinated control is read with S0032
   </div>
 
@@ -2725,13 +2725,13 @@
             <pre class="lines">
 
 
-134
 135
 136
-137</pre>
+137
+138</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 134</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 135</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_status_list'>status_list</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>S0032:</span> <span class='lbracket'>[</span><span class='symbol'>:status</span><span class='comma'>,</span><span class='symbol'>:intersection</span><span class='comma'>,</span><span class='symbol'>:source</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
@@ -2757,7 +2757,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-146"></a>
+    <a name="spec-site-tlc-modes_spec-rb-147"></a>
     Traffic Light Controller Operational yellow flash can be read with S0011
   </div>
 
@@ -2786,17 +2786,17 @@
             <pre class="lines">
 
 
-146
 147
 148
 149
 150
 151
 152
-153</pre>
+153
+154</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 146</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 147</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='kw'>if</span> <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>Proxy</span><span class='period'>.</span><span class='id identifier rubyid_version_meets_requirement?'>version_meets_requirement?</span><span class='lparen'>(</span> <span class='id identifier rubyid_site'>site</span><span class='period'>.</span><span class='id identifier rubyid_sxl_version'>sxl_version</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&gt;=1.1</span><span class='tstring_end'>&#39;</span></span> <span class='rparen'>)</span>
@@ -2826,7 +2826,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-164"></a>
+    <a name="spec-site-tlc-modes_spec-rb-165"></a>
     Traffic Light Controller Operational yellow flash can be activated with M0001
   </div>
 
@@ -2859,14 +2859,14 @@
             <pre class="lines">
 
 
-164
 165
 166
 167
-168</pre>
+168
+169</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 164</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 165</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -2893,7 +2893,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-179"></a>
+    <a name="spec-site-tlc-modes_spec-rb-180"></a>
     Traffic Light Controller Operational yellow flash affects all signal groups
   </div>
 
@@ -2926,7 +2926,6 @@
             <pre class="lines">
 
 
-179
 180
 181
 182
@@ -2935,10 +2934,11 @@
 185
 186
 187
-188</pre>
+188
+189</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 179</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 180</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -2970,7 +2970,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-197"></a>
+    <a name="spec-site-tlc-modes_spec-rb-198"></a>
     Traffic Light Controller Operational all red can be read with S0012
   </div>
 
@@ -2999,17 +2999,17 @@
             <pre class="lines">
 
 
-197
 198
 199
 200
 201
 202
 203
-204</pre>
+204
+205</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 197</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 198</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='kw'>if</span> <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>Proxy</span><span class='period'>.</span><span class='id identifier rubyid_version_meets_requirement?'>version_meets_requirement?</span><span class='lparen'>(</span> <span class='id identifier rubyid_site'>site</span><span class='period'>.</span><span class='id identifier rubyid_sxl_version'>sxl_version</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&gt;=1.1</span><span class='tstring_end'>&#39;</span></span> <span class='rparen'>)</span>
@@ -3039,7 +3039,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-213"></a>
+    <a name="spec-site-tlc-modes_spec-rb-214"></a>
     Traffic Light Controller Operational police key can be read with S0013
   </div>
 
@@ -3068,13 +3068,13 @@
             <pre class="lines">
 
 
-213
 214
 215
-216</pre>
+216
+217</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 213</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 214</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>police key</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -3100,7 +3100,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-227"></a>
+    <a name="spec-site-tlc-modes_spec-rb-228"></a>
     Traffic Light Controller Operational dark mode can be activated with M0001
   </div>
 
@@ -3133,14 +3133,14 @@
             <pre class="lines">
 
 
-227
 228
 229
 230
-231</pre>
+231
+232</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 227</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 228</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -3167,7 +3167,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-modes_spec-rb-242"></a>
+    <a name="spec-site-tlc-modes_spec-rb-243"></a>
     Traffic Light Controller Operational yellow flash be used with a timeout of one minute
   </div>
 
@@ -3200,16 +3200,16 @@
             <pre class="lines">
 
 
-242
 243
 244
 245
 246
 247
-248</pre>
+248
+249</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 242</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/modes_spec.rb', line 243</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -6302,7 +6302,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_priority_spec-rb-11"></a>
+    <a name="spec-site-tlc-signal_priority_spec-rb-13"></a>
     Traffic Light Controller Signal Priority can be requested with M0022
   </div>
 
@@ -6331,8 +6331,6 @@
             <pre class="lines">
 
 
-11
-12
 13
 14
 15
@@ -6344,10 +6342,12 @@
 21
 22
 23
-24</pre>
+24
+25
+26</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_priority_spec.rb', line 11</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_priority_spec.rb', line 13</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_signal_group'>signal_group</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_get_config'>get_config</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>components</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>signal_group</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
@@ -6383,7 +6383,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_priority_spec-rb-33"></a>
+    <a name="spec-site-tlc-signal_priority_spec-rb-35"></a>
     Traffic Light Controller Signal Priority status can be fetched with S0033
   </div>
 
@@ -6412,13 +6412,13 @@
             <pre class="lines">
 
 
-33
-34
 35
-36</pre>
+36
+37
+38</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_priority_spec.rb', line 33</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_priority_spec.rb', line 35</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>signal group status</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -6444,7 +6444,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_priority_spec-rb-46"></a>
+    <a name="spec-site-tlc-signal_priority_spec-rb-48"></a>
     Traffic Light Controller Signal Priority status can be subscribed to with S0033
   </div>
 
@@ -6475,15 +6475,15 @@
             <pre class="lines">
 
 
-46
-47
 48
 49
 50
-51</pre>
+51
+52
+53</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_priority_spec.rb', line 46</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_priority_spec.rb', line 48</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
@@ -6511,7 +6511,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_priority_spec-rb-65"></a>
+    <a name="spec-site-tlc-signal_priority_spec-rb-67"></a>
     Traffic Light Controller Signal Priority becomes completed when cancelled
   </div>
 
@@ -6548,8 +6548,6 @@
             <pre class="lines">
 
 
-65
-66
 67
 68
 69
@@ -6581,10 +6579,12 @@
 95
 96
 97
-98</pre>
+98
+99
+100</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_priority_spec.rb', line 65</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_priority_spec.rb', line 67</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_timeout'>timeout</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_get_config'>get_config</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>priority_completion</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -6640,7 +6640,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_priority_spec-rb-112"></a>
+    <a name="spec-site-tlc-signal_priority_spec-rb-114"></a>
     Traffic Light Controller Signal Priority becomes stale if not cancelled
   </div>
 
@@ -6677,8 +6677,6 @@
             <pre class="lines">
 
 
-112
-113
 114
 115
 116
@@ -6710,10 +6708,12 @@
 142
 143
 144
-145</pre>
+145
+146
+147</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_priority_spec.rb', line 112</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_priority_spec.rb', line 114</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_timeout'>timeout</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_get_config'>get_config</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>priority_completion</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -6856,7 +6856,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-emergency_routes_spec-rb-23"></a>
+    <a name="spec-site-tlc-emergency_routes_spec-rb-24"></a>
     Traffic Light Controller Emergency Route emergency route is read with S0035
   </div>
 
@@ -6864,7 +6864,7 @@
     
     <div class="docstring">
       
-<p>Verify that current emergency routes can be read with S0035.</p>
+<p>Verify that current emergency routes can be read with S0035. Requires core &gt;= 3.2 since it uses the array data type.</p>
 <ol><li>
 <p>Given the site is connected.</p>
 </li><li>
@@ -6885,13 +6885,13 @@
             <pre class="lines">
 
 
-23
 24
 25
-26</pre>
+26
+27</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/emergency_routes_spec.rb', line 23</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/emergency_routes_spec.rb', line 24</span>
 
 <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>emergency route status</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -6917,7 +6917,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-emergency_routes_spec-rb-35"></a>
+    <a name="spec-site-tlc-emergency_routes_spec-rb-36"></a>
     Traffic Light Controller Emergency Route can be activated with M0005 and read with S0006
   </div>
 
@@ -6946,7 +6946,6 @@
             <pre class="lines">
 
 
-35
 36
 37
 38
@@ -6969,10 +6968,11 @@
 55
 56
 57
-58</pre>
+58
+59</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/emergency_routes_spec.rb', line 35</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/emergency_routes_spec.rb', line 36</span>
 
 <span class='id identifier rubyid_emergency_routes'>emergency_routes</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Validator.html" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_get_config'>get_config</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>items</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>emergency_routes</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
       <span class='id identifier rubyid_skip'>skip</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>No emergency routes configured</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_emergency_routes'>emergency_routes</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_emergency_routes'>emergency_routes</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
@@ -7018,7 +7018,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-emergency_routes_spec-rb-70"></a>
+    <a name="spec-site-tlc-emergency_routes_spec-rb-71"></a>
     Traffic Light Controller Emergency Route emergency routes can be activated with M0005 and read with S0035
   </div>
 
@@ -7051,7 +7051,6 @@
             <pre class="lines">
 
 
-70
 71
 72
 73
@@ -7079,10 +7078,11 @@
 95
 96
 97
-98</pre>
+98
+99</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/emergency_routes_spec.rb', line 70</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/emergency_routes_spec.rb', line 71</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_enable_routes'>enable_routes</span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_emergency_routes'>emergency_routes</span>
         <span class='id identifier rubyid_emergency_routes'>emergency_routes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_emergency_route'>emergency_route</span><span class='op'>|</span> <span class='id identifier rubyid_set_emergency_route'><span class='object_link'><a href="../Validator/CommandHelpers.html#set_emergency_route-instance_method" title="Validator::CommandHelpers#set_emergency_route (method)">set_emergency_route</a></span></span> <span class='id identifier rubyid_emergency_route'>emergency_route</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span> <span class='kw'>true</span> <span class='rbrace'>}</span>

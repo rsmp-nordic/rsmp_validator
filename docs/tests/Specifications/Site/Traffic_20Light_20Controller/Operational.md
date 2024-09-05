@@ -251,6 +251,7 @@ end
 ## Operational startup status is read with S0005
 
 Verify status S0005 traffic controller starting by intersection
+statusByIntersection requires core >= 3.2, since it uses the array data type.
 
 1. Given the site is connected
 2. Request status

@@ -86,6 +86,7 @@ end
 ## Emergency route emergency route is read with S0035
 
 Verify that current emergency routes can be read with S0035.
+Requires core >= 3.2 since it uses the array data type.
 1. Given the site is connected.
 2. When we request S0035.
 3. Then we should receive a status response.
