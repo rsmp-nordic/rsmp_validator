@@ -1,4 +1,3 @@
-core_version: '3.2.0'
 port: 12111
 sxl: tlc      # Traffic Light Controller. We are testing a site, not a server.
 intervals:   
