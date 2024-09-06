@@ -48,7 +48,7 @@ GEM
     ostruct (0.6.0)
     rake (13.2.1)
     regexp_parser (2.9.2)
-    rsmp (0.32.4)
+    rsmp (0.32.5)
       async (~> 2.16)
       async-io (~> 1.43)
       colorize (~> 1.1)
