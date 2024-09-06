@@ -150,5 +150,15 @@ RSpec.describe 'Supervisor' do
     it 'exchanges correct connection sequence of rsmp version 3.2.1', core: '3.2.1' do |example|
       check_sequence '3.2.1'
     end
-end
+
+    # Verify the connection sequence when using rsmp core 3.2.2
+    #
+    # 1. Given the site is connected and using core 3.2.2
+    # 2. Send and receive handshake messages
+    # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
+    # 4. Expect the connection sequence to be complete
+    it 'exchanges correct connection sequence of rsmp version 3.2.2', core: '3.2.2' do |example|
+      check_sequence '3.2.2'
+    end
+  end
 end
