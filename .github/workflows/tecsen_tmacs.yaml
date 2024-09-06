@@ -1,6 +1,6 @@
 # GitHub action for testing the TMAC supervisor system using the RSMP Validator
 
-name: TMacs
+name: TECSEN TMacs
 on:
   pull_request:
     types: [ opened, reopened, synchronize, labeled ]
