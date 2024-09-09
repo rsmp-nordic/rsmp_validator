@@ -12,11 +12,11 @@ on:
 jobs:
   validator:
     if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
-    #timeout-minutes: 10
+    runs-on: [ self-hosted, Linux, X64, tmacs ]
     strategy:
       matrix:
         core: ['3.2.2']
-    runs-on: [ self-hosted, Linux, X64, tmacs ]
+      fail-fast: false
 
     steps:
     - name: Set log id

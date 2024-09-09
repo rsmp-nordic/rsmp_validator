@@ -20,6 +20,7 @@ jobs:
     strategy:
       matrix:
         core: ['3.1.2','3.2.0']
+      fail-fast: false
 
     steps:
     - name: Set log id
