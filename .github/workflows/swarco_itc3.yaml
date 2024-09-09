@@ -17,6 +17,10 @@ jobs:
   validator:
     if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
     runs-on: [ self-hosted, Linux, X64, itc3 ]
+    strategy:
+      matrix:
+        core: ['3.2.0']
+      fail-fast: false
 
     steps:
     - name: Set log id
@@ -48,6 +52,7 @@ jobs:
         --out validator-${{ steps.log_id.outputs.LOG_ID }}.log
       env:
         SITE_CONFIG: config/swarco_itc3.yaml
+        CORE_VERSION: ${{ matrix.core}}
 
     - name: Show detailed log
       shell: bash
