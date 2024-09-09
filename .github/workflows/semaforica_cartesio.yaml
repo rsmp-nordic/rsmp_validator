@@ -14,35 +14,49 @@ on:
     # run every night at 10:00PM UTC.
     - cron:  '0 22 * * *'
 jobs:
-  test:
+  validator:
     if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
     runs-on: [ self-hosted, Linux, X64, cartesio ]
+
     steps:
+    - name: Set log id
+      shell: bash
+      id: log_id
+      run: |
+        echo "LOG_ID=\
+        tecsen-lasemaforica-cartesio-\
+        core-${{ matrix.core }}-\
+        run-\
+        ${{ github.run_id }}-\
+        ${{ github.run_number }}-\
+        ${{ github.run_attempt }}\
+        " >> $GITHUB_OUTPUT
+
     - name: Check out repository
       uses: actions/checkout@v4
 
     - name: Install Ruby and gems
       uses: ruby/setup-ruby@v1
       with:
-        bundler-cache: true # runs 'bundle install' and caches installed gems
+        bundler-cache: true
 
     - name: Run tests
-      run: bundle exec rspec --format Validator::Brief --format Validator::Details --out log/validation.log spec/site/tlc
+      run: |
+        bundle exec rspec spec/site \
+        --format Validator::Brief \
+        --format Validator::Details \
+        --out validator-${{ steps.log_id.outputs.LOG_ID }}.log
       env:
         SITE_CONFIG: config/semaforica_cartesio.yaml
 
     - name: Show detailed log
-      if: always()
-      run: cat log/validation.log
-
-    - name: Rename validation.log
-      if: always()
-      run: |
-        mv log/validation.log log/validation_cartesio_$(date +%F_%H-%M-%S).log
-
-    - name: Upload validation.log
+      shell: bash
+      if: always() # even if previous steps failed
+      run: cat validator-${{ steps.log_id.outputs.LOG_ID }}.log
+    
+    - name: Upload validator.log
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: rspec-validation
-        path: log/validation_cartesio_*.log
+        name: validator-${{ steps.log_id.outputs.LOG_ID }}.log
+        path: validator-${{ steps.log_id.outputs.LOG_ID }}.log
