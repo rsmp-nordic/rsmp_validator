@@ -19,7 +19,7 @@ jobs:
     runs-on: [ self-hosted, Linux, X64, itc3 ]
     strategy:
       matrix:
-        core: ['3.1.2','3.2.0']
+        core: ['3.2.0']
       fail-fast: false
 
     steps:
