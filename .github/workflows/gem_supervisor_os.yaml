@@ -9,11 +9,11 @@ on: push
 jobs:
   validator:
     timeout-minutes: 10
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
       fail-fast: false
+    runs-on: ${{ matrix.os }}
 
     steps:
     - name: Set log id
