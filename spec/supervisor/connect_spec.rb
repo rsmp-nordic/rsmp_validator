@@ -11,12 +11,12 @@ RSpec.describe 'Supervisor' do
           ingoing: true,
           outgoing: true
         }
-      ) do |task,site,supervisor_proxy|
-        collector = supervisor_proxy.collector
+      ) do |task,supervisor,site_proxy|
+        collector = site_proxy.collector
         collector.use_task task
         collector.wait!
-        expect(supervisor_proxy.ready?).to be true
-        got = supervisor_proxy.collector.messages.map { |message| [message.direction.to_s, message.type] }
+        expect(site_proxy.ready?).to be true
+        got = site_proxy.collector.messages.map { |message| [message.direction.to_s, message.type] }
       end
       got
     rescue Async::TimeoutError => e
