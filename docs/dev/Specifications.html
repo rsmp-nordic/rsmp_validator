@@ -2215,6 +2215,32 @@
       
       
     
+      
+      <li class='context-specification even'><div>
+  <div class="specification">
+    
+  </div>
+  <!-- <div>Validator::Site.isolated(
+        'collect' => {
+          filter: RSMP::Filter.new(type:"AggregatedStatus"),
+          timeout: Validator.get_config('timeouts','ready'),
+          num: 1,
+          ingoing: true
+        }
+      ) do |task,supervisor,site_proxy|
+        collector = site_proxy.collector
+        collector.use_task task
+        collector.wait!
+        aggregated_status = site_proxy.collector.messages.first
+
+        expect(aggregated_status).to be_an(RSMP::AggregatedStatus)
+        expect(aggregated_status.attribute('fP')).to be_nil
+        expect(aggregated_status.attribute('fS')).to be_nil
+      end</div> -->
+</div></li>
+      
+      
+    
   </ul>
   
   <ul class='context-subcontext'>
