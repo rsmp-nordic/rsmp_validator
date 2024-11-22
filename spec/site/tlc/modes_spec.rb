@@ -183,7 +183,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         timeout =  Validator.get_config('timeouts','yellow_flash')
 
         switch_yellow_flash
-        wait_for_groups 'c', timeout: timeout      # c mean s yellow flash
+        wait_for_groups '([a,c]*c[a,c]*)', timeout: timeout      # c means yellow flash, a is dark
 
         switch_normal_control
         wait_for_groups '[^c]', timeout: timeout   # not c, ie. not yellow flash
