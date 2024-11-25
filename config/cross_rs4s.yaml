@@ -73,7 +73,7 @@ components:
 items:
   plans: [1,2,3,4,5]
 
-  traffic_situations: []
+  traffic_situations: [1,2,3]
 #  emergency_routes: [1,2,3,4,5,6]
   emergency_routes: [1] #no support for multiple simultaneous emergency routes
 
