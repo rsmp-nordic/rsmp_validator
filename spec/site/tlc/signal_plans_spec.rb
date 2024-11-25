@@ -118,18 +118,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    # 1. Verify connection
-    # 2. Send control command to set cycle time
-    # 3. Wait for status = true
-    it 'M0018 set cycle time', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
-        status = 5
-        plan = 0
-        prepare task, site
-        set_cycle_time status, plan
-      end
-    end
-
     # Verify status S0023 command table
     #
     # 1. Given the site is connected
@@ -244,5 +232,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
         set_cycle_time status, plan
       end
     end
+    
   end
 end
