@@ -226,10 +226,29 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Wait for status = true
     specify 'cycle time is set with M0018', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        status = 5
-        plan = 0
+        log "Reading S0028 for M0018 ..."
+        data = request_status_and_confirm site, "cycle time", { S0028: [:status] }
+
+        matchers = data[:collector].instance_variable_get(:@matchers)
+        first_matcher = matchers.first
+        got = first_matcher.instance_variable_get(:@got)
+        result = got["s"] # "1-73,2-61,3-76,4-76,5-91"
+
+        parsed_response = result.split(",").map { |pair| pair.split("-").map(&:to_i) }
+
+        log "S0028 = #{parsed_response}"
+
+
+    # set longer cycle +5secs
+        cycle_length = parsed_response[0][1]
+        plan = parsed_response[0][0] # was 0
+
         prepare task, site
-        set_cycle_time status, plan
+        set_cycle_time cycle_length + 5, plan
+
+    # return back
+        prepare task, site
+        set_cycle_time cycle_length, plan
       end
     end
     
