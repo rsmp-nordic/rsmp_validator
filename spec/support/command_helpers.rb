@@ -259,7 +259,7 @@ module Validator::CommandHelpers
       status: status,
       plan: plan
     }
-    send_command_and_confirm @task, command_list, "Set cycle time to #{plan}"
+    send_command_and_confirm @task, command_list, "Set cycle time to #{status} for plan #{plan}"
   end
 
   def force_input input:, status:'True', value: 'True', validate:true
