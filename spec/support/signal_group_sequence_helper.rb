@@ -28,11 +28,6 @@ module Validator::StatusHelpers
         pos = @pos[i]                 # current pos
         if pos                        # if the group has already started:
           current = @sequence[ pos ]  # get current state
-          if state != current && state == 'a'
-            if current == 'f' || current == 'g'
-              state = current # accept dark='a' where Vehicles: yellow, Pedestrians: red='f'  or Red='g' is requested
-            end
-          end          
           if state != current         # did the state change?
             if pos == @sequence.length-1        # at end?
               expected  = @sequence[-1]         # if at end, expected to stay there
