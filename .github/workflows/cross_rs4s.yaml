@@ -4,6 +4,8 @@
 # documentation.
 # This workflow will run rspec
 
+## THIS IS FOR pksoft72 / rsmp_validator ONLY - different cron:,runs-on:,core:
+
 name: Cross RS4S
 on:
   pull_request:
@@ -12,7 +14,7 @@ on:
     # schedule runs only on the default branch. time is in UTC.
     # * is a special character in YAML so you have to quote this string.
     # run every night at 10:00PM UTC.
-    - cron:  '0 */2 * * *'
+    - cron:  '0 8-18 * * *'
 jobs:
   validator:
     #if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
