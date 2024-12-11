@@ -1,5 +1,7 @@
 port: 12111
+core_version: '3.1.2'
 sxl: tlc
+sxl_version: '1.0.7'
 intervals:
   timer: 1
   watchdog: 60
@@ -37,6 +39,3 @@ secrets:
   security_codes:
     1: 2503
     2: 2503
-restrict_testing:
-  core_version: 3.1.2
-  sxl_version: 1.0.7

@@ -3,6 +3,7 @@
 # see https://rsmp-nordic.github.io/rsmp_validator/config/
 type: tlc
 sxl: tlc      # Traffic Light Controller. We are testing a site, not a server.
+sxl_version: '1.2.1'
 port: 12111
 ips: all
 rsmp_versions: all
@@ -89,8 +90,6 @@ alarms:
   A0302: 
     activation_input: 1
     component: CZ+76000=101DL001
-restrict_testing:
-  sxl_version: 1.2.1
 log:
   watchdogs: false
   acknowledgements: false

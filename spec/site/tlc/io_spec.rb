@@ -11,7 +11,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 1. Given the site is connected
       # 2. When we read input with S0029
       # 3. Then we should receive a valid response
-      specify 'is read with S0003', sxl: '<1.2' do |example|
+      specify 'is read with S0003 with extended input status', sxl: '<1.2' do |example|
         Validator::Site.connected do |task,supervisor,site|
           request_status_and_confirm site, "input status",
             { S0003: [:inputstatus,:extendedinputstatus] }

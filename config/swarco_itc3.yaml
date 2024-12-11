@@ -1,6 +1,7 @@
 port: 12111
 core_version: '3.2.0'
 sxl: tlc      # Traffic Light Controller. We are testing a site, not a server.
+sxl_version: '1.0.15'
 intervals:   
   timer: 1    # main validator timer resolution in seconds
   watchdog: 20 # send watchdog every x seconds
@@ -41,8 +42,6 @@ secrets:
   security_codes:
     1: default
     2: default
-restrict_testing:
-  sxl_version: 1.0.15
 skip_validation:
   - Alarm
 alarms:

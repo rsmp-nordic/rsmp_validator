@@ -53,8 +53,9 @@ All settings except `components` and `items` can be left out, in which case the 
 ```yaml
 port: 13111             # port to listen on
 ips: all                # allowed ip addresses. either 'all' or a list. defaults to 'all' if left out
-rsmp_versions: all      # allowed core version(s). either 'all' or a list. defaults to 'all' if left out
+core_version: 3.2.2     # core version of site, tests not revelant for this version will be skipped
 sxl: tlc                # sxl of the connecting site, options are 'core' or 'tlc'
+sxl_version: 1.2.1      # sxl cersion of the site, tests not relevant for this version will be skipped
 intervals:
   timer: 1              # main timer interval (resolution), in seconds
   watchdog: 1           # how often to send watchdog messages, in seconds
@@ -89,9 +90,6 @@ items:                  # other configurations that should be tested
   inputs: [1]                 # list of emergency inputs (I/O)
   force_input: 5              # what input to force when testing input forcing
 startup_sequence: 'efg' # expected startup sequence
-restrict_testing:       # restrict what tests are run, default is to run all
-  core_version: 3.2.2   # skip unless relevant for core 3.2.2
-  sxl_version: 1.2.1      # skip unless relevant for sxl 1.2.1
 secrets:                # place secrets or in a separate file, see below
   security_codes:       # RSMP security codes. there are no defaults for these
     1: '1111'           # level 1
@@ -119,8 +117,9 @@ site_id: RN+SI0001      # site id of local site
 supervisors:          # what supervisor the local site should connect to
   - ip: 127.0.0.1       # ip
     port: 13111         # port
+core_version: 3.2.2     # core version, tests not revelant for this version will be skipped
 sxl: tlc                # sxl to use, options are 'core' or 'tlc'
-sxl_version: 1.1        # sxl version to use
+sxl_version: 1.2.1      # sxl version, tests not relevant for this version will be skipped
 components:           # components of local site, organized by type and name
   main:                 # type
     TC:                 # name
@@ -158,9 +157,6 @@ timeouts:             # timeouts
   ready: 1              # max time to complete handshake sequence, in seconds
   watchdog: 0.2         # max time between receiving watchdogs, in seconds
   acknowledgement: 0.2  # max time unless a message we send is acknowledged, in seconds
-restrict_testing:       # restrict what tests are run, default is to run all
-  core_version: 3.2.2   # skip unless relevant for core 3.2.2
-  sxl_version: 1.2.1    # skip unless relevant for sxl 1.2.1
 secrets:                # place secrets or in a separate file, see below
   security_codes:       # RSMP security codes. there are no defaults for these
     1: '1111'           # level 1
@@ -255,17 +251,14 @@ end
 ```
 
 
-You can limit the tests that will run by adding `restrict_testing` options in the config file for the test:
+ Only tests relevant to the core and sxl version specified will be run:
 
 ```yaml
-restrict_testing:
-  core_version: 3.1.2
-  sxl_version: 1.0.7 
+core_version: 3.1.2
+sxl_version: 1.0.7 
 ```
 
 In this case, the S0027 test above will not run, because it requires sxl 1.0.13 or higher, but we limited to 1.0.7. 
-
-Usually you will want to set `restrict_testing` version to what the site or supervisor is actually using, but it's possible to use other values.
 
 
 
