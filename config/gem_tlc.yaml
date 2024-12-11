@@ -20,6 +20,30 @@ timeouts:
   functional_position: 2
   priority_completion: 5
   yellow_flash: 2
+signal_plans:
+  1:
+    cycle_time: 6
+    states:
+      A1: '111NBB'
+      A2: '11NBBB'
+      B1: 'BBB11N'
+      B2: 'BBB1NB'
+    dynamic_bands:
+      1: 0
+      2: 5
+  2:
+    cycle_time: 6
+    states:
+      A1: 'NNNNBB'
+      A2: 'NNNNBN'
+      B1: 'BBNNNN'
+      B2: 'BNNNNN'
+inputs:
+  total: 8
+  programming:
+    7:
+      raise_alarm: A0302
+      component: DL1
 components:
   main:
     TC:
@@ -42,12 +66,6 @@ secrets:
   security_codes:
     1: '1111'
     2: '2222'
-alarms:
-  A0302: 
-    activation_input: 7
-    component: DL1
-restrict_testing:
-  sxl_version: 1.2.1
 log:
   watchdogs: false
   acknowledgements: false
