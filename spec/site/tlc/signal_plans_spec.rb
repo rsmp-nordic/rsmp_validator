@@ -139,18 +139,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    # 1. Verify connection
-    # 2. Send control command to set cycle time
-    # 3. Wait for status = true
-    it 'M0018 set cycle time', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
-        prepare task, site
-        plan = Validator.get_config('items','plans').first
-        status = 10
-        set_cycle_time status, plan
-      end
-    end
-
     # Verify status S0023 command table
     #
     # 1. Given the site is connected
@@ -259,10 +247,31 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Wait for status = true
     specify 'cycle time is set with M0018', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        prepare task, site
-        plan = Validator.get_config('items','plans').first
-        status = 10
-        set_cycle_time status, plan
+        extension = 5
+
+        # read current plan
+        plan = read_current_plan(site)
+
+        # read initial cycle times
+        times = read_cycle_times(site)
+        time = times[plan]
+
+        # change cycle tme
+        time_extended = time + extension
+        need_to_reset = true
+        set_cycle_time plan, time_extended, "Extend cycle time to #{time_extended} for plan #{plan}"
+
+        # read updated cycle times
+        increase = 5
+        times = read_cycle_times(site, "updated cycle times")
+        time_extended_actual = times[plan]
+        expect(time_extended_actual).to eq(time_extended)
+
+      ensure
+        if need_to_reset
+          log "Reset cycle time"
+          set_cycle_time plan, time
+        end
       end
     end
   end

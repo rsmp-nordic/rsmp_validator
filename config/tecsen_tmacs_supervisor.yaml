@@ -9,15 +9,18 @@ sxl_version: 1.2.1
 components:
   main:
     CAR_TC_001:
-      cycle_time: 120
   signal_group:
     CAR_SG_001:
+      cycle_time: 120
       plan: '11NBBB'
     CAR_SG_002:
+      cycle_time: 120
       plan: '1NBBBB'
     CAR_SG_003:
+      cycle_time: 120
       plan: 'BBB11N'
     CAR_SG_004:
+      cycle_time: 120
       plan: 'BBB1NB'
   detector_logic:
     CAR_DL_001:

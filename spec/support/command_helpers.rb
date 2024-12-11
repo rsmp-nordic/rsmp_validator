@@ -252,14 +252,14 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "Set time table to #{status}"
   end
 
-  def set_cycle_time status, plan
+  def set_cycle_time plan, cycle_time, description="Set cycle time to #{cycle_time} for plan #{plan}"
     require_security_codes
     command_list = build_command_list :M0018, :setCycleTime, {
       securityCode: Validator.get_config('secrets','security_codes',2),
-      status: status,
+      status: cycle_time,
       plan: plan
     }
-    send_command_and_confirm @task, command_list, "Set cycle time to #{plan}"
+    send_command_and_confirm @task, command_list, description
   end
 
   def force_input input:, status:'True', value: 'True', validate:true
