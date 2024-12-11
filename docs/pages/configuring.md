@@ -124,18 +124,31 @@ sxl_version: 1.1        # sxl version to use
 components:           # components of local site, organized by type and name
   main:                 # type
     TC:                 # name
-      cycle_time: 6     # options for component 'TC'
-  signal_group:
+  signal_group:       # list of signal groups
     A1:
-      plan: '11NBBB'
     A2:
-      plan: '1NBBBB'
     B1:
-      plan: 'BBB11N'
     B2:
-      plan: 'BBB1NB'
-  detector_logic:
+  detector_logic:     # list of detector logics
     DL1:
+signal_plans:         # list of signal plans
+  1:                    # signal plan number
+    cycle_time: 6         # cycle time
+    states:               # signal group states
+      A1: '111NBB'          # states per second
+      A2: '11NBBB'
+      B1: 'BBB11N'
+      B2: 'BBB1NB'
+    dynamic_bands:        # list of dynamic bands
+      1: 0                  # band 1 has the value 0
+      2: 5
+  2:
+    cycle_time: 6
+    states:
+      A1: 'NNNNBB'
+      A2: 'NNNNBN'
+      B1: 'BBNNNN'
+      B2: 'BNNNNN'
 intervals:            # intervals
   timer: 0.1            # basic timer resolution in seconds, in seconds
   watchdog: 0.1         # time between sending watchdog messages, in seconds
