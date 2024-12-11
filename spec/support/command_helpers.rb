@@ -339,15 +339,12 @@ module Validator::CommandHelpers
     end
   end
 
-  # Run a block with ana alarm acticated, then deactive the alarm
+  # Run a block with an alarm acticated, then deactive the alarm
   # The device must be programmed to activate an alarm when a specific
   # input is acticated, and the mapping must be configured in the test config.
   def with_alarm_activated task, site, alarm_code_id, initial_deactivation: true
-    action = Validator.config.dig('alarms', alarm_code_id)
-    skip "alarm #{alarm_code_id} is not configured" unless action
-    input_nr = action['activation_input']
-    skip "alarm #{alarm_code_id} has no activation input configured" unless input_nr
-    component_id = action['component'] || Validator.get_config('main_component')
+    input_nr, component_id = find_alarm_programming(alarm_code_id)
+    component_id ||= Validator.get_config('main_component')
     if initial_deactivation
       force_input_and_confirm input: input_nr, value: 'False'
     end

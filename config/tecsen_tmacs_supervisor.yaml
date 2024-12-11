@@ -4,23 +4,20 @@ ntsOId: CAR_TC_001
 supervisors:
   - ip: rsmp.tmacs.it
     port: 13111
+core_version: '3.2.2'
 sxl: tlc
-sxl_version: 1.2.1
+sxl_version: '1.2.1'
 components:
   main:
     CAR_TC_001:
   signal_group:
     CAR_SG_001:
-      cycle_time: 120
       plan: '11NBBB'
     CAR_SG_002:
-      cycle_time: 120
       plan: '1NBBBB'
     CAR_SG_003:
-      cycle_time: 120
       plan: 'BBB11N'
     CAR_SG_004:
-      cycle_time: 120
       plan: 'BBB1NB'
   detector_logic:
     CAR_DL_001:
@@ -42,6 +39,3 @@ secrets:
   security_codes:
     1: '1234'
     2: '12341234'
-restrict_testing:
-  core_version: 3.2.2
-  sxl_version: 1.2.1

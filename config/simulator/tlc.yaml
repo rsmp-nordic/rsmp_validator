@@ -8,6 +8,7 @@ sxl_version: '1.2.1'
 components:
   main:
     TC:
+      ntsOId: KK+AG9998=001TC000
   signal_group:
     A1:
     A2:
@@ -19,14 +20,14 @@ components:
 signal_plans:
   1:
     cycle_time: 6
-    dynamic_bands:
-      1: 0
-      2: 5
     states:
       A1: '11NBBB'
       A2: '1NBBBB'
       B1: 'BBB11N'
       B2: 'BBB1NB'
+    dynamic_bands:
+      1: 0
+      2: 5
   2:
     cycle_time: 6
     states:
@@ -40,6 +41,7 @@ inputs:
     7:
       raise_alarm: A0302
       component: DL1
+startup_sequence: 'efg'
 intervals:
   timer: 0.1
   watchdog: 0.1
