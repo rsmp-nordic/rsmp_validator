@@ -1,7 +1,6 @@
 source "https://rubygems.org"
 
 gem 'rsmp'
-gem 'activesupport'
 
 group :development do
   gem 'rspec'
