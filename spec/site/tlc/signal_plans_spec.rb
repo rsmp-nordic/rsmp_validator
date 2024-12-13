@@ -117,6 +117,18 @@ RSpec.describe 'Site::Traffic Light Controller' do
           { S0097: [:timestamp,:checksum] }
       end
     end
+    #
+    # Verify status S0098 configuration of traffic parameters
+    #
+    # 1. Given the site is connected
+    # 2. Request status
+    # 3. Expect status response before timeout
+    specify 'config is read with S0098', sxl: '>=1.0.15' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        request_status_and_confirm site, "config of traffic parameters",
+          { S0098: [:timestamp,:config,:version] }
+      end
+    end
 
     # 1. Verify connection
     # 2. Send control command to set cycle time
