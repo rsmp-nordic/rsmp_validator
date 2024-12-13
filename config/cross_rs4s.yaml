@@ -82,10 +82,6 @@ items:
   force_input: 5
   outputs: [1,3,8]
 startup_sequence: 'efg'
-#alarm_activation:       # how to trigger alarms by forcing inputs
-#  A0303:                # alarm A0302
-#    input: 7            # can be triggered by forcing input 8
-#    component: DL1      # and will active on component DL1
 alarms:
   A0302: 
     activation_input: 1
