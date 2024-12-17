@@ -12,84 +12,84 @@ intervals:
   watchdog: 60
 timeouts:
   watchdog: 65
-  acknowledgement: 1
-  connect: 30
-  ready: 1
-  status_response: 3
-  status_update: 5
-  subscribe: 1
-  command: 300
-  command_response: 30
-  alarm: 3
-  disconnect: 20
-  startup_sequence: 45
-  functional_position: 60
-  priority_completion: 5
-  yellow_flash: 2
+  acknowledgement: 20
+  connect: 120
+  ready: 60
+  status_response: 60
+  status_update: 60
+  subscribe: 60
+  command: 180
+  command_response: 180
+  alarm: 60
+  disconnect: 120
+  startup_sequence: 180
+  functional_position: 240
+  priority_completion: 60
+  yellow_flash: 60
 secrets:
   security_codes:
     1: '1111'
     2: '2222'
 components:
   main:
-    CZ+76000=101TC001:
-      ntsOId: CZ+76000=101TC001
+    KTT+TC=101TC001:
+      ntsOId: KTT+TC=101TC001
   signal_group:
-    CZ+76000=101SG001:
-    CZ+76000=101SG002:
-    CZ+76000=101SG003:
-    CZ+76000=101SG004:
-    CZ+76000=101SG005:
-    CZ+76000=101SG006:
-    CZ+76000=101SG007:
-    CZ+76000=101SG008:
-    CZ+76000=101SG009:
-    CZ+76000=101SG010:
-    CZ+76000=101SG011:
-    CZ+76000=101SG012:
-    CZ+76000=101SG013:
-    CZ+76000=101SG014:
-    CZ+76000=101SG015:
-    CZ+76000=101SG016:
-    CZ+76000=101SG017:
-    CZ+76000=101SG018:
-    CZ+76000=101SG019:
-    CZ+76000=101SG020:
-    CZ+76000=101SG021:
-    CZ+76000=101SG022:
-    CZ+76000=101SG023:
-    CZ+76000=101SG024:
-    CZ+76000=101SG025:
-    CZ+76000=101SG026:
-    CZ+76000=101SG027:
-    CZ+76000=101SG028:
-    CZ+76000=101SG029:
-    CZ+76000=101SG030:
-    CZ+76000=101SG031:
-    CZ+76000=101SG032:
+    KTT+TC=101SG001:
+    KTT+TC=101SG002:
+    KTT+TC=101SG003:
+    KTT+TC=101SG004:
+    KTT+TC=101SG005:
+    KTT+TC=101SG006:
+    KTT+TC=101SG007:
+    KTT+TC=101SG008:
+    KTT+TC=101SG009:
+    KTT+TC=101SG010:
+    KTT+TC=101SG011:
+    KTT+TC=101SG012:
+    KTT+TC=101SG013:
+    KTT+TC=101SG014:
+    KTT+TC=101SG015:
+    KTT+TC=101SG016:
+    KTT+TC=101SG017:
+    KTT+TC=101SG018:
+    KTT+TC=101SG019:
+    KTT+TC=101SG020:
+    KTT+TC=101SG021:
+    KTT+TC=101SG022:
+    KTT+TC=101SG023:
+    KTT+TC=101SG024:
+    KTT+TC=101SG025:
+    KTT+TC=101SG026:
+    KTT+TC=101SG027:
+    KTT+TC=101SG028:
+    KTT+TC=101SG029:
+    KTT+TC=101SG030:
+    KTT+TC=101SG031:
+    KTT+TC=101SG032:
   detector_logic:
-    CZ+76000=101DL001:
-    CZ+76000=101DL002:
-    CZ+76000=101DL003:
-    CZ+76000=101DL004:
-    CZ+76000=101DL005:    
-    CZ+76000=101DL006:
-    CZ+76000=101DL007:
-    CZ+76000=101DL008:
-    CZ+76000=101DL009:
-    CZ+76000=101DL010:
+    KTT+TC=101DL001:
+    KTT+TC=101DL002:
+    KTT+TC=101DL003:
+    KTT+TC=101DL004:
+    KTT+TC=101DL005:    
+    KTT+TC=101DL006:
+    KTT+TC=101DL007:
+    KTT+TC=101DL008:
+    KTT+TC=101DL009:
+    KTT+TC=101DL010:
 items:
   plans: [1,2]
   traffic_situations: []
   emergency_routes: []
-  inputs: [1,3,8]
-  force_input: 5
-  outputs: [1,3,8]
+  inputs: [1,2,3,4,5,6,7,8,9,10]
+  force_input: 10
+  outputs: [1,2,3,4,5,6,7,8]
 startup_sequence: 'efg'
 alarms:
   A0302: 
     activation_input: 1
-    component: CZ+76000=101DL001
+    component: KTT+TC=101DL001
 restrict_testing:
   sxl_version: 1.2.1
 log:
