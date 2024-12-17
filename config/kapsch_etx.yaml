@@ -1,4 +1,4 @@
-# Config for testing a site running on localhost (e.g. from the rsmp gem)
+# Config for testing a device running on a local network
 # The settings are used for starting a local supervisor listening for the site tested
 # see https://rsmp-nordic.github.io/rsmp_validator/config/
 type: tlc
