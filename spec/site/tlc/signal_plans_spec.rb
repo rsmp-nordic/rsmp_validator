@@ -135,9 +135,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Wait for status = true
     it 'M0018 set cycle time', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        status = 5
-        plan = Validator.get_config('items','plans').first
         prepare task, site
+        plan = Validator.get_config('items','plans').first
+        status = 10
         set_cycle_time status, plan
       end
     end
@@ -250,9 +250,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Wait for status = true
     specify 'cycle time is set with M0018', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        status = 5
-        plan = Validator.get_config('items','plans').first
         prepare task, site
+        plan = Validator.get_config('items','plans').first
+        status = 10
         set_cycle_time status, plan
       end
     end
