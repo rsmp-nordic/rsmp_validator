@@ -125,8 +125,17 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Expect status response before timeout
     specify 'config is read with S0098', sxl: '>=1.0.15' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        request_status_and_confirm site, "config of traffic parameters",
+        result = request_status_and_confirm site, "config of traffic parameters",
           { S0098: [:timestamp,:config,:version] }
+
+        # the site  should have stored the received status
+        message = result[:collector].messages.first
+        expect(message).to be_an(RSMP::StatusResponse)
+        values = message.attributes['sS'].map { |item| [item['n'], item['s']] }.to_h
+
+        expect(values['timestamp']).not_to be_empty
+        expect(values['config']).not_to be_empty
+        expect(values['timestamp']).not_to be_empty
       end
     end
 
