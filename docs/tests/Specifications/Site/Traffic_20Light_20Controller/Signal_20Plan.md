@@ -32,7 +32,7 @@ grand_parent: Site
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   status = 5
-  plan = 0
+  plan = Validator.get_config('items','plans').first
   prepare task, site
   set_cycle_time status, plan
 end
@@ -132,7 +132,7 @@ end
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   status = 5
-  plan = 0
+  plan = Validator.get_config('items','plans').first
   prepare task, site
   set_cycle_time status, plan
 end
@@ -222,7 +222,7 @@ end
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  plan = "1"
+  plan = Validator.get_config('items','plans').first
   status = "1-12"
   prepare task, site
   set_dynamic_bands plan, status
@@ -249,7 +249,7 @@ end
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   prepare task, site
-  plan = 1
+  plan = Validator.get_config('items','plans').first
   band = 3
   value = get_dynamic_bands(plan, band) || 0
   expect( value ).to be_a(Integer)
@@ -348,7 +348,7 @@ end
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  plan = 1
+  plan = Validator.get_config('items','plans').first
   status = 99
   prepare task, site
   set_offset status, plan
