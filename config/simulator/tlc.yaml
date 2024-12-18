@@ -8,7 +8,6 @@ sxl_version: '1.2.1'
 components:
   main:
     TC:
-      cycle_time: 6
   signal_group:
     A1:
     A2:
@@ -19,6 +18,7 @@ components:
     DL2:
 signal_plans:
   1:
+    cycle_time: 6
     dynamic_bands:
       1: 0
       2: 5
@@ -28,6 +28,7 @@ signal_plans:
       B1: 'BBB11N'
       B2: 'BBB1NB'
   2:
+    cycle_time: 6
     states:
       A1: '111NBB'
       A2: '11NBBB'
