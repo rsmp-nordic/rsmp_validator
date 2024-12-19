@@ -12,20 +12,20 @@ intervals:
   watchdog: 60
 timeouts:
   watchdog: 65
-  acknowledgement: 20
-  connect: 120
-  ready: 60
-  status_response: 60
-  status_update: 60
-  subscribe: 60
-  command: 180
-  command_response: 180
-  alarm: 60
-  disconnect: 120
-  startup_sequence: 180
-  functional_position: 240
-  priority_completion: 60
-  yellow_flash: 60
+  acknowledgement: 1
+  connect: 30
+  ready: 1
+  status_response: 3
+  status_update: 5
+  subscribe: 1
+  command: 60
+  command_response: 30
+  alarm: 3
+  disconnect: 20
+  startup_sequence: 45
+  functional_position: 60
+  priority_completion: 5
+  yellow_flash: 3
 secrets:
   security_codes:
     1: '1111'
@@ -82,14 +82,14 @@ items:
   plans: [1,2]
   traffic_situations: []
   emergency_routes: []
-  inputs: [1,2,3,4,5,6,7,8,9,10]
-  force_input: 10
-  outputs: [1,2,3,4,5,6,7,8]
+  inputs: [1,2,3,4]
+  force_input: 1
+  outputs: [1,2,3,4]
 startup_sequence: 'efg'
-alarms:
-  A0302: 
-    activation_input: 1
-    component: KTT+TC=101DL001
+#alarms:
+#  A0302: 
+#    activation_input: 1
+#    component: KTT+TC=101DL001
 restrict_testing:
   sxl_version: 1.2.1
 log:
