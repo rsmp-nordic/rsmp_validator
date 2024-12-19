@@ -31,10 +31,40 @@ grand_parent: Site
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  status = 5
-  plan = Validator.get_config('items','plans').first
   prepare task, site
+  plan = Validator.get_config('items','plans').first
+  status = 10
   set_cycle_time status, plan
+end
+```
+</details>
+
+
+
+
+## Signal plan config is read with S0098
+
+Verify status S0098 configuration of traffic parameters
+
+1. Given the site is connected
+2. Request status
+3. Expect status response before timeout
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+  result = request_status_and_confirm site, "config of traffic parameters",
+    { S0098: [:timestamp,:config,:version] }
+  # the site  should have stored the received status
+  message = result[:collector].messages.first
+  expect(message).to be_an(RSMP::StatusResponse)
+  values = message.attributes['sS'].map { |item| [item['n'], item['s']] }.to_h
+  expect(values['timestamp']).not_to be_empty
+  expect(values['config']).not_to be_empty
+  expect(values['timestamp']).not_to be_empty
 end
 ```
 </details>
@@ -131,9 +161,9 @@ end
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  status = 5
-  plan = Validator.get_config('items','plans').first
   prepare task, site
+  plan = Validator.get_config('items','plans').first
+  status = 10
   set_cycle_time status, plan
 end
 ```
