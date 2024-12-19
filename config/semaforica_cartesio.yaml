@@ -1,6 +1,8 @@
 port: 12111
 ips: all
+core_version: '3.2.2'
 sxl: tlc      # Traffic Light Controller. We are testing a site, not a server.
+sxl_version: '1.2.1'
 intervals:   
   timer: 1    # main validator timer resolution in seconds
   watchdog: 60 # send watchdog every x seconds
@@ -69,9 +71,6 @@ secrets:
   security_codes:
     1: 1234
     2: 12341234
-restrict_testing:
-  core_version: 3.2.2
-  sxl_version: 1.2.1
 alarms:
   A0302: 
     activation_input: 16   # input 2 activates the control block

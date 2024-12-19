@@ -1,5 +1,7 @@
 port: 12111
+core_version: '3.1.2'
 sxl: tlc
+sxl_version: '1.0.7'
 ntsOId: KK+AG9998=001TC000
 xNId: ''
 intervals:
@@ -39,9 +41,6 @@ secrets:
   security_codes:
     1: testcode1
     2: testcode2
-restrict_testing:
-  core_version: 3.1.2
-  sxl_version: 1.0.7
 alarms:
   A0302:
     component: KK+AG9998=001DL001

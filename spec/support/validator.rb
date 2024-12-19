@@ -306,7 +306,7 @@ module Validator
     # enable filtering by sxl version tags like '>=1.0.7'
     # Gem::Requirement and Gem::Version classed are used to do the version matching,
     # but this otherwise has nothing to do with Gems
-    sxl_version = Validator.config.dig('restrict_testing','sxl_version')
+    sxl_version = Validator.config.dig('sxl_version')
     if sxl_version
       sxl_version = Gem::Version.new sxl_version
       sxl_filter = -> (v) {
@@ -316,7 +316,7 @@ module Validator
       # so we get more useful display of the filter option when we
       # run rspec on the command line
       def sxl_filter.inspect
-        "[unless relevant for #{Validator.config.dig('restrict_testing','sxl_version')}]"
+        "[unless relevant for #{Validator.config.dig('sxl_version')}]"
       end
       rspec_config.filter_run_excluding sxl: sxl_filter
     end

@@ -89,4 +89,21 @@ module Validator::StatusHelpers
     RSMP::Proxy.version_meets_requirement? site.core_version, '>=3.1.5'
   end
 
+  # Use S0028 to read current cycle time lengths.
+  # returns a map of signal program nr => cycle time in seconds
+  def read_cycle_times(site, description='cycle times')
+    result = request_status_and_confirm site, description,
+      { S0028: [:status] }
+    result[:collector].messages.first.attributes['sS'].first['s'].split(',').map do |time|
+      program_time = time.split('-').map {|v| v.to_i}
+    end.to_h
+  end
+
+  # Use S0014 to read current plan.
+  # returns a map of signal program nr => cycle time in seconds
+  def read_current_plan(site, description='current plan')
+    result = request_status_and_confirm site, description,
+      { S0014: [:status] }
+    result[:collector].messages.first.attributes['sS'].first['s'].to_i
+  end
 end
