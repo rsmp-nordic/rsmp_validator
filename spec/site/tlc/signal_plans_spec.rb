@@ -117,15 +117,36 @@ RSpec.describe 'Site::Traffic Light Controller' do
           { S0097: [:timestamp,:checksum] }
       end
     end
+    #
+    # Verify status S0098 configuration of traffic parameters
+    #
+    # 1. Given the site is connected
+    # 2. Request status
+    # 3. Expect status response before timeout
+    specify 'config is read with S0098', sxl: '>=1.0.15' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        result = request_status_and_confirm site, "config of traffic parameters",
+          { S0098: [:timestamp,:config,:version] }
+
+        # the site  should have stored the received status
+        message = result[:collector].messages.first
+        expect(message).to be_an(RSMP::StatusResponse)
+        values = message.attributes['sS'].map { |item| [item['n'], item['s']] }.to_h
+
+        expect(values['timestamp']).not_to be_empty
+        expect(values['config']).not_to be_empty
+        expect(values['timestamp']).not_to be_empty
+      end
+    end
 
     # 1. Verify connection
     # 2. Send control command to set cycle time
     # 3. Wait for status = true
     it 'M0018 set cycle time', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        status = 5
-        plan = 0
         prepare task, site
+        plan = Validator.get_config('items','plans').first
+        status = 10
         set_cycle_time status, plan
       end
     end
@@ -147,7 +168,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Wait for status = true
     specify 'dynamic bands are set with M0014', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        plan = "1"
+        plan = Validator.get_config('items','plans').first
         status = "1-12"
         prepare task, site
         set_dynamic_bands plan, status
@@ -164,7 +185,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'dynamic bands values can be changed and read back', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        plan = 1
+        plan = Validator.get_config('items','plans').first
         band = 3
 
         value = get_dynamic_bands(plan, band) || 0
@@ -214,7 +235,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Wait for status = true
     specify 'offset is set with M0015', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        plan = 1
+        plan = Validator.get_config('items','plans').first
         status = 99
         prepare task, site
         set_offset status, plan
@@ -238,9 +259,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Wait for status = true
     specify 'cycle time is set with M0018', sxl: '>=1.0.13' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        status = 5
-        plan = 0
         prepare task, site
+        plan = Validator.get_config('items','plans').first
+        status = 10
         set_cycle_time status, plan
       end
     end

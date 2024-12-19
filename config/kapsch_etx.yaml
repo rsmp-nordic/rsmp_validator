@@ -1,0 +1,97 @@
+# Config for testing a site running on localhost (e.g. from the rsmp gem)
+# The settings are used for starting a local supervisor listening for the site tested
+# see https://rsmp-nordic.github.io/rsmp_validator/config/
+type: tlc
+sxl: tlc      # Traffic Light Controller. We are testing a site, not a server.
+port: 12111
+ips: all
+rsmp_versions: all
+
+intervals:
+  timer: 1
+  watchdog: 60
+timeouts:
+  watchdog: 65
+  acknowledgement: 20
+  connect: 120
+  ready: 60
+  status_response: 60
+  status_update: 60
+  subscribe: 60
+  command: 180
+  command_response: 180
+  alarm: 60
+  disconnect: 120
+  startup_sequence: 180
+  functional_position: 240
+  priority_completion: 60
+  yellow_flash: 60
+secrets:
+  security_codes:
+    1: '1111'
+    2: '2222'
+components:
+  main:
+    KTT+TC=101TC001:
+      ntsOId: KTT+TC=101TC001
+  signal_group:
+    KTT+TC=101SG001:
+    KTT+TC=101SG002:
+    KTT+TC=101SG003:
+    KTT+TC=101SG004:
+    KTT+TC=101SG005:
+    KTT+TC=101SG006:
+    KTT+TC=101SG007:
+    KTT+TC=101SG008:
+    KTT+TC=101SG009:
+    KTT+TC=101SG010:
+    KTT+TC=101SG011:
+    KTT+TC=101SG012:
+    KTT+TC=101SG013:
+    KTT+TC=101SG014:
+    KTT+TC=101SG015:
+    KTT+TC=101SG016:
+    KTT+TC=101SG017:
+    KTT+TC=101SG018:
+    KTT+TC=101SG019:
+    KTT+TC=101SG020:
+    KTT+TC=101SG021:
+    KTT+TC=101SG022:
+    KTT+TC=101SG023:
+    KTT+TC=101SG024:
+    KTT+TC=101SG025:
+    KTT+TC=101SG026:
+    KTT+TC=101SG027:
+    KTT+TC=101SG028:
+    KTT+TC=101SG029:
+    KTT+TC=101SG030:
+    KTT+TC=101SG031:
+    KTT+TC=101SG032:
+  detector_logic:
+    KTT+TC=101DL001:
+    KTT+TC=101DL002:
+    KTT+TC=101DL003:
+    KTT+TC=101DL004:
+    KTT+TC=101DL005:    
+    KTT+TC=101DL006:
+    KTT+TC=101DL007:
+    KTT+TC=101DL008:
+    KTT+TC=101DL009:
+    KTT+TC=101DL010:
+items:
+  plans: [1,2]
+  traffic_situations: []
+  emergency_routes: []
+  inputs: [1,2,3,4,5,6,7,8,9,10]
+  force_input: 10
+  outputs: [1,2,3,4,5,6,7,8]
+startup_sequence: 'efg'
+alarms:
+  A0302: 
+    activation_input: 1
+    component: KTT+TC=101DL001
+restrict_testing:
+  sxl_version: 1.2.1
+log:
+  watchdogs: false
+  acknowledgements: false
