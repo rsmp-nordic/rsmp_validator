@@ -1,6 +1,7 @@
 RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::CommandHelpers
   include Validator::StatusHelpers
+  include Validator::ProgrammingHelpers
 
   # Testing alarms require a reliable way of rainsing them.
   #
@@ -109,10 +110,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     it 'A0302 can be suspended and resumed' do
       Validator::Site.connected do |task,supervisor,site|
         alarm_code_id = 'A0302'
-        action = Validator.config.dig('alarms', alarm_code_id)
-        skip "alarm #{alarm_code_id} is not configured" unless action
-        component_id = action['component']
-        skip "alarm #{alarm_code_id} has no component configured" unless component_id
+        input, component_id = find_alarm_programming(alarm_code_id)
 
         # first resume alarm to make sure something happens when we suspend
         resume_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: false

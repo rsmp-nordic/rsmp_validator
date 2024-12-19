@@ -6,22 +6,35 @@ supervisors:
   - ip: 127.0.0.1
     port: 14111
 sxl: tlc
-sxl_version: 1.2.1
+sxl_version: '1.2.1'
 components:
   main:
     TC:
-      cycle_time: 6
   signal_group:
     A1:
-      plan: '11NBBB'
     A2:
-      plan: '1NBBBB'
     B1:
-      plan: 'BBB11N'
     B2:
-      plan: 'BBB1NB'
   detector_logic:
     DL1:
+signal_plans:
+  1:
+    cycle_time: 6
+    states:
+      A1: '111NBB'
+      A2: '11NBBB'
+      B1: 'BBB11N'
+      B2: 'BBB1NB'
+    dynamic_bands:
+      1: 0
+      2: 5
+  2:
+    cycle_time: 6
+    states:
+      A1: 'NNNNBB'
+      A2: 'NNNNBN'
+      B1: 'BBNNNN'
+      B2: 'BNNNNN'
 intervals:
   timer: 0.1
   watchdog: 0.1
