@@ -51,7 +51,7 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
           request_status_and_confirm site, "input status",
-            { S0003: [:inputstatus] }
+            { S0003: [:inputstatus,:extendedinputstatus] }
         end</div> -->
 </div></li>
       
@@ -331,10 +331,7 @@
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
         alarm_code_id = 'A0302'
-        action = Validator.config.dig('alarms', alarm_code_id)
-        skip "alarm #{alarm_code_id} is not configured" unless action
-        component_id = action['component']
-        skip "alarm #{alarm_code_id} has no component configured" unless component_id
+        input, component_id = find_alarm_programming(alarm_code_id)
 
         # first resume alarm to make sure something happens when we suspend
         resume_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: false
@@ -1185,21 +1182,6 @@
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
-        prepare task, site
-        plan = Validator.get_config('items','plans').first
-        status = 10
-        set_cycle_time status, plan
-      end</div> -->
-</div></li>
-      
-      
-    
-      
-      <li class='context-specification even'><div>
-  <div class="specification">
-    
-  </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
         request_status_and_confirm site, "command table",
           { S0023: [:status] }
       end</div> -->
@@ -1208,7 +1190,7 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
@@ -1223,7 +1205,7 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
@@ -1248,7 +1230,7 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
@@ -1264,7 +1246,7 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
@@ -1277,7 +1259,7 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
@@ -1292,7 +1274,7 @@
       
     
       
-      <li class='context-specification even'><div>
+      <li class='context-specification odd'><div>
   <div class="specification">
     
   </div>
@@ -1305,15 +1287,36 @@
       
     
       
-      <li class='context-specification odd'><div>
+      <li class='context-specification even'><div>
   <div class="specification">
     
   </div>
   <!-- <div>Validator::Site.connected do |task,supervisor,site|
-        prepare task, site
-        plan = Validator.get_config('items','plans').first
-        status = 10
-        set_cycle_time status, plan
+        extension = 5
+
+        # read current plan
+        plan = read_current_plan(site)
+
+        # read initial cycle times
+        times = read_cycle_times(site)
+        time = times[plan]
+
+        # change cycle tme
+        time_extended = time + extension
+        need_to_reset = true
+        set_cycle_time plan, time_extended, "Extend cycle time to #{time_extended} for plan #{plan}"
+
+        # read updated cycle times
+        increase = 5
+        times = read_cycle_times(site, "updated cycle times")
+        time_extended_actual = times[plan]
+        expect(time_extended_actual).to eq(time_extended)
+
+      ensure
+        if need_to_reset
+          log "Reset cycle time"
+          set_cycle_time plan, time
+        end
       end</div> -->
 </div></li>
       

@@ -105,10 +105,7 @@ Validate that alarms can be suspended. We're using A0302 in this test.
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
   alarm_code_id = 'A0302'
-  action = Validator.config.dig('alarms', alarm_code_id)
-  skip "alarm #{alarm_code_id} is not configured" unless action
-  component_id = action['component']
-  skip "alarm #{alarm_code_id} has no component configured" unless component_id
+  input, component_id = find_alarm_programming(alarm_code_id)
   # first resume alarm to make sure something happens when we suspend
   resume_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: false
   begin

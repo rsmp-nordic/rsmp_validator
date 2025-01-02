@@ -120,6 +120,28 @@ end
 
 
 
+## Input is read with S0003 with extended input status
+
+Verify that we can read input status with S0003, extendedinputstatus attribute
+1. Given the site is connected
+2. When we read input with S0029
+3. Then we should receive a valid response
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+Validator::Site.connected do |task,supervisor,site|
+  request_status_and_confirm site, "input status",
+    { S0003: [:inputstatus,:extendedinputstatus] }
+end
+```
+</details>
+
+
+
+
 ## Input sensitivity is set with M0021
 
 Verify that input sensitivity can be set with M0021

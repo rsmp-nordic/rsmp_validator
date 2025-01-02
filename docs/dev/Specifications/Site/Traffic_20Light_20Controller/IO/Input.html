@@ -75,14 +75,14 @@
       <li class='context-specification'><div class="specification">
   <div class="heading ">
     <a name="spec-site-tlc-io_spec-rb-14"></a>
-    Traffic Light Controller IO Input is read with S0003
+    Traffic Light Controller IO Input is read with S0003 with extended input status
   </div>
 
   <div class="details method_details_list">
     
     <div class="docstring">
       
-<p>Verify that we can read input status with S0003</p>
+<p>Verify that we can read input status with S0003, extendedinputstatus attribute</p>
 <ol><li>
 <p>Given the site is connected</p>
 </li><li>
@@ -113,7 +113,7 @@
 
 <span class='const'><span class='object_link'><a href="../../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
           <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>input status</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-            <span class='lbrace'>{</span> <span class='label'>S0003:</span> <span class='lbracket'>[</span><span class='symbol'>:inputstatus</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
+            <span class='lbrace'>{</span> <span class='label'>S0003:</span> <span class='lbracket'>[</span><span class='symbol'>:inputstatus</span><span class='comma'>,</span><span class='symbol'>:extendedinputstatus</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
         <span class='kw'>end</span></pre>
           </td>
         </tr>
@@ -135,7 +135,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-io_spec-rb-14"></a>
+    <a name="spec-site-tlc-io_spec-rb-25"></a>
     Traffic Light Controller IO Input is read with S0003
   </div>
 
@@ -164,13 +164,13 @@
             <pre class="lines">
 
 
-14
-15
-16
-17</pre>
+25
+26
+27
+28</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 14</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/io_spec.rb', line 25</span>
 
 <span class='const'><span class='object_link'><a href="../../../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
           <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>input status</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
