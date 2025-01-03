@@ -1,18 +1,11 @@
-# Config for testing a site running on localhost (e.g. from the rsmp gem)
+# Config for testing Cross RS4S traffic light controller.
 # The settings are used for starting a local supervisor listening for the site tested
-# see https://rsmp-nordic.github.io/rsmp_validator/config/
-type: tlc
-sxl: tlc      # Traffic Light Controller. We are testing a site, not a server.
+# See https://rsmp-nordic.github.io/rsmp_validator/config/
+sxl: tlc
 sxl_version: '1.2.1'
-port: 12111
-ips: all
-rsmp_versions: all
-
 intervals:
   timer: 1
   watchdog: 60
-#  timer: 0.1
-#  watchdog: 0.1
 timeouts:
   watchdog: 65
   acknowledgement: 1
@@ -24,68 +17,34 @@ timeouts:
   command: 300
   command_response: 30
   alarm: 3
-  disconnect: 20 # RSMP_WATCHDOG_TIMEOUT_MSEC + RSMP_WATCHDOG_PERIOD_MSEC 
+  disconnect: 20
   startup_sequence: 45
   functional_position: 60
   priority_completion: 5
   yellow_flash: 2
-secrets:
-  security_codes:
-    1: '1111'   #spec/site/tlc/invalid_command_spec.rb has hardcoded security code 1111
-    2: 'r;PwL7%U?SN2E.5'
 components:
   main:
     CZ+76000=101TC001:
-      ntsOId: CZ+76000=101TC001
   signal_group:
     CZ+76000=101SG001:
     CZ+76000=101SG002:
     CZ+76000=101SG003:
-    CZ+76000=101SG004:
-    CZ+76000=101SG005:
-    CZ+76000=101SG006:
-    CZ+76000=101SG007:
-    CZ+76000=101SG008:
-    CZ+76000=101SG009:
-    CZ+76000=101SG010:
-    CZ+76000=101SG011:
-    CZ+76000=101SG012:
-    CZ+76000=101SG013:
-    CZ+76000=101SG014:
-    CZ+76000=101SG015:
-    CZ+76000=101SG016:
-    CZ+76000=101SG017:
-    CZ+76000=101SG018:
-    CZ+76000=101SG019:
-    CZ+76000=101SG020:
-    CZ+76000=101SG021:
-    CZ+76000=101SG022:
   detector_logic:
     CZ+76000=101DL001:
     CZ+76000=101DL002:
     CZ+76000=101DL003:
-    CZ+76000=101DL004:
-    CZ+76000=101DL005:
-    CZ+76000=101DL006:
-    CZ+76000=101DL007:
-    CZ+76000=101DL008:
-    CZ+76000=101DL009:
-    CZ+76000=101DL010:
 items:
   plans: [1,2,3,4,5]
-
   traffic_situations: []
-#  emergency_routes: [1,2,3,4,5,6]
-  emergency_routes: [1] #no support for multiple simultaneous emergency routes
-
+  emergency_routes: [1] # only one emergency route
   inputs: [1,3,8]
-  force_input: 5
   outputs: [1,3,8]
 startup_sequence: 'efg'
-alarms:
-  A0302: 
-    activation_input: 1
+alarm_triggers:
+  A0302:
+    input: 7
     component: CZ+76000=101DL001
-log:
-  watchdogs: false
-  acknowledgements: false
+secrets:
+  security_codes:
+    1: '1111'
+    2: 'r;PwL7%U?SN2E.5'
