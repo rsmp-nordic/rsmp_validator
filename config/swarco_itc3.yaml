@@ -1,6 +1,7 @@
-port: 12111
-core_version: '3.2.0'
-sxl: tlc      # Traffic Light Controller. We are testing a site, not a server.
+# Config for testing Swarco ITC-3 traffic light controller.
+# The settings are used for starting a local supervisor listening for the site tested
+# See https://rsmp-nordic.github.io/rsmp_validator/config/
+sxl: tlc
 sxl_version: '1.0.15'
 intervals:   
   timer: 1    # main validator timer resolution in seconds
@@ -35,16 +36,15 @@ items:
   traffic_situations: [1]
   emergency_routes: [1]
   inputs: [1]
-  force_input: 1
   outputs: [1]
 startup_sequence: 'efg'
+skip_validation:
+  - Alarm
+alarm_triggers:
+  A0302:
+    input: 2
+    component: AA+BBCCC=DDDDL002
 secrets:
   security_codes:
     1: default
     2: default
-skip_validation:
-  - Alarm
-alarms:
-  A0302: 
-    activation_input: 2   # input 2 activates the control block
-    component: AA+BBCCC=DDDDL002  # detector logic 2 is set to error by control block.

@@ -69,10 +69,11 @@ class Validator::Site < Validator::Testee
     want = ['sxl','intervals','timeouts','components','rsmp_versions','core_version','skip_validation']
     guest_settings = config.select { |key| want.include? key }
     @supervisor_config = {
-      'port' => config['port'],
       'max_sites' => 1,
       'guest' => guest_settings
     }
+    @supervisor_config['port'] = config['port'] if config['port']
+
     [
       'connect',
       'ready',
