@@ -24,8 +24,8 @@ grand_parent: Site
 Verify status S0098 configuration of traffic parameters
 
 1. Given the site is connected
-2. Request status
-3. Expect status response before timeout
+2. When we request the status
+3. We should receive a status response before timeout
 
 <details markdown="block">
   <summary>
@@ -54,8 +54,8 @@ end
 Verify status S0014 current time plan
 
 1. Given the site is connected
-2. Request status
-3. Expect status response before timeout
+2. When we request the status
+3. We should receive a status response before timeout
 
 <details markdown="block">
   <summary>
@@ -82,9 +82,9 @@ Verify that we change time plan (signal program)
 We try switching all programs configured
 
 1. Given the site is connected
-2. Verify that there is a Validator.get_config('validator') with a time plan
-3. Send command to switch time plan
-4. Wait for status "Current timeplan" = requested time plan
+2. And there is a Validator.get_config('validator') with a time plan
+3. When we send the command
+3. We should receive a confirmative command response before timeout
 
 <details markdown="block">
   <summary>
@@ -108,8 +108,8 @@ end
 Verify status S0028 cycle time
 
 1. Given the site is connected
-2. Request status
-3. Expect status response before timeout
+2. When we request the status
+3. We should receive a status response before timeout
 
 <details markdown="block">
   <summary>
@@ -128,9 +128,14 @@ end
 
 ## Signal plan cycle time is set with M0018
 
-1. Verify connection
-2. Send control command to set cycle time
-3. Wait for status = true
+Verify that cycle time can be changed with M0018
+ 
+1. Given the site is connected
+2. And we read cycle times 
+3. When we extend cycle time of curent plan with 5s
+4. Then reading the cycle time should confirm the change 
+5. Finally when we revert cycle time to previous value
+6. Then reading cycle time should confirm the reversion
 
 <details markdown="block">
   <summary>
@@ -138,25 +143,8 @@ end
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  extension = 5
-  # read current plan
-  plan = read_current_plan(site)
-  # read initial cycle times
-  times = read_cycle_times(site)
-  time = times[plan]
-  # change cycle tme
-  time_extended = time + extension
-  need_to_reset = true
-  set_cycle_time plan, time_extended, "Extend cycle time to #{time_extended} for plan #{plan}"
-  # read updated cycle times
-  increase = 5
-  times = read_cycle_times(site, "updated cycle times")
-  time_extended_actual = times[plan]
-  expect(time_extended_actual).to eq(time_extended)
-ensure
-  if need_to_reset
-    log "Reset cycle time"
-    set_cycle_time plan, time
+  with_cycle_time_extended(site) do
+    log "Cycle time extension confirmed"
   end
 end
 ```
@@ -170,8 +158,8 @@ end
 Verify status S0027 time tables
 
 1. Given the site is connected
-2. Request status
-3. Expect status response before timeout
+2. When we request the status
+3. We should receive a status response before timeout
 
 <details markdown="block">
   <summary>
@@ -190,9 +178,11 @@ end
 
 ## Signal plan day table is set with M0017
 
-1. Verify connection
-2. Send control command to set time_table
-3. Wait for status = true
+Verify that we can set day table with M0017
+
+1. Given the site is connected
+2. When we send the command
+3. We should receive a confirmative command response before timeout
 
 <details markdown="block">
   <summary>
@@ -215,8 +205,8 @@ end
 Verify status S0023 command table
 
 1. Given the site is connected
-2. Request status
-3. Expect status response before timeout
+2. When we request the status
+3. We should receive a status response before timeout
 
 <details markdown="block">
   <summary>
@@ -235,9 +225,11 @@ end
 
 ## Signal plan dynamic bands are set with M0014
 
-1. Verify connection
-2. Send control command to set dynamic_bands
-3. Wait for status = true
+Verify that dynamic bands can the set with M0014
+
+1. Given the site is connected
+2. When we send the command
+3. We should receive a confirmative command response before timeout
 
 <details markdown="block">
   <summary>
@@ -258,12 +250,14 @@ end
 
 ## Signal plan dynamic bands values can be changed and read back
 
+Verify that dynamic bands can be read and changed
+
 1. Given the site is connected
-2. Read dynamic band
-3. Set dynamic band to 2x previous value
-4. Read  band to confirm
-5. Set dynamic band to previous value
-6. Read dynamic band to confirm
+2. And we read dynamic band
+3. When we set dynamic band to 2x previous value
+4. Then reading dynamic bands should confirm the change 
+5. Finally when we revert dynamic band to previous value
+6. Then reading dynamic bands should confirm the reversion
 
 <details markdown="block">
   <summary>
@@ -294,8 +288,8 @@ end
 Verify status S0022 list of time plans
 
 1. Given the site is connected
-2. Request status
-3. Expect status response before timeout
+2. When we request the status
+3. We should receive a status response before timeout
 
 <details markdown="block">
   <summary>
@@ -318,8 +312,8 @@ Verify status S0018 number of time plans
 Deprecated from 1.2, use S0022 instead.
 
 1. Given the site is connected
-2. Request status
-3. Expect status response before timeout
+2. When we request the status
+3. We should receive a status response before timeout
 
 <details markdown="block">
   <summary>
@@ -386,7 +380,7 @@ end
 
 Verify command M0023 timeout of dynamic bands
 
-1. Verify connection
+1. Given the site is connected
 2. When we send command to set timeout
 3. Then we should get a confirmation
 2. When we send command to disable timeout
@@ -415,8 +409,8 @@ end
 Verify status S0097 version of traffic program
 
 1. Given the site is connected
-2. Request status
-3. Expect status response before timeout
+2. When we request the status
+3. We should receive a status response before timeout
 
 <details markdown="block">
   <summary>
@@ -438,8 +432,8 @@ end
 Verify status S0026 week time table
 
 1. Given the site is connected
-2. Request status
-3. Expect status response before timeout
+2. When we request the status
+3. We should receive a status response before timeout
 
 <details markdown="block">
   <summary>
@@ -458,9 +452,11 @@ end
 
 ## Signal plan week table is set with M0016
 
-1. Verify connection
-2. Send control command to set  week_table
-3. Wait for status = true
+Verify that we can set week table with M0016
+
+1. Given the site is connected
+2. When we send the command
+3. We should receive a confirmative command response before timeout
 
 <details markdown="block">
   <summary>
