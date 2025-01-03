@@ -262,6 +262,36 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, description
   end
 
+  def with_cycle_time_extended site, extension=5, &block
+    # read current plan
+    plan = read_current_plan(site)
+
+    # read initial cycle times
+    times = read_cycle_times(site)
+    time = times[plan]
+
+    expect(time).to_not be_nil, "Site returned empty cycle times list"
+
+    # change cycle tme
+    time_extended = time + extension
+    need_to_reset = true
+    set_cycle_time plan, time_extended, "Extend cycle time to #{time_extended} for plan #{plan}"
+
+    # read updated cycle times
+    increase = 5
+    times = read_cycle_times(site, "updated cycle times")
+    time_extended_actual = times[plan]
+    expect(time_extended_actual).to eq(time_extended)
+
+    block.yield
+  ensure
+    if need_to_reset
+      log "Reset cycle time"
+      set_cycle_time plan, time
+    end
+  end
+
+
   def force_input input:, status:'True', value: 'True', validate:true
     require_security_codes
     if status == 'True'
