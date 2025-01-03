@@ -1,6 +1,7 @@
 # Config for testing a site running on localhost (e.g. from the rsmp gem)
 # The settings are used for starting a local supervisor listening for the site tested
 port: 13111
+sxl_version: '1.2.1'
 intervals:
   timer: 0.1
   watchdog: 0.1
@@ -23,6 +24,7 @@ timeouts:
 components:
   main:
     TC:
+      ntsOId: KK+AG9998=001TC000
   signal_group:
     A1:
     A2:
@@ -31,6 +33,12 @@ components:
   detector_logic:
     DL1:
     DL2:
+inputs:
+  total: 8
+  programming:
+    7:
+      raise_alarm: A0302
+      component: DL1
 items:
   plans: [1,2]
   traffic_situations: [1,2]
@@ -42,12 +50,6 @@ secrets:
   security_codes:
     1: '1111'
     2: '2222'
-alarms:
-  A0302: 
-    activation_input: 7
-    component: DL1
-restrict_testing:
-  sxl_version: 1.2.1
 log:
   watchdogs: false
   acknowledgements: false

@@ -252,15 +252,45 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "Set time table to #{status}"
   end
 
-  def set_cycle_time status, plan
+  def set_cycle_time plan, cycle_time, description="Set cycle time to #{cycle_time} for plan #{plan}"
     require_security_codes
     command_list = build_command_list :M0018, :setCycleTime, {
       securityCode: Validator.get_config('secrets','security_codes',2),
-      status: status,
+      status: cycle_time,
       plan: plan
     }
-    send_command_and_confirm @task, command_list, "Set cycle time to #{status} for plan #{plan}"
+    send_command_and_confirm @task, command_list, description
   end
+
+  def with_cycle_time_extended site, extension=5, &block
+    # read current plan
+    plan = read_current_plan(site)
+
+    # read initial cycle times
+    times = read_cycle_times(site)
+    time = times[plan]
+
+    expect(time).to_not be_nil, "Site returned empty cycle times list"
+
+    # change cycle tme
+    time_extended = time + extension
+    need_to_reset = true
+    set_cycle_time plan, time_extended, "Extend cycle time to #{time_extended} for plan #{plan}"
+
+    # read updated cycle times
+    increase = 5
+    times = read_cycle_times(site, "updated cycle times")
+    time_extended_actual = times[plan]
+    expect(time_extended_actual).to eq(time_extended)
+
+    block.yield
+  ensure
+    if need_to_reset
+      log "Reset cycle time"
+      set_cycle_time plan, time
+    end
+  end
+
 
   def force_input input:, status:'True', value: 'True', validate:true
     require_security_codes
@@ -339,15 +369,12 @@ module Validator::CommandHelpers
     end
   end
 
-  # Run a block with ana alarm acticated, then deactive the alarm
+  # Run a block with an alarm acticated, then deactive the alarm
   # The device must be programmed to activate an alarm when a specific
   # input is acticated, and the mapping must be configured in the test config.
   def with_alarm_activated task, site, alarm_code_id, initial_deactivation: true
-    action = Validator.config.dig('alarms', alarm_code_id)
-    skip "alarm #{alarm_code_id} is not configured" unless action
-    input_nr = action['activation_input']
-    skip "alarm #{alarm_code_id} has no activation input configured" unless input_nr
-    component_id = action['component'] || Validator.get_config('main_component')
+    input_nr, component_id = find_alarm_programming(alarm_code_id)
+    component_id ||= Validator.get_config('main_component')
     if initial_deactivation
       force_input_and_confirm input: input_nr, value: 'False'
     end
