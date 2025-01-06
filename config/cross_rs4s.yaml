@@ -27,7 +27,7 @@ timeouts:
   disconnect: 20 # RSMP_WATCHDOG_TIMEOUT_MSEC + RSMP_WATCHDOG_PERIOD_MSEC 
   startup_sequence: 45
   functional_position: 60
-  priority_completion: 5
+  priority_completion: 120
   yellow_flash: 2
 secrets:
   security_codes:
