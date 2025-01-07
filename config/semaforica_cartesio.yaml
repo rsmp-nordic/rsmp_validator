@@ -44,7 +44,7 @@ startup_sequence: 'efg'
 alarm_triggers:
   A0302:
     input: 16
-    component: CAR_DL_001
+    component: CAR_DL_016
 secrets:
   security_codes:
     1: 1234
