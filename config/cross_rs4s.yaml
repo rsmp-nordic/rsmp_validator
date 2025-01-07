@@ -72,7 +72,8 @@ components:
     CZ+76000=101DL009:
     CZ+76000=101DL010:
 items:
-  plans: [1,2,3,4,5]
+  plans: [1,2]  #switching to each plan takes a alot of time
+  #plans: [1,2,3,4,5]
 
   traffic_situations: [1,2,3]
 #  emergency_routes: [1,2,3,4,5,6]
