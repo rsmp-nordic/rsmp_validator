@@ -15,7 +15,7 @@ intervals:
 #  watchdog: 0.1
 timeouts:
   watchdog: 65
-  acknowledgement: 1
+  acknowledgement: 5
   connect: 30
   ready: 1
   status_response: 3
