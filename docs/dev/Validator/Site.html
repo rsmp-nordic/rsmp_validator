@@ -632,16 +632,16 @@
       <pre class="lines">
 
 
-92
 93
 94
 95
 96
 97
-98</pre>
+98
+99</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 92</span>
+      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 93</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_build_node'>build_node</span> <span class='id identifier rubyid_options'>options</span>
   <span class='const'>RSMP</span><span class='op'>::</span><span class='const'>Supervisor</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
@@ -694,7 +694,8 @@
 86
 87
 88
-89</pre>
+89
+90</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 66</span>
@@ -705,10 +706,11 @@
 </span>  <span class='id identifier rubyid_want'>want</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>sxl</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>intervals</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>timeouts</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>components</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>rsmp_versions</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>core_version</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>skip_validation</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_guest_settings'>guest_settings</span> <span class='op'>=</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_key'>key</span><span class='op'>|</span> <span class='id identifier rubyid_want'>want</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_key'>key</span> <span class='rbrace'>}</span>
   <span class='ivar'>@supervisor_config</span> <span class='op'>=</span> <span class='lbrace'>{</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>port</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>port</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>max_sites</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='int'>1</span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>guest</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_guest_settings'>guest_settings</span>
   <span class='rbrace'>}</span>
+  <span class='ivar'>@supervisor_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>port</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>port</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>port</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+
   <span class='lbracket'>[</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>connect</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ready</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
@@ -755,17 +757,17 @@
       <pre class="lines">
 
 
-101
 102
 103
 104
 105
 106
 107
-108</pre>
+108
+109</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 102</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_for_connection'>wait_for_connection</span>
   <span class='ivar'>@proxy</span> <span class='op'>=</span> <span class='ivar'>@node</span><span class='period'>.</span><span class='id identifier rubyid_proxies'>proxies</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
@@ -807,15 +809,15 @@
       <pre class="lines">
 
 
-111
 112
 113
 114
 115
-116</pre>
+116
+117</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 111</span>
+      <pre class="code"><span class="info file"># File 'spec/support/test_site.rb', line 112</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_for_handshake'>wait_for_handshake</span>
   <span class='kw'>return</span> <span class='kw'>if</span> <span class='ivar'>@proxy</span><span class='period'>.</span><span class='id identifier rubyid_ready?'>ready?</span>
