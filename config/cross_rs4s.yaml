@@ -20,7 +20,7 @@ timeouts:
   disconnect: 20
   startup_sequence: 45
   functional_position: 60
-  priority_completion: 120
+  priority_completion: 15
   yellow_flash: 2
 components:
   main:
