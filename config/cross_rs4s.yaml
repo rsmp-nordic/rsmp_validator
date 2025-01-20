@@ -8,7 +8,7 @@ intervals:
   watchdog: 60
 timeouts:
   watchdog: 65
-  acknowledgement: 1
+  acknowledgement: 5
   connect: 30
   ready: 1
   status_response: 3
@@ -20,7 +20,7 @@ timeouts:
   disconnect: 20
   startup_sequence: 45
   functional_position: 60
-  priority_completion: 5
+  priority_completion: 15
   yellow_flash: 2
 components:
   main:
@@ -34,8 +34,8 @@ components:
     CZ+76000=101DL002:
     CZ+76000=101DL003:
 items:
-  plans: [1,2,3,4,5]
-  traffic_situations: []
+  plans: [1,2]  #switching to each plan takes a lot of time
+  traffic_situations: [1,2,3]
   emergency_routes: [1] # only one emergency route
   inputs: [1,3,8]
   outputs: [1,3,8]
