@@ -8,7 +8,7 @@ intervals:
   watchdog: 60
 timeouts:
   watchdog: 65
-  acknowledgement: 1
+  acknowledgement: 10
   connect: 30
   ready: 1
   status_response: 3
