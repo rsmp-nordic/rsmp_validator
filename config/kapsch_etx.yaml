@@ -2,26 +2,26 @@
 # The settings are used for starting a local supervisor listening for the site tested
 # See https://rsmp-nordic.github.io/rsmp_validator/config/
 sxl: tlc
-sxl_version: '1.2.1'
+sxl_version: "1.2.1"
 intervals:
   timer: 1
-  watchdog: 60
+  watchdog: 10
 timeouts:
-  watchdog: 65
-  acknowledgement: 1
-  connect: 30
-  ready: 1
-  status_response: 3
-  status_update: 5
-  subscribe: 1
-  command: 60
-  command_response: 30
-  alarm: 3
+  watchdog: 15
+  acknowledgement: 10
+  connect: 10
+  ready: 15
+  status_response: 10
+  status_update: 10
+  subscribe: 10
+  command: 20
+  command_response: 20
+  alarm: 20
   disconnect: 20
-  startup_sequence: 45
-  functional_position: 60
-  priority_completion: 5
-  yellow_flash: 3
+  startup_sequence: 10
+  functional_position: 10
+  priority_completion: 10
+  yellow_flash: 10
 components:
   main:
     KTT+TC=101TC001:
@@ -34,17 +34,17 @@ components:
     KTT+TC=101DL002:
     KTT+TC=101DL003:
 items:
-  plans: [1,2]
+  plans: [1, 2]
   traffic_situations: []
   emergency_routes: []
-  inputs: [1,2,3,4]
-  outputs: [1,2,3,4]
-startup_sequence: 'efg'
+  inputs: [1, 2, 3, 4]
+  outputs: [1, 2, 3, 4]
+startup_sequence: "efg"
 alarm_triggers:
   #A0302:
   #  input: 7
   #  component: DL1
 secrets:
   security_codes:
-    1: '1111'
-    2: '2222'
+    1: "1111"
+    2: "2222"
