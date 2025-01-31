@@ -50,10 +50,9 @@ module Validator::StatusHelpers
   def wait_for_status parent_task, description, status_list,
       update_rate: Validator.get_config('intervals','status_update', assume: 0),
       timeout: Validator.get_config('timeouts','command')
-    update_rate = 0 unless update_rate
     log "Wait for #{description}"
     subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt'=>update_rate.to_s }
-    subscribe_list.map! { |item| item.merge!('sOc' => false) } if use_sOc?(@site)
+    subscribe_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(@site)
 
     begin
       result = @site.subscribe_to_status Validator.get_config('main_component'), subscribe_list, collect!: {
