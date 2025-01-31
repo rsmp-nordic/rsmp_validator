@@ -18,7 +18,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         component = Validator.get_config('main_component')
 
         status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus','uRt'=>'1'}]
-        status_list.map! { |item| item.merge!('sOc' => false) } if use_sOc?(site)
+        status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)
 
          site.subscribe_to_status component, status_list, collect!: {
           timeout: Validator.get_config('timeouts','status_update')
