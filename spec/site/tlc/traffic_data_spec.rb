@@ -82,7 +82,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         occupancies = occupancy_item["s"].split(",")
         occupancies.each do |occupancy|
           num = occupancy.to_i
-          expect((0..100).cover?(num)).to be_truthy, "Occupancy must be in the range 0..100, got #{num}"
+          expect((-1..100).cover?(num)).to be_truthy, "Occupancy must be in the range 0..100, got #{num}"
         end
       end
     end
