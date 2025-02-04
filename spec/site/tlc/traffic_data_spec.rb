@@ -72,8 +72,18 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Expect status response before timeout
     specify 'occupancy for all detectors is read with S0207', sxl: '>=1.0.14' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        request_status_and_confirm site, "traffic counting: occupancy",
+        result = request_status_and_confirm site, "traffic counting: occupancy",
           { S0207: [:start,:occupancy] }
+
+        status = result[:collector].messages.first
+        expect(status).to be_a(RSMP::StatusResponse)
+        occupancy_item = status.attribute("sS").find {|item| item["n"] == "occupancy" }
+        expect(occupancy_item).to be_a(Hash)
+        occupancies = occupancy_item["s"].split(",")
+        occupancies.each do |occupancy|
+          num = occupancy.to_i
+          expect((0..100).cover?(num)).to be_truthy, "Occupancy must be in the range 0..100, got #{num}"
+        end
       end
     end
 
