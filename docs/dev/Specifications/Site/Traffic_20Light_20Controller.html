@@ -5737,66 +5737,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_groups_spec-rb-64"></a>
-    Traffic Light Controller Signal Group series can be started/stopped with M0012
-  </div>
-
-  <div class="details method_details_list">
-    
-    <div class="docstring">
-      <ol><li>
-<p>Verify connection</p>
-</li><li>
-<p>Send control command to start or stop a serie of signalgroups</p>
-</li><li>
-<p>Wait for status = true</p>
-</li></ol>
-
-    </div>
-
-    <div style="clear: both;"></div>
-
-    <!-- Source Code -->
-    <div style="float: left;">
-      <table class="source_code">
-        <tr>
-          <td>
-            <pre class="lines">
-
-
-64
-65
-66
-67</pre>
-          </td>
-          <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 64</span>
-
-<span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
-        <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
-        <span class='id identifier rubyid_set_signal_start_or_stop'><span class='object_link'><a href="../../Validator/CommandHelpers.html#set_signal_start_or_stop-instance_method" title="Validator::CommandHelpers#set_signal_start_or_stop (method)">set_signal_start_or_stop</a></span></span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>5,4134,65;5,11</span><span class='tstring_end'>&#39;</span></span>
-      <span class='kw'>end</span></pre>
-          </td>
-        </tr>
-      </table>
-    </div>
-    
-
-    <div style="clear: both;"></div>
-    
-  </div>
-
-  <!-- Captures the collapsed state -->
-  <div class="attributes" style="display:none;">
-    <input type="hidden" name="collapsed" value="false">
-  </div>
-
-</div></li> 
-    
-      
-      <li class='context-specification'><div class="specification">
-  <div class="heading ">
-    <a name="spec-site-tlc-signal_groups_spec-rb-76"></a>
+    <a name="spec-site-tlc-signal_groups_spec-rb-66"></a>
     Traffic Light Controller Signal Group list size is read with S0017
   </div>
 
@@ -5825,13 +5766,13 @@
             <pre class="lines">
 
 
-76
-77
-78
-79</pre>
+66
+67
+68
+69</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 76</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 66</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_request_status_and_confirm'><span class='object_link'><a href="../../Validator/StatusHelpers.html#request_status_and_confirm-instance_method" title="Validator::StatusHelpers#request_status_and_confirm (method)">request_status_and_confirm</a></span></span> <span class='id identifier rubyid_site'>site</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>number of signal groups</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
@@ -5857,7 +5798,7 @@
       
       <li class='context-specification'><div class="specification">
   <div class="heading ">
-    <a name="spec-site-tlc-signal_groups_spec-rb-88"></a>
+    <a name="spec-site-tlc-signal_groups_spec-rb-78"></a>
     Traffic Light Controller Signal Group follow startup sequence after yellow flash
   </div>
 
@@ -5886,17 +5827,17 @@
             <pre class="lines">
 
 
-88
-89
-90
-91
-92
-93
-94
-95</pre>
+78
+79
+80
+81
+82
+83
+84
+85</pre>
           </td>
           <td>
-            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 88</span>
+            <pre class="code"><span class="info file"># File 'spec/site/tlc/signal_groups_spec.rb', line 78</span>
 
 <span class='const'><span class='object_link'><a href="../../Validator.html" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'><span class='object_link'><a href="../../Validator/Site.html#connected-class_method" title="Validator::Site.connected (method)">connected</a></span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='comma'>,</span><span class='id identifier rubyid_supervisor'>supervisor</span><span class='comma'>,</span><span class='id identifier rubyid_site'>site</span><span class='op'>|</span>
         <span class='id identifier rubyid_prepare'><span class='object_link'><a href="../../Validator/CommandHelpers.html#prepare-instance_method" title="Validator::CommandHelpers#prepare (method)">prepare</a></span></span> <span class='id identifier rubyid_task'>task</span><span class='comma'>,</span> <span class='id identifier rubyid_site'>site</span>
