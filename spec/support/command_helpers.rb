@@ -43,15 +43,6 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "Order signal group #{indx} to red", component
   end
 
-  # Request series of signal groups to start/stop
-  def set_signal_start_or_stop status
-    command_list = build_command_list :M0012, :setStart, {
-      securityCode: Validator.get_config('secrets','security_codes',2),
-      status: status
-    }
-    send_command_and_confirm @task, command_list, "Request series of signal groups to #{status}"
-  end
-
   # Switch signal plan
   def set_plan plan
     require_security_codes

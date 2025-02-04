@@ -58,16 +58,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    # 1. Verify connection
-    # 2. Send control command to start or stop a serie of signalgroups
-    # 3. Wait for status = true
-    specify 'series can be started/stopped with M0012', :important, sxl: '>=1.0.8' do |example|
-      Validator::Site.connected do |task,supervisor,site|
-        prepare task, site
-        set_signal_start_or_stop '5,4134,65;5,11'
-      end
-    end
-
     # Verify status S0017 number of signal groups
     #
     # 1. Given the site is connected
