@@ -29,21 +29,23 @@ components:
     KTT+TC=101SG001:
     KTT+TC=101SG002:
     KTT+TC=101SG003:
+    KTT+TC=101SG004:
   detector_logic:
     KTT+TC=101DL001:
     KTT+TC=101DL002:
     KTT+TC=101DL003:
+    KTT+TC=101DL004:
 items:
   plans: [1, 2]
-  traffic_situations: []
-  emergency_routes: []
+  traffic_situations: [1,2]
+  emergency_routes: [1]
   inputs: [1, 2, 3, 4]
   outputs: [1, 2, 3, 4]
 startup_sequence: "efg"
 alarm_triggers:
-  #A0302:
-  #  input: 7
-  #  component: DL1
+  A0302:
+    input: 7
+    component: KTT+TC=101DL001
 secrets:
   security_codes:
     1: "1111"
