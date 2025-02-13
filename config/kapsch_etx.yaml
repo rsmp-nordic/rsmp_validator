@@ -9,7 +9,7 @@ intervals:
 timeouts:
   watchdog: 15
   acknowledgement: 10
-  connect: 10
+  connect: 30
   ready: 15
   status_response: 10
   status_update: 10
@@ -21,7 +21,7 @@ timeouts:
   startup_sequence: 10
   functional_position: 10
   priority_completion: 10
-  yellow_flash: 10
+  yellow_flash: 3
 components:
   main:
     KTT+TC=101TC001:
