@@ -53,7 +53,9 @@ jobs:
         bundle exec rspec spec/site \
         --format Validator::Brief \
         --format Validator::Details \
-        --out validator-${{ steps.log_id.outputs.LOG_ID }}.log
+        --out validator-${{ steps.log_id.outputs.LOG_ID }}.log \
+        --format json \
+        --out results-${{ steps.log_id.outputs.LOG_ID }}.json
         
       env:
         SITE_CONFIG: config/gem_tlc.yaml
@@ -77,3 +79,10 @@ jobs:
       with:
         name: simulator-${{ steps.log_id.outputs.LOG_ID }}.log
         path: simulator-${{ steps.log_id.outputs.LOG_ID }}.log
+
+    - name: Upload results.log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: results-${{ steps.log_id.outputs.LOG_ID }}.log
+        path: results-${{ steps.log_id.outputs.LOG_ID }}.json
