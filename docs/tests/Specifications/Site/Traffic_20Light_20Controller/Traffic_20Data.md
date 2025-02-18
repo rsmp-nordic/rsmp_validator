@@ -173,8 +173,17 @@ Verify status S0207 traffic counting: occupancy
   </summary>
 ```ruby
 Validator::Site.connected do |task,supervisor,site|
-  request_status_and_confirm site, "traffic counting: occupancy",
+  result = request_status_and_confirm site, "traffic counting: occupancy",
     { S0207: [:start,:occupancy] }
+  status = result[:collector].messages.first
+  expect(status).to be_a(RSMP::StatusResponse)
+  occupancy_item = status.attribute("sS").find {|item| item["n"] == "occupancy" }
+  expect(occupancy_item).to be_a(Hash)
+  occupancies = occupancy_item["s"].split(",")
+  occupancies.each do |occupancy|
+    num = occupancy.to_i
+    expect((-1..100).cover?(num)).to be_truthy, "Occupancy must be in the range -1..100, got #{num}"
+  end
 end
 ```
 </details>
