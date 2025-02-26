@@ -29,15 +29,13 @@ components:
     KTT+TC=101SG001:
     KTT+TC=101SG002:
     KTT+TC=101SG003:
-    KTT+TC=101SG004:
   detector_logic:
     KTT+TC=101DL001:
     KTT+TC=101DL002:
     KTT+TC=101DL003:
-    KTT+TC=101DL004:
 items:
   plans: [1, 2]
-  traffic_situations: [1,2]
+  traffic_situations: [1, 2]
   emergency_routes: [1]
   inputs: [1, 2, 3, 4]
   outputs: [1, 2, 3, 4]
