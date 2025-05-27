@@ -1,6 +1,7 @@
+# The settings are used for starting a local tlc emulator connecting to the supervisor system to be tested
+
 type: tlc
 site_id: CAR_TC_001
-ntsOId: CAR_TC_001
 supervisors:
   - ip: rsmp.tmacs.it
     port: 13111
@@ -9,33 +10,43 @@ sxl: tlc
 sxl_version: '1.2.1'
 components:
   main:
-    CAR_TC_001:
+    TC:
   signal_group:
-    CAR_SG_001:
-      plan: '11NBBB'
-    CAR_SG_002:
-      plan: '1NBBBB'
-    CAR_SG_003:
-      plan: 'BBB11N'
-    CAR_SG_004:
-      plan: 'BBB1NB'
+    A1:
+    A2:
+    B1:
+    B2:
   detector_logic:
-    CAR_DL_001:
-    CAR_DL_002:
-    CAR_DL_003:
-    CAR_DL_004:
-    CAR_DL_005:
+    DL1:
+signal_plans:
+  1:
+    cycle_time: 6
+    states:
+      A1: '111NBB'
+      A2: '11NBBB'
+      B1: 'BBB11N'
+      B2: 'BBB1NB'
+    dynamic_bands:
+      1: 0
+      2: 5
+  2:
+    cycle_time: 6
+    states:
+      A1: 'NNNNBB'
+      A2: 'NNNNBN'
+      B1: 'BBNNNN'
+      B2: 'BNNNNN'
 intervals:
-  timer: 1
-  watchdog: 60
-  reconnect: 10
+  timer: 0.1
+  watchdog: 1
+  reconnect: 1
+  after_connect: 1
 timeouts:
-  connect: 30
-  ready: 10
-  watchdog: 60
-  acknowledgement: 1
-  disconnects: 60
+  connect: 10
+  ready: 100
+  watchdog: 5
+  acknowledgement: 5
 secrets:
   security_codes:
-    1: '1234'
-    2: '12341234'
+    1: '1111'
+    2: '2222'
