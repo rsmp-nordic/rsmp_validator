@@ -10,32 +10,32 @@ sxl: tlc
 sxl_version: '1.2.1'
 components:
   main:
-    TC:
+    CAR_TC_001:
   signal_group:
-    A1:
-    A2:
-    B1:
-    B2:
+    CAR_SG_001:
+    CAR_SG_002:
+    CAR_SG_003:
+    CAR_SG_004:
   detector_logic:
-    DL1:
+    CAR_DL_001:
 signal_plans:
   1:
     cycle_time: 6
     states:
-      A1: '111NBB'
-      A2: '11NBBB'
-      B1: 'BBB11N'
-      B2: 'BBB1NB'
+      CAR_SG_001: '111NBB'
+      CAR_SG_002: '11NBBB'
+      CAR_SG_003: 'BBB11N'
+      CAR_SG_004: 'BBB1NB'
     dynamic_bands:
       1: 0
       2: 5
   2:
     cycle_time: 6
     states:
-      A1: 'NNNNBB'
-      A2: 'NNNNBN'
-      B1: 'BBNNNN'
-      B2: 'BNNNNN'
+      CAR_SG_001: 'NNNNBB'
+      CAR_SG_002: 'NNNNBN'
+      CAR_SG_003: 'BBNNNN'
+      CAR_SG_004: 'BNNNNN'
 intervals:
   timer: 0.1
   watchdog: 1
