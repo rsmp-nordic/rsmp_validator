@@ -1,0 +1,47 @@
+# Configuration for testing Lightmotion Satellite RSMP proxy software
+# The settings are used for starting a local supervisor listening for the site tested
+# See https://rsmp-nordic.github.io/rsmp_validator/config/
+sxl: tlc
+sxl_version: '1.2'
+core_version: '3.2.1'
+intervals:
+  timer: 1    # main validator timer resolution in seconds
+  watchdog: 20 # send watchdog every x seconds
+timeouts:     # Timeouts used when waiting for messages from site.
+  watchdog: 60
+  acknowledgement: 55
+  connect: 120 # Max time to wait for rsmp site to connect to server.
+  ready: 20
+  status_response: 20
+  status_update: 20
+  subscribe: 20
+  command: 20
+  command_response: 20
+  alarm: 20
+  disconnect: 60
+  shutdown: 20
+  startup_sequence: 20
+  functional_position: 20
+  yellow_flash: 20
+components:
+  main:
+    AA+BBCCC=DDDEEFFF:
+  signal_group:         # Each signal group must be specified manually
+    AA+BBCCC=DDDSG001:
+    AA+BBCCC=DDDSG002:
+    AA+BBCCC=DDDSG003:
+    AA+BBCCC=DDDSG004:
+  detector_logic:       # Each detector logic must be specified manually
+    AA+BBCCC=DDDDL001:
+    AA+BBCCC=DDDDL002:
+items:
+  plans: [1]
+  traffic_situations: [1]
+  emergency_routes: [1]
+  inputs: [1]
+  outputs: [1]
+startup_sequence: 'efg'
+secrets:
+  security_codes:
+    1: "1234"
+    2: "4321"
