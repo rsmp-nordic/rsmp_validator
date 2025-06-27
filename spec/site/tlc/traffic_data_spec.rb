@@ -78,12 +78,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
           { S0207: [:start,:occupancy] },
           update_rate: 60
 
-        status = result[:collector].messages.first
-        expect(status).to be_a(RSMP::StatusUpdate)
-        occupancy_item = status.attribute("sS").find {|item| item["n"] == "occupancy" }
-        expect(occupancy_item).to be_a(Hash)
-        occupancies = occupancy_item["s"].split(",")
-        occupancies.each do |occupancy|
+        occupancies = result[:collector].matcher_got_hash.dig("S0207","occupancy")
+        expect(occupancies).to be_a(String), "Occupancies must be a string, but got nil"
+        occupancies.split(",").each do |occupancy|
           num = occupancy.to_i
           expect((-1..100).cover?(num)).to be_truthy, "Occupancy must be in the range -1..100, got #{num}"
         end
