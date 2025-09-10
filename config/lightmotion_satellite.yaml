@@ -23,6 +23,7 @@ timeouts:     # Timeouts used when waiting for messages from site.
   startup_sequence: 20
   functional_position: 20
   yellow_flash: 20
+  priority_completion: 20
 components:
   main:
     AA+BBCCC=DDDEEFFF:
@@ -41,6 +42,10 @@ items:
   inputs: [1]
   outputs: [1]
 startup_sequence: 'efg'
+alarm_triggers:
+  A0302:
+    input: 1
+    component: AA+BBCCC=DDDDL001
 secrets:
   security_codes:
     1: "1234"
