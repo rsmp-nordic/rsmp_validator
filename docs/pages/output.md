@@ -16,7 +16,7 @@ RSpec has several build-in report formats, including `progress`, `documentation`
 See the [RSpec docs](https://relishapp.com/rspec/rspec-core/v/2-6/docs/command-line/format-option) for more info about formatters.
 
 ## Brief format
-The `Brief` format is similar to the build-in `documentation` format. It show one line per test, colored according to the test result. But unlike `documentation`, it will include a bit of information about each failing tests directly in the progress overview:
+The `Brief` format is similar to the built-in `documentation` format. It shows one line per test, colored according to the test result. But unlike `documentation`, it will include a bit of information about each failing test directly in the progress overview:
 
 ```
 Traffic Light Controller
