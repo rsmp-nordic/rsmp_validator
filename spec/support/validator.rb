@@ -2,6 +2,8 @@ require 'rsmp'
 require 'colorize'
 require 'rspec/expectations'
 
+# Main module for RSMP Validator functionality
+# Handles configuration, logging, and coordination between RSpec and the RSMP gem
 module Validator
   include RSpec::Matchers
 
@@ -12,11 +14,12 @@ module Validator
 
   @@reactor = nil
 
-  # get our global reactor
+  # Get the global Async reactor used for RSMP communication
   def self.reactor
     @@reactor
   end
 
+  # Initialize the validator system at RSpec startup
   def self.setup rspec_config
     determine_mode rspec_config.files_to_run
     load_tester_config
@@ -27,6 +30,7 @@ module Validator
     setup_filters rspec_config
   end
 
+  # Set up logging system with custom settings and colors
   def self.setup_logging rspec_config
     settings = {
       'stream' => ReportStream.new(rspec_config.reporter),
@@ -48,7 +52,7 @@ module Validator
     self.reporter = rspec_config.reporter
   end
 
-  # called by rspec at startup
+  # Called by RSpec at startup - initializes the Async reactor and checks connectivity
   def self.before_suite examle
     @@reactor = Async::Reactor.new
     reactor.annotate 'reactor'
@@ -71,7 +75,8 @@ module Validator
     raise
   end
 
-  # called by rspec when each example is being run
+  # Called by RSpec when each test is being run
+  # Manages the Async reactor and fiber-local data for RSpec compatibility
   def self.around_each example
     thread_local_data = RSpec::Support.thread_local_data
     reactor.run do |task|
@@ -86,7 +91,7 @@ module Validator
     end
   end
 
-  # initial check that we have a connection to the site/supervisor
+  # Initial connectivity check to verify we can connect to the site/supervisor being tested
   def self.check_connection
     Validator::Log.log "Initial #{self.mode} connection check"
     if self.mode == :site
