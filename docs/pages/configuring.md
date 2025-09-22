@@ -75,6 +75,8 @@ timeouts:
   startup_sequence: 5     # max time until startup sequence completes, in seconds
   functional_position: 2  # max time until requested functional position is reached, in seconds
   yellow_flash: 2         # max time until yellow flash is activated, in seconds
+  priority_completion: 5  # max time until signal priority request completes, in seconds
+  shutdown: 60            # max time until site shuts down, in seconds
 components:             # list of rsmp components, organized by type and name
   main:                 # type
     TC:                 # name. note that this is an (empty) options hash
@@ -90,17 +92,19 @@ items:                  # other configurations that should be tested
   inputs: [1]                 # list of emergency inputs (I/O)
   force_input: 5              # what input to force when testing input forcing
 startup_sequence: 'efg' # expected startup sequence
+skip_validation:         # list of message types to skip JSON schema validation for
+  - Alarm                # example: skip validation for Alarm messages
 secrets:                # place secrets or in a separate file, see below
   security_codes:       # RSMP security codes. there are no defaults for these
     1: '1111'           # level 1
     2: '2222'           # level 2
-alarm_activation:       # how to trigger alarms by forcing inputs
-  A0303:                # alarm A0302
-    input: 7            # can be triggered by forcing input 8
-    component: DL1      # and will active on component DL1
+alarm_triggers:          # how to trigger alarms by forcing inputs
+  A0302:                # alarm A0302
+    input: 7            # can be triggered by forcing input 7
+    component: DL1      # and will activate on component DL1
 ```
 
-The following settings will be copied into a configuration for the local supervisor: `port`, `sxl`, `intervals`, `timeouts`, `components`, `rsmp_versions`.
+The following settings will be copied into a configuration for the local supervisor: `port`, `sxl`, `intervals`, `timeouts`, `components`, `rsmp_versions`, `skip_validation`.
 
 The supervisor config will also have `max_sites: 1` and `ips: all` meaning it will allow connections from any ip and with any RSMP site id, but will only allow one site to be connected at a time. Multiple connections will be flagged as an error.
 
@@ -152,6 +156,7 @@ intervals:            # intervals
   timer: 0.1            # basic timer resolution in seconds, in seconds
   watchdog: 0.1         # time between sending watchdog messages, in seconds
   reconnect: 0.1        # interval between retries if supervisor is unreachable, in seconds
+  after_connect: 0.2    # delay after connecting before starting handshake, in seconds
 timeouts:             # timeouts
   connect: 1            # max time it should take to connect, in seconds
   ready: 1              # max time to complete handshake sequence, in seconds
