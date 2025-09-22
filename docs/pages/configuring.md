@@ -7,27 +7,27 @@ nav_order: 3
 ---
 
 # Configuration
-Before you run tests, you must setup a configuration for the equipment you want to tests. 
+Before you run tests, you must set up a configuration for the equipment you want to test. 
 
-For example, the validator needs to know the SXL (type of equipment), because the SXL is not send by the equipment when connecting.
+For example, the validator needs to know the SXL (type of equipment), because the SXL is not sent by the equipment when connecting.
 
 ## Config files
 Configurations are stored as YAML files in the folder `config/`.
 
-The config file contains network settings, timeouts and intervals, list RSMP components, etc. used to run tests.
+The config file contains network settings, timeouts and intervals, list of RSMP components, etc. used to run tests.
 
-When you test a site, the config is used to start a local supervisor, using the [rsmp gem](https://github.com/rsmp-nordic/rsmp)).
+When you test a site, the config is used to start a local supervisor, using the [rsmp gem](https://github.com/rsmp-nordic/rsmp).
 
 Similarly, when you test a supervisor, the config is used to start a local site.
 
-Note: The folder `config/private` is ignored by git can can be used for experimenting with configs that you don't want to store in git.
+Note: The folder `config/private` is ignored by git and can be used for experimenting with configs that you don't want to store in git.
 
 ## Choosing what config to use
 After creating your test configuration, you need to point the validator to it.
 
-One option is is to use the `config/validator.yaml` file. It's a YAML file, with either a `site` or `supervisor` key, depending on what you're testing. The value should contain the path to your config file.
+One option is to use the `config/validator.yaml` file. It's a YAML file, with either a `site` or `supervisor` key, depending on what you're testing. The value should contain the path to your config file.
 
-For example, if you're testing a site, your `.validator.yaml` file might look like this:
+For example, if you're testing a site, your `validator.yaml` file might look like this:
 
 ```yaml
 site: config/my_site_validation_config.yaml
@@ -37,10 +37,10 @@ You can use the file `config/validator_example.yaml` as a template.
 
 Note: The file `config/validator.yaml` is ignored by git.
 
-The other option is to set either SITE_CONFIG or SUPERVISOR_CONFIG to the path to your config, depending on whether you're testing a site or a supervisor. For example, if you're testing a site, you can run all site test with:
+The other option is to set either SITE_CONFIG or SUPERVISOR_CONFIG to the path to your config, depending on whether you're testing a site or a supervisor. For example, if you're testing a site, you can run all site tests with:
 
 ```
-SITE_CONFIG=config/my_site_validation_config.yaml bundle exec spec/site
+SITE_CONFIG=config/my_site_validation_config.yaml bundle exec rspec spec/site
 ```
 
 If the relevant environment variable is set, the file `config/validator.yaml` will not be read.
@@ -53,18 +53,18 @@ All settings except `components` and `items` can be left out, in which case the 
 ```yaml
 port: 13111             # port to listen on
 ips: all                # allowed ip addresses. either 'all' or a list. defaults to 'all' if left out
-core_version: 3.2.2     # core version of site, tests not revelant for this version will be skipped
+core_version: 3.2.2     # core version of site, tests not relevant for this version will be skipped
 sxl: tlc                # sxl of the connecting site, options are 'core' or 'tlc'
-sxl_version: 1.2.1      # sxl cersion of the site, tests not relevant for this version will be skipped
+sxl_version: 1.2.1      # sxl version of the site, tests not relevant for this version will be skipped
 intervals:
   timer: 1              # main timer interval (resolution), in seconds
   watchdog: 1           # how often to send watchdog messages, in seconds
 
 timeouts:
-  watchdog: 2           # max time bewteen incoming watchdogs, in seconds
+  watchdog: 2           # max time between incoming watchdogs, in seconds
   acknowledgement: 2    # max time until acknowledgement is received, in seconds
   connect: 1            # max time until site connects, in seconds
-  ready: 1              # max time until site completes connecton sequence, in seconds
+  ready: 1              # max time until site completes connection sequence, in seconds
   status_response: 1    # max time until site responds to a status request, in seconds
   status_update: 1      # max time until site sends a status update, in seconds
   subscribe: 1          # max time until site sends a status update, in seconds
@@ -72,10 +72,10 @@ timeouts:
   command_response: 1   # max time until site responds to a command request, in seconds
   alarm: 1              # max time until site raises an alarm, in seconds
   disconnect: 1         # max time until site disconnects, in seconds
-  startup_sequence: 5     # max time until startup sequence completes
-  functional_position: 2  # max time until requested functional position is reached
-  yellow_flash: 2         # max time until yellow flash is activated
-components:             # list of rsmp components, organized by type and name, in seconds
+  startup_sequence: 5     # max time until startup sequence completes, in seconds
+  functional_position: 2  # max time until requested functional position is reached, in seconds
+  yellow_flash: 2         # max time until yellow flash is activated, in seconds
+components:             # list of rsmp components, organized by type and name
   main:                 # type
     TC:                 # name. note that this is an (empty) options hash
   signal_group:         # list of signal groups to test
@@ -117,7 +117,7 @@ site_id: RN+SI0001      # site id of local site
 supervisors:          # what supervisor the local site should connect to
   - ip: 127.0.0.1       # ip
     port: 13111         # port
-core_version: 3.2.2     # core version, tests not revelant for this version will be skipped
+core_version: 3.2.2     # core version, tests not relevant for this version will be skipped
 sxl: tlc                # sxl to use, options are 'core' or 'tlc'
 sxl_version: 1.2.1      # sxl version, tests not relevant for this version will be skipped
 components:           # components of local site, organized by type and name
@@ -167,13 +167,13 @@ secrets:                # place secrets or in a separate file, see below
 The `sxl` attribute of a configuration specifies what SXL to use for communication. Currently, the valid options are:
 
 - core: Generic RSMP communication. No alarms, commands or status are allowed, only core messages.
-- sxl: Traffic Light Controllers.
+- tlc: Traffic Light Controllers.
 
-The sxl will choose the JSON Schema used to validate all ingoing and outgoing messages. It also restrict what type of components can be listed under the `components` attribute in the configuration.
+The sxl will choose the JSON Schema used to validate all ingoing and outgoing messages. It also restricts what type of components can be listed under the `components` attribute in the configuration.
 
-Equipment that doesn't yet have a standardized SXL cannot be fully validated using the RSMP validator, because there are no tests for these types yet, and because there is no JSON Schema to validate the command and statuses for such types of equipment.
+Equipment that doesn't yet have a standardized SXL cannot be fully validated using the RSMP validator, because there are no tests for these types yet, and because there is no JSON Schema to validate the commands and statuses for such types of equipment.
 
-However, you can still use the RSMP Validator to validate the core part of the communication, including connecting, Aggregated Status and Watchdog messages. Use 'core' as the sxl type in the configuration and then running only the tests in the folder `spec/site/core/`. Remember to also set sxl version to version of the core specification used, e.g. 3.1.5.
+However, you can still use the RSMP Validator to validate the core part of the communication, including connecting, Aggregated Status and Watchdog messages. Use 'core' as the sxl type in the configuration and then run only the tests in the folder `spec/site/core/`. Remember to also set sxl version to the version of the core specification used, e.g. 3.1.5.
 
 ## Components Option
 RSMP equipment has a list of RSMP components. For example a traffic light controller will have some signal groups and detector logics. In addition all RSMP equipment must have a main component.
@@ -196,22 +196,22 @@ components:
 
 The component ids (e.g. `KK+AG9998=001TC000` in the example above) must match the components in the equipment. Otherwise tests will fail.
 
-Note that each component must be defined as a hash in the YAML file, be using a training colon. As the example above show, the hash will usually be empty. (Items are used to configure components when you run local RSMP site, e.g. a TLC emulator.)
+Note that each component must be defined as a hash in the YAML file, by using a trailing colon. As the example above shows, the hash will usually be empty. (Items are used to configure components when you run a local RSMP site, e.g. a TLC emulator.)
 
 ## Timeouts
-Timeouts are defined in seconds. Timeouts should be set as low as possible while, still giving the site time to respond correctly before tests times out and report errors.
+Timeouts are defined in seconds. Timeouts should be set as low as possible while still giving the site time to respond correctly before tests time out and report errors.
 
 ## Configuring the actual site/supervisor
 You should make sure that the actual site or supervisor you want to test is configured to match the validator configuration file, e.g. that the components match and intervals and timeouts are compatible.
 
 When testing a site, you need to configure it to connect to the validator.
-This typically includes setting an ip address and port. If the site and the validator is running in the same machine, the ip address will typically be `localhost` or `127.0.0.1`.
+This typically includes setting an IP address and port. If the site and the validator are running on the same machine, the IP address will typically be `localhost` or `127.0.0.1`.
 
-When testing a supervisor, you need to configure it to listen for connections on the same port as the validator uses, and make sure the connection is not blocked due to firewalls, ip filtering, or rsmp site id filtering.
+When testing a supervisor, you need to configure it to listen for connections on the same port as the validator uses, and make sure the connection is not blocked due to firewalls, IP filtering, or RSMP site ID filtering.
 
-RSMP Traffic Light Controllers be default communicate on port 12111, but to avoid interfering with real installations, the validator uses port 13111 by default. You can use another port if you like, just be sure to configure the equipment and the validator to use the same port.
+RSMP Traffic Light Controllers by default communicate on port 12111, but to avoid interfering with real installations, the validator uses port 13111 by default. You can use another port if you like, just be sure to configure the equipment and the validator to use the same port.
 
-If the site cannot connect to the validator, check the ip and port, and make sure firewalls, etc are not blocking the connection.
+If the site cannot connect to the validator, check the IP and port, and make sure firewalls, etc. are not blocking the connection.
 
 ## Secrets
 Some tests involve commands that require RSMP security codes.
@@ -229,9 +229,9 @@ security_codes:
 ```
 
 ## Restricting tests based on Core and SXL version
-Usually there is no need to run tests that relate to core or sxl versions newer than what the site or supervisor your testing is using.
+Usually there is no need to run tests that relate to core or SXL versions newer than what the site or supervisor you're testing is using.
 
-Each test is tagged with the core and sxl version it's relevant for. For example S0027 was added in the SXL version 1.0.13, which is why the test for S0027 is tagged with `sxl: '>=1.0.13`. This means the test is relevant if testing is either unrestricted or restricted to sxl 1.0.13 or higher.
+Each test is tagged with the core and SXL version it's relevant for. For example S0027 was added in SXL version 1.0.13, which is why the test for S0027 is tagged with `sxl: '>=1.0.13'`. This means the test is relevant if testing is either unrestricted or restricted to SXL 1.0.13 or higher.
 
 ```ruby
 specify 'day table is read with S0027', sxl: '>=1.0.13'  do |example|
@@ -242,7 +242,7 @@ specify 'day table is read with S0027', sxl: '>=1.0.13'  do |example|
 end
 ```
 
-This following test run only if testing is unrestricted or restricted to exactly core version 3.1.5.
+The following test runs only if testing is unrestricted or restricted to exactly core version 3.1.5.
 
 ```ruby
 it 'is correct for rsmp version 3.1.5',  core: '3.1.5' do |example|
@@ -251,14 +251,14 @@ end
 ```
 
 
- Only tests relevant to the core and sxl version specified will be run:
+Only tests relevant to the core and SXL version specified will be run:
 
 ```yaml
 core_version: 3.1.2
 sxl_version: 1.0.7 
 ```
 
-In this case, the S0027 test above will not run, because it requires sxl 1.0.13 or higher, but we limited to 1.0.7. 
+In this case, the S0027 test above will not run, because it requires SXL 1.0.13 or higher, but we limited testing to 1.0.7. 
 
 ## Auto Node Feature
 
