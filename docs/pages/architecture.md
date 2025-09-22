@@ -10,7 +10,7 @@ The RSMP Validator is a command-line tool for validating RSMP implementations. I
 
 The `rsmp` gem is used to handle RSMP communication.
 
-The validator performs integration testing, not unit testing. The equipment, you test is not guaranteed to be in the same state every time you run a test. Most tests therefore start be resetting certain settings in the equipment to a a known state.
+The validator performs integration testing, not unit testing. The equipment you test is not guaranteed to be in the same state every time you run a test. Most tests therefore start by resetting certain settings in the equipment to a known state.
 
 ## Flow
 The RSMP Validator consists of RSpec, the individual tests and some helper classes.
@@ -19,7 +19,7 @@ When you run tests, a local RSMP supervisor is started, to communicate with the 
 
 ![Overview]({{ site.baseurl }}/assets/images/flow.png "RSMP Validator Flow")
 
-1. Testing is initiated with the `rspec` command. RSpec runs each tests, one after the other.
+1. Testing is initiated with the `rspec` command. RSpec runs each test, one after the other.
 2. The test uses a helper to wait for the site to connect. The helper will start the local RSMP supervisor if it's not already running.
 3. The test uses the RSMP supervisor to send RSMP messages to the site to be tested, e.g. a command request. It will then typically wait for a specific kind of response from the site, e.g. a command response.
 4. The site responds with RSMP messages. Responses might be sent immediately, or after a while. Responses might include one or more messages.

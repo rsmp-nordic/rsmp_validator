@@ -19,8 +19,8 @@ end
 
 # Note that rebuilding with YARD does not delete unused files.
 # For this reason, it's often a good idea to delete the output folder before rebuilding, using:
-# % rm -r docs/tests
+# % rm -r docs/dev
 desc "Rebuild YARD docs for the RSpec files in spec."
 task :spec_docs do
-	system 'bundle exec yardoc --template jekyll --format markdown --output docs/tests'
+	system 'bundle exec yardoc --template jekyll --format markdown --output docs/dev'
 end

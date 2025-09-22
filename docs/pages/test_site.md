@@ -5,11 +5,11 @@ permalink: /test_site/
 parent: Writing Tests
 ---
 
-# TestSite helper class
+# Validator::Site helper class
 
-TestSite is a helper class for testing RSMP sites in RSpec tests.
+Validator::Site is a helper class for testing RSMP sites in RSpec tests.
 
-TestSite uses the `rsmp` gem to run an RSMP supervisor, which the site connects to.
+Validator::Site uses the `rsmp` gem to run an RSMP supervisor, which the site connects to.
 
 # Connections
 The validator performs integration tests of external systems.
@@ -77,7 +77,7 @@ Use this if you somehow modify the RSMP::SiteProxy or otherwise make the current
 Disconnects the site if connected before calling the block with a single argument `task`, which is an Async::Task.
 
 ## Configurations
-The TestSite will use the following options from the test [specification]({{ site.baseurl}}{% link pages/configuring.md %}):
+The TestSite will use the following options from the test [configuration]({{ site.baseurl}}{% link pages/configuring.md %}):
 
 ```yaml
 timeouts:

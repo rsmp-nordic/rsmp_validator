@@ -22,10 +22,10 @@ Check that prerequisites are installed:
 git version 2.31.1
 
 % ruby --version
-ruby 3.0.0p0 (2020-12-25 revision 95aff21468) [x86_64-darwin20]
+ruby 3.4.0p0 (2024-12-25 revision 123abcd) [x86_64-darwin20]
 
 % bundler --version
-Bundler version 2.2.15
+Bundler version 2.4.19
 ```
 
 ## Installing
