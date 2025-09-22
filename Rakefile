@@ -17,8 +17,8 @@ task :yard do
 	system 'git commit -m "update yard docs"'
 end
 
-# Note that rebuilding with YARD does not delete unused fies.
-# For this reason, it's often a good idea  delete the output folder before rebuilding, using:
+# Note that rebuilding with YARD does not delete unused files.
+# For this reason, it's often a good idea to delete the output folder before rebuilding, using:
 # % rm -r docs/tests
 desc "Rebuild YARD docs for the RSpec files in spec."
 task :spec_docs do
