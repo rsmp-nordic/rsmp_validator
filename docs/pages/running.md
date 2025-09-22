@@ -119,8 +119,8 @@ Tests that rely on device programming are tagged with :programming. If the devic
 ## RSpec Helpers and Options
 The file `spec/spec_helper.rb` will be included automatically by RSpec, because the file `.rspec` has the following options:
 
-```yaml
---require spec_helper
+```
+--require spec_helper --force-color
 ```
  
 The file `spec/spec_helper.rb` will in turn include the required dependencies, including the rsmp gem and files in `spec/support/`, which define helper classes and methods.
