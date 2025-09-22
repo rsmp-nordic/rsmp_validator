@@ -101,10 +101,10 @@ See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) documentation for detail
 ### Alarms and Programming
 Testing alarms require some way to trigger them.
 
-There's not yet any way to trigger alarms directly via RSMP. But often you can program the equipment to raise an alarm when a specific input is activated. If that's the case, use the `alarm_activation` item in the validator config to specify which input activates which alarm:
+There's not yet any way to trigger alarms directly via RSMP. But often you can program the equipment to raise an alarm when a specific input is activated. If that's the case, use the `alarm_triggers` item in the validator config to specify which input activates which alarm:
 
 ```yaml
-alarm_activation:
+alarm_triggers:
   A0302: 
     input: 7
     component: DL1

@@ -1,4 +1,4 @@
-# This file is template.
+# This file is a template.
 # Copy it to config/validator.yaml and edit the copy to
 # point to the config for the system you're testing
 # You only need either a site or a supervisor key. The right
