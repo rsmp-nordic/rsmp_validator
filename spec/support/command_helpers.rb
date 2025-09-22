@@ -1,4 +1,5 @@
 module Validator::CommandHelpers
+  # Send an RSMP command and wait for confirmation response
   def send_command_and_confirm parent_task, command_list, message, component=Validator.get_config('main_component')
     result = nil
     log message
@@ -8,6 +9,10 @@ module Validator::CommandHelpers
   end
 
   # Build a RSMP command value list from a hash
+  # @param command_code_id [Symbol] the command code identifier (e.g. :M0001)  
+  # @param command_name [Symbol] the command name (e.g. :setValue)
+  # @param values [Hash] key-value pairs for command parameters
+  # @return [Array] formatted command list for RSMP
   def build_command_list command_code_id, command_name, values
     values.compact.to_a.map do |n,v|
       {
@@ -54,6 +59,7 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "Switch to plan #{plan}"
   end
 
+  # Switch to traffic situation and wait for confirmation via status
   def switch_traffic_situation ts
     set_traffic_situation ts
     wait_for_status(@task,
@@ -85,7 +91,7 @@ module Validator::CommandHelpers
       traficsituation: '1'   # note: the spec misspells 'traficsituation'
 
     }
-    send_command_and_confirm @task, command_list, "Switch to automaatic traffic situation"
+    send_command_and_confirm @task, command_list, "Switch to automatic traffic situation"
   end
 
   # Set functional position
@@ -354,6 +360,7 @@ module Validator::CommandHelpers
     send_command_and_confirm @task, command_list, "Set security code for level #{level}"
   end
 
+  # Check if security codes are configured, skip test if not available
   def require_security_codes
     unless Validator.config.dig 'secrets', 'security_codes'
       skip "Security codes are not configured"
