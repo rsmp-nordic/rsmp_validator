@@ -25,7 +25,7 @@ Note: Before running tests, be sure to set up your test [configuration]({{ site.
 
 The RSMP Validator is based on the RSpec testing tool, so you use the `rspec` command to run tests. You should be located in the root of the project folder when running test.
 
-Test a site, by running tests covering the core specification:
+Test a site by running tests covering the core specification:
 
 ```
 % bundle exec rspec spec/site/core
@@ -54,7 +54,7 @@ If you want to store you selection for easy reuse, add them to a file name .rspe
 
  .rspec-local is git ignored, and will therefore not be added to the repo. 
 
-You can also keep different configurations, and pick on when running tests, eg:
+You can also keep different configurations, and pick one when running tests, e.g.:
 
 ```
 % bundle exec rspec --options my_rspec_options
@@ -74,7 +74,7 @@ Alternatively, you can manually start a local Ruby TLC site using the `rsmp` com
 
 Because the validator by default listens on port 13111, you should tell the site to connect on this port. You can do this either by editing the configuration, or using the `supervisor` command line option, as shown below.
 
-You can use short reconnect and timeout intervals in the config file, which will make the test quick to run.
+You can use short reconnect and timeout intervals in the config file, which will make the tests quick to run.
 
 ```
 % cd rsmp
@@ -85,7 +85,11 @@ You can use short reconnect and timeout intervals in the config file, which will
 2020-01-01 23:38:48 UTC                           Will try to reconnect again every 0.1 seconds..
 ```
 
+<<<<<<< HEAD
 Once it's running, you can run the validator site specs in another terminal, and you will see the Ruby TLC site respond to e.g. request to switch signal plan:
+=======
+Once it's running, you can run the validator site specs, and you will see the Ruby TLC site respond to e.g. requests to switch signal plan:
+>>>>>>> 035e48c (Fix typos, grammar, and improve clarity in main documentation files)
 
 ```
 2020-01-01 23:38:54 UTC  6697976b5     -->  c776  Received CommandRequest {"mType":"rSMsg","type":"CommandRequest","ntsOId":"","xNId":"","cId":"TC","arg":[{"cCI":"M0002","cO":"setPlan","n":"status","v":"True"},{"cCI":"M0002","cO":"setPlan","n":"securityCode","v":"0000"},{"cCI":"M0002","cO":"setPlan","n":"timeplan","v":"2"}],"mId":"c77665c1-f7cc-4488-8bcb-f809939e0e20"}
@@ -97,7 +101,7 @@ See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) documentation for detail
 ### Alarms and Programming
 Testing alarms require some way to trigger them.
 
-There's not yet any way to trigger alarms directly via RSMP. But often you can program the equipment to raise an alarm when a specific input is activated. If that's the case, use the `alarm_activcation` item in the validator config to specify which input activates which alarm:
+There's not yet any way to trigger alarms directly via RSMP. But often you can program the equipment to raise an alarm when a specific input is activated. If that's the case, use the `alarm_activation` item in the validator config to specify which input activates which alarm:
 
 ```yaml
 alarm_activation:
@@ -119,7 +123,7 @@ The file `spec/spec_helper.rb` will be included automatically by RSpec, because 
 --require spec_helper
 ```
  
-The file `spec/spec_helper.rb`and will in turn include the required dependencies, including the rsmp gem and files in `spec/support/`, which defines helper classes and methods.
+The file `spec/spec_helper.rb` will in turn include the required dependencies, including the rsmp gem and files in `spec/support/`, which define helper classes and methods.
 
 ## Git Ignores
-The file .gitignore is setup to ignore files and folders that typically use used for private configurations, including `config/private/` and all secrets*.yaml files in `config/`.
+The file .gitignore is set up to ignore files and folders that are typically used for private configurations, including `config/private/` and all secrets*.yaml files in `config/`.

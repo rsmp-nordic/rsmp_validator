@@ -11,7 +11,7 @@ nav_order: 2
 ## Prerequisites
 Git is used to fetch and update tools, dependencies, etc: https://git-scm.com/downloads
 
-Ruby, a dynamic language: https://www.ruby-lang.org/en/. It's recommended to install Ruby using a version manager like [rbenv](https://github.com/rbenv/rbenv). 
+Ruby, a dynamic language: https://www.ruby-lang.org/en/. It's recommended to install Ruby using a version manager like [rbenv](https://github.com/rbenv/rbenv).
 
 Bundler is a popular package manager for Ruby: https://bundler.io
 
@@ -32,7 +32,7 @@ Bundler version 2.2.15
 Install by cloning the Git repository, and then running Bundler:
 
 ```
-# clone the rsmp_validator git repository to you local machine
+# clone the rsmp_validator git repository to your local machine
 % git clone https://github.com/rsmp-nordic/rsmp_validator.git
 Cloning into 'rsmp_validator'...
 remote: Enumerating objects: 2097, done.
