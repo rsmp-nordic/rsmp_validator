@@ -1,4 +1,4 @@
-# This file is template.
+# This file is a template.
 # Copy it to config/validator.yaml and edit the copy to
 # point to the config for the system you're testing
 # You only need either a site or a supervisor key. The right
@@ -6,7 +6,7 @@
 # But you can leave both, the unused key will just be ignored.
 
 # when testing a site, the config describes the local supervisor
-site: config/gem_site.yaml
+site: config/gem_tlc.yaml
 
 # when testing a supervisor, the config describes the local site
 supervisor: config/gem_supervisor.yaml
