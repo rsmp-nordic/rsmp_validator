@@ -1,6 +1,6 @@
 ---
 layout: page
-title: TestSite
+title: Validator::Site
 permalink: /test_site/
 parent: Writing Tests
 ---

@@ -88,9 +88,9 @@ components:             # list of rsmp components, organized by type and name
 items:                  # other configurations that should be tested
   plans: [1,2]                # list of plans to test
   traffic_situations: [1,2]   # list of traffic situations to test
-  emergency_routes: [1]       # list of emergency route to test
-  inputs: [1]                 # list of emergency inputs (I/O)
-  force_input: 5              # what input to force when testing input forcing
+  emergency_routes: [1]       # list of emergency routes to test
+  inputs: [1]                 # list of inputs (I/O) to test
+  outputs: [1]                # list of outputs to test
 startup_sequence: 'efg' # expected startup sequence
 skip_validation:         # list of message types to skip JSON schema validation for
   - Alarm                # example: skip validation for Alarm messages
@@ -120,7 +120,7 @@ type: tlc               # type of local site to run
 site_id: RN+SI0001      # site id of local site
 supervisors:          # what supervisor the local site should connect to
   - ip: 127.0.0.1       # ip
-    port: 13111         # port
+    port: 14111         # port
 core_version: 3.2.2     # core version, tests not relevant for this version will be skipped
 sxl: tlc                # sxl to use, options are 'core' or 'tlc'
 sxl_version: 1.2.1      # sxl version, tests not relevant for this version will be skipped

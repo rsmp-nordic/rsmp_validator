@@ -15,7 +15,7 @@ View the RSMP specification for [Core](https://github.com/rsmp-nordic/rsmp_core)
 More information about RSMP Nordic can be found at the [RSMP Nordic website](https://rsmp-nordic.org).
 
 ## Tools
-If you want an application with a graphical user interface for manually sending and inspecting RSMP message, take a look at the [RSMP Simulator](https://github.com/rsmp-nordic/rsmp_simulator) application for Windows.
+If you want an application with a graphical user interface for manually sending and inspecting RSMP messages, take a look at the [RSMP Simulator](https://github.com/rsmp-nordic/rsmp_simulator) application for Windows.
 
 See all RSMP Nordic [repositories](https://github.com/rsmp-nordic) on GitHub.
 

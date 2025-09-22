@@ -43,7 +43,7 @@ In this example, the tests are running against a TLC emulator from the rsmp gem,
 ## Filtering Tests
 You can use rspec command line [options](https://rspec.info/) to filter which tests to run.
 
-If you want to store you selection for easy reuse, add them to a file name .rspec-local, in the root of the project folder. RSpec will automatically use the options. Example:
+If you want to store your selection for easy reuse, add them to a file name .rspec-local, in the root of the project folder. RSpec will automatically use the options. Example:
 
 ```
 % cat .rspec-local
@@ -99,7 +99,7 @@ Once it's running, you can run the validator site specs, and you will see the Ru
 See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) documentation for details on how to run Ruby sites and supervisors.
 
 ### Alarms and Programming
-Testing alarms require some way to trigger them.
+Testing alarms requires some way to trigger them.
 
 There's not yet any way to trigger alarms directly via RSMP. But often you can program the equipment to raise an alarm when a specific input is activated. If that's the case, use the `alarm_triggers` item in the validator config to specify which input activates which alarm:
 
