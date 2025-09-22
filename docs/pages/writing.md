@@ -13,7 +13,7 @@ Here's an example of a test that verifies that a Traffic Light Controller respon
 
 ```ruby
 RSpec.describe "Traffic Light Controller" do
-  include StatusHelpers
+  include Validator::StatusHelpers
 
   it 'responds with NotAck to invalid status request code' do |example|
     # wait for the site to be connected

@@ -48,7 +48,7 @@ To speed up testing `Validator::Site` can keep the RSMP connection open between 
 
 The example above uses `Validator::Site#connected`. If the previous test left the connection open, it's reused, otherwise it waits for the site to reconnect.
 
-A test can also use `Validator::Site#reconnected` to request that the RSMP connection is closed and reestablished before continuing with the test, or `Validator::Site#disconnected` to ensure that the connection is closed. See the documentation of the [TestSite]({{ site.baseurl}}{% link pages/test_site.md %}) helper for details. 
+A test can also use `Validator::Site#reconnected` to request that the RSMP connection is closed and reestablished before continuing with the test, or `Validator::Site#disconnected` to ensure that the connection is closed. See the documentation of the [Validator::Site]({{ site.baseurl}}{% link pages/test_site.md %}) helper for details. 
 
 ### Interacting with the Site
 `Validator::Site#connected` and friends will return a `site` object which can be used to communicate with the site using the interface provided by the `rsmp` gem. For example you can send RSMP commands, wait for responses, subscribe to statuses, etc.
@@ -102,8 +102,8 @@ Finally `expect()` is used to check that the timestamp close enough to what we e
 
 ```ruby
 RSpec.describe "Traffic Light Controller" do
-  include CommandHelpers
-  include StatusHelpers
+  include Validator::CommandHelpers
+  include Validator::StatusHelpers
 
   describe 'Clock' do
     CLOCK = Time.new 2020,9,29,17,29,51,'+00:00'
@@ -137,12 +137,12 @@ For example, the method `switch_yellow_flash` first sends an M0001 command and t
 ## Concurrency
 The validator uses the [`rsmp`](https://github.com/rsmp-nordic/rsmp) gem to handle RSMP communication. To handle concurrency, the `rsmp` gem in turn uses the [`async`](https://github.com/socketry/async) gem, an asynchronous event-driven reactor.
 
-The local RSMP supervisor therefore runs inside an Async reactor. The reactor must be stopped between tests, to give RSpec a chance to run and move on to the next test. The TestSite helper handles pausing the event reactor between tests.
+The local RSMP supervisor therefore runs inside an Async reactor. The reactor must be stopped between tests, to give RSpec a chance to run and move on to the next test. The Validator::Site helper handles pausing the event reactor between tests.
 
 It also means that you cannot usually interact with the RSMP site outside the `Validator::Site#connected` block.
 
 ## JSON Schema Validation
-RSMP is based on TCP sockets, not HTTP. This means that messages can be send in both directions at any time. 
+RSMP is based on TCP sockets, not HTTP. This means that messages can be sent in both directions at any time. 
  
 RSMP messages that are not directly related to the currently running test are often exchanged. For example, watchdog or status messages might be sent by the site at any time during a test, and acknowledgements are sent back by the supervisor.
 

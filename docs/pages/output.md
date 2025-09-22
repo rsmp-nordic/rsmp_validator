@@ -13,7 +13,7 @@ nav_order: 5
 When you run tests, RSpec will report the results.
 RSpec has several build-in report formats, including `progress`, `documentation`, `html` and `json`. RSMP Validator comes with two additional formats, called `Brief` and `Details`.
 
-See the [RSpec docs](https://relishapp.com/rspec/rspec-core/v/2-6/docs/command-line/format-option) for more info about formatters.
+See the [RSpec docs](https://rspec.info/documentation/3.12/rspec-core/RSpec/Core/Formatters.html) for more info about formatters.
 
 ## Brief format
 The `Brief` format is similar to the built-in `documentation` format. It shows one line per test, colored according to the test result. But unlike `documentation`, it will include a bit of information about each failing test directly in the progress overview:
@@ -28,7 +28,7 @@ Traffic Light Controller
 ```
 
 ## Detailed format
-The `Details` format show a more detailed log of the steps each test performs  as well as all RSMP messages exchanged, with timestamp, port number, etc.
+The `Details` format shows a more detailed log of the steps each test performs as well as all RSMP messages exchanged, with timestamp, port number, etc.
 
 ```
 Traffic Light Controller / Clock / can be read with S0096
