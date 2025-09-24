@@ -112,6 +112,57 @@ RSpec.describe Site::Tlc::Alarm do
     # 5. When we resume the alarm
     # 6. Then we should receive an alarm resumed message
 
+    # Validate that alarm timestamps are different when alarm turns active vs inactive.
+    #
+    # This test verifies RSMP 3.1.4 behavior where the alarm timestamp (aTs) 
+    # represents when the alarm changes status, ensuring we can determine
+    # the duration of an alarm even if it turns inactive during communication interruption.
+    #
+    # 1. Given the site is connected
+    # 2. When we trigger an alarm by activating an input
+    # 3. Then we should receive an alarm with timestamp representing when it turned active
+    # 4. When we deactivate the input
+    # 5. Then we should receive an alarm with a different timestamp representing when it turned inactive
+    # 6. And the timestamps should be different to distinguish between active and inactive events
+
+    specify 'A0302 has different timestamps for active and inactive states', :programming, sxl: '>=1.0.7' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        alarm_code_id = 'A0302'
+        prepare task, site
+        
+        log "Testing alarm #{alarm_code_id} timestamp differences between active/inactive states"
+        
+        active_timestamp = nil
+        inactive_timestamp = nil
+        
+        deactivated, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id|
+          # capture active timestamp
+          active_timestamp = Time.parse(alarm.attributes["aTs"])
+          log "Alarm #{alarm_code_id} is now Active on component #{component_id} at #{active_timestamp}"
+          
+          # verify active timestamp is close to now
+          expect(active_timestamp).to be_within(1.minute).of Time.now.utc
+        end
+        
+        # capture inactive timestamp
+        inactive_timestamp = Time.parse(deactivated.attributes["aTs"])
+        log "Alarm #{alarm_code_id} is now Inactive on component #{component_id} at #{inactive_timestamp}"
+        
+        # verify inactive timestamp is close to now
+        expect(inactive_timestamp).to be_within(1.minute).of Time.now.utc
+        
+        # verify timestamps are different - this is the core requirement
+        expect(inactive_timestamp).not_to eq(active_timestamp), 
+          "Active and inactive timestamps should be different. Active: #{active_timestamp}, Inactive: #{inactive_timestamp}"
+        
+        # verify inactive timestamp is after active timestamp (logical sequence)
+        expect(inactive_timestamp).to be > active_timestamp,
+          "Inactive timestamp should be after active timestamp. Active: #{active_timestamp}, Inactive: #{inactive_timestamp}"
+        
+        log "Verified alarm #{alarm_code_id} has different timestamps: Active=#{active_timestamp}, Inactive=#{inactive_timestamp}"
+      end
+    end
+
     it 'A0302 can be suspended and resumed' do
       Validator::SiteTester.connected do |task, _supervisor, site|
         alarm_code_id = 'A0302'
