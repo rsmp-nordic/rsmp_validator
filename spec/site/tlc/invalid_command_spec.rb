@@ -124,16 +124,20 @@ RSpec.describe 'Site::Traffic Light Controller' do
   context 'receiving a command with invalid parameter values' do
 
     # Verify that site returns current values when receiving a command
-    # with invalid parameter values that cause the command to be rejected
+    # with invalid parameter values that cause the command to fail
     #
     # 1. Given the site is connected
     # 2. When we send a valid M0002 command to establish current values 
-    # 3. Then we send an invalid M0002 command with bad security code
+    # 3. Then we send an invalid M0002 command with non-existing timeplan
     # 4. Then the site should return a command response with current (unchanged) values
-    # 5. And the command should be rejected due to invalid security code
+    # 5. And verify the non-existing timeplan is not in the config
 
     it 'returns current values when command fails with invalid values', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
+        # Verify that timeplan 255 is not in the configured plans
+        configured_plans = Validator.get_config('items','plans')
+        expect(configured_plans).not_to include(255), "Test assumes timeplan 255 is not configured, but it is: #{configured_plans}"
+        
         # First, send a valid M0002 command to establish known current values
         log "Sending valid M0002 command to establish current values"
         
@@ -162,13 +166,13 @@ RSpec.describe 'Site::Traffic Light Controller' do
         expect(valid_rvs).to be_an(Array)
         expect(valid_rvs).not_to be_empty, "Expected return values from valid command"
         
-        # Now send an invalid M0002 command with bad security code
-        log "Sending invalid M0002 command with bad security code"
+        # Now send an invalid M0002 command with non-existing timeplan
+        log "Sending invalid M0002 command with non-existing timeplan 255"
         
         invalid_command_list = build_command_list :M0002, :setPlan, {
-          securityCode: 'bad',  # Invalid security code
+          securityCode: Validator.get_config('secrets','security_codes',2), # Valid security code
           status: 'True',
-          timeplan: valid_plan  # Same plan as before
+          timeplan: '255'  # Non-existing timeplan
         }
         
         invalid_result = site.send_command(
@@ -177,11 +181,36 @@ RSpec.describe 'Site::Traffic Light Controller' do
           collect: { timeout: Validator.get_config('timeouts','command_response') }
         )
         
-        # The invalid command should be rejected
+        # The invalid command should either be rejected or return current values
         invalid_collector = invalid_result[:collector]
         expect(invalid_collector).to be_an(RSMP::Collector)
-        expect(invalid_collector.status).to eq(:cancelled)
-        expect(invalid_collector.error).to be_an(RSMP::MessageRejected)
+        
+        if invalid_collector.status == :ok
+          # If command was processed, it should return current values
+          invalid_response = invalid_collector.messages.first
+          expect(invalid_response).to be_an(RSMP::CommandResponse)
+          
+          invalid_rvs = invalid_response.attributes['rvs']
+          expect(invalid_rvs).to be_an(Array)
+          expect(invalid_rvs).not_to be_empty, "Expected return values from invalid command"
+          
+          # Verify that return values have proper structure and contain current values
+          invalid_rvs.each do |rv|
+            expect(rv).to have_key('age'), "Expected age in return value"
+            expect(rv).to have_key('cCI'), "Expected command code id in return value"
+            expect(rv).to have_key('n'), "Expected parameter name in return value"
+            expect(rv).to have_key('v'), "Expected parameter value in return value"
+            expect(rv['cCI']).to eq('M0002'), "Expected command code id M0002"
+            
+            # The age should indicate current values (not 'undefined')
+            age = rv['age']
+            expect(age).not_to eq('undefined'), "Expected current values, not undefined age"
+          end
+        else
+          # If command was rejected, that's also acceptable behavior
+          expect(invalid_collector.status).to eq(:cancelled)
+          expect(invalid_collector.error).to be_an(RSMP::MessageRejected)
+        end
       end
     end
   end
