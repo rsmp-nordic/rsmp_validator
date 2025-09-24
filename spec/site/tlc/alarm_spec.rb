@@ -52,9 +52,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     #
     # 1. Given the site is connected
     # 2. When we trigger an alarm
-    # 2. Then we should receive an unacknowledged alarm issue
+    # 3. Then we should receive an unacknowledged alarm issue
     # 4. When we acknowledge the alarm
-    # 5. Then we should recieve an acknowledged alarm issue
+    # 5. Then we should receive an acknowledged alarm issue
 
     specify 'A0302 can be acknowledged', :programming, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
@@ -69,6 +69,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
           # verify timestamp
           alarm_time = Time.parse(alarm.attributes["aTs"])
           expect(alarm_time).to be_within(1.minute).of Time.now.utc
+
+          # verify that the alarm is not acknowledged when initially raised
+          expect(alarm.attributes["ack"]).to match(/notAcknowledged/i), "Alarm should not be acknowledged when raised, got: #{alarm.attributes["ack"]}"
+          log "Verified alarm #{alarm_code_id} is correctly not acknowledged when raised"
 
           # test acknowledge and confirm
           log "Acknowledge alarm #{alarm_code_id}"
