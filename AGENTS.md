@@ -24,9 +24,8 @@ You can test either RSMP sites or supervisor.
 - spec/supervisor/ contains tests for RSMP supervisors.
 
 
-## Dev environment tips
-This repo include a devcontainer with the correct ruby version. It also installs required gems. Ruby, bundler and gems should therefore already be available, so do NOT install them manually.
-
+## Development Guidelines
+This repo include .github/copilot-setup-steps which sets up Ruby, bundler and gems. DO NOT install them manually.
 Always run gem executable with 'bundle exec', to ensure the correct gem environment.
 
 ## Testing instructions
