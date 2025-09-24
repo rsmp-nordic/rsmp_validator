@@ -294,6 +294,10 @@
           alarm_time = Time.parse(alarm.attributes["aTs"])
           expect(alarm_time).to be_within(1.minute).of Time.now.utc
 
+          # verify that the alarm is not acknowledged when initially raised
+          expect(alarm.attributes["ack"]).to match(/notAcknowledged/i), "Alarm should not be acknowledged when raised, got: #{alarm.attributes["ack"]}"
+          log "Verified alarm #{alarm_code_id} is correctly not acknowledged when raised"
+
           # test acknowledge and confirm
           log "Acknowledge alarm #{alarm_code_id}"
 
