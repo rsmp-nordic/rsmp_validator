@@ -25,7 +25,8 @@ You can test either RSMP sites or supervisor.
 
 
 ## Development Guidelines
-This repo include .github/copilot-setup-steps which sets up Ruby, bundler and gems. DO NOT install them manually.
+This repo a custom Github Actions workflow which should already have set up Ruby, bundler and gems. DO NOT install them manually.
+
 Always run gem executable with 'bundle exec', to ensure the correct gem environment.
 
 ## Testing instructions
