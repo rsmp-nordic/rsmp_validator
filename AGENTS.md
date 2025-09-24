@@ -32,23 +32,33 @@ Always run gem executable with 'bundle exec', to ensure the correct gem environm
 ## Testing instructions
 When running tests, the validator will determine wether you're testing a site or a supervisor based on whether test files are located in spec/site/ or spec/supervisor.
 
-
 ### Testing RSMP sites
 Tests for sites are located in spec/site/.
 When testing a site, the validator acts as a supervisor and waits for the site to connect.
 
 You can run a RSMP site locally to interact with your test:
-
 % bundle exec rsmp site --config config/simulator/tlc.yaml
 
 This will keep running until you close it, so run it in a separate terminal.
+
+
+Now you can rspec tests, which will communicate with the site your started, using RSMP:
+% SITE_CONFIG=config/gem_tlc.yaml bundle exec rspec spec/site --format documentation
+
+Use --format Validator::Details to see addional logging.
+
 
 ### Testing RSMP supervisors
 Tests for sites are located in spec/supervisor/.
 When testing a supervisor, the validator acts as a site and connects to the supervisor.
 
 You can run a RSMP supervisor locally to interact with your test:
-
 % bundle exec rsmp site --config config/simulator/supervisor.yaml
 
 This will keep running until you close it, so run it in a separate terminal.
+
+
+Now you can rspec tests, which will communicate with the site your started, using RSMP:
+% SITE_CONFIG=config/gem_supwervisor.yaml bundle exec rspec spec/site --format documentation
+
+Use --format Validator::Details to see addional logging.
