@@ -3,7 +3,7 @@
 {
 	"name": "Ruby",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/ruby",
+	"image": "mcr.microsoft.com/devcontainers/ruby:3.4",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -11,8 +11,8 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	   "postCreateCommand": "bundle install"
+	// A command to run when creating the container and rerun when the workspace content was updated while creating the container
+	   "updateContentCommand": "bundle install"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
