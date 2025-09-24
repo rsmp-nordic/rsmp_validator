@@ -44,42 +44,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
       end
     end
 
-    # Validate that alarm acknowledgement is false when the alarm is raised.
-    #
-    # According to the RSMP specification, when an alarm is raised (turns active)
-    # it must be not acknowledged. Alarm acknowledgement is controlled by user.
-    #
-    # The test requires that the device is programmed so that the alarm
-    # is raised when a specific input is activated, as specified in the
-    # test configuration.
-    #
-    # 1. Given the site is connected
-    # 2. When we force the input to True to raise an alarm
-    # 3. Then an alarm should be raised with acknowledgement set to 'notAcknowledged'
-    # 4. When we force the input to False
-    # 5. Then the alarm should become inactive
-
-    specify 'Alarm A0302 is not acknowledged when activated', :programming, sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
-        alarm_code_id = 'A0302'
-        prepare task, site
-        def verify_timestamp alarm, duration=1.minute
-          alarm_time = Time.parse(alarm.attributes["aTs"])
-          expect(alarm_time).to be_within(duration).of Time.now.utc
-        end
-        deactivated, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm,component_id|   # raise alarm, by activating input
-          verify_timestamp alarm
-          
-          # Verify that the alarm is not acknowledged when raised
-          expect(alarm.attributes["ack"]).to match(/notAcknowledged/i), "Alarm should not be acknowledged when raised, got: #{alarm.attributes["ack"]}"
-          
-          log "Alarm #{alarm_code_id} is now Active on component #{component_id} and correctly not acknowledged"
-        end
-        verify_timestamp deactivated
-        log "Alarm #{alarm_code_id} is now Inactive on component #{component_id}"
-      end
-    end
-
     # Validate that an alarm can be acknowledged.
     #
     # The test expects that the TLC is programmed so that an detector logic fault
@@ -88,9 +52,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
     #
     # 1. Given the site is connected
     # 2. When we trigger an alarm
-    # 2. Then we should receive an unacknowledged alarm issue
+    # 3. Then we should receive an unacknowledged alarm issue
     # 4. When we acknowledge the alarm
-    # 5. Then we should recieve an acknowledged alarm issue
+    # 5. Then we should receive an acknowledged alarm issue
 
     specify 'A0302 can be acknowledged', :programming, sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
@@ -105,6 +69,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
           # verify timestamp
           alarm_time = Time.parse(alarm.attributes["aTs"])
           expect(alarm_time).to be_within(1.minute).of Time.now.utc
+
+          # verify that the alarm is not acknowledged when initially raised
+          expect(alarm.attributes["ack"]).to match(/notAcknowledged/i), "Alarm should not be acknowledged when raised, got: #{alarm.attributes["ack"]}"
+          log "Verified alarm #{alarm_code_id} is correctly not acknowledged when raised"
 
           # test acknowledge and confirm
           log "Acknowledge alarm #{alarm_code_id}"
