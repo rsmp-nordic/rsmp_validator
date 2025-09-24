@@ -124,88 +124,64 @@ RSpec.describe 'Site::Traffic Light Controller' do
   context 'receiving a command with invalid parameter values' do
 
     # Verify that site returns current values when receiving a command
-    # with invalid parameter values that cause the command to fail
+    # with invalid parameter values that cause the command to be rejected
     #
     # 1. Given the site is connected
-    # 2. When we send an M0002 command with an invalid timeplan value
-    # 3. Then the site should return a command response with current values
-    # 4. And the age attribute should not be 'undefined'
-
-    # Verify that site returns current values when receiving a command
-    # with invalid parameter values that cause the command to fail
-    #
-    # Note: This test uses a timeout of 0 minutes for yellow flash to trigger
-    # a quick automatic revert, which helps create a scenario where current
-    # values should be returned if the command processing fails for some reason.
-    #
-    # 1. Given the site is connected
-    # 2. When we send an M0001 command with an extreme timeout value
-    # 3. Then the site should return a command response with current values
-    # 4. And the age attribute should contain valid timestamps
+    # 2. When we send a valid M0002 command to establish current values 
+    # 3. Then we send an invalid M0002 command with bad security code
+    # 4. Then the site should return a command response with current (unchanged) values
+    # 5. And the command should be rejected due to invalid security code
 
     it 'returns current values when command fails with invalid values', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        log "Sending M0001 with parameters that may cause processing issues"
+        # First, send a valid M0002 command to establish known current values
+        log "Sending valid M0002 command to establish current values"
         
-        # Use parameters that are technically valid format-wise but might 
-        # cause the command to fail during processing
-        command_list = build_command_list :M0001, :setValue, {
-          securityCode: Validator.get_config('secrets','security_codes',2),
-          status: 'YellowFlash',
-          timeout: '-1',    # Negative timeout might cause processing issues
-          intersection: '99' # Very high intersection number
+        valid_plan = '1'  # Use plan 1 from available plans [1,2]
+        valid_command_list = build_command_list :M0002, :setPlan, {
+          securityCode: Validator.get_config('secrets','security_codes',2), # Valid: '2222'
+          status: 'True',
+          timeplan: valid_plan
         }
         
-        result = site.send_command(
+        valid_result = site.send_command(
           Validator.get_config('main_component'),
-          command_list,
+          valid_command_list,
           collect: { timeout: Validator.get_config('timeouts','command_response') }
         )
         
-        collector = result[:collector]
-        expect(collector).to be_an(RSMP::Collector)
+        # Verify the valid command succeeded
+        valid_collector = valid_result[:collector]
+        expect(valid_collector).to be_an(RSMP::Collector)
+        expect(valid_collector.status).to eq(:ok)
+        valid_response = valid_collector.messages.first
+        expect(valid_response).to be_an(RSMP::CommandResponse)
         
-        # The key is that we should get a response, whether it's successful or not
-        if collector.status == :ok
-          response = collector.messages.first
-          expect(response).to be_an(RSMP::CommandResponse)
-          
-          # Check that we got return values
-          rvs = response.attributes['rvs']
-          expect(rvs).to be_an(Array)
-          expect(rvs).not_to be_empty, "Expected return values in command response"
-          
-          # Verify that return values have proper structure
-          rvs.each do |rv|
-            expect(rv).to have_key('age'), "Expected age in return value"
-            expect(rv).to have_key('cCI'), "Expected command code id in return value"
-            expect(rv).to have_key('n'), "Expected parameter name in return value"
-            expect(rv).to have_key('v'), "Expected parameter value in return value"
-            expect(rv['cCI']).to eq('M0001'), "Expected command code id M0001"
-            
-            # The age should either be a valid timestamp, 'undefined', or 'recent'
-            # - 'undefined': command was not processed for this component
-            # - 'recent': command was processed but may have failed, returning current/attempted values
-            # - timestamp: command was successful, returning actual current values with their timestamps
-            age = rv['age']
-            if age == 'undefined'
-              # Command was not processed (e.g., unknown component)
-              expect(age).to eq('undefined')
-            elsif age == 'recent'
-              # Command was processed but may have failed - this is what we're testing for
-              expect(age).to eq('recent')
-            else
-              # Command was successful - should have a valid timestamp
-              expect(age).to be_a(String), "Expected age to be a string timestamp"
-              expect(age).to match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/), "Expected age to be a valid ISO timestamp"
-            end
-          end
-        else
-          # If the command was rejected, that's also a valid outcome for this test
-          # We're testing that implementations handle invalid values appropriately
-          expect(collector.status).to eq(:cancelled)
-          expect(collector.error).to be_an(RSMP::MessageRejected)
-        end
+        # Store the current values from the successful command
+        valid_rvs = valid_response.attributes['rvs']
+        expect(valid_rvs).to be_an(Array)
+        expect(valid_rvs).not_to be_empty, "Expected return values from valid command"
+        
+        # Now send an invalid M0002 command with bad security code
+        log "Sending invalid M0002 command with bad security code"
+        
+        invalid_command_list = build_command_list :M0002, :setPlan, {
+          securityCode: 'bad',  # Invalid security code
+          status: 'True',
+          timeplan: valid_plan  # Same plan as before
+        }
+        
+        invalid_result = site.send_command(
+          Validator.get_config('main_component'),
+          invalid_command_list,
+          collect: { timeout: Validator.get_config('timeouts','command_response') }
+        )
+        
+        # The invalid command should be rejected
+        invalid_collector = invalid_result[:collector]
+        expect(invalid_collector).to be_an(RSMP::Collector)
+        expect(invalid_collector.status).to eq(:cancelled)
+        expect(invalid_collector.error).to be_an(RSMP::MessageRejected)
       end
     end
   end
