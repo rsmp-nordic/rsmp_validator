@@ -7,13 +7,13 @@ nav_order: 4
 ---
 
 # Writing Tests
-Test are written as RSpec specifications.
+Tests are written as RSpec specifications.
 
-Here's an example of a test that verifies that a Traffic Light Controllers responds with a NotAcknowledged if it receives an non-existing status request:
+Here's an example of a test that verifies that a Traffic Light Controller responds with a NotAcknowledged if it receives a non-existing status request:
 
 ```ruby
 RSpec.describe "Traffic Light Controller" do
-  include StatusHelpers
+  include Validator::StatusHelpers
 
   it 'responds with NotAck to invalid status request code' do |example|
     # wait for the site to be connected
@@ -38,12 +38,12 @@ RSpec.describe "Traffic Light Controller" do
 
 The Validator::Site handles the connection to the site, and will pass a `RSMP::SiteProxy` object in the `site` argument, which can be used to communicate with the site. 
 
-For example, you can request statuses ,subscribe to statuses and send commands. Many of the methods allow you to wait for response.
+For example, you can request statuses, subscribe to statuses and send commands. Many of the methods allow you to wait for responses.
 
 See the `rsmp` [gem](https://github.com/rsmp-nordic/rsmp) for more documentation.
 
 ## Working with Exceptions and Timeouts
-Timeouts an essential when testing external systems. When you send a command or request, you expect a response within a certain amount of time. These timeouts must be defined in the test [configuration]({{ site.baseurl}}{% link pages/configuring.md %}).
+Timeouts are essential when testing external systems. When you send a command or request, you expect a response within a certain amount of time. These timeouts must be defined in the test [configuration]({{ site.baseurl}}{% link pages/configuring.md %}).
 
-The `rsmp` gem will raise exceptions if a timeout is reached. Normally, you will not need to do any specific exception handling in your test code. You test will be aborted and RSpec will catch the error and report the error as failed.
+The `rsmp` gem will raise exceptions if a timeout is reached. Normally, you will not need to do any specific exception handling in your test code. Your test will be aborted and RSpec will catch the error and report the error as failed.
 
