@@ -68,8 +68,10 @@ class Validator::Site < Validator::Testee
     # picking elements from the config
     want = ['sxl','intervals','timeouts','components','rsmp_versions','core_version','skip_validation']
     guest_settings = config.select { |key| want.include? key }
+    guest_settings['type'] = 'tlc'  # Mark as TLC to enable TrafficControllerProxy
     @supervisor_config = {
       'max_sites' => 1,
+      'proxy_type' => 'auto',  # Enable auto-detection of TrafficControllerProxy for TLC sites
       'guest' => guest_settings
     }
     @supervisor_config['port'] = config['port'] if config['port']

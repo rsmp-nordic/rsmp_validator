@@ -1,6 +1,7 @@
 RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::StatusHelpers
   include Validator::CommandHelpers
+  include Validator::TrafficControllerProxyHelpers
 
   describe "Signal Plan" do
     # Verify status S0014 current time plan
@@ -10,12 +11,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. We should receive a status response before timeout
     specify 'currently active is read with S0014', sxl: '>=1.0.7' do |example|
       Validator::Site.connected do |task,supervisor,site|
-        if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
-          status_list = { S0014: [:status,:source] }
-        else
-          status_list = { S0014: [:status] }
-        end
-        request_status_and_confirm site, "current time plan", status_list
+        request_timeplan_status_with_proxy(site, "current time plan")
       end
     end
 
@@ -31,7 +27,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       skip("No time plans configured") if plans.nil? || plans.empty?
       Validator::Site.connected do |task,supervisor,site|
         prepare task, site
-        plans.each { |plan| switch_plan plan }
+        plans.each { |plan| switch_timeplan_with_proxy(site, plan) }
       end
     end
 

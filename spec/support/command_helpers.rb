@@ -1,4 +1,7 @@
 module Validator::CommandHelpers
+  # Include TrafficControllerProxy helpers for enhanced timeplan functionality
+  include Validator::TrafficControllerProxyHelpers
+  
   def send_command_and_confirm parent_task, command_list, message, component=Validator.get_config('main_component')
     result = nil
     log message
@@ -255,7 +258,7 @@ module Validator::CommandHelpers
 
   def with_cycle_time_extended site, extension=5, &block
     # read current plan
-    plan = read_current_plan(site)
+    plan = read_current_timeplan_with_proxy(site)
 
     # read initial cycle times
     times = read_cycle_times(site)
