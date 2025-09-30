@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: da777597bfa33786a39023cde54a21dc49611641
+  revision: d755667e5efd8e95a43a7313bbfd08f64787975a
   branch: copilot/fix-1797a643-0c0a-4b12-bbe7-e6564f930dda
   specs:
     rsmp (0.37.0)
