@@ -49,4 +49,12 @@ module RSMP
       end
     end
   end
+
+  # Ensure version_meets_requirement? is available as a class method on Proxy
+  # This may be redundant but ensures compatibility
+  class Proxy
+    def self.version_meets_requirement?(version, requirement)
+      Gem::Requirement.new(requirement).satisfied_by?(Gem::Version.new(version))
+    end
+  end
 end

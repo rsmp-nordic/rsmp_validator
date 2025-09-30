@@ -57,5 +57,5 @@ security_codes:
 log:
   id: true
   json: true
-  acknowledgements: false
-  watchdogs: false
+  acknowledgements: true
+  watchdogs: true
