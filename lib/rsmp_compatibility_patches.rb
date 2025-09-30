@@ -24,6 +24,29 @@ module RSMP
             SignalPlan.new(number: id.to_i, cycle_time: cycle_time, states: states, dynamic_bands: dynamic_bands)
         end
       end
+
+      # Patch the build_component method to handle ntsOId/ntsoid naming inconsistency
+      def build_component(id:, type:, settings: {})
+        case type
+        when 'main'
+          TrafficController.new node: self,
+                                id: id,
+                                ntsoid: settings['ntsOId'] || settings['ntsoid'],
+                                xnid: settings['xNId'] || settings['xnid'],
+                                startup_sequence: @startup_sequence,
+                                signal_plans: @signal_plans,
+                                live_output: @site_settings['live_output'],
+                                inputs: @site_settings['inputs']
+        when 'signal_group'
+          group = SignalGroup.new node: self, id: id
+          main.add_signal_group group
+          group
+        when 'detector_logic'
+          logic = DetectorLogic.new node: self, id: id
+          main.add_detector_logic logic
+          logic
+        end
+      end
     end
   end
 end
