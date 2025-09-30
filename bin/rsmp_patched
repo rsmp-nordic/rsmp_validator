@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+# Load bundler environment
+require 'bundler/setup'
+
+# Load compatibility patches (which loads RSMP and applies patches)
+require_relative '../lib/rsmp_compatibility_patches'
+
+# Load the RSMP CLI
+require 'rsmp/cli'
+
+# Run the CLI with the provided arguments - Thor style
+RSMP::CLI.start(ARGV)

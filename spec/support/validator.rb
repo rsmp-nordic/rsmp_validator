@@ -2,6 +2,9 @@ require 'rsmp'
 require 'colorize'
 require 'rspec/expectations'
 
+# Load compatibility patches for the updated RSMP gem
+require_relative '../../lib/rsmp_compatibility_patches'
+
 module Validator
   include RSpec::Matchers
 
