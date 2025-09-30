@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: 12202483f405a5e879731a8b04a7275bd2f648cc
+  revision: da777597bfa33786a39023cde54a21dc49611641
   branch: copilot/fix-1797a643-0c0a-4b12-bbe7-e6564f930dda
   specs:
     rsmp (0.37.0)
@@ -15,7 +15,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (8.0.2.1)
+    activesupport (8.0.3)
       base64
       benchmark (>= 0.3)
       bigdecimal
@@ -83,7 +83,7 @@ GEM
     rspec-mocks (3.13.5)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-support (3.13.5)
+    rspec-support (3.13.6)
     securerandom (0.4.1)
     simpleidn (0.2.3)
     thor (1.4.0)
@@ -94,13 +94,7 @@ GEM
     yard (0.9.37)
 
 PLATFORMS
-  arm64-darwin-22
-  arm64-darwin-23
-  x64-mingw-ucrt
-  x64-mingw32
-  x86_64-darwin-20
-  x86_64-darwin-21
-  x86_64-darwin-22
+  ruby
   x86_64-linux
 
 DEPENDENCIES
@@ -111,4 +105,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.6.3
+   2.6.9
