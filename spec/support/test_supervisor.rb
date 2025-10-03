@@ -27,6 +27,21 @@ class Validator::Supervisor < Validator::Testee
     end
   end
 
+  def initialize
+    @programmatic_supervisor = nil
+    @supervisor_config = nil
+    super
+  end
+
+  def parse_config
+    super
+    
+    # load supervisor config if we should start a supervisor programmatically
+    if Validator.supervisor_to_test_config_path
+      @supervisor_config = YAML.load_file Validator.supervisor_to_test_config_path
+    end
+  end
+
   # build local site
   def build_node options
     klass = case config['type']
@@ -59,6 +74,36 @@ class Validator::Supervisor < Validator::Testee
       @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
     rescue RSMP::TimeoutError
       raise RSMP::ConnectionError.new "Handshake didn't complete within #{config['timeouts']['ready']}s"
+    end
+  end
+
+  # Start a programmatic supervisor if configured
+  def start_programmatic_supervisor
+    return unless @supervisor_config
+    return if @programmatic_supervisor
+
+    Validator::Log.log "Starting programmatic supervisor"
+
+    Validator.reactor.async do |task|
+      task.annotate 'programmatic supervisor runner'
+
+      @programmatic_supervisor = RSMP::Supervisor.new(
+        supervisor_settings: @supervisor_config,
+        logger: Validator.logger
+      )
+
+      @programmatic_supervisor.start  # keep running inside the async task
+    end
+  end
+
+  # Stop the programmatic supervisor if running
+  def stop_programmatic_supervisor
+    if @programmatic_supervisor
+      Validator::Log.log "Stopping programmatic supervisor"
+      @programmatic_supervisor.ignore_errors RSMP::DisconnectError do
+        @programmatic_supervisor.stop
+      end
+      @programmatic_supervisor = nil
     end
   end
 

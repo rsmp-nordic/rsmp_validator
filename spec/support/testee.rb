@@ -70,6 +70,9 @@ class Validator::Testee
     # stop programmatic site if configured (only for Validator::Site)
     stop_programmatic_site if respond_to?(:stop_programmatic_site)
     
+    # stop programmatic supervisor if configured (only for Validator::Supervisor)
+    stop_programmatic_supervisor if respond_to?(:stop_programmatic_supervisor)
+    
     if @node
       Validator::Log.log why if why
       @node.ignore_errors RSMP::DisconnectError do
@@ -114,6 +117,9 @@ class Validator::Testee
 
     # start programmatic site if configured (only for Validator::Site)
     start_programmatic_site if respond_to?(:start_programmatic_site)
+    
+    # start programmatic supervisor if configured (only for Validator::Supervisor)
+    start_programmatic_supervisor if respond_to?(:start_programmatic_supervisor)
   end
 
   # Wait until communication has been established, and handshake completed. Subclasses must override
