@@ -10,3 +10,13 @@ site: config/gem_site.yaml
 
 # when testing a supervisor, the config describes the local site
 supervisor: config/gem_supervisor.yaml
+
+# Optional: Start a site programmatically when testing sites
+# Useful for development on the rsmp gem - no need for a separate process
+# Uncomment to enable:
+# site_to_test: config/simulator/tlc.yaml
+
+# Optional: Start a supervisor programmatically when testing supervisors
+# Useful for development on the rsmp gem - no need for a separate process
+# Uncomment to enable:
+# supervisor_to_test: config/simulator/supervisor.yaml
