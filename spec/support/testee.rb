@@ -67,6 +67,9 @@ class Validator::Testee
 
   # Stop the rsmp supervisor
   def stop why=nil
+    # stop programmatic site if configured (only for Validator::Site)
+    stop_programmatic_site if respond_to?(:stop_programmatic_site)
+    
     if @node
       Validator::Log.log why if why
       @node.ignore_errors RSMP::DisconnectError do
@@ -109,6 +112,8 @@ class Validator::Testee
       @node.start  # keep running inside the async task
     end
 
+    # start programmatic site if configured (only for Validator::Site)
+    start_programmatic_site if respond_to?(:start_programmatic_site)
   end
 
   # Wait until communication has been established, and handshake completed. Subclasses must override

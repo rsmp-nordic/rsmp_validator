@@ -63,6 +63,12 @@ class Validator::Site < Validator::Testee
     end
   end
 
+  def initialize
+    @programmatic_site = nil
+    @site_config = nil
+    super
+  end
+
   def parse_config
     # build rsmp supervisor config by
     # picking elements from the config
@@ -86,6 +92,11 @@ class Validator::Site < Validator::Testee
       'disconnect',
     ].each do |key|
       raise "config 'timeouts/#{key}' is missing" unless config['timeouts'][key]
+    end
+
+    # load site config if we should start a site programmatically
+    if Validator.site_to_test_config_path
+      @site_config = YAML.load_file Validator.site_to_test_config_path
     end
   end
 
@@ -114,5 +125,48 @@ class Validator::Site < Validator::Testee
     Validator::Log.log "Waiting for handskake to complete"
     @proxy.wait_for_state :ready, timeout:config['timeouts']['ready']
     Validator::Log.log "Ready"
+  end
+
+  # Start a programmatic site if configured
+  def start_programmatic_site
+    return unless @site_config
+    return if @programmatic_site
+
+    Validator::Log.log "Starting programmatic site"
+
+    # Determine site class based on type
+    site_class = RSMP::Site
+    site_type = @site_config['type']
+    case site_type
+    when 'tlc'
+      site_class = RSMP::TLC::TrafficControllerSite
+    when nil
+      # Default to basic Site if no type specified
+      site_class = RSMP::Site
+    else
+      raise "Unknown site type: #{site_type}"
+    end
+
+    Validator.reactor.async do |task|
+      task.annotate 'programmatic site runner'
+
+      @programmatic_site = site_class.new(
+        site_settings: @site_config,
+        logger: Validator.logger
+      )
+
+      @programmatic_site.start  # keep running inside the async task
+    end
+  end
+
+  # Stop the programmatic site if running
+  def stop_programmatic_site
+    if @programmatic_site
+      Validator::Log.log "Stopping programmatic site"
+      @programmatic_site.ignore_errors RSMP::DisconnectError do
+        @programmatic_site.stop
+      end
+      @programmatic_site = nil
+    end
   end
 end

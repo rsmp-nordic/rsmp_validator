@@ -9,6 +9,7 @@ module Validator
     include RSMP::Logging
     attr_accessor :config, :mode, :logger, :reporter
     attr_accessor :site_validator, :supervisor_validator
+    attr_accessor :site_to_test_config_path
   end
 
   @@reactor = nil
@@ -165,6 +166,11 @@ module Validator
       self.abort_with_error "Config file #{config_path} is missing"
     end
 
+    # check if we should start a site programmatically when testing sites
+    if self.mode == :site
+      load_site_to_test_config
+    end
+
     # check that the config looks right for the current mode
     if self.mode == :supervisor
       if config['port']
@@ -219,6 +225,27 @@ module Validator
     end
  
     self.load_secrets config_path
+  end
+
+  # load site_to_test config when testing sites
+  # checks SITE_TO_TEST env variable first, then validator.yaml
+  def self.load_site_to_test_config
+    if ENV['SITE_TO_TEST']
+      self.site_to_test_config_path = ENV['SITE_TO_TEST']
+    else
+      ref_path = 'config/validator.yaml'
+      if File.exist? ref_path
+        config_ref = YAML.load_file ref_path
+        self.site_to_test_config_path = config_ref['site_to_test'].to_s.strip if config_ref['site_to_test']
+      end
+    end
+
+    if self.site_to_test_config_path && self.site_to_test_config_path != ''
+      unless File.exist? self.site_to_test_config_path
+        self.abort_with_error "SITE_TO_TEST config file #{self.site_to_test_config_path} does not exist"
+      end
+      #log "Will start site programmatically from #{self.site_to_test_config_path}"
+    end
   end
 
   # load secrets
