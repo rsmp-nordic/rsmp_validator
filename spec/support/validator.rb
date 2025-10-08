@@ -7,7 +7,7 @@ module Validator
 
   class << self
     include RSMP::Logging
-    attr_accessor :config, :auto_config, :mode, :logger, :reporter
+    attr_accessor :config, :mode, :logger, :reporter, :auto_node_config, :auto_node
   end
 
   @@reactor = nil
@@ -19,9 +19,10 @@ module Validator
 
   def self.setup rspec_config
     determine_mode rspec_config.files_to_run
-    load_config
-    #load_auto_config
+    load_tester_config
+    load_auto_node_config
     setup_logging rspec_config
+    build_auto_node
     build_tester
     setup_filters rspec_config
   end
@@ -53,6 +54,7 @@ module Validator
     reactor.annotate 'reactor'
     error = nil
     reactor.run do |task|
+      self.auto_node.start if self.auto_node
       Validator.check_connection
     rescue StandardError => e
       error = e
@@ -127,42 +129,41 @@ module Validator
       else
         self.abort_with_error "Unknown test mode: #{mode}"
       end
-
-      #log "We're testing a #{mode}"
     end
   end
 
   # get the path of our config file, which depend on whether we're testing a site or supervisor
-  def self.get_config_path
-    key = "#{self.mode.to_s.upcase}_CONFIG"
-    if ENV[key]
-      config_path = ENV[key]
-    else
-      ref_path = 'config/validator.yaml'
-      if File.exist? ref_path
-        # get config path
-        config_ref = YAML.load_file ref_path
-        config_path = config_ref[self.mode.to_s].to_s.strip
-        self.abort_with_error "Error: #{ref_path} has no :#{self.mode.to_s} key" unless config_path
-      else
-        self.abort_with_error "Error: Neither #{ref_path} nor #{key} is present" unless config_path
-      end
-    end
-
-    self.abort_with_error "Error: Config path is empty" unless config_path && config_path != ''
+  # First check SITE_CONFIG or SUPERVISOR_CONFIG
+  # Then look for the key 'site' or 'supervisor' in config/validator.yaml
+  def self.get_config_path local: false
+    mode = self.mode.to_s
+    config_path = get_config_path_from_env(mode) || get_config_path_from_validator_yaml(mode)
+    self.abort_with_error "#{mode.capitalize} config path not set" unless config_path && config_path != ''
     config_path
   end
 
+  def self.get_config_path_from_env mode
+    key = "#{mode.upcase}_CONFIG"
+    ENV[key]
+  end
+  
+  def self.get_config_path_from_validator_yaml mode
+    ref_path = 'config/validator.yaml'
+    return nil unless File.exist? ref_path
+    config_ref = YAML.load_file ref_path
+    config_ref[mode].to_s.strip
+  end
+
   # load config from a YAML file
-  def self.load_config
+  def self.load_tester_config
     config_path = get_config_path
 
     # load config
     if File.exist? config_path
-      #log "Loading config from #{config_path}"
+      puts "Using #{self.mode.to_s} config: #{config_path}"
       self.config = YAML.load_file config_path
     else
-      self.abort_with_error "Config file #{config_path} is missing"
+      self.abort_with_error "#{self.mode.capitalize} config file #{config_path} is missing"
     end
 
     # check that the config looks right for the current mode
@@ -219,6 +220,40 @@ module Validator
     end
  
     self.load_secrets config_path
+  end
+
+  # load auto node config from a YAML file
+  # this is the config for the local site/supervisor that will be started for testing
+  def self.load_auto_node_config
+    auto_node_config_path = get_auto_node_config_path
+    return unless auto_node_config_path
+
+    # load auto config
+    if File.exist? auto_node_config_path
+      puts "Will run auto #{self.mode.to_s} with config: #{auto_node_config_path}"
+      self.auto_node_config = YAML.load_file auto_node_config_path
+    else
+      self.abort_with_error "Auto #{self.mode.to_s} config file #{auto_node_config_path} is missing"
+    end
+  end
+
+  # get the path of the auto config file
+  # First check AUTO_SITE_CONFIG or AUTO_SUPERVISOR_CONFIG environment variables
+  # Then look for 'auto_site' or 'auto_supervisor' keys in config/validator.yaml
+  def self.get_auto_node_config_path
+    # Check environment variable first
+    env_key = self.mode == :site ? 'AUTO_SITE_CONFIG' : 'AUTO_SUPERVISOR_CONFIG'
+    env_path = ENV[env_key]
+    return env_path if env_path && !env_path.empty?
+    
+    # Fall back to validator.yaml
+    ref_path = 'config/validator.yaml'
+    return nil unless File.exist? ref_path
+    
+    config_ref = YAML.load_file ref_path
+    key = self.mode == :site ? 'auto_site' : 'auto_supervisor'
+    path = config_ref[key].to_s.strip
+    path.empty? ? nil : path
   end
 
   # load secrets
@@ -278,6 +313,20 @@ module Validator
       Validator::SiteTester.instance = Validator::SiteTester.new
     elsif self.mode == :supervisor
       Validator::SupervisorTester.instance = Validator::SupervisorTester.new
+    else
+      self.abort_with_error "Unknown test mode: #{self.mode}"
+    end
+  end
+
+  # build the auto node (local site or supervisor to be tested)
+  # this is only done if auto_node_config is loaded
+  def self.build_auto_node
+    return unless self.auto_node_config
+
+    if self.mode == :site
+      self.auto_node = Validator::AutoSite.new
+    elsif self.mode == :supervisor
+      self.auto_node = Validator::AutoSupervisor.new
     else
       self.abort_with_error "Unknown test mode: #{self.mode}"
     end
