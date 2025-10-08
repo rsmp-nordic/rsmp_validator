@@ -6,7 +6,18 @@
 # But you can leave both, the unused key will just be ignored.
 
 # when testing a site, the config describes the local supervisor
-site: config/gem_site.yaml
+site: config/gem_tlc.yaml
 
 # when testing a supervisor, the config describes the local site
 supervisor: config/gem_supervisor.yaml
+
+# Optional: Auto Node Feature
+# Automatically start a local site/supervisor to test instead of an external one.
+# This is useful when developing the RSMP gem or the test suite itself.
+# The auto node runs inside the same Async reactor as the validator.
+
+# Uncomment to automatically start a local site for testing:
+# auto_site: config/simulator/tlc.yaml
+
+# Uncomment to automatically start a local supervisor for testing:
+# auto_supervisor: config/simulator/supervisor.yaml

@@ -260,5 +260,17 @@ sxl_version: 1.0.7
 
 In this case, the S0027 test above will not run, because it requires sxl 1.0.13 or higher, but we limited to 1.0.7. 
 
+## Auto Node Feature
+
+The validator includes an **auto node feature** that allows you to programmatically start a local site or supervisor to be tested, instead of connecting to external equipment. This is primarily useful when developing the RSMP gem or the validator itself.
+
+For detailed information about the auto node feature, including configuration and usage, see the [Auto Node]({{ site.baseurl}}{% link pages/auto.md %}) page.
+
+To enable it, add `local_site` or `local_supervisor` to your `config/validator.yaml`:
+
+```yaml
+site: config/gem_tlc.yaml
+local_site: config/simulator/tlc.yaml  # Optional: starts a local site to test
+```
 
 
