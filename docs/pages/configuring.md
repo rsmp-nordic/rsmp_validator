@@ -198,6 +198,43 @@ The component ids (e.g. `KK+AG9998=001TC000` in the example above) must match th
 
 Note that each component must be defined as a hash in the YAML file, be using a training colon. As the example above show, the hash will usually be empty. (Items are used to configure components when you run local RSMP site, e.g. a TLC emulator.)
 
+## Group-Based Programs
+
+The validator supports testing of group-based traffic control programs, a modern approach based on constraint programming. Group-based programs are defined separately from traditional signal plans.
+
+To configure group-based programs in your test configuration, add a `group_based_programs` section along with `regional_config` and `intersection_config` sections:
+
+```yaml
+regional_config:
+  regulations:
+    minimum_green_times:
+      vehicle: 5
+      pedestrian: 6
+    maximum_green_times:
+      default: 120
+
+intersection_config:
+  signal_groups:
+    sg1: { type: "vehicle" }
+    sg2: { type: "vehicle" }
+  conflicts:
+    - groups: [sg1, sg2]
+  detectors:
+    d1: { type: "loop" }
+
+group_based_programs:
+  actuated_v1:
+    id: "program_1"
+    version: "1.0"
+    timing:
+      sg1: { min_green: 10, max_green: 60 }
+    detector_logics:
+      - detectors: [d1]
+        creates_demand_for: sg1
+```
+
+See the [Group-Based Programming page]({{ site.baseurl}}{% link pages/group_based_programming.md %}) for complete details and examples.
+
 ## Timeouts
 Timeouts are defined in seconds. Timeouts should be set as low as possible while, still giving the site time to respond correctly before tests times out and report errors.
 
