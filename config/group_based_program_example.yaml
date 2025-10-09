@@ -1,0 +1,191 @@
+# Example configuration for testing group-based traffic control programs
+# Based on: https://github.com/rsmp-nordic/tlc_programming/blob/main/group_based.md
+
+# Config for testing RSMP Nordic traffic light controller with group-based programs
+port: 13111
+sxl: tlc
+sxl_version: '1.2.1'
+intervals:
+  timer: 0.1
+  watchdog: 0.1
+timeouts:
+  watchdog: 1
+  acknowledgement: 1
+  connect: 1
+  ready: 1
+  status_response: 1
+  status_update: 1
+  subscribe: 1
+  command: 1
+  command_response: 1
+  alarm: 1
+  disconnect: 1
+  startup_sequence: 5
+  functional_position: 2
+  priority_completion: 5
+  yellow_flash: 2
+
+# RSMP Components
+components:
+  main:
+    TC:
+  signal_group:
+    sg1:
+    sg2:
+    sg3:
+  detector_logic:
+    DL1:
+    DL2:
+
+items:
+  plans: [1,2]
+  traffic_situations: [1,2]
+  emergency_routes: [1]
+  inputs: [1,3]
+  outputs: [1,3]
+
+# Regional Configuration - Regulatory constraints
+regional_config:
+  region: "sweden_stockholm"
+  version: "2024.1"
+  regulations:
+    yellow_times:
+      default: 3      # seconds
+      speed_50: 3
+      speed_70: 4
+    all_red_times:
+      default: 2      # seconds
+    minimum_green_times:
+      vehicle: 5      # seconds
+      pedestrian: 6
+      bicycle: 8
+    maximum_green_times:
+      default: 120    # seconds, regulatory maximum
+
+# Intersection Configuration - Physical topology
+intersection_config:
+  id: "main_street_oak_ave"
+  location: { lat: 59.334, lon: 18.063 }
+  
+  signal_groups:
+    sg1:
+      description: "North-South through traffic"
+      type: "vehicle"
+      approach_speed: 50  # km/h
+    sg2:
+      description: "East-West through traffic"
+      type: "vehicle"
+      approach_speed: 50
+    sg3:
+      description: "Pedestrian North-South"
+      type: "pedestrian"
+      crossing_distance: 12  # meters
+  
+  # Derived from physical layout - cannot change
+  conflicts:
+    - groups: [sg1, sg2]
+      reason: "Perpendicular traffic flows"
+    - groups: [sg1, sg3]
+      reason: "Pedestrian crossing"
+  
+  # Calculated from layout and regulation
+  intergreens:
+    - from: sg1
+      to: sg2
+      min_time: 4    # calculated from intersection size + speed
+      calculation: "clearing_time + perception_reaction"
+    - from: sg2
+      to: sg1
+      min_time: 4
+    - from: sg1
+      to: sg3
+      min_time: 3
+    - from: sg3
+      to: sg1
+      min_time: 2
+      
+  detectors:
+    d1: { type: "loop", location: "NS approach 50m" }
+    d2: { type: "loop", location: "EW approach 50m" }
+    d3: { type: "button", location: "Ped crossing north" }
+
+# Group-Based Programs
+group_based_programs:
+  actuated_v1:
+    id: "main_intersection_actuated_v1"
+    version: "1.0"
+    description: "Vehicle-actuated control with pedestrian priority"
+    
+    # Program-specific timing (within regulatory limits)
+    timing:
+      sg1:
+        min_green: 10      # above regulatory minimum of 5s
+        max_green: 60      # below regulatory maximum of 120s
+      sg2:
+        min_green: 8
+        max_green: 45
+      sg3:
+        min_green: 15      # above regulatory minimum of 6s
+        max_green: 20
+    
+    # Detector logics - how detectors create demand
+    detector_logics:
+      - detectors: [d1]
+        creates_demand_for: sg1
+        priority: 5
+      - detectors: [d2]
+        creates_demand_for: sg2
+        priority: 5
+      - detectors: [d3]
+        creates_demand_for: sg3
+        priority: 8       # pedestrians get higher priority
+    
+    # Extension logic
+    extension_rules:
+      - signal_group: sg1
+        detector: d1
+        type: "gap_out"
+        gap_time: 3
+        max_extension: 20
+      - signal_group: sg2
+        detector: d2
+        type: "gap_out"
+        gap_time: 3
+        max_extension: 15
+    
+    # Optimization objectives
+    objectives:
+      - type: "minimize_delay"
+        weight: 1.0
+      - type: "minimize_stops"
+        weight: 0.8
+
+  fixed_time_v1:
+    id: "main_intersection_fixed_v1"
+    version: "1.0"
+    description: "Fixed-time control for high traffic periods"
+    
+    timing:
+      sg1:
+        min_green: 30      # fixed time
+        max_green: 30      # same as min = fixed
+      sg2:
+        min_green: 25
+        max_green: 25
+      sg3:
+        min_green: 15
+        max_green: 15
+    
+    # No detector logics - uses recall mode for all signal groups
+    detector_logics: []
+    
+    extension_rules: []
+    
+    objectives:
+      - type: "minimize_cycle_time"
+        weight: 1.0
+
+secrets:
+  security_codes:
+    1: '1111'
+    2: '2222'
