@@ -9,7 +9,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'control mode is read with S0020', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "control mode",
           { S0020: [:controlmode,:intersection] }
       end
@@ -21,7 +21,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'startup status is read with S0005', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic controller starting (true/false)",
           { S0005: [:status] }
       end
@@ -34,7 +34,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'startup status is read with S0005', sxl: '>=1.2', core: '>=3.2' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic controller starting (true/false)",
           { S0005: [:statusByIntersection] }
       end
@@ -46,7 +46,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'switched on is read with S0007', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         status_list = { S0007: [:status,:intersection] }
         request_status_and_confirm site, "controller switch on (dark mode=off)", status_list
       end
@@ -58,7 +58,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'switched on is read with S0007', sxl: '>=1.1' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         status_list = { S0007: [:status,:intersection,:source] }
         request_status_and_confirm site, "controller switch on (dark mode=off)", status_list
       end
@@ -70,7 +70,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'manual control is read with S0008', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0008: [:status,:intersection,:source] }
         else
@@ -86,7 +86,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'fixed time control is read with S0009', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0009: [:status,:intersection,:source] }
         else
@@ -104,7 +104,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Send command to switch to fixed time = false
     # 5. Wait for status = false
     specify 'fixed time control can be activated with M0007', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         switch_fixed_time 'True'
         switch_fixed_time 'False'
@@ -117,7 +117,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'isolated control is read with S0010', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0010: [:status,:intersection,:source] }
         else
@@ -133,7 +133,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'coordinated control is read with S0032', sxl: '>=1.1' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         status_list = { S0032: [:status,:intersection,:source] }
         request_status_and_confirm site, "coordinated control status", status_list
       end
@@ -145,7 +145,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'yellow flash can be read with S0011', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0011: [:status,:intersection,:source] }
         else
@@ -163,7 +163,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Send command to switch to normal control
     # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
     specify 'yellow flash can be activated with M0001', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         switch_yellow_flash
         switch_normal_control
@@ -178,7 +178,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Send command to switch to normal control
     # 5. Wait for all groups to switch do something else that 'c'
     specify 'yellow flash affects all signal groups', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         timeout =  Validator.get_config('timeouts','yellow_flash')
 
@@ -196,7 +196,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'all red can be read with S0012', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0012: [:status,:intersection,:source] }
         else
@@ -212,7 +212,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'police key can be read with S0013', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "police key",
           { S0013: [:status] }
       end
@@ -226,7 +226,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Send command to switch to normal control
     # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
     specify 'dark mode can be activated with M0001', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         switch_dark_mode
         switch_normal_control
@@ -241,7 +241,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Wait for status Yellow flash
     # 5. Wait for automatic revert to Normal Control
     specify 'yellow flash be used with a timeout of one minute', sxl: '>=1.0.7', slow: true do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         switch_normal_control
         minutes = 1

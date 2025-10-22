@@ -9,7 +9,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'operator logged in/out of OP-panel is read with S0091', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0091: [:user] }
         else
@@ -25,7 +25,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'operator logged in/out of web-interface is read with S0092', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0092: [:user] }
         else
@@ -41,7 +41,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'version is read with S0095 ', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "version of traffic controller",
         { S0095: [:status] }
       end
@@ -53,7 +53,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Send control command to setsecuritycode_level
     # 5. Wait for status = true
     specify 'security code is set with M0103', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         set_security_code 1
         set_security_code 2
@@ -67,7 +67,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send a M0008 command with incorrect security codes
     # 3. Then we should received a NotAck
     specify 'security code is rejected when incorrect', sxl: '>=1.1' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         expect { wrong_security_code }.to raise_error(RSMP::MessageRejected)
       end

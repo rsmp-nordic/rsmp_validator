@@ -9,7 +9,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we request the status
     # 3. We should receive a status response before timeout
     specify 'currently active is read with S0014', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0014: [:status,:source] }
         else
@@ -29,7 +29,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'currently active is set with M0002', sxl: '>=1.0.7' do |example|
       plans = Validator.get_config('items','plans')
       skip("No time plans configured") if plans.nil? || plans.empty?
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         plans.each { |plan| switch_plan plan }
       end
@@ -42,7 +42,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we request the status
     # 3. We should receive a status response before timeout
     specify 'list size is read with S0018', sxl: ['>=1.0.7','<1.2'] do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "number of time plans",
           { S0018: [:number] }
       end
@@ -54,7 +54,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we request the status
     # 3. We should receive a status response before timeout
     specify 'list is read with S0022', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "list of time plans",
           { S0022: [:status] }
       end
@@ -66,7 +66,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we request the status
     # 3. We should receive a status response before timeout
     specify 'week table is read with S0026', sxl: '>=1.0.13'  do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "week time table",
           { S0026: [:status] }
       end
@@ -78,7 +78,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send the command
     # 3. We should receive a confirmative command response before timeout
     specify 'week table is set with M0016', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         status = "0-1,6-2"
         prepare task, site
         set_week_table status
@@ -91,7 +91,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we request the status
     # 3. We should receive a status response before timeout
     specify 'day table is read with S0027', sxl: '>=1.0.13'  do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "command table",
           { S0027: [:status] }
       end
@@ -103,7 +103,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send the command
     # 3. We should receive a confirmative command response before timeout
     specify 'day table is set with M0017', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         status = "12-1-12-59,1-0-23-12"
         prepare task, site
         set_day_table status
@@ -116,7 +116,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we request the status
     # 3. We should receive a status response before timeout
     specify 'version is read with S0097', sxl: '>=1.0.15' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "version of traffic program",
           { S0097: [:timestamp,:checksum] }
       end
@@ -128,7 +128,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we request the status
     # 3. We should receive a status response before timeout
     specify 'config is read with S0098', sxl: '>=1.0.15' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         result = request_status_and_confirm site, "config of traffic parameters",
           { S0098: [:timestamp,:config,:version] }
 
@@ -149,7 +149,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we request the status
     # 3. We should receive a status response before timeout
     specify 'dynamic bands are read with S0023', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "command table",
           { S0023: [:status] }
       end
@@ -161,7 +161,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send the command
     # 3. We should receive a confirmative command response before timeout
     specify 'dynamic bands are set with M0014', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         plan = Validator.get_config('items','plans').first
         status = "1-12"
         prepare task, site
@@ -179,7 +179,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 6. Then reading dynamic bands should confirm the reversion
 
     specify 'dynamic bands values can be changed and read back', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         plan = Validator.get_config('items','plans').first
         band = 3
@@ -205,7 +205,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send command to disable timeout
     # 3. Then we should get a confirmation
     specify 'timeout for dynamic bands is set with M0023', sxl: '>=1.1' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         status = 10
         set_timeout_for_dynamic_bands status
@@ -220,7 +220,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'offset is read with S0024', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "offset time",
           { S0024: [:status] }
       end
@@ -230,7 +230,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Send control command to set dynamic_bands
     # 3. Wait for status = true
     specify 'offset is set with M0015', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         plan = Validator.get_config('items','plans').first
         status = 99
         prepare task, site
@@ -244,7 +244,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we request the status
     # 3. We should receive a status response before timeout
     specify 'cycle time is read with S0028', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "cycle time",
           { S0028: [:status] }
       end
@@ -259,7 +259,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 5. Finally when we revert cycle time to previous value
     # 6. Then reading cycle time should confirm the reversion
     specify 'cycle time is set with M0018', sxl: '>=1.0.13' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         with_cycle_time_extended(site) do
           log "Cycle time extension confirmed"
         end

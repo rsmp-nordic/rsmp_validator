@@ -31,7 +31,7 @@ module Validator
     end
 
     def dump_sentinel_warnings
-      warnings = Validator::Testee.sentinel_errors
+      warnings = Validator::Tester.sentinel_errors
       if warnings.any?
         @output << "\n\nSentinel warnings:\n\n"
         warnings.each.with_index(1) do |warning,i|
@@ -53,12 +53,12 @@ module Validator
     end
 
     def dump_sentinel_summary
-      return unless Validator::Testee.sentinel_errors.any?
-      num = Validator::Testee.sentinel_errors.size
+      return unless Validator::Tester.sentinel_errors.any?
+      num = Validator::Tester.sentinel_errors.size
       str = "#{num} sentinel warnings:"
       str = colorize(str,:yellow) if num > 0
       @output << "\n#{str}\n\n"
-      histogram = Validator::Testee.sentinel_errors.dup.inject(Hash.new(0)) { |h, x| h[x.class] += 1; h }.each_pair do |err,num|
+      histogram = Validator::Tester.sentinel_errors.dup.inject(Hash.new(0)) { |h, x| h[x.class] += 1; h }.each_pair do |err,num|
         @output << colorize("  #{num} #{err}\n",:yellow)
       end
     end

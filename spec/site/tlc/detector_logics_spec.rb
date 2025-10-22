@@ -9,7 +9,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'list size is read with S0016', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "number of detector logics",
           { S0016: [:number] }
       end
@@ -21,7 +21,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'status is read with S0002', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "detector logic status",
           { S0002: [:detectorlogicstatus] }
       end
@@ -33,7 +33,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'forcing is read with S0021', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "detector logic forcing",
           { S0021: [:detectorlogics] }
       end
@@ -43,7 +43,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Send control command to switch detector_logic= true
     # 3. Wait for status = true
     specify 'forcing is set with M0008', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
 
         Validator.get_config('components','detector_logic').keys.each_with_index do |component, indx|
@@ -68,7 +68,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'sensitivity is read with S0031', sxl: '>=1.0.15' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "loop detector sensitivity",
           { S0031: [:status] }
       end

@@ -11,7 +11,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send a signal priority request
     # 3. Then we should receive an acknowledgement
     it 'can be requested with M0022', sxl: '>=1.1', core: '>=3.2' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         signal_group = Validator.get_config('components','signal_group').keys.first
         command_list = build_command_list :M0022, :requestPriority, {
           requestId: SecureRandom.uuid()[0..3],
@@ -33,7 +33,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we request signal priority status
     # 3. Then we should receive a status update
     it 'status can be fetched with S0033', sxl: '>=1.1', core: '>=3.2' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "signal group status",
           { S0033: [:status] }
       end
@@ -46,7 +46,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Then we should receive an acknowledgement
     # 5. And we should reive a status updates
     it 'status can be subscribed to with S0033', sxl: '>=1.1', core: '>=3.2' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
         status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)
@@ -65,7 +65,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 7. Then the state should become 'completed'
 
     it 'becomes completed when cancelled', sxl: '>=1.1', core: '>=3.2' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         timeout = Validator.get_config('timeouts','priority_completion')
         component = Validator.get_config('main_component')
         signal_group_id = Validator.get_config('components','signal_group').keys.first
@@ -112,7 +112,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 7. Then the state should become 'stale'
 
     it 'becomes stale if not cancelled', sxl: '>=1.1', core: '>=3.2' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         timeout = Validator.get_config('timeouts','priority_completion')
         component = Validator.get_config('main_component')
         signal_group_id = Validator.get_config('components','signal_group').keys.first

@@ -26,7 +26,7 @@
 #
 # RSpec.describe "Traffic Light Controller" do
 #   it 'my test' do |example|
-#     Validator::Site.connected do |task,supervisor,site|
+#     Validator::SiteTester.connected do |task,supervisor,site|
 #       # your test code goes here
 #     end
 #   end
@@ -36,30 +36,30 @@
 # which can be used to communicate with the site. For example
 # you can send commands, wait for responses, subscribe to statuses, etc.
 
-class Validator::Site < Validator::Testee
+class Validator::SiteTester < Validator::Tester
 
-   # class methods that just calls the instance stored in Validator
+   # class methods that delegate to the singleton instance
   class << self
-    attr_accessor :testee
+    attr_accessor :instance
 
-    def connected options={}, &block
-      testee.connected options, &block
+    def connected(options={}, &block)
+      instance.connected(options, &block)
     end
 
-    def reconnected options={}, &block
-      testee.reconnected options, &block
+    def reconnected(options={}, &block)
+      instance.reconnected(options, &block)
     end
 
-    def disconnected &block
-      testee.disconnected &block
+    def disconnected(&block)
+      instance.disconnected(&block)
     end
 
-    def isolated options={}, &block
-      testee.isolated options, &block
+    def isolated(options={}, &block)
+      instance.isolated(options, &block)
     end
 
     def stop
-      testee.stop
+      instance.stop
     end
   end
 

@@ -9,7 +9,7 @@ module Validator
       timeout = Validator.get_config('timeouts','ready')
       got = nil
 
-      Validator::Site.isolated(
+      Validator::SiteTester.isolated(
         'collect' => {timeout: timeout, num: length, ingoing: true, outgoing: true},
         'guest' => {
           'rsmp_versions' => [core_version],

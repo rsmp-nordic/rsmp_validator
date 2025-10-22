@@ -13,7 +13,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. unsubscribe
 
     it 'can be turned on and off for S0001' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         log "Subscribe to status and wait for update"
         component = Validator.get_config('main_component')
 

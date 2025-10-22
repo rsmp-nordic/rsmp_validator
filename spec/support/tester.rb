@@ -6,7 +6,7 @@ require 'rsmp'
 require 'colorize'
 require 'rspec/expectations'
 
-class Validator::Testee
+class Validator::Tester
   include RSpec::Matchers
 
   @@sentinel_errors = []
@@ -83,7 +83,7 @@ class Validator::Testee
     parse_config
   end
 
-  # Start the testee, which is either a site or supervisor,
+  # Start the tester, which is either a site or supervisor,
   # depending on what we're testing.
   # The node is run inside an async task that will persist
   # bewteen tests.

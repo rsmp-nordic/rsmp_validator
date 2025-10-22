@@ -10,7 +10,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we request S0006.
     # 3. Then we should receive a status response.
     specify 'emergency route is read with S0006', sxl: ['>=1.0.7','<1.2'] do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "emergency route status",
           { S0006: [:status,:emergencystage] }
       end
@@ -22,7 +22,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we request S0035.
     # 3. Then we should receive a status response.
     specify 'emergency route is read with S0035', sxl: '>=1.2', core: '>=3.2' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "emergency route status",
           { S0035: [:emergencyroutes] }
       end
@@ -49,7 +49,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         )
      end
 
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         set_emergency_states task, emergency_routes, false
         begin
@@ -89,7 +89,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
       skip("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
 
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         disable_routes task, emergency_routes
         begin

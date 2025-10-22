@@ -4,10 +4,10 @@ RSpec.describe 'Site::Core' do
   # Check that the site closed the connection as required when faced with
   # various types of incorrect behaviour from our side.
   #
-  # The site object passed by Validator::Site a SiteProxy object. We can redefine methods
+  # The site object passed by Validator::SiteTester a SiteProxy object. We can redefine methods
   # on this object to modify behaviour after the connection has been established. To ensure
-  # that the modfid SityProxy is not reused in later tests, we use  Validator::Site.isolate,
-  # rather than the more common Validator::Site.connect.
+  # that the modfid SityProxy is not reused in later tests, we use  Validator::SiteTester.isolate,
+  # rather than the more common Validator::SiteTester.connect.
 
   describe 'Connection' do
     # 1. Given the site has just connected
@@ -15,7 +15,7 @@ RSpec.describe 'Site::Core' do
     # 3. Then the site should disconnect
     it 'is closed if watchdogs are not acknowledged', sxl: '>=1.0.7' do |example|
       timeout = Validator.get_config('timeouts','disconnect')
-      Validator::Site.isolated do |task,supervisor,site_proxy|
+      Validator::SiteTester.isolated do |task,supervisor,site_proxy|
         supervisor.ignore_errors RSMP::DisconnectError do
           log "Disabling watchdog acknowledgements, site should disconnect"
           def site_proxy.acknowledge original
@@ -36,7 +36,7 @@ RSpec.describe 'Site::Core' do
     # 2. When our supervisor stops sending watchdogs
     # 3. Then the site should not disconnect
     it 'is not closed if watchdogs are not received', sxl: '>=1.0.7', slow: true do |example|
-      Validator::Site.isolated do |task,supervisor,site|
+      Validator::SiteTester.isolated do |task,supervisor,site|
         timeout = Validator.get_config('timeouts','disconnect')
 
         wait_task = task.async do

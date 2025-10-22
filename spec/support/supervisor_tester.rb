@@ -5,25 +5,25 @@ require 'rsmp'
 require 'singleton'
 require 'colorize'
 
-class Validator::Supervisor < Validator::Testee
+class Validator::SupervisorTester < Validator::Tester
 
   class << self
-    attr_accessor :testee
+    attr_accessor :instance
 
-    def connected options={}, &block
-      testee.connected options, &block
+    def connected(options={}, &block)
+      instance.connected(options, &block)
     end
 
-    def reconnected options={}, &block
-      testee.reconnected options, &block
+    def reconnected(options={}, &block)
+      instance.reconnected(options, &block)
     end
 
-    def disconnected &block
-      testee.disconnected &block
+    def disconnected(&block)
+      instance.disconnected(&block)
     end
 
-    def isolated options={}, &block
-      testee.isolated options, &block
+    def isolated(options={}, &block)
+      instance.isolated(options, &block)
     end
   end
 

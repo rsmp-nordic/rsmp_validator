@@ -28,7 +28,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 5. Then the alarm issue should become inactive, with a timestamp close to now
 
     specify 'Alarm A0302 is raised when input is activated', :programming, sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         alarm_code_id = 'A0302'
         prepare task, site
         def verify_timestamp alarm, duration=1.minute
@@ -57,7 +57,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 5. Then we should recieve an acknowledged alarm issue
 
     specify 'A0302 can be acknowledged', :programming, sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         alarm_code_id = 'A0302'   # what alarm to expect
         timeout  = Validator.get_config('timeouts','alarm')
@@ -108,7 +108,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 6. Then we should receive an alarm resumed message
 
     it 'A0302 can be suspended and resumed' do
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         alarm_code_id = 'A0302'
         input, component_id = find_alarm_programming(alarm_code_id)
 

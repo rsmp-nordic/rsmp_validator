@@ -8,7 +8,7 @@ RSpec.describe 'Site::Core' do
     # 2. When we request aggregated status
     # 3. Then we should receive an aggregated status
     it 'can be requested', core: '>=3.1.5' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         log "Request aggregated status"
         result = site.request_aggregated_status Validator.get_config('main_component'), collect!: {
@@ -24,7 +24,7 @@ RSpec.describe 'Site::Core' do
     # 2. When we receive an aggregated status
     # 3. Then fP and fS should be null
     it 'uses null for functional position/state', sxl: '>=1.1' do |example|
-      Validator::Site.isolated(
+      Validator::SiteTester.isolated(
         'collect' => {
           filter: RSMP::Filter.new(type:"AggregatedStatus"),
           timeout: Validator.get_config('timeouts','ready'),

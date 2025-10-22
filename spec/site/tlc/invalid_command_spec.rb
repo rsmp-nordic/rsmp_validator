@@ -11,7 +11,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Then the site should return a command response with age=undefined
 
     it 'returns a command response with age=undefined', core: '>=3.1.3' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         log "Sending M0001"
         command_list = build_command_list :M0001, :setValue, {
           securityCode: Validator.get_config('secrets','security_codes',2),
@@ -49,7 +49,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Then the site should return NotAck
 
     it 'returns NotAck' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         log "Sending non-existing command M0000"
         command_list = build_command_list :M0000, :bad, {}
         result = site.send_command Validator.get_config('main_component'), command_list,
@@ -73,7 +73,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Then the site return NotAck
 
     it 'returns NotAck' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         log "Sending M0001 with 'status' attribute missing"
         command_list = build_command_list :M0001, :setValue, {
             securityCode: '1111',
@@ -102,7 +102,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Then the site should return NotAck
 
     it 'returns NotAck' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         log "Sending M0001"
         # for M0001, cO should be :setValue, here we use the incorrect :bad
         command_list = build_command_list :M0001, :bad, {
