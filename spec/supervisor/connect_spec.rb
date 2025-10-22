@@ -3,7 +3,7 @@ RSpec.describe 'Supervisor' do
   describe 'Connection Sequence' do
     def get_connection_message core_version, length
       got = nil
-      Validator::Supervisor.isolated(
+      Validator::SupervisorTester.isolated(
         'rsmp_versions' => [core_version],
         'collect' => {
           timeout: Validator.get_config('timeouts','ready'),

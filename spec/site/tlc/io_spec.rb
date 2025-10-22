@@ -12,7 +12,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 2. When we read input with S0029
       # 3. Then we should receive a valid response
       specify 'is read with S0003 with extended input status', sxl: '<1.2' do |example|
-        Validator::Site.connected do |task,supervisor,site|
+        Validator::SiteTester.connected do |task,supervisor,site|
           request_status_and_confirm site, "input status",
             { S0003: [:inputstatus,:extendedinputstatus] }
         end
@@ -23,7 +23,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 2. When we read input with S0029
       # 3. Then we should receive a valid response
       specify 'is read with S0003', sxl: '>=1.2' do |example|
-        Validator::Site.connected do |task,supervisor,site|
+        Validator::SiteTester.connected do |task,supervisor,site|
           request_status_and_confirm site, "input status",
             { S0003: [:inputstatus] }
         end
@@ -34,7 +34,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 2. When we read input with S0029
       # 3. Then we should receive a valid response
       specify 'forcing is read with S0029', sxl: '>=1.0.13' do |example|
-        Validator::Site.connected do |task,supervisor,site|
+        Validator::SiteTester.connected do |task,supervisor,site|
           request_status_and_confirm site, "forced input status",
             { S0029: [:status] }
         end
@@ -47,7 +47,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 3. Then S0003 should show the input on
 
       specify 'forcing is set with M0019', sxl: '>=1.0.13' do |example|
-        Validator::Site.connected do |task,supervisor,site|
+        Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           inputs = Validator.get_config('items','inputs')
           skip("No inputs configured") if inputs.nil? || inputs.empty?
@@ -68,7 +68,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 5. Then S0003 should show the input is inactive
 
       it 'is activated with M0006', sxl: '>=1.0.7' do |example|
-        Validator::Site.connected do |task,supervisor,site|
+        Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           inputs = Validator.get_config('items','inputs')
           skip("No inputs configured") if inputs.nil? || inputs.empty?
@@ -82,7 +82,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 2. Send control command to set a serie of input
       # 3. Wait for status = true
       specify 'series is activated with M0013', sxl: '>=1.0.8' do |example|
-        Validator::Site.connected do |task,supervisor,site|
+        Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           inputs = Validator.get_config('items','inputs')
           skip("No inputs configured") if inputs.nil? || inputs.empty?
@@ -96,7 +96,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 2. When we set sensitivity with M0021
       # 3. Then we receive a confirmation
       specify 'sensitivity is set with M0021', sxl: '>=1.0.15' do |example|
-        Validator::Site.connected do |task,supervisor,site|
+        Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           status = '1-50'
           set_trigger_level status
@@ -111,7 +111,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 3. We should receive a status updated
       # 4. And the outputstatus attribute should be a digit string
       specify 'is read with S0004', sxl: ['>=1.0.7','<1.2'] do |example|
-        Validator::Site.connected do |task,supervisor,site|
+        Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           request_status_and_confirm site, "output status",
             { S0004: [:outputstatus,:extendedoutputstatus] }
@@ -124,7 +124,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 3. We should receive a status updated
       # 4. And the outputstatus attribute should be a digit string
       specify 'is read with S0004', sxl: ['>=1.2'] do |example|
-        Validator::Site.connected do |task,supervisor,site|
+        Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           request_status_and_confirm site, "output status",
             { S0004: [:outputstatus] }
@@ -136,7 +136,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 2. Request status
       # 3. Expect status response before timeout
       specify 'forcing is read with S0030', sxl: '>=1.0.15' do |example|
-        Validator::Site.connected do |task,supervisor,site|
+        Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           request_status_and_confirm site, "forced output status",
             { S0030: [:status] }
@@ -148,7 +148,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       # 2. When we force output with M0020
       # 3. Wait for status = true
       specify 'forcing is set with M0020', sxl: '>=1.0.15' do |example|
-        Validator::Site.connected do |task,supervisor,site|
+        Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           outputs = Validator.get_config('items','outputs')
           skip("No outputs configured") if outputs.nil? || outputs.empty?

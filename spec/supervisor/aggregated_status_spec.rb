@@ -5,7 +5,7 @@ RSpec.describe 'Supervisor' do
 
   # Validate that the supervisor responds correctly when we send an aggregated status message
     it 'receives aggregated status' do
-      Validator::Supervisor.connected do |task,site,supervisor_proxy|
+      Validator::SupervisorTester.connected do |task,site,supervisor_proxy|
         component = site.find_component Validator.get_config('main_component')
 
         # setting ':collect' will cause set_aggregated_status() to wait for the

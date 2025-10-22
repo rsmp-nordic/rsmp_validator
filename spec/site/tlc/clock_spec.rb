@@ -20,7 +20,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Request status
     # 3. Expect status response before timeout
     it 'can be read with S0096', sxl: '>=1.0.7'  do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "current date and time",
           { S0096: [
             :year,
@@ -39,7 +39,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Send command
     # 3. Expect status response before timeout
     it 'can be set with M0104', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         set_clock(CLOCK)
       end
@@ -53,7 +53,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Compare set_clock and status timestamp
     # 5. Expect the difference to be within max_diff
     it 'is used for S0096 status response', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do
@@ -102,7 +102,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
     it 'is used for S0096 response timestamp', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do
@@ -141,7 +141,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 5. Compare set_clock and response timestamp
     # 6. Expect the difference to be within max_diff
     it 'is used for aggregated status timestamp', core: '>=3.1.5', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do
@@ -167,7 +167,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
     it 'is used for M0001 response timestamp', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do
@@ -191,7 +191,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
     it 'is used for M0104 response timestamp', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do
@@ -219,7 +219,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 5. And the alarm timestamp should be close to the time set the clock to
 
     it 'is used for alarm timestamp', :programming, sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do                           # set clock
@@ -243,7 +243,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Compare set_clock and alarm response timestamp
     # 5. Expect the difference to be within max_diff
     it 'is used for watchdog timestamp', sxl: '>=1.0.7' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do

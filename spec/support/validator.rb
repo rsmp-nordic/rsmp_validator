@@ -7,8 +7,7 @@ module Validator
 
   class << self
     include RSMP::Logging
-    attr_accessor :config, :mode, :logger, :reporter
-    attr_accessor :site_validator, :supervisor_validator
+    attr_accessor :config, :auto_config, :mode, :logger, :reporter
   end
 
   @@reactor = nil
@@ -21,8 +20,9 @@ module Validator
   def self.setup rspec_config
     determine_mode rspec_config.files_to_run
     load_config
+    #load_auto_config
     setup_logging rspec_config
-    build_testee
+    build_tester
     setup_filters rspec_config
   end
 
@@ -88,9 +88,9 @@ module Validator
   def self.check_connection
     Validator::Log.log "Initial #{self.mode} connection check"
     if self.mode == :site
-      Validator::Site.testee.connected {}
+      Validator::SiteTester.instance.connected {}
     elsif self.mode == :supervisor
-      Validator::Supervisor.testee.connected {}
+      Validator::SupervisorTester.instance.connected {}
     end
     self.log ""
   end
@@ -271,13 +271,13 @@ module Validator
     end
   end
 
-  # build the testee, which can Validator::Site or a Validator::Supervisor,
+  # build the tester, which can be a Validator::SiteTester or a Validator::SupervisorTester,
   # depending on what we're going to test
-  def self.build_testee
+  def self.build_tester
     if self.mode == :site
-      Validator::Site.testee = Validator::Site.new
+      Validator::SiteTester.instance = Validator::SiteTester.new
     elsif self.mode == :supervisor
-      Validator::Supervisor.testee = Validator::Supervisor.new
+      Validator::SupervisorTester.instance = Validator::SupervisorTester.new
     else
       self.abort_with_error "Unknown test mode: #{self.mode}"
     end

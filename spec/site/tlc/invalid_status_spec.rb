@@ -11,7 +11,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 3. Then the site should return a status response with q=undefined
 
     it 'return a command response with age=undefined', core: '>=3.1.3' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         log "Sending M0001 with bad component id"
         status_list = convert_status_list( S0001:[:signalgroupstatus] )
         result = site.request_status(
@@ -44,7 +44,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send a non-existing S000 status request
     # 3. Then the site should return NotAck
     it 'returns NotAck' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         log "Requesting non-existing status S0000"
         status_list = convert_status_list( S0000:[:status] )
         result = site.request_status(
@@ -68,7 +68,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send an S0001 request with the stauts name 'bad'
     # 3. Then the site should return NotAck
     it 'returns NotAck' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         log "Requesting S0001 with non-existing status name"
         status_list = convert_status_list( S0001:[:bad] )
         result = site.request_status(
