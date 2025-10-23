@@ -31,7 +31,7 @@ Verify that we can read forced input status with S0029
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "forced input status",
     { S0029: [:status] }
 end
@@ -54,7 +54,7 @@ Verify that we can force input with M0019
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   inputs = Validator.get_config('items','inputs')
   skip("No inputs configured") if inputs.nil? || inputs.empty?
@@ -85,7 +85,7 @@ Verify that we can activate input with M0006
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   inputs = Validator.get_config('items','inputs')
   skip("No inputs configured") if inputs.nil? || inputs.empty?
@@ -110,7 +110,7 @@ Verify that we can read input status with S0003
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "input status",
     { S0003: [:inputstatus] }
 end
@@ -132,7 +132,7 @@ Verify that we can read input status with S0003, extendedinputstatus attribute
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "input status",
     { S0003: [:inputstatus,:extendedinputstatus] }
 end
@@ -154,7 +154,7 @@ Verify that input sensitivity can be set with M0021
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   status = '1-50'
   set_trigger_level status
@@ -177,7 +177,7 @@ Verify that we can acticate/deactivate a series of inputs with M0013
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   inputs = Validator.get_config('items','inputs')
   skip("No inputs configured") if inputs.nil? || inputs.empty?

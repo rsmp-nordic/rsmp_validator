@@ -60,23 +60,32 @@ You can also keep different configurations, and pick on when running tests, eg:
 % bundle exec rspec --options my_rspec_options
 ```
 
-### Running tests again a local Ruby TLC site
-For trying out the specs, you can just the `rsmp` command from the rsmp gem to run a local Ruby TLC site. 
+### Running tests against a local RSMP site
 
-Because the validator by default listens on port 13111, use should tell the site to connect on this port. You can do this either by editing the configuration, or using the `supervisor` command line option, as shown below.
+There are two ways to test against a local RSMP site:
+
+#### Option 1: Auto Node Feature (For Development)
+
+If you're developing the RSMP gem or validator itself, you can use the **auto node feature** to automatically start a local site to test. See the [Auto Node]({{ site.baseurl}}{% link pages/auto.md %}) page for details.
+
+#### Option 2: Manual RSMP Site (For Testing Real Equipment)
+
+Alternatively, you can manually start a local Ruby TLC site using the `rsmp` command from the rsmp gem.
+
+Because the validator by default listens on port 13111, you should tell the site to connect on this port. You can do this either by editing the configuration, or using the `supervisor` command line option, as shown below.
 
 You can use short reconnect and timeout intervals in the config file, which will make the test quick to run.
 
 ```
-% cd rmsp
+% cd rsmp
 % bundle exec rsmp site --type tlc --json --config config/tlc.yaml --supervisors localhost:13111
 2020-01-01 23:38:48 UTC                           Starting site RN+SI0001
-2020-01-01 23:38:48 UTC                           Connecting to superviser at 127.0.0.1:12111
-2020-01-01 23:38:48 UTC                           No connection to supervisor at 127.0.0.1:12111
+2020-01-01 23:38:48 UTC                           Connecting to supervisor at 127.0.0.1:13111
+2020-01-01 23:38:48 UTC                           No connection to supervisor at 127.0.0.1:13111
 2020-01-01 23:38:48 UTC                           Will try to reconnect again every 0.1 seconds..
 ```
 
-Once it's running, you can run the validator site specs, and you will see the Ruby TLC site respond to e.g. request to switch signal plan:
+Once it's running, you can run the validator site specs in another terminal, and you will see the Ruby TLC site respond to e.g. request to switch signal plan:
 
 ```
 2020-01-01 23:38:54 UTC  6697976b5     -->  c776  Received CommandRequest {"mType":"rSMsg","type":"CommandRequest","ntsOId":"","xNId":"","cId":"TC","arg":[{"cCI":"M0002","cO":"setPlan","n":"status","v":"True"},{"cCI":"M0002","cO":"setPlan","n":"securityCode","v":"0000"},{"cCI":"M0002","cO":"setPlan","n":"timeplan","v":"2"}],"mId":"c77665c1-f7cc-4488-8bcb-f809939e0e20"}

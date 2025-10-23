@@ -32,7 +32,7 @@ Verify that the controller responds to an aggregated status request.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   log "Request aggregated status"
   result = site.request_aggregated_status Validator.get_config('main_component'), collect!: {
@@ -59,7 +59,7 @@ For SXL versions before 1.1 empty strings "" is also allowed.
      View Source
   </summary>
 ```ruby
-Validator::Site.isolated(
+Validator::SiteTester.isolated(
   'collect' => {
     filter: RSMP::Filter.new(type:"AggregatedStatus"),
     timeout: Validator.get_config('timeouts','ready'),

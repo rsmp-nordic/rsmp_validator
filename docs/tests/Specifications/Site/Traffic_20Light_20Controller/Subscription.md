@@ -36,7 +36,7 @@ the subscription mechanism works.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   log "Subscribe to status and wait for update"
   component = Validator.get_config('main_component')
   status_list = [{'sCI'=>'S0001','n'=>'signalgroupstatus','uRt'=>'1'}]

@@ -31,7 +31,7 @@ Verify that forced output status can be read with S0030
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   request_status_and_confirm site, "forced output status",
     { S0030: [:status] }
@@ -54,7 +54,7 @@ Verify that output can be forced with M0020
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
    prepare task, site
    outputs = Validator.get_config('items','outputs')
    skip("No outputs configured") if outputs.nil? || outputs.empty?
@@ -84,7 +84,7 @@ Verify that  output status can be read with S0004
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   request_status_and_confirm site, "output status",
     { S0004: [:outputstatus] }

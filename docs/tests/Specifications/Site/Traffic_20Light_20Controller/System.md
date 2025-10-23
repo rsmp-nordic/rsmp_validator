@@ -32,7 +32,7 @@ Verify status S0091 operator logged in/out OP-panel
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
     status_list = { S0091: [:user] }
   else
@@ -59,7 +59,7 @@ Verify status S0092 operator logged in/out web-interface
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
     status_list = { S0092: [:user] }
   else
@@ -87,7 +87,7 @@ The behaviour is undefined.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   expect { wrong_security_code }.to raise_error(RSMP::MessageRejected)
 end
@@ -110,7 +110,7 @@ end
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   set_security_code 1
   set_security_code 2
@@ -134,7 +134,7 @@ Verify status S0095 version of traffic controller
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "version of traffic controller",
   { S0095: [:status] }
 end

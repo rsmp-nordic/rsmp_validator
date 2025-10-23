@@ -14,10 +14,10 @@ grand_parent: Site
 Check that the site closed the connection as required when faced with
 various types of incorrect behaviour from our side.
 
-The site object passed by Validator::Site a SiteProxy object. We can redefine methods
+The site object passed by Validator::SiteTester a SiteProxy object. We can redefine methods
 on this object to modify behaviour after the connection has been established. To ensure
-that the modfid SityProxy is not reused in later tests, we use  Validator::Site.isolate,
-rather than the more common Validator::Site.connect.
+that the modfid SityProxy is not reused in later tests, we use  Validator::SiteTester.isolate,
+rather than the more common Validator::SiteTester.connect.
 
 ### Tests
 {: .no_toc .text-delta }
@@ -37,7 +37,7 @@ rather than the more common Validator::Site.connect.
   </summary>
 ```ruby
 timeout = Validator.get_config('timeouts','disconnect')
-Validator::Site.isolated do |task,supervisor,site_proxy|
+Validator::SiteTester.isolated do |task,supervisor,site_proxy|
   supervisor.ignore_errors RSMP::DisconnectError do
     log "Disabling watchdog acknowledgements, site should disconnect"
     def site_proxy.acknowledge original
@@ -69,7 +69,7 @@ end
      View Source
   </summary>
 ```ruby
-Validator::Site.isolated do |task,supervisor,site|
+Validator::SiteTester.isolated do |task,supervisor,site|
   timeout = Validator.get_config('timeouts','disconnect')
   wait_task = task.async do
     site.wait_for_state :disconnected, timeout: timeout

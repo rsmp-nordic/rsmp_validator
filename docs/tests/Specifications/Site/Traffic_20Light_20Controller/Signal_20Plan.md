@@ -32,7 +32,7 @@ Verify status S0098 configuration of traffic parameters
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   result = request_status_and_confirm site, "config of traffic parameters",
     { S0098: [:timestamp,:config,:version] }
   # the site  should have stored the received status
@@ -62,7 +62,7 @@ Verify status S0014 current time plan
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
     status_list = { S0014: [:status,:source] }
   else
@@ -93,7 +93,7 @@ We try switching all programs configured
 ```ruby
 plans = Validator.get_config('items','plans')
 skip("No time plans configured") if plans.nil? || plans.empty?
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   plans.each { |plan| switch_plan plan }
 end
@@ -116,7 +116,7 @@ Verify status S0028 cycle time
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "cycle time",
     { S0028: [:status] }
 end
@@ -142,7 +142,7 @@ Verify that cycle time can be changed with M0018
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   with_cycle_time_extended(site) do
     log "Cycle time extension confirmed"
   end
@@ -166,7 +166,7 @@ Verify status S0027 time tables
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "command table",
     { S0027: [:status] }
 end
@@ -189,7 +189,7 @@ Verify that we can set day table with M0017
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   status = "12-1-12-59,1-0-23-12"
   prepare task, site
   set_day_table status
@@ -213,7 +213,7 @@ Verify status S0023 command table
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "command table",
     { S0023: [:status] }
 end
@@ -236,7 +236,7 @@ Verify that dynamic bands can the set with M0014
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   plan = Validator.get_config('items','plans').first
   status = "1-12"
   prepare task, site
@@ -264,7 +264,7 @@ Verify that dynamic bands can be read and changed
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   plan = Validator.get_config('items','plans').first
   band = 3
@@ -296,7 +296,7 @@ Verify status S0022 list of time plans
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "list of time plans",
     { S0022: [:status] }
 end
@@ -320,7 +320,7 @@ Deprecated from 1.2, use S0022 instead.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "number of time plans",
     { S0018: [:number] }
 end
@@ -343,7 +343,7 @@ Verify status S0024 offset time
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "offset time",
     { S0024: [:status] }
 end
@@ -364,7 +364,7 @@ end
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   plan = Validator.get_config('items','plans').first
   status = 99
   prepare task, site
@@ -391,7 +391,7 @@ Verify command M0023 timeout of dynamic bands
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   status = 10
   set_timeout_for_dynamic_bands status
@@ -417,7 +417,7 @@ Verify status S0097 version of traffic program
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "version of traffic program",
     { S0097: [:timestamp,:checksum] }
 end
@@ -440,7 +440,7 @@ Verify status S0026 week time table
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "week time table",
     { S0026: [:status] }
 end
@@ -463,7 +463,7 @@ Verify that we can set week table with M0016
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   status = "0-1,6-2"
   prepare task, site
   set_week_table status

@@ -45,7 +45,7 @@ def set_emergency_states task, emergency_routes, state
     ]
   )
 end
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   set_emergency_states task, emergency_routes, false
   begin
@@ -73,7 +73,7 @@ Depreciated from 1.2, use S0035 instead.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "emergency route status",
     { S0006: [:status,:emergencystage] }
 end
@@ -96,7 +96,7 @@ Requires core >= 3.2 since it uses the array data type.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "emergency route status",
     { S0035: [:emergencyroutes] }
 end
@@ -137,7 +137,7 @@ def disable_routes task, emergency_routes
 end
 emergency_routes = Validator.get_config('items','emergency_routes')
 skip("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   disable_routes task, emergency_routes
   begin

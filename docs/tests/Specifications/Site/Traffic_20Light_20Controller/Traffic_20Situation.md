@@ -32,7 +32,7 @@ Verify status S0015 current traffic situation
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
     status_list = { S0015: [:status,:source] }
   else
@@ -62,7 +62,7 @@ Verify that we change traffic situation
 ```ruby
 situations = Validator.get_config('items','traffic_situations')
 skip("No traffic situations configured") if situations.nil? || situations.empty?
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   situations.each { |traffic_situation| switch_traffic_situation traffic_situation.to_s }
 ensure
@@ -87,7 +87,7 @@ Verify status S0019 number of traffic situations
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "number of traffic situations",
     { S0019: [:number] }
 end

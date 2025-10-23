@@ -32,7 +32,7 @@ Verify status S0021 manually set detector logic
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "detector logic forcing",
     { S0021: [:detectorlogics] }
 end
@@ -53,7 +53,7 @@ end
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   Validator.get_config('components','detector_logic').keys.each_with_index do |component, indx|
     force_detector_logic component, mode:'True'
@@ -88,7 +88,7 @@ Verify status S0016 number of detector logics
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "number of detector logics",
     { S0016: [:number] }
 end
@@ -111,7 +111,7 @@ Verify status S0031 trigger level sensitivity for loop detector
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "loop detector sensitivity",
     { S0031: [:status] }
 end
@@ -134,7 +134,7 @@ Verify status S0002 detector logic status
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "detector logic status",
     { S0002: [:detectorlogicstatus] }
 end

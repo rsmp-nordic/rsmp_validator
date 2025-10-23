@@ -32,7 +32,7 @@ Verify that we can activate normal control after yellow flash mode is turned off
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   verify_startup_sequence do
     switch_yellow_flash
@@ -59,7 +59,7 @@ Validate that a signal group can be ordered to green using the M0010 command.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   set_signal_start
 end
@@ -80,7 +80,7 @@ end
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   set_signal_stop
 end
@@ -103,7 +103,7 @@ Verify status S0017 number of signal groups
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "number of signal groups",
     { S0017: [:number] }
 end
@@ -126,7 +126,7 @@ Verify that time-of-green/time-of-red can be read with S0025.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "time-of-green/time-of-red",
     { S0025: [
         :minToGEstimate,
@@ -158,7 +158,7 @@ Verify that signal group status can be read with S0001.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "signal group status",
     { S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }
 end

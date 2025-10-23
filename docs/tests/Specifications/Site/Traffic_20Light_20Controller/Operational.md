@@ -32,7 +32,7 @@ Verify status S0012 all red
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
     status_list = { S0012: [:status,:intersection,:source] }
   else
@@ -59,7 +59,7 @@ Verify status S0020 control mode
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "control mode",
     { S0020: [:controlmode,:intersection] }
 end
@@ -82,7 +82,7 @@ Verify status S0032 coordinated control
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   status_list = { S0032: [:status,:intersection,:source] }
   request_status_and_confirm site, "coordinated control status", status_list
 end
@@ -107,7 +107,7 @@ Verify that we can activate dark mode
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   switch_dark_mode
   switch_normal_control
@@ -133,7 +133,7 @@ Verify command M0007 fixed time control
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   switch_fixed_time 'True'
   switch_fixed_time 'False'
@@ -157,7 +157,7 @@ Verify status S0009 fixed time control
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
     status_list = { S0009: [:status,:intersection,:source] }
   else
@@ -184,7 +184,7 @@ Verify status S0010 isolated control
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
     status_list = { S0010: [:status,:intersection,:source] }
   else
@@ -211,7 +211,7 @@ Verify status S0008 manual control
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
     status_list = { S0008: [:status,:intersection,:source] }
   else
@@ -238,7 +238,7 @@ Verify status S0013 police key
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "police key",
     { S0013: [:status] }
 end
@@ -262,7 +262,7 @@ statusByIntersection requires core >= 3.2, since it uses the array data type.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "traffic controller starting (true/false)",
     { S0005: [:statusByIntersection] }
 end
@@ -285,7 +285,7 @@ Verify status S0007 controller switched on, source attribute
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   status_list = { S0007: [:status,:intersection,:source] }
   request_status_and_confirm site, "controller switch on (dark mode=off)", status_list
 end
@@ -310,7 +310,7 @@ Verify that we can yellow flash causes all groups to go to state 'c'
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   timeout =  Validator.get_config('timeouts','yellow_flash')
   switch_yellow_flash
@@ -339,7 +339,7 @@ Verify that we can activate yellow flash and after 1 minute goes back to NormalC
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   switch_normal_control
   minutes = 1
@@ -367,7 +367,7 @@ Verify that we can activate yellow flash
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   switch_yellow_flash
   switch_normal_control
@@ -391,7 +391,7 @@ Verify status S0011 yellow flash
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
     status_list = { S0011: [:status,:intersection,:source] }
   else

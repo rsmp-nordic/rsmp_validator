@@ -49,7 +49,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
           request_status_and_confirm site, "input status",
             { S0003: [:inputstatus,:extendedinputstatus] }
         end</div> -->
@@ -62,7 +62,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
           request_status_and_confirm site, "input status",
             { S0003: [:inputstatus] }
         end</div> -->
@@ -75,7 +75,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
           request_status_and_confirm site, "forced input status",
             { S0029: [:status] }
         end</div> -->
@@ -88,7 +88,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           inputs = Validator.get_config('items','inputs')
           skip("No inputs configured") if inputs.nil? || inputs.empty?
@@ -108,7 +108,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           inputs = Validator.get_config('items','inputs')
           skip("No inputs configured") if inputs.nil? || inputs.empty?
@@ -124,7 +124,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           inputs = Validator.get_config('items','inputs')
           skip("No inputs configured") if inputs.nil? || inputs.empty?
@@ -140,7 +140,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           status = '1-50'
           set_trigger_level status
@@ -172,7 +172,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           request_status_and_confirm site, "output status",
             { S0004: [:outputstatus] }
@@ -186,7 +186,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           request_status_and_confirm site, "output status",
             { S0004: [:outputstatus] }
@@ -200,7 +200,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           request_status_and_confirm site, "forced output status",
             { S0030: [:status] }
@@ -214,7 +214,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
           prepare task, site
           outputs = Validator.get_config('items','outputs')
           skip("No outputs configured") if outputs.nil? || outputs.empty?
@@ -258,7 +258,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         alarm_code_id = 'A0302'
         prepare task, site
         def verify_timestamp alarm, duration=1.minute
@@ -281,7 +281,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         alarm_code_id = 'A0302'   # what alarm to expect
         timeout  = Validator.get_config('timeouts','alarm')
@@ -333,7 +333,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         alarm_code_id = 'A0302'
         input, component_id = find_alarm_programming(alarm_code_id)
 
@@ -380,7 +380,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "current date and time",
           { S0096: [
             :year,
@@ -400,7 +400,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         set_clock(CLOCK)
       end</div> -->
@@ -413,7 +413,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do
@@ -461,7 +461,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do
@@ -498,7 +498,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do
@@ -523,7 +523,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do
@@ -546,7 +546,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do
@@ -569,7 +569,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do                           # set clock
@@ -592,7 +592,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
           with_clock_set site, CLOCK do
@@ -634,7 +634,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "control mode",
           { S0020: [:controlmode,:intersection] }
       end</div> -->
@@ -647,7 +647,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic controller starting (true/false)",
           { S0005: [:statusByIntersection] }
       end</div> -->
@@ -660,7 +660,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic controller starting (true/false)",
           { S0005: [:statusByIntersection] }
       end</div> -->
@@ -673,7 +673,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         status_list = { S0007: [:status,:intersection,:source] }
         request_status_and_confirm site, "controller switch on (dark mode=off)", status_list
       end</div> -->
@@ -686,7 +686,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         status_list = { S0007: [:status,:intersection,:source] }
         request_status_and_confirm site, "controller switch on (dark mode=off)", status_list
       end</div> -->
@@ -699,7 +699,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0008: [:status,:intersection,:source] }
         else
@@ -716,7 +716,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0009: [:status,:intersection,:source] }
         else
@@ -733,7 +733,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         switch_fixed_time 'True'
         switch_fixed_time 'False'
@@ -747,7 +747,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0010: [:status,:intersection,:source] }
         else
@@ -764,7 +764,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         status_list = { S0032: [:status,:intersection,:source] }
         request_status_and_confirm site, "coordinated control status", status_list
       end</div> -->
@@ -777,7 +777,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0011: [:status,:intersection,:source] }
         else
@@ -794,7 +794,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         switch_yellow_flash
         switch_normal_control
@@ -808,7 +808,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         timeout =  Validator.get_config('timeouts','yellow_flash')
 
@@ -827,7 +827,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0012: [:status,:intersection,:source] }
         else
@@ -844,7 +844,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "police key",
           { S0013: [:status] }
       end</div> -->
@@ -857,7 +857,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         switch_dark_mode
         switch_normal_control
@@ -871,7 +871,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         switch_normal_control
         minutes = 1
@@ -905,7 +905,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0091: [:user] }
         else
@@ -922,7 +922,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0092: [:user] }
         else
@@ -939,7 +939,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "version of traffic controller",
         { S0095: [:status] }
       end</div> -->
@@ -952,7 +952,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         set_security_code 1
         set_security_code 2
@@ -966,7 +966,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         expect { wrong_security_code }.to raise_error(RSMP::MessageRejected)
       end</div> -->
@@ -997,7 +997,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         log "Subscribe to status and wait for update"
         component = Validator.get_config('main_component')
 
@@ -1078,7 +1078,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0014: [:status,:source] }
         else
@@ -1097,7 +1097,7 @@
   </div>
   <!-- <div>plans = Validator.get_config('items','plans')
       skip("No time plans configured") if plans.nil? || plans.empty?
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         plans.each { |plan| switch_plan plan }
       end</div> -->
@@ -1110,7 +1110,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "number of time plans",
           { S0018: [:number] }
       end</div> -->
@@ -1123,7 +1123,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "list of time plans",
           { S0022: [:status] }
       end</div> -->
@@ -1136,7 +1136,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "week time table",
           { S0026: [:status] }
       end</div> -->
@@ -1149,7 +1149,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         status = "0-1,6-2"
         prepare task, site
         set_week_table status
@@ -1163,7 +1163,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "command table",
           { S0027: [:status] }
       end</div> -->
@@ -1176,7 +1176,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         status = "12-1-12-59,1-0-23-12"
         prepare task, site
         set_day_table status
@@ -1190,7 +1190,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "version of traffic program",
           { S0097: [:timestamp,:checksum] }
       end</div> -->
@@ -1203,7 +1203,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         result = request_status_and_confirm site, "config of traffic parameters",
           { S0098: [:timestamp,:config,:version] }
 
@@ -1225,7 +1225,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "command table",
           { S0023: [:status] }
       end</div> -->
@@ -1238,7 +1238,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         plan = Validator.get_config('items','plans').first
         status = "1-12"
         prepare task, site
@@ -1253,7 +1253,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         plan = Validator.get_config('items','plans').first
         band = 3
@@ -1278,7 +1278,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         status = 10
         set_timeout_for_dynamic_bands status
@@ -1294,7 +1294,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "offset time",
           { S0024: [:status] }
       end</div> -->
@@ -1307,7 +1307,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         plan = Validator.get_config('items','plans').first
         status = 99
         prepare task, site
@@ -1322,7 +1322,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "cycle time",
           { S0028: [:status] }
       end</div> -->
@@ -1335,7 +1335,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         with_cycle_time_extended(site) do
           log "Cycle time extension confirmed"
         end
@@ -1367,7 +1367,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: number of vehicles",
           { S0201: [:starttime,:vehicles] },
           Validator.get_config('components','detector_logic').keys.first
@@ -1381,7 +1381,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: number of vehicles",
           { S0205: [:start,:vehicles] }
       end</div> -->
@@ -1394,7 +1394,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: vehicle speed",
           { S0202: [:starttime,:speed] },
           Validator.get_config('components','detector_logic').keys.first
@@ -1408,7 +1408,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: vehicle speed",
           { S0206: [:start,:speed] }
       end</div> -->
@@ -1421,7 +1421,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: occupancy",
           { S0203: [:starttime,:occupancy] },
           Validator.get_config('components','detector_logic').keys.first
@@ -1435,7 +1435,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         result = wait_for_status task, "traffic counting: occupancy",
           { S0207: [:start,:occupancy] },
@@ -1461,7 +1461,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: classification",
           { S0204: [
               :starttime,
@@ -1486,7 +1486,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "traffic counting: classification",
           { S0208: [
               :start,
@@ -1528,7 +1528,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         set_signal_start
       end</div> -->
@@ -1541,7 +1541,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         set_signal_stop
       end</div> -->
@@ -1554,7 +1554,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "signal group status",
           { S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }
       end</div> -->
@@ -1567,7 +1567,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "time-of-green/time-of-red",
           { S0025: [
               :minToGEstimate,
@@ -1589,7 +1589,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "number of signal groups",
           { S0017: [:number] }
       end</div> -->
@@ -1602,7 +1602,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         verify_startup_sequence do
           switch_yellow_flash
@@ -1637,7 +1637,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "number of detector logics",
           { S0016: [:number] }
       end</div> -->
@@ -1650,7 +1650,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "detector logic status",
           { S0002: [:detectorlogicstatus] }
       end</div> -->
@@ -1663,7 +1663,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "detector logic forcing",
           { S0021: [:detectorlogics] }
       end</div> -->
@@ -1676,7 +1676,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
 
         Validator.get_config('components','detector_logic').keys.each_with_index do |component, indx|
@@ -1702,7 +1702,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "loop detector sensitivity",
           { S0031: [:status] }
       end</div> -->
@@ -1733,7 +1733,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         signal_group = Validator.get_config('components','signal_group').keys.first
         command_list = build_command_list :M0022, :requestPriority, {
           requestId: SecureRandom.uuid()[0..3],
@@ -1756,7 +1756,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "signal group status",
           { S0033: [:status] }
       end</div> -->
@@ -1769,7 +1769,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
         status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)
@@ -1784,7 +1784,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         timeout = Validator.get_config('timeouts','priority_completion')
         component = Validator.get_config('main_component')
         signal_group_id = Validator.get_config('components','signal_group').keys.first
@@ -1827,7 +1827,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         timeout = Validator.get_config('timeouts','priority_completion')
         component = Validator.get_config('main_component')
         signal_group_id = Validator.get_config('components','signal_group').keys.first
@@ -1888,7 +1888,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "emergency route status",
           { S0006: [:status,:emergencystage] }
       end</div> -->
@@ -1901,7 +1901,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "emergency route status",
           { S0035: [:emergencyroutes] }
       end</div> -->
@@ -1929,7 +1929,7 @@
         )
      end
 
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         set_emergency_states task, emergency_routes, false
         begin
@@ -1967,7 +1967,7 @@
 
       skip("No emergency routes configured") if emergency_routes.nil? || emergency_routes.empty?
 
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         disable_routes task, emergency_routes
         begin
@@ -2003,7 +2003,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         if RSMP::Proxy.version_meets_requirement?( site.sxl_version, '>=1.1' )
           status_list = { S0015: [:status,:source] }
         else
@@ -2022,7 +2022,7 @@
   </div>
   <!-- <div>situations = Validator.get_config('items','traffic_situations')
       skip("No traffic situations configured") if situations.nil? || situations.empty?
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         situations.each { |traffic_situation| switch_traffic_situation traffic_situation.to_s }
       ensure
@@ -2037,7 +2037,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         request_status_and_confirm site, "number of traffic situations",
           { S0019: [:number] }
       end</div> -->
@@ -2185,7 +2185,7 @@
     
   </div>
   <!-- <div>timeout = Validator.get_config('timeouts','disconnect')
-      Validator::Site.isolated do |task,supervisor,site_proxy|
+      Validator::SiteTester.isolated do |task,supervisor,site_proxy|
         supervisor.ignore_errors RSMP::DisconnectError do
           log "Disabling watchdog acknowledgements, site should disconnect"
           def site_proxy.acknowledge original
@@ -2209,7 +2209,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.isolated do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.isolated do |task,supervisor,site|
         timeout = Validator.get_config('timeouts','disconnect')
 
         wait_task = task.async do
@@ -2251,7 +2251,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.connected do |task,supervisor,site|
+  <!-- <div>Validator::SiteTester.connected do |task,supervisor,site|
         prepare task, site
         log "Request aggregated status"
         result = site.request_aggregated_status Validator.get_config('main_component'), collect!: {
@@ -2267,7 +2267,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Site.isolated(
+  <!-- <div>Validator::SiteTester.isolated(
         'collect' => {
           filter: RSMP::Filter.new(type:"AggregatedStatus"),
           timeout: Validator.get_config('timeouts','ready'),
@@ -2429,7 +2429,7 @@
   <div class="specification">
     
   </div>
-  <!-- <div>Validator::Supervisor.connected do |task,site,supervisor_proxy|
+  <!-- <div>Validator::SupervisorTester.connected do |task,site,supervisor_proxy|
         component = site.find_component Validator.get_config('main_component')
 
         # setting ':collect' will cause set_aggregated_status() to wait for the

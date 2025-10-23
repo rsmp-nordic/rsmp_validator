@@ -32,7 +32,7 @@ Verify status 0096 current date and time
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "current date and time",
     { S0096: [
       :year,
@@ -62,7 +62,7 @@ Verify that the controller responds to M0104
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   set_clock(CLOCK)
 end
@@ -87,7 +87,7 @@ Verify command response timestamp after changing clock
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
     with_clock_set site, CLOCK do
@@ -122,7 +122,7 @@ Verify command response timestamp after changing clock
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
     with_clock_set site, CLOCK do
@@ -157,7 +157,7 @@ Verify status response timestamp after changing clock
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
     with_clock_set site, CLOCK do
@@ -204,7 +204,7 @@ Verify status S0096 clock after changing clock
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
     with_clock_set site, CLOCK do
@@ -262,7 +262,7 @@ Verify aggregated status response timestamp after changing clock
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
     with_clock_set site, CLOCK do
@@ -302,7 +302,7 @@ configuted in the test config.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
     with_clock_set site, CLOCK do                           # set clock
@@ -337,7 +337,7 @@ Verify timestamp of watchdog after changing clock
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   site.with_watchdog_disabled do  # avoid time synchronization by disabling watchdogs
     with_clock_set site, CLOCK do

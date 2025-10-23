@@ -105,7 +105,7 @@
     
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Validator/Brief.html" title="Validator::Brief (class)">Brief</a></span>, <span class='object_link'><a href="Validator/Details.html" title="Validator::Details (class)">Details</a></span>, <span class='object_link'><a href="Validator/FormatterBase.html" title="Validator::FormatterBase (class)">FormatterBase</a></span>, <span class='object_link'><a href="Validator/List.html" title="Validator::List (class)">List</a></span>, <span class='object_link'><a href="Validator/ReportStream.html" title="Validator::ReportStream (class)">ReportStream</a></span>, <span class='object_link'><a href="Validator/Site.html" title="Validator::Site (class)">Site</a></span>, <span class='object_link'><a href="Validator/Steps.html" title="Validator::Steps (class)">Steps</a></span>, <span class='object_link'><a href="Validator/Supervisor.html" title="Validator::Supervisor (class)">Supervisor</a></span>, <span class='object_link'><a href="Validator/Testee.html" title="Validator::Testee (class)">Testee</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Validator/AutoNode.html" title="Validator::AutoNode (class)">AutoNode</a></span>, <span class='object_link'><a href="Validator/AutoSite.html" title="Validator::AutoSite (class)">AutoSite</a></span>, <span class='object_link'><a href="Validator/AutoSupervisor.html" title="Validator::AutoSupervisor (class)">AutoSupervisor</a></span>, <span class='object_link'><a href="Validator/Brief.html" title="Validator::Brief (class)">Brief</a></span>, <span class='object_link'><a href="Validator/Details.html" title="Validator::Details (class)">Details</a></span>, <span class='object_link'><a href="Validator/FormatterBase.html" title="Validator::FormatterBase (class)">FormatterBase</a></span>, <span class='object_link'><a href="Validator/List.html" title="Validator::List (class)">List</a></span>, <span class='object_link'><a href="Validator/ReportStream.html" title="Validator::ReportStream (class)">ReportStream</a></span>, <span class='object_link'><a href="Validator/SiteTester.html" title="Validator::SiteTester (class)">SiteTester</a></span>, <span class='object_link'><a href="Validator/Steps.html" title="Validator::Steps (class)">Steps</a></span>, <span class='object_link'><a href="Validator/SupervisorTester.html" title="Validator::SupervisorTester (class)">SupervisorTester</a></span>, <span class='object_link'><a href="Validator/Tester.html" title="Validator::Tester (class)">Tester</a></span>
     
   
 </p>
@@ -131,6 +131,60 @@
 
   <h2>Class Attribute Summary <small><a href="#" class="summary_toggle">collapse</a></small></h2>
   <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#auto_node-class_method" title="auto_node (class method)">.<strong>auto_node</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute auto_node.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#auto_node_config-class_method" title="auto_node_config (class method)">.<strong>auto_node_config</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute auto_node_config.</p>
+</div></span>
+  
+</li>
+
     
       <li class="public ">
   <span class="summary_signature">
@@ -235,60 +289,6 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns the value of attribute reporter.</p>
-</div></span>
-  
-</li>
-
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#site_validator-class_method" title="site_validator (class method)">.<strong>site_validator</strong>  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-    
-    
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute site_validator.</p>
-</div></span>
-  
-</li>
-
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#supervisor_validator-class_method" title="supervisor_validator (class method)">.<strong>supervisor_validator</strong>  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-    
-    
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute supervisor_validator.</p>
 </div></span>
   
 </li>
@@ -536,9 +536,97 @@
     <h2>Class Attribute Details</h2>
     
       
-      <span id="config=-class_method"></span>
+      <span id="auto_node=-class_method"></span>
       <div class="method_details first">
-  <h3 class="signature first" id="config-class_method">
+  <h3 class="signature first" id="auto_node-class_method">
+  
+    .<strong>auto_node</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the value of attribute auto_node.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+<table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+10
+11
+12</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 10</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_auto_node'>auto_node</span>
+  <span class='ivar'>@auto_node</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="auto_node_config=-class_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="auto_node_config-class_method">
+  
+    .<strong>auto_node_config</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the value of attribute auto_node_config.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+<table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+10
+11
+12</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 10</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_auto_node_config'>auto_node_config</span>
+  <span class='ivar'>@auto_node_config</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="config=-class_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="config-class_method">
   
     .<strong>config</strong>  &#x21d2; <tt>Object</tt> 
   
@@ -711,94 +799,6 @@
 </table>
 </div>
     
-      
-      <span id="site_validator=-class_method"></span>
-      <div class="method_details ">
-  <h3 class="signature " id="site_validator-class_method">
-  
-    .<strong>site_validator</strong>  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Returns the value of attribute site_validator.</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div>
-<table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-11
-12
-13</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 11</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_site_validator'>site_validator</span>
-  <span class='ivar'>@site_validator</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      
-      <span id="supervisor_validator=-class_method"></span>
-      <div class="method_details ">
-  <h3 class="signature " id="supervisor_validator-class_method">
-  
-    .<strong>supervisor_validator</strong>  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Returns the value of attribute supervisor_validator.</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div>
-<table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-11
-12
-13</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 11</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_supervisor_validator'>supervisor_validator</span>
-  <span class='ivar'>@supervisor_validator</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
   </div>
 
 
@@ -833,8 +833,6 @@
       <pre class="lines">
 
 
-73
-74
 75
 76
 77
@@ -845,10 +843,12 @@
 82
 83
 84
-85</pre>
+85
+86
+87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 73</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 75</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_around_each'>around_each</span> <span class='id identifier rubyid_example'>example</span>
   <span class='id identifier rubyid_thread_local_data'>thread_local_data</span> <span class='op'>=</span> <span class='const'>RSpec</span><span class='op'>::</span><span class='const'>Support</span><span class='period'>.</span><span class='id identifier rubyid_thread_local_data'>thread_local_data</span>
@@ -895,7 +895,6 @@
       <pre class="lines">
 
 
-51
 52
 53
 54
@@ -914,16 +913,19 @@
 67
 68
 69
-70</pre>
+70
+71
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 51</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 52</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_before_suite'>before_suite</span> <span class='id identifier rubyid_examle'>examle</span>
   <span class='cvar'>@@reactor</span> <span class='op'>=</span> <span class='const'>Async</span><span class='op'>::</span><span class='const'>Reactor</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
   <span class='id identifier rubyid_reactor'>reactor</span><span class='period'>.</span><span class='id identifier rubyid_annotate'>annotate</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>reactor</span><span class='tstring_end'>&#39;</span></span>
   <span class='id identifier rubyid_error'>error</span> <span class='op'>=</span> <span class='kw'>nil</span>
   <span class='id identifier rubyid_reactor'>reactor</span><span class='period'>.</span><span class='id identifier rubyid_run'>run</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_task'>task</span><span class='op'>|</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_auto_node'>auto_node</span><span class='period'>.</span><span class='id identifier rubyid_start'>start</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_auto_node'>auto_node</span>
     <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_check_connection'><span class='object_link'><a href="#check_connection-class_method" title="Validator.check_connection (method)">check_connection</a></span></span>
   <span class='kw'>rescue</span> <span class='const'>StandardError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
     <span class='id identifier rubyid_error'>error</span> <span class='op'>=</span> <span class='id identifier rubyid_e'>e</span>
@@ -971,25 +973,25 @@
       <pre class="lines">
 
 
-88
-89
 90
 91
 92
 93
 94
 95
-96</pre>
+96
+97
+98</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 88</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 90</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_connection'>check_connection</span>
   <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Validator/Log.html" title="Validator::Log (module)">Log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="Validator/Log.html#log-instance_method" title="Validator::Log#log (method)">log</a></span></span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Initial </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='embexpr_end'>}</span><span class='tstring_content'> connection check</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>==</span> <span class='symbol'>:site</span>
-    <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Validator/Site.html" title="Validator::Site (class)">Site</a></span></span><span class='period'>.</span><span class='id identifier rubyid_testee'><span class='object_link'><a href="Validator/Site.html#testee-class_method" title="Validator::Site.testee (method)">testee</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'>connected</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+    <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Validator/SiteTester.html" title="Validator::SiteTester (class)">SiteTester</a></span></span><span class='period'>.</span><span class='id identifier rubyid_instance'><span class='object_link'><a href="Validator/SiteTester.html#instance-class_method" title="Validator::SiteTester.instance (method)">instance</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'>connected</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
   <span class='kw'>elsif</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>==</span> <span class='symbol'>:supervisor</span>
-    <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Validator/Supervisor.html" title="Validator::Supervisor (class)">Supervisor</a></span></span><span class='period'>.</span><span class='id identifier rubyid_testee'><span class='object_link'><a href="Validator/Supervisor.html#testee-class_method" title="Validator::Supervisor.testee (method)">testee</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'>connected</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+    <span class='const'><span class='object_link'><a href="" title="Validator (module)">Validator</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Validator/SupervisorTester.html" title="Validator::SupervisorTester (class)">SupervisorTester</a></span></span><span class='period'>.</span><span class='id identifier rubyid_instance'><span class='object_link'><a href="Validator/SupervisorTester.html#instance-class_method" title="Validator::SupervisorTester.instance (method)">instance</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connected'>connected</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
   <span class='kw'>end</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
 <span class='kw'>end</span></pre>
@@ -1025,12 +1027,12 @@
       <pre class="lines">
 
 
-99
-100
-101</pre>
+101
+102
+103</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 101</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span> <span class='id identifier rubyid_str'>str</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reporter'>reporter</span><span class='period'>.</span><span class='id identifier rubyid_publish'>publish</span> <span class='symbol'>:step</span><span class='comma'>,</span> <span class='label'>message:</span> <span class='id identifier rubyid_str'>str</span>
@@ -1067,12 +1069,12 @@
       <pre class="lines">
 
 
+16
 17
-18
-19</pre>
+18</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 17</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 16</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reactor'>reactor</span>
   <span class='cvar'>@@reactor</span>
@@ -1098,22 +1100,26 @@
       <pre class="lines">
 
 
+20
 21
 22
 23
 24
 25
 26
-27</pre>
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 21</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 20</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_setup'>setup</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span>
   <span class='id identifier rubyid_determine_mode'>determine_mode</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span><span class='period'>.</span><span class='id identifier rubyid_files_to_run'>files_to_run</span>
-  <span class='id identifier rubyid_load_config'>load_config</span>
+  <span class='id identifier rubyid_load_tester_config'>load_tester_config</span>
+  <span class='id identifier rubyid_load_auto_node_config'>load_auto_node_config</span>
   <span class='id identifier rubyid_setup_logging'>setup_logging</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span>
-  <span class='id identifier rubyid_build_testee'>build_testee</span>
+  <span class='id identifier rubyid_build_auto_node'>build_auto_node</span>
+  <span class='id identifier rubyid_build_tester'>build_tester</span>
   <span class='id identifier rubyid_setup_filters'>setup_filters</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1137,7 +1143,6 @@
       <pre class="lines">
 
 
-29
 30
 31
 32
@@ -1156,10 +1161,11 @@
 45
 46
 47
-48</pre>
+48
+49</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 29</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 30</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_setup_logging'>setup_logging</span> <span class='id identifier rubyid_rspec_config'>rspec_config</span>
   <span class='id identifier rubyid_settings'>settings</span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -1213,12 +1219,12 @@
       <pre class="lines">
 
 
-104
-105
-106</pre>
+106
+107
+108</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 104</span>
+      <pre class="code"><span class="info file"># File 'spec/support/validator.rb', line 106</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_warning'>warning</span> <span class='id identifier rubyid_str'>str</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reporter'>reporter</span><span class='period'>.</span><span class='id identifier rubyid_publish'>publish</span> <span class='symbol'>:warning</span><span class='comma'>,</span> <span class='label'>message:</span> <span class='id identifier rubyid_str'>str</span>

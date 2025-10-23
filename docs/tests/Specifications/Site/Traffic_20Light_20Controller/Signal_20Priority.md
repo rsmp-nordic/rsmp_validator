@@ -36,7 +36,7 @@ Validate that a signal priority completes when we cancel it.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   timeout = Validator.get_config('timeouts','priority_completion')
   component = Validator.get_config('main_component')
   signal_group_id = Validator.get_config('components','signal_group').keys.first
@@ -86,7 +86,7 @@ Validate that a signal priority times out if not cancelled.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   timeout = Validator.get_config('timeouts','priority_completion')
   component = Validator.get_config('main_component')
   signal_group_id = Validator.get_config('components','signal_group').keys.first
@@ -132,7 +132,7 @@ Validate that a signal priority can be requested.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   signal_group = Validator.get_config('components','signal_group').keys.first
   command_list = build_command_list :M0022, :requestPriority, {
     requestId: SecureRandom.uuid()[0..3],
@@ -165,7 +165,7 @@ Validate that signal priority status can be requested.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   request_status_and_confirm site, "signal group status",
     { S0033: [:status] }
 end
@@ -189,7 +189,7 @@ Validate that we can subscribe signal priority status
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   status_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
   status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)

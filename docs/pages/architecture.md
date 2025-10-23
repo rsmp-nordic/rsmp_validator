@@ -15,7 +15,7 @@ The validator performs integration testing, not unit testing. The equipment, you
 ## Flow
 The RSMP Validator consists of RSpec, the individual tests and some some helper classes.
 
-Then you run tests, a local RSMP supervisor is started, to communicate with the site you're testing. The helper classes provide an interface to the supervisor. This local supervisor can in turn be used to exchange message with the remote  site you're testing.
+When you run tests, a local RSMP supervisor is started, to communicate with the site you're testing. The helper classes provide an interface to the supervisor. This local supervisor can in turn be used to exchange messages with the site you're testing.
 
 ![Overview]({{ site.baseurl }}/assets/images/flow.png "RSMP Validator Flow")
 

@@ -47,7 +47,7 @@ The alarm code and input nr is read from the test configuration.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   prepare task, site
   alarm_code_id = 'A0302'   # what alarm to expect
   timeout  = Validator.get_config('timeouts','alarm')
@@ -106,7 +106,7 @@ Validate that alarms can be suspended. We're using A0302 in this test.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   alarm_code_id = 'A0302'
   input, component_id = find_alarm_programming(alarm_code_id)
   # first resume alarm to make sure something happens when we suspend
@@ -148,7 +148,7 @@ test configuration.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   alarm_code_id = 'A0302'
   prepare task, site
   def verify_timestamp alarm, duration=1.minute
