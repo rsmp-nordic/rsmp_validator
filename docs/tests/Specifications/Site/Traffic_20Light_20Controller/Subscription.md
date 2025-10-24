@@ -70,7 +70,7 @@ then changes the update rate to 1s and verifies the new rate is in effect.
      View Source
   </summary>
 ```ruby
-Validator::Site.connected do |task,supervisor,site|
+Validator::SiteTester.connected do |task,supervisor,site|
   component = Validator.get_config('main_component')
   
   # Step 1: Subscribe with 60s update rate (no need to wait for updates with long interval)
