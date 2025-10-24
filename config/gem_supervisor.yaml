@@ -49,3 +49,7 @@ secrets:
   security_codes:
     1: '1111'
     2: '2222'
+log:
+  prefix: '[TLC       ]'
+  acknowledgements: false
+  watchdogs: false

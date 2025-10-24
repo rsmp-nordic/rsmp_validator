@@ -26,7 +26,7 @@ class Validator::AutoSite < Validator::AutoNode
     # Create the site with the auto_config settings
     klass.new(
       site_settings: config,
-      logger: Validator.logger
+      logger: create_logger
     )
   end
 end
