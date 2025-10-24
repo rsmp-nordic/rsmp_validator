@@ -39,7 +39,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. Verify that the new update rate is in effect by checking next update is received within 2s
 
     it 'can change interval during active subscription' do |example|
-      Validator::Site.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task,supervisor,site|
         component = Validator.get_config('main_component')
         
         # Step 1: Subscribe with 60s update rate (no need to wait for updates with long interval)
