@@ -39,6 +39,8 @@ Traffic Light Controller / Clock / can be read with S0096
     2021-07-07T13:08:49.457Z 53786    RN+SI0001           Sent MessageAck for Version 5087 {"mType":"rSMsg","type":"MessageAck","oMId":"50871bcb-57c2-430d-ab0f-49077823d0ac"}
 ```
 
+When using the auto node feature, both the validator and auto node output will use the same formatter, with output interleaved and formatted consistently. Use the `prefix` log option in the auto node config to distinguish between sources.
+
 ## Sentinel Warnings
 Sometimes invalid messages are received that are not directly related to the currently executing test. For example, alarms or statuses can be received at any time. If such messages do not conform to the RSMP JSON schema, a sentinel warning will be recorded.
 
@@ -80,6 +82,8 @@ For example, you can show the brief format in the console, and also direct the d
 ```
 % bundle exec rspec spec/site --format Validator::Brief --format Validator::Details --out log/validation.log
 ```
+
+When using the auto node feature with interleaved output (default), both validator and auto node logs will go through all configured formatters. If the auto node is configured with `path` in its log settings, its output will be written to that file independently of the RSpec formatters.
 
 ## Default output formats
 You can set default options for the rspec command by adding them to the file `.rspec-local`. For example, if you want to show the brief format in the console by default, while directing the detailed log to a file::
