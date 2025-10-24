@@ -64,4 +64,64 @@ You can use these as templates:
 - `config/simulator/tlc.yaml`
 - `config/simulator/supervisor.yaml`
 
+## Logging
+Auto nodes create their own logger instance, which allows you to control their output independently from the validator/supervisor logger.
 
+### Interleaved Output (Default)
+By default, output from the auto node is interleaved with the validator's output using the same RSpec formatter. To distinguish between the validator and auto node output, you can use the `prefix` option in the auto node's log configuration:
+
+```yaml
+# config/simulator/tlc.yaml
+log:
+  prefix: '[TLC]       '  # Prefix to identify auto site output
+  json: true
+  acknowledgements: false
+  watchdogs: false
+```
+
+When you run tests with a formatter like `--format Validator::Details`, both the validator and auto node output will be formatted consistently and appear in the same stream, differentiated by the prefix.
+
+RSpec's `--out` flag controls where the interleaved output goes:
+
+```shell
+# Both validator and auto node output go to details.log
+bundle exec rspec --format Validator::Details --out logs/details.log
+```
+
+You can use multiple formatters, and the interleaved output will go through all of them:
+
+```shell
+# Interleaved output goes to both progress.log and details.log
+bundle exec rspec --format progress --out logs/progress.log \
+                  --format Validator::Details --out logs/details.log
+```
+
+### Separate Log File
+Alternatively, you can direct the auto node's output to a separate file using the `path` option:
+
+```yaml
+# config/simulator/tlc.yaml
+log:
+  path: 'logs/auto_site.log'  # Direct output to separate file
+  debug: true
+  json: true
+```
+
+With this configuration:
+- **Auto node logs** are written directly to `logs/auto_site.log` 
+- **Validator logs** continue to go through the RSpec formatters (controlled by `--out` flags)
+- The two output streams are **completely independent**
+
+This means the auto node's logs bypass the RSpec formatter system entirely and are written to the configured file regardless of any `--out` flags used.
+
+### Log Configuration Options
+The auto node's `log` section accepts all the same options as the RSMP logger. See the [rsmp gem documentation](https://github.com/rsmp-nordic/rsmp) for complete details. Common options include:
+
+- `path`: File path for log output (bypasses RSpec formatters)
+- `prefix`: Text to prepend to each log line
+- `debug`: Enable debug messages
+- `json`: Include JSON representation of messages
+- `acknowledgements`: Show acknowledgement messages
+- `watchdogs`: Show watchdog messages
+- `timestamp`: Show timestamps
+- `component`: Show component information

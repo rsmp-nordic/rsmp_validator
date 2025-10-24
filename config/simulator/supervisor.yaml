@@ -8,8 +8,10 @@ guest:
     watchdog: 0.5
     acknowledgement: 0.5
 log:
+  prefix: '[SUPERVISOR]'
   id: true
   port: true
   json: true
-  acknowledgements: true
-  watchdogs: true
+  acknowledgements: false
+  watchdogs: false
+

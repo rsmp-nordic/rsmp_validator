@@ -264,13 +264,15 @@ In this case, the S0027 test above will not run, because it requires sxl 1.0.13 
 
 The validator includes an **auto node feature** that allows you to programmatically start a local site or supervisor to be tested, instead of connecting to external equipment. This is primarily useful when developing the RSMP gem or the validator itself.
 
-For detailed information about the auto node feature, including configuration and usage, see the [Auto Node]({{ site.baseurl}}{% link pages/auto.md %}) page.
+Auto nodes create their own logger instance, allowing you to control their output independently. By default, output is interleaved with the validator output using prefixes to distinguish the sources. You can also direct auto node output to a separate file using the `path` option in the auto node's log configuration.
 
-To enable it, add `local_site` or `local_supervisor` to your `config/validator.yaml`:
+For detailed information about the auto node feature, including configuration, logging options, and usage, see the [Auto Node]({{ site.baseurl}}{% link pages/auto.md %}) page.
+
+To enable it, add `auto_site` or `auto_supervisor` to your `config/validator.yaml`:
 
 ```yaml
 site: config/gem_tlc.yaml
-local_site: config/simulator/tlc.yaml  # Optional: starts a local site to test
+auto_site: config/simulator/tlc.yaml  # Optional: starts a local site to test
 ```
 
 

@@ -18,7 +18,7 @@ class Validator::AutoSupervisor < Validator::AutoNode
     # Create the supervisor with the auto_config settings
     RSMP::Supervisor.new(
       supervisor_settings: config,
-      logger: Validator.logger
+      logger: create_logger
     )
   end
 end

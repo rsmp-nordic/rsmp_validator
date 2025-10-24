@@ -14,6 +14,9 @@ the TCP connection open between test, which significantly speeds up testing.
 
 You can test either RSMP sites or supervisor.
 
+## Auto Node Logging
+When using the auto node feature to start a local site or supervisor for testing, each auto node creates its own logger instance. By default, output is interleaved with the validator output and formatted consistently. You can use the `prefix` option in the auto node config to distinguish the sources, or use the `path` option to direct output to a separate file.
+
 ## Files
 - config/ contains test configurations.
 - docs/ contains documentation, as a Jekyll site published using Github Pages.
