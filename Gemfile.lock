@@ -91,7 +91,6 @@ PLATFORMS
   arm64-darwin-22
   arm64-darwin-23
   x64-mingw-ucrt
-  x64-mingw32
   x86_64-darwin-20
   x86_64-darwin-21
   x86_64-darwin-22
@@ -105,4 +104,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.6.3
+  4.0.3
