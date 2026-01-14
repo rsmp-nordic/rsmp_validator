@@ -1,5 +1,6 @@
+# frozen_string_literal: true
+
 module Validator
-  
   # Class used as a stream by the RSMP::Logger
   #
   # When RSMP::Logger writes to it, the data
@@ -10,15 +11,14 @@ module Validator
   # Formatters can write to separate file, or to the console.
 
   class ReportStream
-    def initialize rspec_reporter
+    def initialize(rspec_reporter)
       @reporter = rspec_reporter
     end
 
-    def puts str
+    def puts(str)
       @reporter.publish :log, message: str
     end
 
-    def flush
-    end
+    def flush; end
   end
 end

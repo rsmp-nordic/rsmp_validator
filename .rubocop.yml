@@ -1,0 +1,54 @@
+plugins:
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false
+  Exclude:
+    - 'yard/**/*'
+    - 'vendor/**/*'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'spec/support/command_helpers.rb'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'spec/support/command_helpers.rb'
+
+Metrics/MethodLength:
+  Max: 25
+  Exclude:
+    - 'spec/support/command_helpers.rb'
+
+Metrics/ModuleLength:
+  Max: 350
+  Exclude:
+    - 'spec/support/command_helpers.rb'
+
+# These files contain empty blocks required by the YARD documentation generation.
+RSpec/EmptyExampleGroup:
+  Exclude:
+    - 'spec/site/site_spec.rb'
+    - 'spec/site/core/core_spec.rb'
+    - 'spec/site/tlc/tlc_spec.rb'
+    - 'spec/supervisor/supervisor_spec.rb'
+
+RSpec/NoExpectationExample:
+  Exclude:
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
+
+RSpec/MultipleExpectations:
+  Exclude:
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
+
+RSpec/ExampleLength:
+  Exclude:
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
+
+RSpec/Output:
+  Exclude:
+    - 'spec/support/validator.rb'
