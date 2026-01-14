@@ -15,11 +15,9 @@ module Validator
     attr_accessor :config, :mode, :logger, :reporter, :auto_node_config, :auto_node
   end
 
-  @@reactor = nil
-
   # Get the global Async reactor used for RSMP communication
   def self.reactor
-    @@reactor
+    @reactor
   end
 
   # Initialize the validator system at RSpec startup
@@ -57,7 +55,7 @@ module Validator
 
   # Called by RSpec at startup - initializes the Async reactor and checks connectivity
   def self.before_suite(_examle)
-    @@reactor = Async::Reactor.new
+    @reactor = Async::Reactor.new
     reactor.annotate 'reactor'
     error = nil
     reactor.run do |task|
@@ -98,9 +96,9 @@ module Validator
   def self.check_connection
     Validator::Log.log "Initial #{mode} connection check"
     if mode == :site
-      Validator::SiteTester.instance.connected {}
+      Validator::SiteTester.instance.connected { nil }
     elsif mode == :supervisor
-      Validator::SupervisorTester.instance.connected {}
+      Validator::SupervisorTester.instance.connected { nil }
     end
     log ''
   end
@@ -125,9 +123,11 @@ module Validator
   def self.set_mode(mode)
     if self.mode
       abort_with_error 'Cannot test run specs in both spec/site/ and spec/supervisor/' if self.mode != mode
-    elsif mode == :site
-      self.mode = mode
-    elsif mode == :supervisor
+      return
+    end
+
+    case mode
+    when :site, :supervisor
       self.mode = mode
     else
       abort_with_error "Unknown test mode: #{mode}"
@@ -141,6 +141,8 @@ module Validator
     mode = self.mode.to_s
     config_path = get_config_path_from_env(mode) || get_config_path_from_validator_yaml(mode)
     abort_with_error "#{mode.capitalize} config path not set" unless config_path && config_path != ''
+
+    config_path = File.expand_path(config_path) if local
     config_path
   end
 

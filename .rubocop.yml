@@ -1,2 +1,139 @@
-  AllCops:
-    NewCops: enable
+plugins:
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false
+  Exclude:
+    - 'yard/**/*'
+
+# Specs are intentionally long/integration-heavy; relax metric/style cops there.
+Metrics/AbcSize:
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/ModuleLength:
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/ParameterLists:
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'spec/**/*'
+
+Layout/LineLength:
+  Exclude:
+    - 'spec/**/*'
+
+Style/Documentation:
+  Exclude:
+    - 'spec/**/*'
+
+# These files contain empty blocks required by the YARD documentation generation.
+Lint/EmptyBlock:
+  Exclude:
+    - 'spec/site/site_spec.rb'
+    - 'spec/site/core/core_spec.rb'
+    - 'spec/site/tlc/tlc_spec.rb'
+    - 'spec/supervisor/supervisor_spec.rb'
+
+# RSpec cops are too strict for these integration specs.
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/NoExpectationExample:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/MultipleExpectations:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/ExampleLength:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/ContextWording:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/InstanceVariable:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/SortMetadata:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/MetadataStyle:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/PredicateMatcher:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/Output:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/NotToNot:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/HookArgument:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/EmptyLineAfterExample:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/ExcessiveDocstringSpacing:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/EmptyExampleGroup:
+  Exclude:
+    - 'spec/**/*'
+
+# Naming cops frequently conflict with RSMP field naming conventions in specs.
+Naming/AccessorMethodName:
+  Exclude:
+    - 'spec/**/*'
+
+Naming/MethodParameterName:
+  Exclude:
+    - 'spec/**/*'
+
+Naming/VariableName:
+  Exclude:
+    - 'spec/**/*'
+
+Naming/VariableNumber:
+  Exclude:
+    - 'spec/**/*'
+
+Naming/MethodName:
+  Exclude:
+    - 'spec/**/*'
