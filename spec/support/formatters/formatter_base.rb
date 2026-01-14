@@ -60,9 +60,12 @@ module Validator
       str = "#{num} sentinel warnings:"
       str = colorize(str, :yellow) if num > 0
       @output << "\n#{str}\n\n"
-      Validator::Tester.sentinel_errors.dup.each_with_object(Hash.new(0)) do |x, h|
+
+      counts = Validator::Tester.sentinel_errors.dup.each_with_object(Hash.new(0)) do |x, h|
         h[x.class] += 1
-      end.each_pair do |err, num|
+      end
+
+      counts.each_pair do |err, num|
         @output << colorize("  #{num} #{err}\n", :yellow)
       end
     end

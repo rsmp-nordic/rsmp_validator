@@ -27,11 +27,10 @@ require_relative 'support/formatters/details'
 require_relative 'support/formatters/list'
 require_relative 'support/formatters/steps'
 
-include RSpec
-include Validator::Log
-
 # configure RSpec
 RSpec.configure do |config|
+  config.include Validator::Log
+
   Validator.setup config
 
   # Enable flags like --only-failures and --next-failure
