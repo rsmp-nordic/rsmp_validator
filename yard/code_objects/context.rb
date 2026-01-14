@@ -3,9 +3,9 @@ module YARD::CodeObjects
     class Context < NamespaceObject
       attr_accessor :value, :specifications, :owner, :paired_to_code_object
 
-      def initialize(namespace,title)
+      def initialize(namespace, title)
         @specifications = []
-        super(namespace,title)
+        super(namespace, title)
       end
 
       def type
@@ -13,14 +13,14 @@ module YARD::CodeObjects
       end
 
       def subcontexts
-        children.find_all {|child| child.is_a?(Context) }
+        children.find_all { |child| child.is_a?(Context) }
       end
 
       def unique_id
-        "#{file}-#{line}".gsub(/\W/,'-')
+        "#{file}-#{line}".gsub(/\W/, '-')
       end
 
-      def full_name options={}
+      def full_name(_options = {})
         context = parent
         parts = [name]
         while context.is_a?(Context)

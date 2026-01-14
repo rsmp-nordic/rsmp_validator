@@ -3,8 +3,8 @@ module YARD::CodeObjects
     class Specification < Base
       attr_accessor :value, :source
 
-      def initialize(namespace,name)
-        super(namespace,name)
+      def initialize(namespace, name)
+        super(namespace, name)
       end
 
       def type
@@ -12,10 +12,10 @@ module YARD::CodeObjects
       end
 
       def unique_id
-        "#{file}-#{line}".gsub(/\W/,'-')
+        "#{file}-#{line}".gsub(/\W/, '-')
       end
 
-      def full_name options={}
+      def full_name(_options = {})
         context = parent
         parts = [name]
         while context.is_a?(Context)

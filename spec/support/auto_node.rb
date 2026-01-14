@@ -19,14 +19,14 @@ class Validator::AutoNode
   # This method should be called from within the reactor context
   def start
     return if @node
-    
+
     @node = build_node
-    
+
     # Run the node in a separate async task within the same reactor
     @task = Async do |task|
       task.annotate "auto_#{node_type}"
       Validator::Log.log_block("Starting auto #{node_type}") do
-        @node.start  # This will keep running until stopped
+        @node.start # This will keep running until stopped
       end
     end
   end
@@ -58,22 +58,19 @@ class Validator::AutoNode
   end
 
   def node_type
-    raise NotImplementedError, "Subclasses must implement node_type"
+    raise NotImplementedError, 'Subclasses must implement node_type'
   end
 
   def build_node
-    raise NotImplementedError, "Subclasses must implement build_node"
+    raise NotImplementedError, 'Subclasses must implement build_node'
   end
 
-  
-    def create_logger
+  def create_logger
     # start with validator's logger settings as base
     logger_settings = Validator.logger.settings.dup
 
     # if auto node config has log settings, merge them
-    if config['log']
-      logger_settings.merge!(config['log'])
-    end
+    logger_settings.merge!(config['log']) if config['log']
 
     # If path is explicitly set, remove stream to allow file output
     # Otherwise, keep the validator's stream for consistent formatting

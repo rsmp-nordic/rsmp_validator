@@ -27,15 +27,15 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. When we force the input to False
     # 5. Then the alarm issue should become inactive, with a timestamp close to now
 
-    specify 'Alarm A0302 is raised when input is activated', :programming, sxl: '>=1.0.7' do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
+    specify 'Alarm A0302 is raised when input is activated', :programming, sxl: '>=1.0.7' do |_example|
+      Validator::SiteTester.connected do |task, _supervisor, site|
         alarm_code_id = 'A0302'
         prepare task, site
-        def verify_timestamp alarm, duration=1.minute
-          alarm_time = Time.parse(alarm.attributes["aTs"])
+        def verify_timestamp(alarm, duration = 1.minute)
+          alarm_time = Time.parse(alarm.attributes['aTs'])
           expect(alarm_time).to be_within(duration).of Time.now.utc
         end
-        deactivated, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm,component_id|   # raise alarm, by activating input
+        deactivated, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id| # raise alarm, by activating input
           verify_timestamp alarm
           log "Alarm #{alarm_code_id} is now Active on component #{component_id}"
         end
@@ -56,22 +56,23 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. When we acknowledge the alarm
     # 5. Then we should receive an acknowledged alarm issue
 
-    specify 'A0302 can be acknowledged', :programming, sxl: '>=1.0.7' do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
+    specify 'A0302 can be acknowledged', :programming, sxl: '>=1.0.7' do |_example|
+      Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
-        alarm_code_id = 'A0302'   # what alarm to expect
-        timeout  = Validator.get_config('timeouts','alarm')
+        alarm_code_id = 'A0302' # what alarm to expect
+        timeout = Validator.get_config('timeouts', 'alarm')
 
         log "Activating alarm #{alarm_code_id}"
-        deactivate, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id|   # raise alarm, by activating input
+        with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id| # raise alarm, by activating input
           log "Alarm #{alarm_code_id} is now active on component #{component_id}"
 
           # verify timestamp
-          alarm_time = Time.parse(alarm.attributes["aTs"])
+          alarm_time = Time.parse(alarm.attributes['aTs'])
           expect(alarm_time).to be_within(1.minute).of Time.now.utc
 
           # verify that the alarm is not acknowledged when initially raised
-          expect(alarm.attributes["ack"]).to match(/notAcknowledged/i), "Alarm should not be acknowledged when raised, got: #{alarm.attributes["ack"]}"
+          expect(alarm.attributes['ack']).to match(/notAcknowledged/i),
+                                             "Alarm should not be acknowledged when raised, got: #{alarm.attributes['ack']}"
           log "Verified alarm #{alarm_code_id} is correctly not acknowledged when raised"
 
           # test acknowledge and confirm
@@ -79,15 +80,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
           collect_task = task.async do
             RSMP::AlarmCollector.new(site,
-              num: 1,
-              matcher: {
-                'aCId' => alarm_code_id,
-                'aSp' => /Acknowledge/i,
-                'ack' => /Acknowledged/i,
-                'aS' => /Active/i
-              },
-              timeout: timeout
-            ).collect!
+                                     num: 1,
+                                     matcher: {
+                                       'aCId' => alarm_code_id,
+                                       'aSp' => /Acknowledge/i,
+                                       'ack' => /Acknowledged/i,
+                                       'aS' => /Active/i
+                                     },
+                                     timeout: timeout).collect!
           end
 
           site.send_message RSMP::AlarmAcknowledge.new(
@@ -112,20 +112,20 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 6. Then we should receive an alarm resumed message
 
     it 'A0302 can be suspended and resumed' do
-      Validator::SiteTester.connected do |task,supervisor,site|
+      Validator::SiteTester.connected do |task, _supervisor, site|
         alarm_code_id = 'A0302'
-        input, component_id = find_alarm_programming(alarm_code_id)
+        _, component_id = find_alarm_programming(alarm_code_id)
 
         # first resume alarm to make sure something happens when we suspend
         resume_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: false
 
         begin
           # suspend alarm
-          request, response = suspend_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: true
+          _, response = suspend_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: true
           expect(response).to be_a(RSMP::AlarmSuspended)
 
           # resume alarm
-          request, response = resume_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: true
+          _, response = resume_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: true
           expect(response).to be_a(RSMP::AlarmResumed)
         ensure
           # always end with resuming alarm
