@@ -51,7 +51,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
         status_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
-        status_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(site)
+        status_list.map! { |item| item.merge!('sOc' => true) } if use_soc?(site)
         wait_for_status task, 'signal priority status', status_list
       end
     end

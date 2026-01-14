@@ -120,7 +120,7 @@ module Validator
   end
 
   # set whether we are testing a site or a supervisor
-  def self.set_mode(mode)
+  def self.select_mode(mode)
     if self.mode
       abort_with_error 'Cannot test run specs in both spec/site/ and spec/supervisor/' if self.mode != mode
       return
@@ -241,22 +241,22 @@ module Validator
   # load auto node config from a YAML file
   # this is the config for the local site/supervisor that will be started for testing
   def self.load_auto_node_config
-    auto_node_config_path = get_auto_node_config_path
-    return unless auto_node_config_path
+    path = auto_node_config_path
+    return unless path
 
     # load auto config
-    if File.exist? auto_node_config_path
-      puts "Will run auto #{mode} with config: #{auto_node_config_path}"
-      self.auto_node_config = YAML.load_file auto_node_config_path
+    if File.exist? path
+      puts "Will run auto #{mode} with config: #{path}"
+      self.auto_node_config = YAML.load_file path
     else
-      abort_with_error "Auto #{mode} config file #{auto_node_config_path} is missing"
+      abort_with_error "Auto #{mode} config file #{path} is missing"
     end
   end
 
   # get the path of the auto config file
   # First check AUTO_SITE_CONFIG or AUTO_SUPERVISOR_CONFIG environment variables
   # Then look for 'auto_site' or 'auto_supervisor' keys in config/validator.yaml
-  def self.get_auto_node_config_path
+  def self.auto_node_config_path
     # Check environment variable first
     env_key = mode == :site ? 'AUTO_SITE_CONFIG' : 'AUTO_SUPERVISOR_CONFIG'
     env_path = ENV.fetch(env_key, nil)
@@ -313,9 +313,9 @@ module Validator
     files_to_run.each do |path_str|
       path = Pathname.new(path_str)
       if path.fnmatch?(File.join(site_folder_full_path, '**'))
-        set_mode :site
+        select_mode :site
       elsif path.fnmatch?(File.join(supervisor_folder_full_path, '**'))
-        set_mode :supervisor
+        select_mode :supervisor
       else
         abort_with_error "Spec #{path_str} is neither a site nor supervisor test"
       end

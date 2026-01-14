@@ -119,19 +119,19 @@ RSpec.describe 'Site::Traffic Light Controller' do
         _, component_id = find_alarm_programming(alarm_code_id)
 
         # first resume alarm to make sure something happens when we suspend
-        resume_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: false
+        resume_alarm site, task, c_id: component_id, a_c_id: alarm_code_id, collect: false
 
         begin
           # suspend alarm
-          _, response = suspend_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: true
+          _, response = suspend_alarm site, task, c_id: component_id, a_c_id: alarm_code_id, collect: true
           expect(response).to be_a(RSMP::AlarmSuspended)
 
           # resume alarm
-          _, response = resume_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: true
+          _, response = resume_alarm site, task, c_id: component_id, a_c_id: alarm_code_id, collect: true
           expect(response).to be_a(RSMP::AlarmResumed)
         ensure
           # always end with resuming alarm
-          resume_alarm site, task, cId: component_id, aCId: alarm_code_id, collect: false
+          resume_alarm site, task, c_id: component_id, a_c_id: alarm_code_id, collect: false
         end
       end
     end

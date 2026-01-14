@@ -47,7 +47,7 @@ RSpec.configure do |config|
     Validator.before_suite example
   end
 
-  config.around(:each) do |example|
+  config.around do |example|
     Validator.around_each example
   end
 end

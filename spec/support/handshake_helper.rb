@@ -33,7 +33,7 @@ module Validator
     # We therefore cannot expect a specific sequence of the first four messages,
     # but we can check that the set of messages is correct
     # The same is the case with the next four messages, which is the exchange of Watchdogs
-    def check_sequence_3_1_1_to_3_1_3(core_version)
+    def check_sequence_v311_to_v313(core_version)
       expected_version_messages = expected_version_exchange_messages
       expected_watchdog_messages = expected_watchdog_exchange_messages
 
@@ -77,8 +77,8 @@ module Validator
     def expect_sequence_part!(got_part, expected:, forbidden:, context:)
       forbidden.each do |message|
         type = message.split(':').last
-        expect(got_part.include?(message)).to(
-          be_falsy,
+        expect(got_part).not_to(
+          include(message),
           "#{type} not allowed during #{context}: #{got_part}"
         )
       end
@@ -92,7 +92,7 @@ module Validator
     # Validate the connection sequence for core 3.1.4 and later
     # From 3.1.4, the site must send a Version first, so the sequence
     # is fixed and can be directly verified
-    def check_sequence_3_1_4_or_later(version)
+    def check_sequence_v314_or_later(version)
       expected = [
         'in:Version',
         'out:MessageAck',
@@ -110,9 +110,9 @@ module Validator
     def check_sequence(version)
       case version
       when '3.1.1', '3.1.2', '3.1.3'
-        check_sequence_3_1_1_to_3_1_3 version
+        check_sequence_v311_to_v313 version
       when '3.1.4', '3.1.5', '3.2', '3.2.1', '3.2.2'
-        check_sequence_3_1_4_or_later version
+        check_sequence_v314_or_later version
       else
         raise "Unkown rsmp version #{version}"
       end
