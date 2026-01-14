@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rspec/core/formatters/console_codes'
 
 module Validator
@@ -34,7 +36,8 @@ module Validator
       @output << colorize("\n#{notification.example.full_description}\n", :bold)
     end
 
-    def example_passed(_notification) # ExampleNotification
+    # ExampleNotification
+    def example_passed(_notification)
       @output << colorize("    Passed\n\n", :success)
     end
 
@@ -58,7 +61,7 @@ module Validator
 
     def dump_pending(notification)
       dump_sentinel_warnings
-      super notification
+      super
     end
   end
 end

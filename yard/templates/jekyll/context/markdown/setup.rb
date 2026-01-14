@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def init
   super
   sections :frontmatter, :title, :description, :context_toc, :specification_toc, :specifications
@@ -44,7 +46,7 @@ def title
 end
 
 def description
-  object.docstring.strip + "\n\n"
+  "#{object.docstring.strip}\n\n"
 end
 
 def object_permalink(obj)
@@ -52,7 +54,7 @@ def object_permalink(obj)
 end
 
 def object_link(obj)
-  'tests/' + options.serializer.serialized_path(obj).gsub('.html', '.md')
+  "tests/#{options.serializer.serialized_path(obj).gsub('.html', '.md')}"
 end
 
 def context_toc
@@ -94,7 +96,7 @@ def indent(source)
   n = /^(\s*)/.match(lines.last)[0].size
   lines.map do |line|
     i = [n, /^(\s*)/.match(line)[0].size].min
-    line[i..-1]
+    line[i..]
   end.join
 end
 

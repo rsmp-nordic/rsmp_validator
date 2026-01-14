@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::StatusHelpers
   include Validator::CommandHelpers
@@ -246,7 +248,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         switch_normal_control
         minutes = 1
         switch_yellow_flash timeout_minutes: minutes
-        wait_normal_control timeout: minutes * 60 + Validator.get_config('timeouts', 'functional_position')
+        wait_normal_control timeout: (minutes * 60) + Validator.get_config('timeouts', 'functional_position')
       end
     end
   end

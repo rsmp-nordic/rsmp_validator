@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Site' do
   # Tests covering the core specification for sites.
   #

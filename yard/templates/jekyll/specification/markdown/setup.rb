@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 include YARD::Templates::Helpers::HtmlHelper
 
 def init
@@ -36,7 +38,7 @@ def title
 end
 
 def docstring
-  object.docstring.strip + "\n\n"
+  "#{object.docstring.strip}\n\n"
 end
 
 def indent(source)
@@ -44,7 +46,7 @@ def indent(source)
   n = /^(\s*)/.match(lines.last)[0].size
   lines.map do |line|
     i = [n, /^(\s*)/.match(line)[0].size].min
-    line[i..-1]
+    line[i..]
   end.join
 end
 

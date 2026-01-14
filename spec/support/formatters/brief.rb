@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rspec/core/formatters/console_codes'
 
 module Validator
@@ -42,7 +44,7 @@ module Validator
 
     def example_pending(notification)
       @output << colorize("#{indent}#{notification.example.description} - " \
-        "Pending: #{notification.example.execution_result.pending_message}\n", :pending)
+                          "Pending: #{notification.example.execution_result.pending_message}\n", :pending)
     end
 
     def dump_failures(notification); end

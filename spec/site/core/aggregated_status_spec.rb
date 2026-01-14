@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Site::Core' do
   include Validator::CommandHelpers
 

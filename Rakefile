@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Rake tasks for updating documentation.
 # We use the branch gh-pages as the publishing source on GitHub Pages,
 # and the Rake tasks commit to this branch.

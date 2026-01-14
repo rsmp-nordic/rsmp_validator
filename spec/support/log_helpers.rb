@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Validator
   module Log
     INDENT = '> '
@@ -21,7 +23,7 @@ module Validator
       raise
     rescue Async::TimeoutError
       Validator.log "  #{INDENT * previous_log_indentation}#{action}: TIMEOUT", level: :test
-      raise RSMP::TimeoutError.new "Timeout while #{action}"
+      raise RSMP::TimeoutError, "Timeout while #{action}"
     ensure
       @log_indentation = previous_log_indentation
     end

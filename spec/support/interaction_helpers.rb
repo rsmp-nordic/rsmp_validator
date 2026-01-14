@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Validator
   def ask_user(site, question, accept: '')
     async_stdin = Async::IO::Stream.new(Async::IO::Generic.new($stdin))
     pointing = "\u{1f449}"
-    print "#{pointing} " + question.colorize(color: :light_magenta) + ' '
+    print "#{pointing} #{question.colorize(color: :light_magenta)} "
     site.log "Asking user for input: #{question}", level: :test
     response = async_stdin.gets.chomp
     if response == accept
