@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Site::Traffic Light Controller' do
+RSpec.describe Site::Tlc::Subscribe do
   include Validator::StatusHelpers
 
   describe 'Subscription' do
@@ -63,8 +63,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
           timeout: 2
         }
 
-        expect(result).to_not be_nil
-        expect(result[:collector].messages).to_not be_empty,
+        expect(result).not_to be_nil
+        expect(result[:collector].messages).not_to be_empty,
                                                    'Expected to receive status update within 2s with new 1s update rate'
         log 'Successfully received status update within 2s, confirming 1s update rate is active'
       ensure

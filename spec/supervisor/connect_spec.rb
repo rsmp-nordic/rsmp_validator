@@ -2,24 +2,39 @@
 
 RSpec.describe 'Supervisor' do
   describe 'Connection Sequence' do
+    def connection_collect_options(timeout, length)
+      {
+        timeout: timeout,
+        num: length,
+        ingoing: true,
+        outgoing: true
+      }
+    end
+
+    def prepare_and_wait_for_collector(task, site_proxy)
+      collector = site_proxy.collector
+      collector.use_task task
+      collector.wait!
+    end
+
+    def direction_and_type_pairs(messages)
+      messages.map { |message| [message.direction.to_s, message.type] }
+    end
+
     def get_connection_message(core_version, length)
-      got = nil
+      timeout = Validator.get_config('timeouts', 'ready')
+      got_messages = nil
       Validator::SupervisorTester.isolated(
         'rsmp_versions' => [core_version],
         'collect' => {
-          timeout: Validator.get_config('timeouts', 'ready'),
-          num: length,
-          ingoing: true,
-          outgoing: true
+          **connection_collect_options(timeout, length)
         }
       ) do |task, _supervisor, site_proxy|
-        collector = site_proxy.collector
-        collector.use_task task
-        collector.wait!
-        expect(site_proxy.ready?).to be true
-        got = site_proxy.collector.messages.map { |message| [message.direction.to_s, message.type] }
+        prepare_and_wait_for_collector(task, site_proxy)
+        expect(site_proxy).to be_ready
+        got_messages = site_proxy.collector.messages
       end
-      got
+      direction_and_type_pairs(got_messages)
     rescue Async::TimeoutError
       raise "Did not collect #{length} messages within #{timeout}s"
     end

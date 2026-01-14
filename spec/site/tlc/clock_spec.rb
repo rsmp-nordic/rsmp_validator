@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Site::Traffic Light Controller' do
+RSpec.describe Site::Tlc::Clock do
   include Validator::CommandHelpers
   include Validator::StatusHelpers
   include Validator::ProgrammingHelpers

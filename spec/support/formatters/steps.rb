@@ -52,21 +52,7 @@ module Validator
     end
 
     def example_failed(notification)
-      # RSpec::Core::Formatters::ExceptionPresenter is a private class which
-      # should not really be used by us, but the snippet extraction and backtrace
-      # processing seems rather cumbersome to reimplement
-      presenter = RSpec::Core::Formatters::ExceptionPresenter.new(notification.example.execution_result.exception,
-                                                                  notification.example, indentation: 0)
-
-      error = presenter.message_lines.map do |line|
-        colorize("  #{line}\n", :failure)
-      end.join
-      @output << error << "\n"
-
-      backtrace = presenter.formatted_backtrace.map do |line|
-        colorize("  # #{line}\n", :light_blue)
-      end.join
-      @output << backtrace << "\n"
+      append_example_failure(notification)
     end
 
     def dump_pending(notification)

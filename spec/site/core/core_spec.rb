@@ -5,7 +5,7 @@ RSpec.describe 'Site' do
   #
   # These tests are generic and can be used to test all types of RSMP sites.
 
-  # This group is intentionally empty; it exists for documentation generation.
   describe 'Core' do
+    # This group is intentionally empty, but exist so for YARD documentation generation purposes.
   end
 end
