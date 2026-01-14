@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rsmp'
 require 'colorize'
 require 'rspec/expectations'
@@ -9,6 +11,7 @@ module Validator
 
   class << self
     include RSMP::Logging
+
     attr_accessor :config, :mode, :logger, :reporter, :auto_node_config, :auto_node
   end
 
@@ -58,7 +61,7 @@ module Validator
     reactor.annotate 'reactor'
     error = nil
     reactor.run do |task|
-      auto_node.start if auto_node
+      auto_node&.start
       Validator.check_connection
     rescue StandardError => e
       error = e
@@ -143,7 +146,7 @@ module Validator
 
   def self.get_config_path_from_env(mode)
     key = "#{mode.upcase}_CONFIG"
-    ENV[key]
+    ENV.fetch(key, nil)
   end
 
   def self.get_config_path_from_validator_yaml(mode)
@@ -245,7 +248,7 @@ module Validator
   def self.get_auto_node_config_path
     # Check environment variable first
     env_key = mode == :site ? 'AUTO_SITE_CONFIG' : 'AUTO_SUPERVISOR_CONFIG'
-    env_path = ENV[env_key]
+    env_path = ENV.fetch(env_key, nil)
     return env_path if env_path && !env_path.empty?
 
     # Fall back to validator.yaml
@@ -339,7 +342,7 @@ module Validator
     # enable filtering by rsmp core version tags like '>=3.1.2'
     # Gem::Requirement and Gem::Version classed are used to do the version matching,
     # but this otherwise has nothing to do with Gems
-    core_version = Validator.config.dig('core_version')
+    core_version = Validator.config['core_version']
     if core_version
       core_version = Gem::Version.new core_version
       core_filter = lambda { |v|
@@ -349,7 +352,7 @@ module Validator
       # so we get more useful display of the filter option when we
       # run rspec on the command line
       def core_filter.inspect
-        "[unless relevant for #{Validator.config.dig('core_version')}]"
+        "[unless relevant for #{Validator.config['core_version']}]"
       end
       rspec_config.filter_run_excluding core: core_filter
     end
@@ -357,7 +360,7 @@ module Validator
     # enable filtering by sxl version tags like '>=1.0.7'
     # Gem::Requirement and Gem::Version classed are used to do the version matching,
     # but this otherwise has nothing to do with Gems
-    sxl_version = Validator.config.dig('sxl_version')
+    sxl_version = Validator.config['sxl_version']
     return unless sxl_version
 
     sxl_version = Gem::Version.new sxl_version
@@ -368,7 +371,7 @@ module Validator
     # so we get more useful display of the filter option when we
     # run rspec on the command line
     def sxl_filter.inspect
-      "[unless relevant for #{Validator.config.dig('sxl_version')}]"
+      "[unless relevant for #{Validator.config['sxl_version']}]"
     end
     rspec_config.filter_run_excluding sxl: sxl_filter
   end

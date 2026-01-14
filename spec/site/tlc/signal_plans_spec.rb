@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::StatusHelpers
   include Validator::CommandHelpers
@@ -135,7 +137,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         # the site  should have stored the received status
         message = result[:collector].messages.first
         expect(message).to be_an(RSMP::StatusResponse)
-        values = message.attributes['sS'].map { |item| [item['n'], item['s']] }.to_h
+        values = message.attributes['sS'].to_h { |item| [item['n'], item['s']] }
 
         expect(values['timestamp']).not_to be_empty
         expect(values['config']).not_to be_empty

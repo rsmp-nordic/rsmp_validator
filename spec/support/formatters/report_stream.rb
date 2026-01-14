@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Validator
   # Class used as a stream by the RSMP::Logger
   #

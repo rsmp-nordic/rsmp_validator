@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Supervisor' do
   describe 'Connection Sequence' do
     def get_connection_message(core_version, length)
