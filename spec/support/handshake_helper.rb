@@ -34,41 +34,59 @@ module Validator
     # but we can check that the set of messages is correct
     # The same is the case with the next four messages, which is the exchange of Watchdogs
     def check_sequence_3_1_1_to_3_1_3(core_version)
-      expected_version_messages = [
+      expected_version_messages = expected_version_exchange_messages
+      expected_watchdog_messages = expected_watchdog_exchange_messages
+
+      length = expected_version_messages.length +
+               expected_watchdog_messages.length
+      got = get_connection_message core_version, length
+
+      expect_sequence_part!(
+        got[0..3],
+        expected: expected_version_messages,
+        forbidden: ['in:AggregatedStatus', 'in:Watchdog', 'in:Alarm'],
+        context: 'version exchange'
+      )
+
+      expect_sequence_part!(
+        got[4..7],
+        expected: expected_watchdog_messages,
+        forbidden: ['in:AggregatedStatus', 'in:Alarm'],
+        context: 'watchdog exchange'
+      )
+    end
+
+    def expected_version_exchange_messages
+      [
         'in:Version',
         'out:MessageAck',
         'out:Version',
         'in:MessageAck'
       ]
-      expected_watchdog_messages = [
+    end
+
+    def expected_watchdog_exchange_messages
+      [
         'in:Watchdog',
         'out:MessageAck',
         'out:Watchdog',
         'in:MessageAck'
       ]
+    end
 
-      length = expected_version_messages.length +
-               expected_watchdog_messages.length
+    def expect_sequence_part!(got_part, expected:, forbidden:, context:)
+      forbidden.each do |message|
+        type = message.split(':').last
+        expect(got_part.include?(message)).to(
+          be_falsy,
+          "#{type} not allowed during #{context}: #{got_part}"
+        )
+      end
 
-      got = get_connection_message core_version, length
-
-      got_version_messages = got[0..3]
-      expect(got_version_messages.include?('in:AggregatedStatus')).to be_falsy,
-                                                                      "AggregatedStatus not allowed during version exchange: #{got_version_messages}"
-      expect(got_version_messages.include?('in:Watchdog')).to be_falsy,
-                                                              "Watchdog not allowed during version exchange: #{got_version_messages}"
-      expect(got_version_messages.include?('in:Alarm')).to be_falsy,
-                                                           "Alarms not allowed during version exchange: #{got_version_messages}"
-      expect(got_version_messages).to match_array(expected_version_messages),
-                                      "Wrong version part, must contain #{expected_version_messages}, got #{got_version_messages}"
-
-      got_watchdog_messages = got[4..7]
-      expect(got_watchdog_messages.include?('in:AggregatedStatus')).to be_falsy,
-                                                                       "AggregatedStatus not allowed during watchdog exchange: #{got_watchdog_messages}"
-      expect(got_watchdog_messages.include?('in:Alarm')).to be_falsy,
-                                                            "Alarms not allowed during watchdog exchange: #{got_version_messages}"
-      expect(got_watchdog_messages).to match_array(expected_watchdog_messages),
-                                       "Wrong watchdog part, must contain #{expected_watchdog_messages}, got #{got_watchdog_messages}"
+      expect(got_part).to(
+        match_array(expected),
+        "Wrong #{context} part, must contain #{expected}, got #{got_part}"
+      )
     end
 
     # Validate the connection sequence for core 3.1.4 and later

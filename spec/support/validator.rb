@@ -163,70 +163,79 @@ module Validator
   def self.load_tester_config
     config_path = get_config_path
 
-    # load config
-    if File.exist? config_path
-      puts "Using #{mode} config: #{config_path}"
-      self.config = YAML.load_file config_path
-    else
-      abort_with_error "#{mode.capitalize} config file #{config_path} is missing"
-    end
+    self.config = load_yaml_config!(
+      config_path,
+      using_message: "Using #{mode} config: #{config_path}",
+      missing_message: "#{mode.capitalize} config file #{config_path} is missing"
+    )
 
-    # check that the config looks right for the current mode
-    if mode == :supervisor
-      if config['port']
-        abort_with_error <<~HEREDOC
-          Error:
-          The config file at #{config_path} has a 'port' element, which is not expected when testing a supervisor.
-          For supervisor testing, the config should describe the local site used during testing.
-          Check that you're using the right config file, or fix the config.
-        HEREDOC
-      end
-    elsif mode == :site
-      if config['supervisors']
-        abort_with_error <<~HEREDOC
-          Error:
-          The config file at #{config_path} has a 'supervisors' element, which is not expected when testing a site.
-          For site testing, the config should describe the local supervisor used during testing.
-          Check that you're using the right config file, or fix the config.
-        HEREDOC
-      end
-    end
+    validate_mode_config!(config_path)
+    validate_components_config!
+    validate_timeouts_config!
+    normalize_core_version!
+    load_secrets config_path
+  end
 
-    # components
+  def self.load_yaml_config!(path, using_message:, missing_message:)
+    abort_with_error missing_message unless File.exist?(path)
+
+    puts using_message
+    YAML.load_file path
+  end
+
+  def self.validate_mode_config!(config_path)
+    case mode
+    when :supervisor
+      return unless config['port']
+
+      abort_with_error <<~HEREDOC
+        Error:
+        The config file at #{config_path} has a 'port' element, which is not expected when testing a supervisor.
+        For supervisor testing, the config should describe the local site used during testing.
+        Check that you're using the right config file, or fix the config.
+      HEREDOC
+    when :site
+      return unless config['supervisors']
+
+      abort_with_error <<~HEREDOC
+        Error:
+        The config file at #{config_path} has a 'supervisors' element, which is not expected when testing a site.
+        For site testing, the config should describe the local supervisor used during testing.
+        Check that you're using the right config file, or fix the config.
+      HEREDOC
+    end
+  end
+
+  def self.validate_components_config!
     abort_with_error "Error: config 'components' settings is missing or empty" if config['components'] == {}
 
-    config['main_component'] = begin
-      config['components']['main'].keys.first
-    rescue StandardError
-      {}
-    end
-    abort_with_error "Error: config 'main' component settings is missing or empty" if config['main_component'] == {}
+    main_component = config.dig('components', 'main')&.keys&.first
+    abort_with_error "Error: config 'main' component settings is missing or empty" unless main_component
 
-    # timeouts
-    abort_with_error "Error: config 'timeouts' settings is missing or empty" if config['timeouts'] == {}
+    config['main_component'] = main_component
+  end
 
-    # core version
-    core_version =
-      ENV['CORE_VERSION'] ||
-      config['core_version'] ||
-      RSMP::Schema.latest_core_version
+  def self.validate_timeouts_config!
+    timeouts = config['timeouts']
+    abort_with_error "Error: config 'timeouts' settings is missing or empty" if timeouts.nil? || timeouts == {}
+  end
 
+  def self.normalize_core_version!
+    core_version = ENV['CORE_VERSION'] || config['core_version'] || RSMP::Schema.latest_core_version
     core_version = RSMP::Schema.latest_core_version if core_version == 'latest'
 
     known_versions = RSMP::Schema.core_versions
+    normalized_core_version = normalized_core_version(core_version, known_versions)
+    return config['core_version'] = normalized_core_version.to_s if normalized_core_version
 
+    abort_with_error "Unknown core version #{core_version}, must be one of [#{known_versions.join(', ')}]."
+  end
+
+  def self.normalized_core_version(core_version, known_versions)
     # 3.2 will match 3.2.0
-    normalized_core_version = known_versions.map { |v| Gem::Version.new(v) }.sort.reverse.detect do |v|
+    known_versions.map { |v| Gem::Version.new(v) }.sort.reverse.detect do |v|
       Gem::Requirement.new(core_version).satisfied_by?(v)
     end
-
-    if normalized_core_version
-      config['core_version'] = normalized_core_version.to_s
-    else
-      abort_with_error "Unknown core version #{core_version}, must be one of [#{known_versions.join(', ')}]."
-    end
-
-    load_secrets config_path
   end
 
   # load auto node config from a YAML file

@@ -208,9 +208,13 @@ module Validator
     def get_dynamic_bands(plan, band)
       Validator.log 'Get dynamic bands', level: :test
       status_list = { S0023: [:status] }
-      result = @site.request_status Validator.get_config('main_component'), convert_status_list(status_list), collect!: {
-        timeout: Validator.get_config('timeouts', 'status_update', default: 0)
-      }
+      result = @site.request_status(
+        Validator.get_config('main_component'),
+        convert_status_list(status_list),
+        collect!: {
+          timeout: Validator.get_config('timeouts', 'status_update', default: 0)
+        }
+      )
       collector = result[:collector]
       collector.matchers.first.got['s'].split(',').each do |item|
         some_plan, some_band, value = *item.split('-')
@@ -428,9 +432,15 @@ module Validator
     def force_input_and_confirm(input:, value:)
       force_input status: 'True', input: input, value: value
       digit = (value == 'True' ? '1' : '0')
-      wait_for_status(@task,
-                      "input #{input} to be #{value}",
-                      [{ 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{input - 1}}#{digit}/ }]) # index is 1-based, convert to 0-based fo regex
+
+      # Index is 1-based, convert to 0-based for regex
+      wait_for_status(
+        @task,
+        "input #{input} to be #{value}",
+        [
+          { 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{input - 1}}#{digit}/ }
+        ]
+      )
     end
 
     def set_clock(clock)
@@ -493,9 +503,13 @@ module Validator
       wait_for_status(@task,
                       'normal control on, yellow flash off, startup mode off',
                       [
-                        { 'sCI' => 'S0007', 'n' => 'status', 's' => /^True(,True)*$/ },     # normal control on (=dark mode off)
-                        { 'sCI' => 'S0011', 'n' => 'status', 's' => /^False(,False)*$/ },   # yellow flash off
-                        { 'sCI' => 'S0005', 'n' => 'status', 's' => 'False' }               # startup mode off
+                        {
+                          'sCI' => 'S0007',
+                          'n' => 'status',
+                          's' => /^True(,True)*$/ # normal control on (=dark mode off)
+                        },
+                        { 'sCI' => 'S0011', 'n' => 'status', 's' => /^False(,False)*$/ }, # yellow flash off
+                        { 'sCI' => 'S0005', 'n' => 'status', 's' => 'False' } # startup mode off
                       ],
                       timeout: timeout)
     end
@@ -544,7 +558,11 @@ module Validator
       when :ok
         log 'Startup sequence verified'
       when :timeout
-        raise "Startup sequence '#{sequencer.sequence}' didn't complete in #{timeout}s, reached #{sequencer.latest}, #{sequencer.num_started} started, #{sequencer.num_done} done"
+        raise(
+          "Startup sequence '#{sequencer.sequence}' didn't complete in #{timeout}s, " \
+          "reached #{sequencer.latest}, #{sequencer.num_started} started, " \
+          "#{sequencer.num_done} done"
+        )
       when :cancelled
         raise "Startup sequence '#{sequencer.sequence}' not followed: #{collector.error}"
       end
@@ -569,9 +587,15 @@ module Validator
 
     def switch_input(indx)
       set_input 'True', indx.to_s
-      wait_for_status(@task,
-                      "input #{indx} to be True",
-                      [{ 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{indx - 1}}1/ }]) # index is 1-based, convert to 0-based fo regex
+
+      # Index is 1-based, convert to 0-based for regex
+      wait_for_status(
+        @task,
+        "input #{indx} to be True",
+        [
+          { 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{indx - 1}}1/ }
+        ]
+      )
 
       set_input 'False', indx.to_s
       wait_for_status(@task,
