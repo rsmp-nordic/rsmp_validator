@@ -65,9 +65,10 @@ module Validator
     # Switch to traffic situation and wait for confirmation via status
     def switch_traffic_situation(traffic_situation)
       apply_traffic_situation traffic_situation
-      wait_for_status(@task,
-                      "traffic situation #{traffic_situation}",
-                      [{ 'sCI' => 'S0015', 'n' => 'status', 's' => traffic_situation }])
+      wait_for_status(
+        "traffic situation #{traffic_situation}",
+        [{ 'sCI' => 'S0015', 'n' => 'status', 's' => traffic_situation }]
+      )
     end
 
     # Set traffic situation
@@ -167,23 +168,26 @@ module Validator
 
     def switch_plan(plan)
       apply_plan plan.to_s
-      wait_for_status(@task,
-                      "plan #{plan} to be active",
-                      [{ 'sCI' => 'S0014', 'n' => 'status', 's' => plan.to_s }])
+      wait_for_status(
+        "plan #{plan} to be active",
+        [{ 'sCI' => 'S0014', 'n' => 'status', 's' => plan.to_s }]
+      )
     end
 
     def switch_yellow_flash(timeout_minutes: 0)
       set_functional_position 'YellowFlash', timeout_minutes: timeout_minutes
-      wait_for_status(@task,
-                      'yellow flash',
-                      [{ 'sCI' => 'S0011', 'n' => 'status', 's' => /^True(,True)*$/ }])
+      wait_for_status(
+        'yellow flash',
+        [{ 'sCI' => 'S0011', 'n' => 'status', 's' => /^True(,True)*$/ }]
+      )
     end
 
     def switch_dark_mode
       set_functional_position 'Dark'
-      wait_for_status(@task,
-                      'dark mode',
-                      [{ 'sCI' => 'S0007', 'n' => 'status', 's' => /^False(,False)*$/ }])
+      wait_for_status(
+        'dark mode',
+        [{ 'sCI' => 'S0007', 'n' => 'status', 's' => /^False(,False)*$/ }]
+      )
     end
 
     def apply_series_of_inputs(status)
@@ -310,14 +314,20 @@ module Validator
 
       if status == 'True'
         input_status_str = value == 'True' ? '1' : '0'
-        wait_for_status(@task, wait_str, [
-                          { 'sCI' => 'S0029', 'n' => 'status', 's' => /^.{#{input - 1}}1/ },
-                          { 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{input - 1}}#{input_status_str}/ }
-                        ])
+        wait_for_status(
+          wait_str,
+          [
+            { 'sCI' => 'S0029', 'n' => 'status', 's' => /^.{#{input - 1}}1/ },
+            { 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{input - 1}}#{input_status_str}/ }
+          ]
+        )
       else
-        wait_for_status(@task, wait_str, [
-                          { 'sCI' => 'S0029', 'n' => 'status', 's' => /^.{#{input - 1}}0/ }
-                        ])
+        wait_for_status(
+          wait_str,
+          [
+            { 'sCI' => 'S0029', 'n' => 'status', 's' => /^.{#{input - 1}}0/ }
+          ]
+        )
       end
     end
 
@@ -435,7 +445,6 @@ module Validator
 
       # Index is 1-based, convert to 0-based for regex
       wait_for_status(
-        @task,
         "input #{input} to be #{value}",
         [
           { 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{input - 1}}#{digit}/ }
@@ -500,18 +509,19 @@ module Validator
     end
 
     def wait_normal_control(timeout: Validator.get_config('timeouts', 'startup_sequence'))
-      wait_for_status(@task,
-                      'normal control on, yellow flash off, startup mode off',
-                      [
-                        {
-                          'sCI' => 'S0007',
-                          'n' => 'status',
-                          's' => /^True(,True)*$/ # normal control on (=dark mode off)
-                        },
-                        { 'sCI' => 'S0011', 'n' => 'status', 's' => /^False(,False)*$/ }, # yellow flash off
-                        { 'sCI' => 'S0005', 'n' => 'status', 's' => 'False' } # startup mode off
-                      ],
-                      timeout: timeout)
+      wait_for_status(
+        'normal control on, yellow flash off, startup mode off',
+        [
+          {
+            'sCI' => 'S0007',
+            'n' => 'status',
+            's' => /^True(,True)*$/ # normal control on (=dark mode off)
+          },
+          { 'sCI' => 'S0011', 'n' => 'status', 's' => /^False(,False)*$/ }, # yellow flash off
+          { 'sCI' => 'S0005', 'n' => 'status', 's' => 'False' } # startup mode off
+        ],
+        timeout: timeout
+      )
     end
 
     def verify_startup_sequence
@@ -532,19 +542,7 @@ module Validator
           next unless item
 
           states = item['s']
-          # p states
-          status = sequencer.check states # check sequences
-          if status == :ok
-            log "Startup sequence #{states}: OK"
-            if sequencer.done?             # if all groups reached end?
-              collector.complete           # then end collection
-            else
-              false                        # reject item, ie. continue collecting
-            end
-          else
-            log "Startup sequence #{states}: Fail"
-            collector.cancel status        # if sequence was incorrect then cancel collection
-          end
+          handle_startup_sequence_item(states, sequencer, collector)
         end
       end
 
@@ -554,7 +552,32 @@ module Validator
       # subscribe, so we start getting status udates
       @site.subscribe_to_status component, subscribe_list
 
-      case collector_task.wait # wait for the collector to complete
+      handle_startup_sequence_result(collector_task.wait, sequencer, collector, timeout)
+
+      wait_for_status(
+        'control mode to be startup',
+        [{ 'sCI' => 'S0020', 'n' => 'controlmode', 's' => 'control' }]
+      )
+    ensure
+      @site.unsubscribe_to_status component, unsubscribe_list # unsubscribe
+    end
+
+    def handle_startup_sequence_item(states, sequencer, collector)
+      status = sequencer.check(states)
+
+      if status == :ok
+        log "Startup sequence #{states}: OK"
+        return collector.complete if sequencer.done?
+
+        return false
+      end
+
+      log "Startup sequence #{states}: Fail"
+      collector.cancel status
+    end
+
+    def handle_startup_sequence_result(result, sequencer, collector, timeout)
+      case result
       when :ok
         log 'Startup sequence verified'
       when :timeout
@@ -566,12 +589,9 @@ module Validator
       when :cancelled
         raise "Startup sequence '#{sequencer.sequence}' not followed: #{collector.error}"
       end
-
-      wait_for_status(@task, 'control mode to be startup',
-                      [{ 'sCI' => 'S0020', 'n' => 'controlmode', 's' => 'control' }])
-    ensure
-      @site.unsubscribe_to_status component, unsubscribe_list # unsubscribe
     end
+
+    private :handle_startup_sequence_item, :handle_startup_sequence_result
 
     def switch_normal_control
       set_functional_position 'NormalControl'
@@ -580,9 +600,10 @@ module Validator
 
     def switch_fixed_time(status)
       apply_fixed_time status
-      wait_for_status(@task,
-                      "fixed time to be #{status}",
-                      [{ 'sCI' => 'S0009', 'n' => 'status', 's' => /^#{status}(,#{status})*$/ }])
+      wait_for_status(
+        "fixed time to be #{status}",
+        [{ 'sCI' => 'S0009', 'n' => 'status', 's' => /^#{status}(,#{status})*$/ }]
+      )
     end
 
     def switch_input(indx)
@@ -590,7 +611,6 @@ module Validator
 
       # Index is 1-based, convert to 0-based for regex
       wait_for_status(
-        @task,
         "input #{indx} to be True",
         [
           { 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{indx - 1}}1/ }
@@ -598,9 +618,10 @@ module Validator
       )
 
       set_input 'False', indx.to_s
-      wait_for_status(@task,
-                      "input #{indx} to be False",
-                      [{ 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{indx - 1}}0/ }])
+      wait_for_status(
+        "input #{indx} to be False",
+        [{ 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{indx - 1}}0/ }]
+      )
     end
 
     def suspend_alarm(site, task, c_id:, a_c_id:, collect:)
