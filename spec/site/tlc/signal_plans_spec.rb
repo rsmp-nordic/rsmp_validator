@@ -123,6 +123,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
                                    { S0097: %i[timestamp checksum] }
       end
     end
+
     #
     # Verify status S0098 configuration of traffic parameters
     #

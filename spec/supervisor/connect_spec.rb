@@ -24,7 +24,7 @@ RSpec.describe 'Supervisor' do
       raise "Did not collect #{length} messages within #{timeout}s"
     end
 
-    def check_sequence_3_1_1(core_version)
+    def check_sequence_v311(core_version)
       # in earlier core version, both sides sends a Version
       # message simulatenously. we therefore cannot expect
       # a specific sequence
@@ -54,7 +54,7 @@ RSpec.describe 'Supervisor' do
       expect(expected_watchdog_messages).to include(*got_watchdog_messages)
     end
 
-    def check_sequence_3_1_4(version)
+    def check_sequence_v314(version)
       expected = [
         %w[out Version],
         %w[in MessageAck],
@@ -74,9 +74,9 @@ RSpec.describe 'Supervisor' do
     def check_sequence(version)
       case version
       when '3.1.1', '3.1.2', '3.1.3'
-        check_sequence_3_1_1 version
+        check_sequence_v311 version
       when '3.1.4', '3.1.5', '3.2', '3.2.1', '3.2.2'
-        check_sequence_3_1_4 version
+        check_sequence_v314 version
       else
         raise "Unkown rsmp version #{version}"
       end

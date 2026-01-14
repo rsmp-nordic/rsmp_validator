@@ -42,7 +42,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'version is read with S0095 ', sxl: '>=1.0.7' do |_example|
+    specify 'version is read with S0095', sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'version of traffic controller',
                                    { S0095: [:status] }
