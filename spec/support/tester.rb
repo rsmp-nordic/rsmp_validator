@@ -12,10 +12,8 @@ module Validator
   class Tester
     include RSpec::Matchers
 
-    @@sentinel_errors = []
-
     def self.sentinel_errors
-      @@sentinel_errors
+      @sentinel_errors ||= []
     end
 
     def config
@@ -105,7 +103,7 @@ module Validator
           while @node
             e = @node.error_queue.dequeue
             Validator.log "Sentinel warning: #{e.class}: #{e}", level: :test
-            @@sentinel_errors << e
+            self.class.sentinel_errors << e
           end
         end
 

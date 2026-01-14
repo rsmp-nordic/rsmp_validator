@@ -4,20 +4,16 @@ module Validator
   module Log
     INDENT = '> '
 
-    # log the start of an action
-    def log(action)
-      Validator.log "> #{action}", level: :test
+    def self.log(action, **options)
+      Validator.log "> #{action}", **options
     end
 
-    # log the start and completion/error of a block of code
-    def log_block(action, &block)
+    def self.log_block(action, **options)
       @log_indentation ||= 0
       previous_log_indentation = @log_indentation
-      Validator.log "> #{INDENT * @log_indentation}#{action}", level: :test
-      Time.now
+      Validator.log "> #{INDENT * @log_indentation}#{action}", **options
       @log_indentation += 1
-      yield block
-      # Validator.log "  #{INDENT*previous_log_indentation}#{action}: OK", level: :test
+      yield
     rescue StandardError
       Validator.log "  #{INDENT * previous_log_indentation}#{action}: ERROR", level: :test
       raise
@@ -26,6 +22,16 @@ module Validator
       raise RSMP::TimeoutError, "Timeout while #{action}"
     ensure
       @log_indentation = previous_log_indentation
+    end
+
+    # log the start of an action
+    def log(action, **options)
+      Validator::Log.log(action, **options)
+    end
+
+    # log the start and completion/error of a block of code
+    def log_block(action, **options, &block)
+      Validator::Log.log_block(action, **options, &block)
     end
   end
 end

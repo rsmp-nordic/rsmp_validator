@@ -302,6 +302,8 @@ module Validator
       }
       send_command_and_confirm @task, command_list, str
 
+      return unless validate
+
       if status == 'True'
         input_status_str = value == 'True' ? '1' : '0'
         wait_for_status(@task, wait_str, [
@@ -324,6 +326,8 @@ module Validator
         outputValue: value
       }
       send_command_and_confirm @task, command_list, "Force output #{output} to #{value}"
+
+      validate
     end
 
     def set_trigger_level(status)
