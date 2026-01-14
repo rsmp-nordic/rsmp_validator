@@ -56,7 +56,7 @@ module Validator
                         component_id: Validator.get_config('main_component'))
       log "Wait for #{description}"
       subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt' => update_rate.to_s }
-      subscribe_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(@site)
+      subscribe_list.map! { |item| item.merge!('sOc' => true) } if use_soc?(@site)
 
       begin
         @site.subscribe_to_status component_id, subscribe_list, collect!: {
@@ -86,7 +86,7 @@ module Validator
 
     # Should the sOc attribute be used?
     # It should if the core version is 3.1.5 or higher.
-    def use_sOc?(site)
+    def use_soc?(site)
       RSMP::Proxy.version_meets_requirement? site.core_version, '>=3.1.5'
     end
 

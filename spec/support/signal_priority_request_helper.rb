@@ -57,7 +57,7 @@ module Validator
         @request_id = SecureRandom.uuid[0..3]
         @matcher = S0033Matcher.new({ 'cCI' => 'S0033', 'q' => 'recent' }, request_id: @request_id)
         @subscribe_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
-        @subscribe_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(@site)
+        @subscribe_list.map! { |item| item.merge!('sOc' => true) } if use_soc?(@site)
         @unsubscribe_list = [{ 'sCI' => 'S0033', 'n' => 'status' }]
         @got = []
         @timeout = timeout
@@ -73,15 +73,15 @@ module Validator
       def request(
         level: 7,
         eta: 2,
-        vehicleType: 'car'
+        vehicle_type: 'car'
       )
         command_list = build_command_list(:M0022, :requestPriority, {
-                                            requestId: @request_id,
-                                            signalGroupId: @signal_group_id,
-                                            type: 'new',
-                                            level: level,
-                                            eta: eta,
-                                            vehicleType: vehicleType
+                                            'requestId' => @request_id,
+                                            'signalGroupId' => @signal_group_id,
+                                            'type' => 'new',
+                                            'level' => level,
+                                            'eta' => eta,
+                                            'vehicleType' => vehicle_type
                                           })
         @site.send_command @component, command_list
       end
@@ -89,15 +89,15 @@ module Validator
       def request_unrelated(
         level: 7,
         eta: 2,
-        vehicleType: 'car'
+        vehicle_type: 'car'
       )
         command_list = build_command_list(:M0022, :requestPriority, {
-                                            requestId: SecureRandom.uuid[0..3],
-                                            signalGroupId: @signal_group_id,
-                                            type: 'new',
-                                            level: level,
-                                            eta: eta,
-                                            vehicleType: vehicleType
+                                            'requestId' => SecureRandom.uuid[0..3],
+                                            'signalGroupId' => @signal_group_id,
+                                            'type' => 'new',
+                                            'level' => level,
+                                            'eta' => eta,
+                                            'vehicleType' => vehicle_type
                                           })
         @site.send_command @component, command_list
       end

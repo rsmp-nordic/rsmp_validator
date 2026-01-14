@@ -83,7 +83,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::SiteTester.connected do |task, _supervisor, site|
         status = '0-1,6-2'
         prepare task, site
-        set_week_table status
+        apply_week_table status
       end
     end
 
@@ -108,7 +108,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::SiteTester.connected do |task, _supervisor, site|
         status = '12-1-12-59,1-0-23-12'
         prepare task, site
-        set_day_table status
+        apply_day_table status
       end
     end
 
@@ -210,9 +210,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
       Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
         status = 10
-        set_timeout_for_dynamic_bands status
+        apply_timeout_for_dynamic_bands status
         status = 0
-        set_timeout_for_dynamic_bands status
+        apply_timeout_for_dynamic_bands status
       end
     end
 
