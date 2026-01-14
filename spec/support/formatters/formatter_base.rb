@@ -53,25 +53,49 @@ module Validator
       dump_sentinel_summary
     end
 
+    def append_example_failure(notification)
+      presenter = exception_presenter(notification)
+      append_failure_message(presenter)
+      append_failure_backtrace(presenter)
+    end
+
     def dump_sentinel_summary
       return unless Validator::Tester.sentinel_errors.any?
 
-      num = Validator::Tester.sentinel_errors.size
-      str = "#{num} sentinel warnings:"
-      str = colorize(str, :yellow) if num > 0
-      @output << "\n#{str}\n\n"
+      errors = Validator::Tester.sentinel_errors
+      @output << "\n#{colorize("#{errors.size} sentinel warnings:", :yellow)}\n\n"
 
-      counts = Validator::Tester.sentinel_errors.dup.each_with_object(Hash.new(0)) do |x, h|
-        h[x.class] += 1
-      end
-
-      counts.each_pair do |err, num|
-        @output << colorize("  #{num} #{err}\n", :yellow)
+      errors.map(&:class).tally.each_pair do |error_class, count|
+        @output << colorize("  #{count} #{error_class}\n", :yellow)
       end
     end
 
     def close(_notification)
       @output << "\n"
+    end
+
+    private
+
+    def exception_presenter(notification)
+      RSpec::Core::Formatters::ExceptionPresenter.new(
+        notification.example.execution_result.exception,
+        notification.example,
+        indentation: 0
+      )
+    end
+
+    def append_failure_message(presenter)
+      error = presenter.message_lines.map do |line|
+        colorize("  #{line}\n", :failure)
+      end.join
+      @output << error << "\n"
+    end
+
+    def append_failure_backtrace(presenter)
+      backtrace = presenter.formatted_backtrace.map do |line|
+        colorize("  # #{line}\n", :light_blue)
+      end.join
+      @output << backtrace << "\n"
     end
   end
 end

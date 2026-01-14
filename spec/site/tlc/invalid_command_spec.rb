@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Site::Traffic Light Controller' do
+RSpec.describe Site::Tlc::InvalidCommand do
   include Validator::CommandHelpers
 
-  context 'receiving an command with an unknown component id' do
+  context 'when receiving a command with an unknown component id' do
     # Verify that site reponds with age=undefined when receiving
     # a command with an unknown component id
     #
@@ -41,7 +41,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
   end
 
-  context 'receiving an unknown command code id' do
+  context 'when receiving an unknown command code id' do
     # Verify that site returns NotAck when receiving an unknown command
     #
     # 1. Given the site is connected
@@ -63,7 +63,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
   end
 
-  context 'receiving a command with a missing attribute' do
+  context 'when receiving a command with a missing attribute' do
     # Verify that site returns NotAck when receiving a command
     # with a mising command attribute
     #
@@ -91,7 +91,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
   end
 
-  context 'receiving a command with a bad command name n' do
+  context 'when receiving a command with a bad command name n' do
     # Verify that site returns NotAck when receiving a command
     # with an unknown command name
     #

@@ -8,78 +8,31 @@ AllCops:
     - 'yard/**/*'
     - 'vendor/**/*'
 
-# Specs are intentionally long/integration-heavy; relax metric/style cops there.
 Metrics/AbcSize:
-  Max: 25
   Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
     - 'spec/support/command_helpers.rb'
 
-Metrics/BlockLength:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
-Metrics/ClassLength:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
 Metrics/CyclomaticComplexity:
-  Max: 12
   Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
     - 'spec/support/command_helpers.rb'
 
 Metrics/MethodLength:
   Max: 25
   Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
     - 'spec/support/command_helpers.rb'
 
 Metrics/ModuleLength:
   Max: 350
   Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
     - 'spec/support/command_helpers.rb'
-
-Metrics/ParameterLists:
-  Max: 6
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
-Metrics/PerceivedComplexity:
-  Max: 12
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-    - 'spec/support/command_helpers.rb'
-
-Layout/LineLength:
-  Max: 120
-
-Style/Documentation:
-  Exclude:
-    - 'spec/**/*'
 
 # These files contain empty blocks required by the YARD documentation generation.
-Lint/EmptyBlock:
+RSpec/EmptyExampleGroup:
   Exclude:
     - 'spec/site/site_spec.rb'
     - 'spec/site/core/core_spec.rb'
     - 'spec/site/tlc/tlc_spec.rb'
     - 'spec/supervisor/supervisor_spec.rb'
-
-# RSpec cops are too strict for these integration specs.
-RSpec/DescribeClass:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
 
 RSpec/NoExpectationExample:
   Exclude:
@@ -96,53 +49,6 @@ RSpec/ExampleLength:
     - 'spec/site/**/*'
     - 'spec/supervisor/**/*'
 
-RSpec/ContextWording:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
-RSpec/InstanceVariable:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
-RSpec/SortMetadata:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
-RSpec/MetadataStyle:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
-RSpec/PredicateMatcher:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
 RSpec/Output:
   Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-    - 'spec/support/interaction_helpers.rb'
     - 'spec/support/validator.rb'
-
-RSpec/NotToNot:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
-RSpec/HookArgument:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
-RSpec/EmptyExampleGroup:
-  Exclude:
-    - 'spec/site/site_spec.rb'
-    - 'spec/site/core/core_spec.rb'
-    - 'spec/site/tlc/tlc_spec.rb'
-    - 'spec/supervisor/supervisor_spec.rb'
-
-

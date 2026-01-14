@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Site::Traffic Light Controller' do
+RSpec.describe Site::Tlc::SignalGroups do
   include Validator::CommandHelpers
   include Validator::StatusHelpers
 
@@ -77,7 +77,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected and in yellow flash mode
     # 2. When we activate normal control
     # 3. All signal groups should go through e, f and g
-    it 'follow startup sequence after yellow flash', sxl: '>=1.0.7', functional: true do |_example|
+    it 'follow startup sequence after yellow flash', :functional, sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
         verify_startup_sequence do

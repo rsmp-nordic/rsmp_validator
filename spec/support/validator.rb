@@ -55,8 +55,21 @@ module Validator
 
   # Called by RSpec at startup - initializes the Async reactor and checks connectivity
   def self.before_suite(_examle)
+    setup_reactor
+    error = run_startup_checks
+    raise error if error
+  rescue RSMP::ConnectionError => e
+    abort_startup(e, e.message)
+  rescue StandardError => e
+    abort_startup(e, e.inspect)
+  end
+
+  def self.setup_reactor
     @reactor = Async::Reactor.new
     reactor.annotate 'reactor'
+  end
+
+  def self.run_startup_checks
     error = nil
     reactor.run do |task|
       auto_node&.start
@@ -67,14 +80,15 @@ module Validator
     ensure
       reactor.interrupt
     end
-    raise error if error
-  rescue RSMP::ConnectionError => e
-    warn "Aborting: #{e.message}".colorize(:red)
-    raise
-  rescue StandardError => e
-    warn "Aborting: #{e.inspect}".colorize(:red)
-    raise
+    error
   end
+
+  def self.abort_startup(exception, message)
+    warn "Aborting: #{message}".colorize(:red)
+    raise exception
+  end
+
+  private_class_method :setup_reactor, :run_startup_checks, :abort_startup
 
   # Called by RSpec when each test is being run
   # Manages the Async reactor and fiber-local data for RSpec compatibility
@@ -279,28 +293,36 @@ module Validator
   # if config_path is 'gem_site.yaml', look for 'gem_site_secrets.yaml'
   # if not found, try the the generic path 'secrets.yaml'
   def self.load_secrets(config_path)
-    unless config['secrets']
-      basename = File.basename(config_path, '.yaml')
-      folder = File.dirname(config_path)
-      secrets_path = File.join folder, "#{basename}_secrets.yaml"
-
-      if File.exist?(secrets_path)
-        secrets = YAML.load_file(secrets_path)
-        config['secrets'] = secrets
-      end
-    end
-
-    if config.dig 'secrets', 'security_codes'
-      unless config.dig 'secrets', 'security_codes', 1
-        log 'Warning: Security code 1 is not configured'.colorize(:yellow)
-      end
-      unless config.dig 'secrets', 'security_codes', 2
-        log 'Warning: Security code 2 is not configured'.colorize(:yellow)
-      end
-    else
-      log 'Warning: No security code configured'.colorize(:yellow)
-    end
+    load_secrets_file(config_path) unless config['secrets']
+    warn_missing_security_codes
   end
+
+  def self.load_secrets_file(config_path)
+    basename = File.basename(config_path, '.yaml')
+    folder = File.dirname(config_path)
+    secrets_path = File.join(folder, "#{basename}_secrets.yaml")
+    return unless File.exist?(secrets_path)
+
+    config['secrets'] = YAML.load_file(secrets_path)
+  end
+
+  def self.warn_missing_security_codes
+    return warn_no_security_code unless config.dig('secrets', 'security_codes')
+
+    warn_security_code_not_configured(1) unless config.dig('secrets', 'security_codes', 1)
+    warn_security_code_not_configured(2) unless config.dig('secrets', 'security_codes', 2)
+  end
+
+  def self.warn_no_security_code
+    log 'Warning: No security code configured'.colorize(:yellow)
+  end
+
+  def self.warn_security_code_not_configured(index)
+    log "Warning: Security code #{index} is not configured".colorize(:yellow)
+  end
+
+  private_class_method :load_secrets_file, :warn_missing_security_codes, :warn_no_security_code,
+                       :warn_security_code_not_configured
 
   # find out whether we're testing a site or a supervisor,
   # based on the path to the specs we're going to run
@@ -350,42 +372,23 @@ module Validator
 
   # setup rspec filters to support filtering by RSMP core and SXL version tags
   def self.setup_filters(rspec_config)
-    # enable filtering by rsmp core version tags like '>=3.1.2'
-    # Gem::Requirement and Gem::Version classed are used to do the version matching,
-    # but this otherwise has nothing to do with Gems
-    core_version = Validator.config['core_version']
-    if core_version
-      core_version = Gem::Version.new core_version
-      core_filter = lambda { |v|
-        !Gem::Requirement.new(v).satisfied_by?(core_version)
-      }
-      # redefine the inspect method on our proc object,
-      # so we get more useful display of the filter option when we
-      # run rspec on the command line
-      def core_filter.inspect
-        "[unless relevant for #{Validator.config['core_version']}]"
-      end
-      rspec_config.filter_run_excluding core: core_filter
-    end
-
-    # enable filtering by sxl version tags like '>=1.0.7'
-    # Gem::Requirement and Gem::Version classed are used to do the version matching,
-    # but this otherwise has nothing to do with Gems
-    sxl_version = Validator.config['sxl_version']
-    return unless sxl_version
-
-    sxl_version = Gem::Version.new sxl_version
-    sxl_filter = lambda { |v|
-      !Gem::Requirement.new(v).satisfied_by?(sxl_version)
-    }
-    # redefine the inspect method on our proc object,
-    # so we get more useful display of the filter option when we
-    # run rspec on the command line
-    def sxl_filter.inspect
-      "[unless relevant for #{Validator.config['sxl_version']}]"
-    end
-    rspec_config.filter_run_excluding sxl: sxl_filter
+    setup_version_filter(rspec_config, tag: :core, config_key: 'core_version')
+    setup_version_filter(rspec_config, tag: :sxl, config_key: 'sxl_version')
   end
+
+  def self.setup_version_filter(rspec_config, tag:, config_key:)
+    version_str = Validator.config[config_key]
+    return unless version_str
+
+    version = Gem::Version.new(version_str)
+    filter = ->(v) { !Gem::Requirement.new(v).satisfied_by?(version) }
+    filter.define_singleton_method(:inspect) do
+      "[unless relevant for #{Validator.config[config_key]}]"
+    end
+    rspec_config.filter_run_excluding(tag => filter)
+  end
+
+  private_class_method :setup_version_filter
 
   def self.get_config(*path, **options)
     value = Validator.config.dig(*path)

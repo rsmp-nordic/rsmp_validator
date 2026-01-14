@@ -25,30 +25,51 @@ module Validator
       end
 
       def check(states)
+        initialize_check(states)
+
+        states.each_char.with_index do |state, group_index|
+          position = @pos[group_index]
+          error = if position
+                    check_started_group(group_index, state,
+                                        position)
+                  else
+                    check_not_started_group(group_index, state)
+                  end
+          return error if error
+        end
+
+        :ok
+      end
+
+      private
+
+      def initialize_check(states)
         @latest = states
         @num_groups = states.size
-        states.each_char.with_index do |state, i|
-          pos = @pos[i]                 # current pos
-          if pos                        # if the group has already started:
-            current = @sequence[pos] # get current state
-            if state != current # did the state change?
-              if pos == @sequence.length - 1 # at end?
-                expected = @sequence[-1] # if at end, expected to stay there
-              else
-                next_pos = pos + 1
-                expected = @sequence[next_pos] # if not at end expected to move to the next state in sequence
-              end
-              if state != expected      # did it go to, or stay in, the expected state?
-                return "Group #{i} changed from #{current} to #{state}, must go to #{expected}"
-              end
+      end
 
-              @pos[i] = next_pos        # move position
-            end
-          elsif state == @sequence[0] # if the group didn't start yet:
-            @pos[i] = 0 # look for start of sequence
-          end
-        end
-        :ok
+      def check_not_started_group(group_index, state)
+        @pos[group_index] = 0 if state == @sequence[0]
+        nil
+      end
+
+      def check_started_group(group_index, state, position)
+        current = @sequence[position]
+        return nil if state == current
+
+        expected, next_position = expected_transition(position)
+        return "Group #{group_index} changed from #{current} to #{state}, must go to #{expected}" if state != expected
+
+        @pos[group_index] = next_position
+        nil
+      end
+
+      def expected_transition(pos)
+        last = @sequence.length - 1
+        return [@sequence[last], last] if pos == last
+
+        next_pos = pos + 1
+        [@sequence[next_pos], next_pos]
       end
     end
   end

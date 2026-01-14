@@ -37,7 +37,7 @@ RSpec.describe 'Site::Core' do
     # 1. Given the site has just connected
     # 2. When our supervisor stops sending watchdogs
     # 3. Then the site should not disconnect
-    it 'is not closed if watchdogs are not received', sxl: '>=1.0.7', slow: true do |_example|
+    it 'is not closed if watchdogs are not received', :slow, sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.isolated do |task, _supervisor, site|
         timeout = Validator.get_config('timeouts', 'disconnect')
 

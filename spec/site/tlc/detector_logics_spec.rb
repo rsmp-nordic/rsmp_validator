@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Site::Traffic Light Controller' do
+RSpec.describe Site::Tlc::DetectorLogics do
   include Validator::CommandHelpers
   include Validator::StatusHelpers
 
@@ -50,14 +50,16 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
         Validator.get_config('components', 'detector_logic').keys.each_with_index do |component, indx|
           force_detector_logic component, mode: 'True'
-          wait_for_status(@task,
-                          "detector logic #{component} to be True",
-                          [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /^.{#{indx}}1/ }])
+          wait_for_status(
+            "detector logic #{component} to be True",
+            [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /^.{#{indx}}1/ }]
+          )
 
           force_detector_logic component, mode: 'False'
-          wait_for_status(@task,
-                          "detector logic #{component} to be False",
-                          [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /^.{#{indx}}0/ }])
+          wait_for_status(
+            "detector logic #{component} to be False",
+            [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /^.{#{indx}}0/ }]
+          )
         end
       end
     end

@@ -8,6 +8,6 @@
 # When testing a supervisor the validator will run a local RSMP site. Because commands and status requests
 # are initiated by the supervisor, only a limited set of tests can be automated by the validator.
 
-# This group is intentionally empty; it exists for documentation generation.
 RSpec.describe 'Supervisor' do
+  # This group is intentionally empty, but exist so for YARD documentation generation purposes.
 end

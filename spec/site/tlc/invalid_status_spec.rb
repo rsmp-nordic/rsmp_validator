@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Site::Traffic Light Controller' do
+RSpec.describe Site::Tlc::InvalidStatus do
   include Validator::StatusHelpers
 
-  context 'receiving a status request with an unknown component id' do
+  context 'when receiving a status request with an unknown component id' do
     # Verify that site reponds with q=undefined when receiving a
     # status request with an unknown component id.
     #
@@ -36,7 +36,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
   end
 
-  context 'receiving a status request for an unknown status' do
+  context 'when receiving a status request for an unknown status' do
     # Verify that site returns NotAck when receiving
     # a request for an unknown status
     #
@@ -60,7 +60,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     end
   end
 
-  context 'receiving a status request with an invalid status name' do
+  context 'when receiving a status request with an invalid status name' do
     # Verify that site returns NotAck when receiving
     # a request for an unknown status
     #
