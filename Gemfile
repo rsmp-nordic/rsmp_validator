@@ -7,6 +7,7 @@ gem 'activesupport'
 group :development do
   gem 'rake'
   gem 'rspec'
+  gem 'rubocop'
 end
 
 group :development, :documentation do
