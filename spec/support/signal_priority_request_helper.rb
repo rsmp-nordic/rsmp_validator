@@ -1,10 +1,9 @@
 module Validator::StatusHelpers
-
   # Match a specific status response or update
   class S0033Matcher < RSMP::StatusMatcher
-
     attr_accessor :state
-    def initialize want, request_id:, state: nil
+
+    def initialize(want, request_id:, state: nil)
       super want
       @request_id = request_id
       @state = state
@@ -12,7 +11,7 @@ module Validator::StatusHelpers
     end
 
     # Match a status value against a matcher
-    def match? item
+    def match?(item)
       super_matched = super(item)
       if super_matched == true
         state = find_request_state item['s']
@@ -29,20 +28,18 @@ module Validator::StatusHelpers
 
     # look through a status message to find state
     # updates for a specific priority request
-    def find_request_state list
+    def find_request_state(list)
       priority = list.find { |prio| prio['r'] == @request_id }
-      priority['s'] if priority 
+      priority['s'] if priority
     end
-
   end
 
   class SignalPriorityRequestHelper < RSMP::Queue
- 
     include Validator::StatusHelpers
     include Validator::CommandHelpers
 
-    def initialize site, component:, signal_group_id:, timeout:, task:
-      super( site,
+    def initialize(site, component:, signal_group_id:, timeout:, task:)
+      super(site,
         filter: RSMP::Filter.new(
           type: 'StatusUpdate',
           ingoing: true,
@@ -54,16 +51,16 @@ module Validator::StatusHelpers
       @site = site
       @component = component
       @signal_group_id = signal_group_id
-      @request_id = SecureRandom.uuid()[0..3]
-      @matcher = S0033Matcher.new({"cCI"=>"S0033", "q"=>"recent"}, request_id: @request_id)
-      @subscribe_list = [{'sCI'=>'S0033','n'=>'status','uRt'=>'0'}]
+      @request_id = SecureRandom.uuid[0..3]
+      @matcher = S0033Matcher.new({ 'cCI' => 'S0033', 'q' => 'recent' }, request_id: @request_id)
+      @subscribe_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
       @subscribe_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(@site)
-      @unsubscribe_list = [{'sCI'=>'S0033','n'=>'status'}]
+      @unsubscribe_list = [{ 'sCI' => 'S0033', 'n' => 'status' }]
       @got = []
       @timeout = timeout
     end
 
-    def run &block
+    def run
       start
       yield
     ensure
@@ -76,13 +73,13 @@ module Validator::StatusHelpers
       vehicleType: 'car'
     )
       command_list = build_command_list(:M0022, :requestPriority, {
-        requestId: @request_id,
-        signalGroupId: @signal_group_id,
-        type: 'new',
-        level: level,
-        eta: eta,
-        vehicleType: vehicleType
-      })
+                                          requestId: @request_id,
+                                          signalGroupId: @signal_group_id,
+                                          type: 'new',
+                                          level: level,
+                                          eta: eta,
+                                          vehicleType: vehicleType
+                                        })
       @site.send_command @component, command_list
     end
 
@@ -91,14 +88,14 @@ module Validator::StatusHelpers
       eta: 2,
       vehicleType: 'car'
     )
-      command_list = build_command_list( :M0022, :requestPriority, {
-        requestId: SecureRandom.uuid()[0..3],
-        signalGroupId: @signal_group_id,
-        type: 'new',
-        level: level,
-        eta: eta,
-        vehicleType: vehicleType
-      })
+      command_list = build_command_list(:M0022, :requestPriority, {
+                                          requestId: SecureRandom.uuid[0..3],
+                                          signalGroupId: @signal_group_id,
+                                          type: 'new',
+                                          level: level,
+                                          eta: eta,
+                                          vehicleType: vehicleType
+                                        })
       @site.send_command @component, command_list
     end
 
@@ -110,17 +107,17 @@ module Validator::StatusHelpers
       @site.send_command @component, command_list
     end
 
-    def expect state
+    def expect(state)
       @matcher.state = state
-      message = wait_for_message timeout: @timeout
+      wait_for_message timeout: @timeout
     rescue RSMP::TimeoutError
       raise RSMP::TimeoutError.new("Priority request did not reach state #{state} within #{@timeout}s")
     end
 
     private
 
-    def accept_message? message
-      super && get_items(message).any? {|item| @matcher.match?(item) }
+    def accept_message?(message)
+      super && get_items(message).any? { |item| @matcher.match?(item) }
     end
 
     def start
@@ -133,9 +130,8 @@ module Validator::StatusHelpers
       stop_receiving
     end
 
-    def get_items message
+    def get_items(message)
       message.attributes['sS'] || []
     end
   end
 end
-

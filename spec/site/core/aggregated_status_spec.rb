@@ -7,12 +7,12 @@ RSpec.describe 'Site::Core' do
     # 1. Given the site is connected
     # 2. When we request aggregated status
     # 3. Then we should receive an aggregated status
-    it 'can be requested', core: '>=3.1.5' do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
+    it 'can be requested', core: '>=3.1.5' do |_example|
+      Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
-        log "Request aggregated status"
-        result = site.request_aggregated_status Validator.get_config('main_component'), collect!: {
-          timeout: Validator.get_config('timeouts','status_response')
+        log 'Request aggregated status'
+        site.request_aggregated_status Validator.get_config('main_component'), collect!: {
+          timeout: Validator.get_config('timeouts', 'status_response')
         }
       end
     end
@@ -23,15 +23,15 @@ RSpec.describe 'Site::Core' do
     # 1. Given the is reconnected
     # 2. When we receive an aggregated status
     # 3. Then fP and fS should be null
-    it 'uses null for functional position/state', sxl: '>=1.1' do |example|
+    it 'uses null for functional position/state', sxl: '>=1.1' do |_example|
       Validator::SiteTester.isolated(
         'collect' => {
-          filter: RSMP::Filter.new(type:"AggregatedStatus"),
-          timeout: Validator.get_config('timeouts','ready'),
+          filter: RSMP::Filter.new(type: 'AggregatedStatus'),
+          timeout: Validator.get_config('timeouts', 'ready'),
           num: 1,
           ingoing: true
         }
-      ) do |task,supervisor,site_proxy|
+      ) do |task, _supervisor, site_proxy|
         collector = site_proxy.collector
         collector.use_task task
         collector.wait!

@@ -2,7 +2,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::CommandHelpers
 
   context 'receiving an command with an unknown component id' do
-
     # Verify that site reponds with age=undefined when receiving
     # a command with an unknown component id
     #
@@ -10,11 +9,11 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send a command with an unknown component id
     # 3. Then the site should return a command response with age=undefined
 
-    it 'returns a command response with age=undefined', core: '>=3.1.3' do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
-        log "Sending M0001"
+    it 'returns a command response with age=undefined', core: '>=3.1.3' do |_example|
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        log 'Sending M0001'
         command_list = build_command_list :M0001, :setValue, {
-          securityCode: Validator.get_config('secrets','security_codes',2),
+          securityCode: Validator.get_config('secrets', 'security_codes', 2),
           status: 'NormalControl',
           timeout: 0,
           intersection: 0
@@ -22,8 +21,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
         result = site.send_command(
           'bad',
           command_list,
-          collect: { timeout: Validator.get_config('timeouts','command_response') },
-          validate: false     # disable validation of outgoing message
+          collect: { timeout: Validator.get_config('timeouts', 'command_response') },
+          validate: false # disable validation of outgoing message
         )
         collector = result[:collector]
         expect(collector).to be_an(RSMP::Collector)
@@ -41,20 +40,19 @@ RSpec.describe 'Site::Traffic Light Controller' do
   end
 
   context 'receiving an unknown command code id' do
-
     # Verify that site returns NotAck when receiving an unknown command
     #
     # 1. Given the site is connected
     # 2. When we send a non-existing M0000 command
     # 3. Then the site should return NotAck
 
-    it 'returns NotAck' do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
-        log "Sending non-existing command M0000"
+    it 'returns NotAck' do |_example|
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        log 'Sending non-existing command M0000'
         command_list = build_command_list :M0000, :bad, {}
         result = site.send_command Validator.get_config('main_component'), command_list,
-          collect: { timeout: Validator.get_config('timeouts','command_response') },
-          validate: false     # disable validation of outgoing message
+                                   collect: { timeout: Validator.get_config('timeouts', 'command_response') },
+                                   validate: false # disable validation of outgoing message
         collector = result[:collector]
         expect(collector).to be_an(RSMP::Collector)
         expect(collector.status).to eq(:cancelled)
@@ -64,7 +62,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
   end
 
   context 'receiving a command with a missing attribute' do
-
     # Verify that site returns NotAck when receiving a command
     # with a mising command attribute
     #
@@ -72,18 +69,18 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send an M0001 command with 'status' missing
     # 3. Then the site return NotAck
 
-    it 'returns NotAck' do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
+    it 'returns NotAck' do |_example|
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         log "Sending M0001 with 'status' attribute missing"
         command_list = build_command_list :M0001, :setValue, {
-            securityCode: '1111',
-            intersection: '0',
-            timeout: '0'
-            # intentionally not setting 'status'
+          securityCode: '1111',
+          intersection: '0',
+          timeout: '0'
+          # intentionally not setting 'status'
         }
         result = site.send_command Validator.get_config('main_component'), command_list,
-          collect: { timeout: Validator.get_config('timeouts','command_response') },
-          validate: false   # disable validation of outgoing message
+                                   collect: { timeout: Validator.get_config('timeouts', 'command_response') },
+                                   validate: false # disable validation of outgoing message
         collector = result[:collector]
         expect(collector).to be_an(RSMP::Collector)
         expect(collector.status).to eq(:cancelled)
@@ -93,7 +90,6 @@ RSpec.describe 'Site::Traffic Light Controller' do
   end
 
   context 'receiving a command with a bad command name n' do
-
     # Verify that site returns NotAck when receiving a command
     # with an unknown command name
     #
@@ -101,18 +97,18 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. When we send an M0001 command with 'bad' as command name
     # 3. Then the site should return NotAck
 
-    it 'returns NotAck' do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
-        log "Sending M0001"
+    it 'returns NotAck' do |_example|
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        log 'Sending M0001'
         # for M0001, cO should be :setValue, here we use the incorrect :bad
         command_list = build_command_list :M0001, :bad, {
-            securityCode: '1111',
-            intersection: '0',
-            timeout: '0'
+          securityCode: '1111',
+          intersection: '0',
+          timeout: '0'
         }
         result = site.send_command Validator.get_config('main_component'), command_list,
-          collect: { timeout: Validator.get_config('timeouts','command_response') },
-          validate: false   # disable validation of outgoing message
+                                   collect: { timeout: Validator.get_config('timeouts', 'command_response') },
+                                   validate: false # disable validation of outgoing message
         collector = result[:collector]
         expect(collector).to be_an(RSMP::Collector)
         expect(collector.status).to eq(:cancelled)

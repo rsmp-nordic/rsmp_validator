@@ -5,7 +5,6 @@
 require_relative 'auto_node'
 
 class Validator::AutoSite < Validator::AutoNode
-
   protected
 
   def node_type
@@ -17,11 +16,11 @@ class Validator::AutoSite < Validator::AutoNode
   def build_node
     # Determine the site class based on type
     klass = case config['type']
-    when 'tlc'
-      RSMP::TLC::TrafficControllerSite
-    else
-      RSMP::Site
-    end
+            when 'tlc'
+              RSMP::TLC::TrafficControllerSite
+            else
+              RSMP::Site
+            end
 
     # Create the site with the auto_config settings
     klass.new(

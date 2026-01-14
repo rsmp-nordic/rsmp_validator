@@ -18,12 +18,12 @@ require_relative 'support/signal_priority_request_helper'
 require_relative 'support/log_helpers'
 require_relative 'support/handshake_helper'
 require_relative 'support/programming_helpers'
-require_relative 'support/formatters/report_stream.rb'
-require_relative 'support/formatters/formatter_base.rb'
-require_relative 'support/formatters/brief.rb'
-require_relative 'support/formatters/details.rb'
-require_relative 'support/formatters/list.rb'
-require_relative 'support/formatters/steps.rb'
+require_relative 'support/formatters/report_stream'
+require_relative 'support/formatters/formatter_base'
+require_relative 'support/formatters/brief'
+require_relative 'support/formatters/details'
+require_relative 'support/formatters/list'
+require_relative 'support/formatters/steps'
 
 include RSpec
 include Validator::Log
@@ -33,7 +33,7 @@ RSpec.configure do |config|
   Validator.setup config
 
   # Enable flags like --only-failures and --next-failure
-  config.example_status_persistence_file_path = ".rspec_status"
+  config.example_status_persistence_file_path = '.rspec_status'
 
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
