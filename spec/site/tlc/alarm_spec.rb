@@ -37,7 +37,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
           alarm_time = Time.parse(alarm.attributes['aTs'])
           expect(alarm_time).to be_within(duration).of Time.now.utc
         end
-        deactivated, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id| # raise alarm, by activating input
+        # Raise alarm by activating input
+        deactivated, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id|
           verify_timestamp alarm
           log "Alarm #{alarm_code_id} is now Active on component #{component_id}"
         end
@@ -73,8 +74,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
           expect(alarm_time).to be_within(1.minute).of Time.now.utc
 
           # verify that the alarm is not acknowledged when initially raised
-          expect(alarm.attributes['ack']).to match(/notAcknowledged/i),
-                                             "Alarm should not be acknowledged when raised, got: #{alarm.attributes['ack']}"
+          ack_message = "Alarm should not be acknowledged when raised, got: #{alarm.attributes['ack']}"
+          expect(alarm.attributes['ack']).to match(/notAcknowledged/i), ack_message
           log "Verified alarm #{alarm_code_id} is correctly not acknowledged when raised"
 
           # test acknowledge and confirm

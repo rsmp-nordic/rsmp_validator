@@ -61,9 +61,7 @@ Metrics/PerceivedComplexity:
     - 'spec/support/command_helpers.rb'
 
 Layout/LineLength:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
+  Max: 120
 
 Style/Documentation:
   Exclude:
@@ -140,43 +138,11 @@ RSpec/HookArgument:
     - 'spec/site/**/*'
     - 'spec/supervisor/**/*'
 
-RSpec/EmptyLineAfterExample:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
-RSpec/ExcessiveDocstringSpacing:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
 RSpec/EmptyExampleGroup:
   Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
+    - 'spec/site/site_spec.rb'
+    - 'spec/site/core/core_spec.rb'
+    - 'spec/site/tlc/tlc_spec.rb'
+    - 'spec/supervisor/supervisor_spec.rb'
 
-# Naming cops frequently conflict with RSMP field naming conventions in specs.
-Naming/AccessorMethodName:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
 
-Naming/MethodParameterName:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
-Naming/VariableName:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
-Naming/VariableNumber:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
-
-Naming/MethodName:
-  Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
