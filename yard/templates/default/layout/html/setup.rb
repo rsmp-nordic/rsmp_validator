@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def menu_lists
   # Load the existing menus
   super + [{

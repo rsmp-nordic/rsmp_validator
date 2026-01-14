@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Yard extensions to generate documentation for RSpec tests.
 #
