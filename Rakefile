@@ -10,17 +10,17 @@ Build documentation with YARD. \
 Updates YARD docs based on relevant folders in spec/ and commits the result to the gh-pages branch.\
 "
 task :yard do
-	system 'bundle exec yardoc'
-	system 'git checkout gh-pages'
-	system 'git add .'
-	system 'git status'
-	system 'git commit -m "update yard docs"'
+  system 'bundle exec yardoc'
+  system 'git checkout gh-pages'
+  system 'git add .'
+  system 'git status'
+  system 'git commit -m "update yard docs"'
 end
 
 # Note that rebuilding with YARD does not delete unused files.
 # For this reason, it's often a good idea to delete the output folder before rebuilding, using:
 # % rm -r docs/dev
-desc "Rebuild YARD docs for the RSpec files in spec."
+desc 'Rebuild YARD docs for the RSpec files in spec.'
 task :spec_docs do
-	system 'bundle exec yardoc --template jekyll --format markdown --output docs/dev'
+  system 'bundle exec yardoc --template jekyll --format markdown --output docs/dev'
 end

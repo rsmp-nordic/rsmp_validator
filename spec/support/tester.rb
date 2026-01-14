@@ -25,7 +25,7 @@ class Validator::Tester
   # Use this unless there's a specific reason to use one of the other methods.
   # A sequence of test using `connected` will  maintain the current connection
   # to the site without disconnecting/reconnecting, leading to faster testing.
-  def connected options={}, &block
+  def connected(options = {})
     start options, 'Connecting'
     wait_for_proxy
     yield Async::Task.current, @node, @proxy
@@ -37,7 +37,7 @@ class Validator::Tester
   # But be aware that a fresh connection does not guarantee that the equipment
   # will be in a pristine state. The equipment is not restarted or otherwise
   # reset.
-  def reconnected options={}, &block
+  def reconnected(options = {})
     stop 'Reconnecting'
     start options
     wait_for_proxy
@@ -50,7 +50,7 @@ class Validator::Tester
   # current connection unstable or unusable. Because `isolated` closes the
   # connection after the test, you ensure that the modified RSMP::SiteProxy
   # object is discarted and following tests use a new object.
-  def isolated options={}, &block
+  def isolated(options = {})
     stop 'Isolating'
     start options, 'Connecting'
     wait_for_proxy
@@ -60,13 +60,13 @@ class Validator::Tester
 
   # Disconnects the site if connected before calling the block with a single
   # argument `task`, which is an an Async::Task.
-  def disconnected &block
+  def disconnected
     stop 'Disconnecting'
     yield Async::Task.current
   end
 
   # Stop the rsmp supervisor
-  def stop why=nil
+  def stop(why = nil)
     if @node
       Validator::Log.log why if why
       @node.ignore_errors RSMP::DisconnectError do
@@ -76,7 +76,7 @@ class Validator::Tester
     @node = nil
     @proxy = nil
   end
-  
+
   private
 
   def initialize
@@ -89,7 +89,7 @@ class Validator::Tester
   # bewteen tests.
   # also run a sentinel task that will listen for sentinel errors
   # notified by the node
-  def start options={}, why=nil
+  def start(options = {}, _why = nil)
     return if @node
 
     Validator.reactor.async do |task|
@@ -99,16 +99,15 @@ class Validator::Tester
 
       Validator.reactor.async do |sentinel|
         sentinel.annotate 'sentinel'
-        while @node do
+        while @node
           e = @node.error_queue.dequeue
           Validator.log "Sentinel warning: #{e.class}: #{e}", level: :test
           @@sentinel_errors << e
         end
       end
 
-      @node.start  # keep running inside the async task
+      @node.start # keep running inside the async task
     end
-
   end
 
   # Wait until communication has been established, and handshake completed. Subclasses must override
@@ -118,7 +117,5 @@ class Validator::Tester
   end
 
   # Parse config file. Subclasses must override
-  def parse_config
-  end
-  
+  def parse_config; end
 end

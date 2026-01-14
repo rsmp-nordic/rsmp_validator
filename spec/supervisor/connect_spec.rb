@@ -1,17 +1,16 @@
 RSpec.describe 'Supervisor' do
-
   describe 'Connection Sequence' do
-    def get_connection_message core_version, length
+    def get_connection_message(core_version, length)
       got = nil
       Validator::SupervisorTester.isolated(
         'rsmp_versions' => [core_version],
         'collect' => {
-          timeout: Validator.get_config('timeouts','ready'),
+          timeout: Validator.get_config('timeouts', 'ready'),
           num: length,
           ingoing: true,
           outgoing: true
         }
-      ) do |task,supervisor,site_proxy|
+      ) do |task, _supervisor, site_proxy|
         collector = site_proxy.collector
         collector.use_task task
         collector.wait!
@@ -19,27 +18,27 @@ RSpec.describe 'Supervisor' do
         got = site_proxy.collector.messages.map { |message| [message.direction.to_s, message.type] }
       end
       got
-    rescue Async::TimeoutError => e
+    rescue Async::TimeoutError
       raise "Did not collect #{length} messages within #{timeout}s"
     end
 
-    def check_sequence_3_1_1 core_version
+    def check_sequence_3_1_1(core_version)
       # in earlier core version, both sides sends a Version
       # message simulatenously. we therefore cannot expect
       # a specific sequence
       # but we can expect a set of messages
 
       expected_version_messages = [
-        ['out','Version'],
-        ['in','MessageAck'],
-        ['in','Version'],
-        ['out','MessageAck'],
+        %w[out Version],
+        %w[in MessageAck],
+        %w[in Version],
+        %w[out MessageAck]
       ]
       expected_watchdog_messages = [
-        ['out','Watchdog'],
-        ['in','MessageAck'],
-        ['in','Watchdog'],
-        ['out','MessageAck']
+        %w[out Watchdog],
+        %w[in MessageAck],
+        %w[in Watchdog],
+        %w[out MessageAck]
       ]
 
       length = expected_version_messages.length +
@@ -53,24 +52,24 @@ RSpec.describe 'Supervisor' do
       expect(expected_watchdog_messages).to include(*got_watchdog_messages)
     end
 
-    def check_sequence_3_1_4 version
+    def check_sequence_3_1_4(version)
       expected = [
-        ['out','Version'],
-        ['in','MessageAck'],
-        ['in','Version'],
-        ['out','MessageAck'],
-        ['out','Watchdog'],
-        ['in','MessageAck'],
-        ['in','Watchdog'],
-        ['out','MessageAck'],
-        ['out','AggregatedStatus'],
-        ['in','MessageAck']
+        %w[out Version],
+        %w[in MessageAck],
+        %w[in Version],
+        %w[out MessageAck],
+        %w[out Watchdog],
+        %w[in MessageAck],
+        %w[in Watchdog],
+        %w[out MessageAck],
+        %w[out AggregatedStatus],
+        %w[in MessageAck]
       ]
       got = get_connection_message version, expected.length
       expect(got).to eq(expected)
     end
 
-    def check_sequence version
+    def check_sequence(version)
       case version
       when '3.1.1', '3.1.2', '3.1.3'
         check_sequence_3_1_1 version
@@ -87,7 +86,7 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.1
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.1.1', core: '3.1.1' do |example|
+    it 'exchanges correct connection sequence of rsmp version 3.1.1', core: '3.1.1' do |_example|
       check_sequence '3.1.1'
     end
 
@@ -97,7 +96,7 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.2
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.1.2', core: '3.1.2' do |example|
+    it 'exchanges correct connection sequence of rsmp version 3.1.2', core: '3.1.2' do |_example|
       check_sequence '3.1.2'
     end
 
@@ -107,7 +106,7 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.3
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.1.3', core: '3.1.3' do |example|
+    it 'exchanges correct connection sequence of rsmp version 3.1.3', core: '3.1.3' do |_example|
       check_sequence '3.1.3'
     end
 
@@ -117,7 +116,7 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.4
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.1.4', core: '3.1.4' do |example|
+    it 'exchanges correct connection sequence of rsmp version 3.1.4', core: '3.1.4' do |_example|
       check_sequence '3.1.4'
     end
 
@@ -127,7 +126,7 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.1.5', core: '3.1.5' do |example|
+    it 'exchanges correct connection sequence of rsmp version 3.1.5', core: '3.1.5' do |_example|
       check_sequence '3.1.5'
     end
 
@@ -137,7 +136,7 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.2', core: '3.2' do |example|
+    it 'exchanges correct connection sequence of rsmp version 3.2', core: '3.2' do |_example|
       check_sequence '3.2'
     end
 
@@ -147,7 +146,7 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.2.1', core: '3.2.1' do |example|
+    it 'exchanges correct connection sequence of rsmp version 3.2.1', core: '3.2.1' do |_example|
       check_sequence '3.2.1'
     end
 
@@ -157,7 +156,7 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.2.2', core: '3.2.2' do |example|
+    it 'exchanges correct connection sequence of rsmp version 3.2.2', core: '3.2.2' do |_example|
       check_sequence '3.2.2'
     end
   end
