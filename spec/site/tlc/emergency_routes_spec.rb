@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Site::Traffic Light Controller' do
+RSpec.describe Site::Tlc::EmergencyRoutes do
   include Validator::CommandHelpers
   include Validator::StatusHelpers
 
@@ -22,7 +22,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected.
     # 2. When we request S0035.
     # 3. Then we should receive a status response.
-    specify 'emergency route is read with S0035', sxl: '>=1.2', core: '>=3.2' do |_example|
+    specify 'emergency route is read with S0035', core: '>=3.2', sxl: '>=1.2' do |_example|
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'emergency route status',
                                    { S0035: [:emergencyroutes] }
@@ -38,11 +38,11 @@ RSpec.describe 'Site::Traffic Light Controller' do
       emergency_routes = Validator.get_config('items', 'emergency_routes')
       skip('No emergency routes configured') if emergency_routes.nil? || emergency_routes.empty?
 
-      def set_emergency_states(task, emergency_routes, state)
+      def set_emergency_states(emergency_routes, state)
         emergency_routes.each do |emergency_route|
           set_emergency_route emergency_route.to_s, state
         end
-        wait_for_status(task, "emergency route #{emergency_routes.last} to be enabled",
+        wait_for_status("emergency route #{emergency_routes.last} to be enabled",
                         [
                           { 'sCI' => 'S0006', 'n' => 'status', 's' => (state ? 'True' : 'False') },
                           { 'sCI' => 'S0006', 'n' => 'emergencystage',
@@ -52,11 +52,11 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
       Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
-        set_emergency_states task, emergency_routes, false
+        set_emergency_states emergency_routes, false
         begin
-          set_emergency_states task, emergency_routes, true
+          set_emergency_states emergency_routes, true
         ensure
-          set_emergency_states task, emergency_routes, false
+          set_emergency_states emergency_routes, false
         end
       end
     end
@@ -69,19 +69,19 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 4. When we request the current emergency routes with S035.
     # 5. Then we should receive the list of active routes.
 
-    specify 'emergency routes can be activated with M0005 and read with S0035', sxl: '>=1.2',
-                                                                                core: '>=3.2' do |_example|
-      def enable_routes(task, emergency_routes)
+    specify 'emergency routes can be activated with M0005 and read with S0035', core: '>=3.2',
+                                                                                sxl: '>=1.2' do |_example|
+      def enable_routes(emergency_routes)
         emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, true }
         routes = emergency_routes.map { |i| { 'id' => i.to_s } }
-        wait_for_status(task, "emergency routes #{emergency_routes} to be enabled",
+        wait_for_status("emergency routes #{emergency_routes} to be enabled",
                         [{ 'sCI' => 'S0035', 'n' => 'emergencyroutes', 's' => routes }])
       end
 
-      def disable_routes(task, emergency_routes)
+      def disable_routes(emergency_routes)
         emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, false }
         routes = []
-        wait_for_status(task, 'all emergency routes to be disabled',
+        wait_for_status('all emergency routes to be disabled',
                         [{ 'sCI' => 'S0035', 'n' => 'emergencyroutes', 's' => routes }])
       end
 
@@ -91,11 +91,11 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
       Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
-        disable_routes task, emergency_routes
+        disable_routes emergency_routes
         begin
-          enable_routes task, emergency_routes
+          enable_routes emergency_routes
         ensure
-          disable_routes task, emergency_routes
+          disable_routes emergency_routes
         end
       end
     end

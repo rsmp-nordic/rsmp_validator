@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Site::Traffic Light Controller' do
+RSpec.describe Site::Tlc::Modes do
   include Validator::StatusHelpers
   include Validator::CommandHelpers
 
@@ -35,7 +35,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'startup status is read with S0005', sxl: '>=1.2', core: '>=3.2' do |_example|
+    specify 'startup status is read with S0005', core: '>=3.2', sxl: '>=1.2' do |_example|
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'traffic controller starting (true/false)',
                                    { S0005: [:statusByIntersection] }
@@ -242,7 +242,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 2. Send the control command to switch to Yellow flash
     # 3. Wait for status Yellow flash
     # 5. Wait for automatic revert to Normal Control
-    specify 'yellow flash be used with a timeout of one minute', sxl: '>=1.0.7', slow: true do |_example|
+    specify 'yellow flash be used with a timeout of one minute', :slow, sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
         switch_normal_control

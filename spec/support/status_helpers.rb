@@ -50,7 +50,7 @@ module Validator
       }
     end
 
-    def wait_for_status(_parent_task, description, status_list,
+    def wait_for_status(description, status_list,
                         update_rate: 0,
                         timeout: Validator.get_config('timeouts', 'command'),
                         component_id: Validator.get_config('main_component'))
@@ -70,10 +70,11 @@ module Validator
 
     def wait_for_groups(state, timeout:)
       regex = /^#{state}+$/
-      wait_for_status(@task,
-                      'Wait for all groups to go to yellow flash',
-                      [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus', 's' => regex }],
-                      timeout: timeout)
+      wait_for_status(
+        'Wait for all groups to go to yellow flash',
+        [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus', 's' => regex }],
+        timeout: timeout
+      )
     end
 
     def request_status_and_confirm(site, description, status_list, component = Validator.get_config('main_component'))

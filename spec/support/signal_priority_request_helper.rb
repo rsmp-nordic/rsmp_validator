@@ -14,7 +14,7 @@ module Validator
       end
 
       # Match a status value against a matcher
-      def match?(item)
+      def match(item)
         super_matched = super
         if super_matched == true
           state = find_request_state item['s']
@@ -120,7 +120,7 @@ module Validator
       private
 
       def accept_message?(message)
-        super && get_items(message).any? { |item| @matcher.match?(item) }
+        super && get_items(message).any? { |item| @matcher.match(item) }
       end
 
       def start

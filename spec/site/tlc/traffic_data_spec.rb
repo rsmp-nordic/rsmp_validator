@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Site::Traffic Light Controller' do
+RSpec.describe Site::Tlc::TrafficData do
   include Validator::StatusHelpers
   include Validator::CommandHelpers
 
@@ -76,7 +76,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'occupancy for all detectors is read with S0207', sxl: '>=1.0.14' do |_example|
       Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
-        result = wait_for_status task, 'traffic counting: occupancy',
+        result = wait_for_status 'traffic counting: occupancy',
                                  { S0207: %i[start occupancy] },
                                  update_rate: 60
 
@@ -88,7 +88,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
 
         occupancies.split(',').each do |occupancy|
           num = occupancy.to_i
-          expect((-1..100).cover?(num)).to be_truthy, "Occupancy must be in the range -1..100, got #{num}"
+          expect(-1..100).to cover(num), "Occupancy must be in the range -1..100, got #{num}"
         end
       end
     end
