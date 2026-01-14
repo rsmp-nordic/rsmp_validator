@@ -4,9 +4,23 @@ require 'rspec/core/formatters/console_codes'
 
 module Validator
   class Steps < FormatterBase
-    RSpec::Core::Formatters.register self, :start, :dump_pending, :dump_failures, :close,
-                                     :dump_summary, :example_started, :example_passed, :example_failed, :example_pending,
-                                     :message, :warning, :step, :example_group_started, :example_group_finished
+    RSpec::Core::Formatters.register(
+      self,
+      :start,
+      :dump_pending,
+      :dump_failures,
+      :close,
+      :dump_summary,
+      :example_started,
+      :example_passed,
+      :example_failed,
+      :example_pending,
+      :message,
+      :warning,
+      :step,
+      :example_group_started,
+      :example_group_finished
+    )
 
     def start(_notification)
       @output << "\n"

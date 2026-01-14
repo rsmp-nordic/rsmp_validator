@@ -9,40 +9,60 @@ AllCops:
 
 # Specs are intentionally long/integration-heavy; relax metric/style cops there.
 Metrics/AbcSize:
+  Max: 25
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
+    - 'spec/support/command_helpers.rb'
 
 Metrics/BlockLength:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 Metrics/ClassLength:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 Metrics/CyclomaticComplexity:
+  Max: 12
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
+    - 'spec/support/command_helpers.rb'
 
 Metrics/MethodLength:
+  Max: 25
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
+    - 'spec/support/command_helpers.rb'
 
 Metrics/ModuleLength:
+  Max: 350
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
+    - 'spec/support/command_helpers.rb'
 
 Metrics/ParameterLists:
+  Max: 6
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 Metrics/PerceivedComplexity:
+  Max: 12
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
+    - 'spec/support/command_helpers.rb'
 
 Layout/LineLength:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 Style/Documentation:
   Exclude:
