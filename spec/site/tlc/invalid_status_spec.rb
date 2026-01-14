@@ -26,9 +26,9 @@ RSpec.describe 'Site::Traffic Light Controller' do
         expect(collector.status).to eq(:ok)
         response = collector.messages.first
         expect(response).to be_an(RSMP::StatusResponse)
-        sS = response.attributes['sS']
-        expect(sS).to be_an(Array)
-        sS.each do |s|
+        ss = response.attributes['sS']
+        expect(ss).to be_an(Array)
+        ss.each do |s|
           q = s['q']
           expect(q).to eq('undefined'), "expected sS q attribute to be 'undefined', got #{s.inspect}"
         end

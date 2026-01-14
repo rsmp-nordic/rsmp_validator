@@ -66,9 +66,13 @@ RSpec.describe 'Site::Traffic Light Controller' do
               minute
               second
             ] }
-            result = site.request_status Validator.get_config('main_component'), convert_status_list(status_list), collect!: {
-              timeout: Validator.get_config('timeouts', 'status_update')
-            }
+            result = site.request_status(
+              Validator.get_config('main_component'),
+              convert_status_list(status_list),
+              collect!: {
+                timeout: Validator.get_config('timeouts', 'status_update')
+              }
+            )
             collector = result[:collector]
             status = status_list.keys.first.to_s
 
