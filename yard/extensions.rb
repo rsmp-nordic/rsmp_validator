@@ -18,8 +18,7 @@
 #
 # % yardoc -e yard/extensions.rb spec
 
-
-templates_path = File.join(File.dirname(__FILE__),'templates')
+templates_path = File.join(File.dirname(__FILE__), 'templates')
 YARD::Templates::Engine.register_template_path templates_path
 
 require_relative 'code_objects/rspec'

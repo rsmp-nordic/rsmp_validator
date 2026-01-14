@@ -13,14 +13,14 @@ RSpec.describe 'Site::Core' do
     # 1. Given the site has just connected
     # 2. When our supervisor does not acknowledge watchdogs
     # 3. Then the site should disconnect
-    it 'is closed if watchdogs are not acknowledged', sxl: '>=1.0.7' do |example|
-      timeout = Validator.get_config('timeouts','disconnect')
-      Validator::SiteTester.isolated do |task,supervisor,site_proxy|
+    it 'is closed if watchdogs are not acknowledged', sxl: '>=1.0.7' do |_example|
+      timeout = Validator.get_config('timeouts', 'disconnect')
+      Validator::SiteTester.isolated do |_task, supervisor, site_proxy|
         supervisor.ignore_errors RSMP::DisconnectError do
-          log "Disabling watchdog acknowledgements, site should disconnect"
-          def site_proxy.acknowledge original
+          log 'Disabling watchdog acknowledgements, site should disconnect'
+          def site_proxy.acknowledge(original)
             if original.is_a? RSMP::Watchdog
-              log "Not acknowledgning watchdog", message: original
+              log 'Not acknowledgning watchdog', message: original
             else
               super
             end
@@ -35,9 +35,9 @@ RSpec.describe 'Site::Core' do
     # 1. Given the site has just connected
     # 2. When our supervisor stops sending watchdogs
     # 3. Then the site should not disconnect
-    it 'is not closed if watchdogs are not received', sxl: '>=1.0.7', slow: true do |example|
-      Validator::SiteTester.isolated do |task,supervisor,site|
-        timeout = Validator.get_config('timeouts','disconnect')
+    it 'is not closed if watchdogs are not received', sxl: '>=1.0.7', slow: true do |_example|
+      Validator::SiteTester.isolated do |task, _supervisor, site|
+        timeout = Validator.get_config('timeouts', 'disconnect')
 
         wait_task = task.async do
           site.wait_for_state :disconnected, timeout: timeout
@@ -46,7 +46,7 @@ RSpec.describe 'Site::Core' do
           # ok, no disconnect happened
         end
 
-        log "Stop sending watchdogs, site should not disconnect"
+        log 'Stop sending watchdogs, site should not disconnect'
         site.with_watchdog_disabled do
           wait_task.wait
         end

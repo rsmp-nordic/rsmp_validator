@@ -6,7 +6,7 @@ def init
   Registry.all(:context).each do |object|
     options.serializer.extension = 'md'
     serialize object
-  rescue => e
+  rescue StandardError => e
     path = options.serializer.serialized_path object
     log.error "Exception occurred while generating '#{path}': #{e}"
     log.backtrace e
@@ -14,7 +14,7 @@ def init
 end
 
 # Generate document from object
-def serialize object
+def serialize(object)
   options.object = object
   Templates::Engine.with_serializer(object, options.serializer) do
     template_name = object.type.to_s

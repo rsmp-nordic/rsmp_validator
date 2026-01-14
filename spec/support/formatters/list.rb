@@ -3,17 +3,16 @@ require 'rspec/core/formatters/console_codes'
 module Validator
   class List < FormatterBase
     RSpec::Core::Formatters.register self, :example_passed, :example_failed, :example_pending,
+                                     def example_pending(notification)
+                                       @output << colorize("#{notification.example.full_description}\n", :pending)
+                                     end
 
-    def example_pending notification
-      @output << colorize("#{notification.example.full_description}\n",:pending)
+    def example_passed(notification) # ExampleNotification
+      @output << colorize("#{notification.example.full_description}\n", :success)
     end
 
-    def example_passed notification # ExampleNotification
-      @output << colorize("#{notification.example.full_description}\n",:success)
-    end
-
-    def example_failed notification
-      @output << colorize("#{notification.example.full_description}\n",:failure)
+    def example_failed(notification)
+      @output << colorize("#{notification.example.full_description}\n", :failure)
     end
   end
 end

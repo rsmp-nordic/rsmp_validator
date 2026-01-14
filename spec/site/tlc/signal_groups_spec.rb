@@ -2,14 +2,14 @@ RSpec.describe 'Site::Traffic Light Controller' do
   include Validator::CommandHelpers
   include Validator::StatusHelpers
 
-  describe "Signal Group" do
+  describe 'Signal Group' do
     # Validate that a signal group can be ordered to green using the M0010 command.
     #
     # 1. Verify connection
     # 2. Send control command to start signalgrup, set_signal_start= true, include security_code
     # 3. Wait for status = true
-    it 'is ordered to green with M0010', :important, sxl: '>=1.0.8' do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
+    it 'is ordered to green with M0010', :important, sxl: '>=1.0.8' do |_example|
+      Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
         set_signal_start
       end
@@ -18,8 +18,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Verify connection
     # 2. Send control command to stop signalgrup, set_signal_start= false, include security_code
     # 3. Wait for status = true
-    it 'is ordered to red with M0011', :important, sxl: '>=1.0.8' do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
+    it 'is ordered to red with M0011', :important, sxl: '>=1.0.8' do |_example|
+      Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
         set_signal_stop
       end
@@ -30,10 +30,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'state is read with S0001', sxl: '>=1.0.7' do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
-        request_status_and_confirm site, "signal group status",
-          { S0001: [:signalgroupstatus, :cyclecounter, :basecyclecounter, :stage] }
+    specify 'state is read with S0001', sxl: '>=1.0.7' do |_example|
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        request_status_and_confirm site, 'signal group status',
+                                   { S0001: %i[signalgroupstatus cyclecounter basecyclecounter stage] }
       end
     end
 
@@ -42,19 +42,19 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'red/green predictions is read with S0025', sxl: '>=1.0.13' do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
-        request_status_and_confirm site, "time-of-green/time-of-red",
-          { S0025: [
-              :minToGEstimate,
-              :maxToGEstimate,
-              :likelyToGEstimate,
-              :ToGConfidence,
-              :minToREstimate,
-              :maxToREstimate,
-              :likelyToREstimate
-          ] },
-          Validator.get_config('components','signal_group').keys.first
+    specify 'red/green predictions is read with S0025', sxl: '>=1.0.13' do |_example|
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        request_status_and_confirm site, 'time-of-green/time-of-red',
+                                   { S0025: %i[
+                                     minToGEstimate
+                                     maxToGEstimate
+                                     likelyToGEstimate
+                                     ToGConfidence
+                                     minToREstimate
+                                     maxToREstimate
+                                     likelyToREstimate
+                                   ] },
+                                   Validator.get_config('components', 'signal_group').keys.first
       end
     end
 
@@ -63,10 +63,10 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'list size is read with S0017', sxl: '>=1.0.7' do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
-        request_status_and_confirm site, "number of signal groups",
-          { S0017: [:number] }
+    specify 'list size is read with S0017', sxl: '>=1.0.7' do |_example|
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        request_status_and_confirm site, 'number of signal groups',
+                                   { S0017: [:number] }
       end
     end
 
@@ -75,8 +75,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
     # 1. Given the site is connected and in yellow flash mode
     # 2. When we activate normal control
     # 3. All signal groups should go through e, f and g
-    it 'follow startup sequence after yellow flash', sxl: '>=1.0.7', functional: true do |example|
-      Validator::SiteTester.connected do |task,supervisor,site|
+    it 'follow startup sequence after yellow flash', sxl: '>=1.0.7', functional: true do |_example|
+      Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
         verify_startup_sequence do
           switch_yellow_flash

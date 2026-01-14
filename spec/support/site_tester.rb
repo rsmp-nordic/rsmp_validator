@@ -37,16 +37,15 @@
 # you can send commands, wait for responses, subscribe to statuses, etc.
 
 class Validator::SiteTester < Validator::Tester
-
-   # class methods that delegate to the singleton instance
+  # class methods that delegate to the singleton instance
   class << self
     attr_accessor :instance
 
-    def connected(options={}, &block)
+    def connected(options = {}, &block)
       instance.connected(options, &block)
     end
 
-    def reconnected(options={}, &block)
+    def reconnected(options = {}, &block)
       instance.reconnected(options, &block)
     end
 
@@ -54,7 +53,7 @@ class Validator::SiteTester < Validator::Tester
       instance.disconnected(&block)
     end
 
-    def isolated(options={}, &block)
+    def isolated(options = {}, &block)
       instance.isolated(options, &block)
     end
 
@@ -66,7 +65,7 @@ class Validator::SiteTester < Validator::Tester
   def parse_config
     # build rsmp supervisor config by
     # picking elements from the config
-    want = ['sxl','intervals','timeouts','components','rsmp_versions','core_version','skip_validation']
+    want = %w[sxl intervals timeouts components rsmp_versions core_version skip_validation]
     guest_settings = config.select { |key| want.include? key }
     @supervisor_config = {
       'max_sites' => 1,
@@ -74,23 +73,23 @@ class Validator::SiteTester < Validator::Tester
     }
     @supervisor_config['port'] = config['port'] if config['port']
 
-    [
-      'connect',
-      'ready',
-      'status_response',
-      'status_update',
-      'subscribe',
-      'command',
-      'command_response',
-      'alarm',
-      'disconnect',
+    %w[
+      connect
+      ready
+      status_response
+      status_update
+      subscribe
+      command
+      command_response
+      alarm
+      disconnect
     ].each do |key|
       raise "config 'timeouts/#{key}' is missing" unless config['timeouts'][key]
     end
   end
 
   # build local supervisor
-  def build_node options
+  def build_node(options)
     RSMP::Supervisor.new(
       supervisor_settings: @supervisor_config.deep_merge(options),
       logger: Validator.logger,
@@ -102,8 +101,9 @@ class Validator::SiteTester < Validator::Tester
   def wait_for_connection
     @proxy = @node.proxies.first
     return if @proxy
-    Validator::Log.log "Waiting for site to connect"
-    @proxy = @node.wait_for_site(:any, timeout:config['timeouts']['connect'])
+
+    Validator::Log.log 'Waiting for site to connect'
+    @proxy = @node.wait_for_site(:any, timeout: config['timeouts']['connect'])
   rescue RSMP::TimeoutError
     raise RSMP::ConnectionError.new "Site did not connect within #{config['timeouts']['connect']}s"
   end
@@ -111,8 +111,9 @@ class Validator::SiteTester < Validator::Tester
   # Wait for an the rsmp handshake to complete
   def wait_for_handshake
     return if @proxy.ready?
-    Validator::Log.log "Waiting for handskake to complete"
-    @proxy.wait_for_state :ready, timeout:config['timeouts']['ready']
-    Validator::Log.log "Ready"
+
+    Validator::Log.log 'Waiting for handskake to complete'
+    @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
+    Validator::Log.log 'Ready'
   end
 end

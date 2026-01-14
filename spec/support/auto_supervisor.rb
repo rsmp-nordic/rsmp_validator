@@ -5,7 +5,6 @@
 require_relative 'auto_node'
 
 class Validator::AutoSupervisor < Validator::AutoNode
-
   protected
 
   def node_type
