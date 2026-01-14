@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'rsmp'
+gem 'rsmp', git: 'https://github.com/rsmp-nordic/rsmp.git', branch: 'ruby4'
 
 gem 'activesupport'
 
