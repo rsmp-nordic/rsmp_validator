@@ -6,6 +6,7 @@ AllCops:
   SuggestExtensions: false
   Exclude:
     - 'yard/**/*'
+    - 'vendor/**/*'
 
 # Specs are intentionally long/integration-heavy; relax metric/style cops there.
 Metrics/AbcSize:
@@ -79,81 +80,103 @@ Lint/EmptyBlock:
 # RSpec cops are too strict for these integration specs.
 RSpec/DescribeClass:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/NoExpectationExample:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/MultipleExpectations:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/ExampleLength:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/ContextWording:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/InstanceVariable:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/SortMetadata:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/MetadataStyle:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/PredicateMatcher:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/Output:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
+    - 'spec/support/interaction_helpers.rb'
+    - 'spec/support/validator.rb'
 
 RSpec/NotToNot:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/HookArgument:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/EmptyLineAfterExample:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/ExcessiveDocstringSpacing:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 RSpec/EmptyExampleGroup:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 # Naming cops frequently conflict with RSMP field naming conventions in specs.
 Naming/AccessorMethodName:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 Naming/MethodParameterName:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 Naming/VariableName:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 Naming/VariableNumber:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'
 
 Naming/MethodName:
   Exclude:
-    - 'spec/**/*'
+    - 'spec/site/**/*'
+    - 'spec/supervisor/**/*'

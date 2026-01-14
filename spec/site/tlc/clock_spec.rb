@@ -42,7 +42,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
     it 'can be set with M0104', sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
-        set_clock(clock)
+        apply_clock(clock)
       end
     end
 

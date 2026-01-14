@@ -52,7 +52,7 @@ module Validator
     end
 
     # Switch signal plan
-    def set_plan(plan)
+    def apply_plan(plan)
       require_security_codes
       command_list = build_command_list :M0002, :setPlan, {
         securityCode: Validator.get_config('secrets', 'security_codes', 2),
@@ -63,23 +63,23 @@ module Validator
     end
 
     # Switch to traffic situation and wait for confirmation via status
-    def switch_traffic_situation(ts)
-      set_traffic_situation ts
+    def switch_traffic_situation(traffic_situation)
+      apply_traffic_situation traffic_situation
       wait_for_status(@task,
-                      "traffic situation #{ts}",
-                      [{ 'sCI' => 'S0015', 'n' => 'status', 's' => ts }])
+                      "traffic situation #{traffic_situation}",
+                      [{ 'sCI' => 'S0015', 'n' => 'status', 's' => traffic_situation }])
     end
 
     # Set traffic situation
-    def set_traffic_situation(ts)
+    def apply_traffic_situation(traffic_situation)
       require_security_codes
       command_list = build_command_list :M0003, :setTrafficSituation, {
         status: 'True',
         securityCode: Validator.get_config('secrets', 'security_codes', 2),
-        traficsituation: ts # NOTE: the spec misspells 'traficsituation'
+        traficsituation: traffic_situation # NOTE: the spec misspells 'traficsituation'
 
       }
-      send_command_and_confirm @task, command_list, "Switch to traffic situation #{ts}"
+      send_command_and_confirm @task, command_list, "Switch to traffic situation #{traffic_situation}"
     end
 
     # Unset traffic situation (switch to automatic)
@@ -108,7 +108,7 @@ module Validator
       send_command_and_confirm @task, command_list, "Switch to functional position #{status}"
     end
 
-    def set_fixed_time(status)
+    def apply_fixed_time(status)
       require_security_codes
       command_list = build_command_list :M0007, :setFixedTime, {
         securityCode: Validator.get_config('secrets', 'security_codes', 2),
@@ -166,7 +166,7 @@ module Validator
     end
 
     def switch_plan(plan)
-      set_plan plan.to_s
+      apply_plan plan.to_s
       wait_for_status(@task,
                       "plan #{plan} to be active",
                       [{ 'sCI' => 'S0014', 'n' => 'status', 's' => plan.to_s }])
@@ -186,7 +186,7 @@ module Validator
                       [{ 'sCI' => 'S0007', 'n' => 'status', 's' => /^False(,False)*$/ }])
     end
 
-    def set_series_of_inputs(status)
+    def apply_series_of_inputs(status)
       require_security_codes
       command_list = build_command_list :M0013, :setInput, {
         securityCode: Validator.get_config('secrets', 'security_codes', 2),
@@ -233,7 +233,7 @@ module Validator
       send_command_and_confirm @task, command_list, "Set offset for plan #{plan} to #{status}"
     end
 
-    def set_week_table(status)
+    def apply_week_table(status)
       require_security_codes
       command_list = build_command_list :M0016, :setWeekTable, {
         securityCode: Validator.get_config('secrets', 'security_codes', 2),
@@ -242,7 +242,7 @@ module Validator
       send_command_and_confirm @task, command_list, "Set week table to #{status}"
     end
 
-    def set_day_table(status)
+    def apply_day_table(status)
       require_security_codes
       command_list = build_command_list :M0017, :setTimeTable, {
         securityCode: Validator.get_config('secrets', 'security_codes', 2),
@@ -269,7 +269,7 @@ module Validator
       times = read_cycle_times(site)
       time = times[plan]
 
-      expect(time).to_not be_nil, 'Site returned empty cycle times list'
+      expect(time).not_to be_nil, 'Site returned empty cycle times list'
 
       # change cycle tme
       time_extended = time + extension
@@ -334,7 +334,7 @@ module Validator
       validate
     end
 
-    def set_trigger_level(status)
+    def apply_trigger_level(status)
       require_security_codes
       command_list = build_command_list :M0021, :setLevel, {
         securityCode: Validator.get_config('secrets', 'security_codes', 2),
@@ -343,7 +343,7 @@ module Validator
       send_command_and_confirm @task, command_list, "Set trigger level sensitivity for loop detector to #{status}"
     end
 
-    def set_timeout_for_dynamic_bands(status)
+    def apply_timeout_for_dynamic_bands(status)
       require_security_codes
       command_list = build_command_list :M0023, :setTimeout, {
         securityCode: Validator.get_config('secrets', 'security_codes', 2),
@@ -352,7 +352,7 @@ module Validator
       send_command_and_confirm @task, command_list, "Set timeout for dynamic bands to #{status}"
     end
 
-    def set_security_code(level)
+    def apply_security_code(level)
       require_security_codes
       status = "Level#{level}"
       command_list = build_command_list :M0103, :setSecurityCode, {
@@ -443,7 +443,7 @@ module Validator
       )
     end
 
-    def set_clock(clock)
+    def apply_clock(clock)
       require_security_codes
       command_list = build_command_list :M0104, :setDate, {
         securityCode: Validator.get_config('secrets', 'security_codes', 1),
@@ -479,7 +479,7 @@ module Validator
     end
 
     def with_clock_set(site, clock)
-      result = set_clock clock
+      result = apply_clock clock
       site.clear_alarm_timestamps
       yield result
     ensure
@@ -517,7 +517,7 @@ module Validator
     def verify_startup_sequence
       status_list = [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus' }]
       subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt' => 0.to_s }
-      subscribe_list.map! { |item| item.merge!('sOc' => true) } if use_sOc?(@site)
+      subscribe_list.map! { |item| item.merge!('sOc' => true) } if use_soc?(@site)
 
       unsubscribe_list = convert_status_list(status_list)
       component = Validator.get_config('main_component')
@@ -579,7 +579,7 @@ module Validator
     end
 
     def switch_fixed_time(status)
-      set_fixed_time status
+      apply_fixed_time status
       wait_for_status(@task,
                       "fixed time to be #{status}",
                       [{ 'sCI' => 'S0009', 'n' => 'status', 's' => /^#{status}(,#{status})*$/ }])
@@ -603,11 +603,11 @@ module Validator
                       [{ 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{indx - 1}}0/ }])
     end
 
-    def suspend_alarm(site, task, cId:, aCId:, collect:)
+    def suspend_alarm(site, task, c_id:, a_c_id:, collect:)
       suspend = RSMP::AlarmSuspend.new(
         'mId' => RSMP::Message.make_m_id, # generate a message id, that can be used to listen for responses
-        'cId' => cId,
-        'aCId' => aCId
+        'cId' => c_id,
+        'aCId' => a_c_id
       )
       if collect
         collect_task = task.async do
@@ -615,8 +615,8 @@ module Validator
                                    m_id: suspend.m_id,
                                    num: 1,
                                    matcher: {
-                                     'cId' => cId,
-                                     'aCI' => aCId,
+                                     'cId' => c_id,
+                                     'aCI' => a_c_id,
                                      'aSp' => 'Suspend',
                                      'sS' => /^Suspended/i
                                    },
@@ -630,11 +630,11 @@ module Validator
       end
     end
 
-    def resume_alarm(site, task, cId:, aCId:, collect:)
+    def resume_alarm(site, task, c_id:, a_c_id:, collect:)
       resume = RSMP::AlarmResume.new(
         'mId' => RSMP::Message.make_m_id, # generate a message id, that can be used to listen for responses
-        'cId' => cId,
-        'aCId' => aCId
+        'cId' => c_id,
+        'aCId' => a_c_id
       )
       if collect
         collect_task = task.async do
@@ -642,8 +642,8 @@ module Validator
                                    m_id: resume.m_id,
                                    num: 1,
                                    matcher: {
-                                     'cId' => cId,
-                                     'aCI' => aCId,
+                                     'cId' => c_id,
+                                     'aCI' => a_c_id,
                                      'aSp' => 'Suspend',
                                      'sS' => /^notSuspended/i
                                    },

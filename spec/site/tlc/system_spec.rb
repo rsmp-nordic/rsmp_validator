@@ -57,8 +57,8 @@ RSpec.describe 'Site::Traffic Light Controller' do
     specify 'security code is set with M0103', sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
-        set_security_code 1
-        set_security_code 2
+        apply_security_code 1
+        apply_security_code 2
       end
     end
 

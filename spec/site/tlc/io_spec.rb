@@ -88,7 +88,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
           inputs = Validator.get_config('items', 'inputs')
           skip('No inputs configured') if inputs.nil? || inputs.empty?
           status = '1,3,12;5,5,10'
-          set_series_of_inputs status
+          apply_series_of_inputs status
         end
       end
 
@@ -100,7 +100,7 @@ RSpec.describe 'Site::Traffic Light Controller' do
         Validator::SiteTester.connected do |task, _supervisor, site|
           prepare task, site
           status = '1-50'
-          set_trigger_level status
+          apply_trigger_level status
         end
       end
     end
