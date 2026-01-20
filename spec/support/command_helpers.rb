@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Validator
   module CommandHelpers
     # Send an RSMP command and wait for confirmation response

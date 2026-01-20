@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Class that handles RSpec 'describe' blocks and builds
 # CodeObjects::RSpec::Context objects
 class RSpecDescribeHandler < YARD::Handlers::Ruby::Base

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module YARD
   module CodeObjects
     module RSpec

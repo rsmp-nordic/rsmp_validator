@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # These constants exist purely to satisfy RuboCop RSpec cops that expect
 # spec files to describe a class/module that matches the file path.
 #

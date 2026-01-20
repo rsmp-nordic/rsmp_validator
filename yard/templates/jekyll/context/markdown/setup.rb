@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 def init
   super
   sections :frontmatter, :title, :description, :context_toc, :specification_toc, :specifications

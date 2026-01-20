@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Automatically starts a local RSMP supervisor to be tested
 # This is used when testing the validator or RSMP gem itself
 # The supervisor runs inside the same Async reactor context as the tester

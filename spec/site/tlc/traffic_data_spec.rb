@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Site::Tlc::TrafficData do
   include Validator::StatusHelpers
   include Validator::CommandHelpers
