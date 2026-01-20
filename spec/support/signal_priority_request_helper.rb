@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Validator
   module StatusHelpers
     # Match a specific status response or update

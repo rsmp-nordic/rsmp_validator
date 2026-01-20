@@ -1,8 +1,6 @@
-# frozen_string_literal: true
-
 module Validator
   module Log
-    INDENT = '> '
+    INDENT = '> '.freeze
 
     def self.log(action, **options)
       Validator.log "> #{action}", **options

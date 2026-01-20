@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe 'Supervisor' do
   describe 'Connection Sequence' do
     def connection_collect_options(timeout, length)

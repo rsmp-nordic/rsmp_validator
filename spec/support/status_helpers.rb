@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Validator
   module StatusHelpers
     # Convert from a hash:

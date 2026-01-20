@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe 'Supervisor' do
   # Validate behaviour related to aggregated status messages
   describe 'Aggregated Status' do

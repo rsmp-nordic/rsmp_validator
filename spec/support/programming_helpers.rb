@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Validator
   module ProgrammingHelpers
     def find_alarm_programming(alarm_code_id)
