@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Helper class for testing RSMP sites
 #
 # The class is a singleton g class, meaning there will only ever be

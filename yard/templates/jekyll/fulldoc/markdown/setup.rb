@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Setup templaty and serialize all relevant objects
 def init
   super

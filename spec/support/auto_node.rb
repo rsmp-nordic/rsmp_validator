@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Base class for automatically starting a local RSMP node (site or supervisor)
 # to be tested. The node runs inside the same Async reactor context as the tester.
 #

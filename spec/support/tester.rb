@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # base class for testing either a site or a supervisor
 # handles running the corresponding local site/supervisor
 # inside an Async reactor

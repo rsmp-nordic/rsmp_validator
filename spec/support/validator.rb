@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'rsmp'
 require 'colorize'
 require 'rspec/expectations'

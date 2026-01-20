@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 include YARD::Templates::Helpers::HtmlHelper
 
 def init

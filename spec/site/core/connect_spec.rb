@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe 'Site::Core' do
   describe 'Connection Sequence' do
     include Validator::HandshakeHelper

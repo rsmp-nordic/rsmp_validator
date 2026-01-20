@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Validator
   # Helpers for validating the sequence of messages during rsmp connection establishment
   module HandshakeHelper

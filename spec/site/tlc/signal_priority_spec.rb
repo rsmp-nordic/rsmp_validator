@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Site::Tlc::SignalPriority do
   include Validator::CommandHelpers
   include Validator::StatusHelpers
