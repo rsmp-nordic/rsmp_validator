@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "site_test.json",
+  "type": "object",
+  "properties": {
+    "local_supervisor": {
+      "type": "object",
+      "properties": {
+        "log": { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+    "core_version": { "type": "string" },
+    "sxl": { "type": "string" },
+    "sxl_version": { "type": "string" },
+    "rsmp_versions": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+    "timeouts": { "type": "object" },
+    "components": { "type": "object" },
+    "items": { "type": "object" },
+    "startup_sequence": { "type": ["string", "null"] },
+    "skip_validation": { "type": "array", "items": { "type": "string" } },
+    "secrets": { "type": "object" },
+    "alarm_triggers": { "type": "object" },
+    "log": { "type": "object" }
+  },
+  "required": ["local_supervisor"],
+  "additionalProperties": true
+}

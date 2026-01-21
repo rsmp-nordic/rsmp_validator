@@ -1,10 +1,24 @@
 # Config for testing a supervisor running on localhost (e.g. one from the rsmp gem)
 # The settings are used for starting a local site connecting to the supervisor tested
-type: tlc
-site_id: RN+SI0001
-supervisors:
-  - ip: 127.0.0.1
-    port: 14111
+local_site:
+  type: tlc
+  site_id: RN+SI0001
+  supervisors:
+    - ip: 127.0.0.1
+      port: 14111
+  log:
+    prefix: '[TLC       ]'
+    acknowledgements: false
+    watchdogs: false
+  intervals:
+    timer: 0.1
+    watchdog: 0.1
+    reconnect: 0.1
+    after_connect: 0.2
+  secrets:
+    security_codes:
+      1: '1111'
+      2: '2222'
 sxl: tlc
 sxl_version: '1.2.1'
 components:
@@ -35,11 +49,6 @@ signal_plans:
       A2: 'NNNNBN'
       B1: 'BBNNNN'
       B2: 'BNNNNN'
-intervals:
-  timer: 0.1
-  watchdog: 0.1
-  reconnect: 0.1
-  after_connect: 0.2
 timeouts:
   connect: 1
   ready: 1
@@ -49,7 +58,3 @@ secrets:
   security_codes:
     1: '1111'
     2: '2222'
-log:
-  prefix: '[TLC       ]'
-  acknowledgements: false
-  watchdogs: false

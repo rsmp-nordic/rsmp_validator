@@ -71,11 +71,12 @@ module Validator
       logger_settings = Validator.logger.settings.dup
 
       # if auto node config has log settings, merge them
-      logger_settings.merge!(config['log']) if config['log']
+      auto_log_settings = Validator.auto_node_log_settings
+      logger_settings.merge!(auto_log_settings) if auto_log_settings && !auto_log_settings.empty?
 
       # If path is explicitly set, remove stream to allow file output
       # Otherwise, keep the validator's stream for consistent formatting
-      logger_settings.delete('stream') if config['log']['path']
+      logger_settings.delete('stream') if auto_log_settings && auto_log_settings['path']
 
       RSMP::Logger.new(logger_settings)
     end

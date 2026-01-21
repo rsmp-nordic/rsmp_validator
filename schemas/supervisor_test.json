@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "supervisor_test.json",
+  "type": "object",
+  "properties": {
+    "local_site": {
+      "type": "object",
+      "properties": {
+        "log": { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+    "core_version": { "type": "string" },
+    "sxl": { "type": "string" },
+    "sxl_version": { "type": "string" },
+    "timeouts": { "type": "object" },
+    "components": { "type": "object" },
+    "items": { "type": "object" },
+    "skip_validation": { "type": "array", "items": { "type": "string" } },
+    "secrets": { "type": "object" },
+    "log": { "type": "object" }
+  },
+  "required": ["local_site"],
+  "additionalProperties": true
+}
