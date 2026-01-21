@@ -23,9 +23,11 @@ module Validator
                 RSMP::Site
               end
 
+      site_settings = Validator::ConfigNormalizer.normalize_site_settings(config)
+
       # Create the site with the auto_config settings
       klass.new(
-        site_settings: config,
+        site_settings: site_settings,
         logger: create_logger
       )
     end

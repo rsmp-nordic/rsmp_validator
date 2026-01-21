@@ -46,19 +46,32 @@ SITE_CONFIG=config/my_site_validation_config.yaml bundle exec rspec spec/site
 If the relevant environment variable is set, the file `config/validator.yaml` will not be read.
 
 ## Options for Site testing
-The config is used to start the local supervisor that will communicate with the site you're testing, but includes additional options used by the validator, like timeouts and options to restrict what tests to run.
+The config is used to start the local supervisor that will communicate with the site you're testing, and it also includes validator-only options like timeouts and items to test.
 
-All settings except `components` and `items` can be left out, in which case the default values will be used.
+`local_supervisor` is required and uses the same schema as an rsmp supervisor config. Put all supervisor settings under `local_supervisor`, and keep test settings at the top level.
+
+Use `local_supervisor.log` for supervisor logs. The top-level `log` block (if set) controls validator logs.
 
 ```yaml
-port: 13111             # port to listen on
-ips: all                # allowed ip addresses. either 'all' or a list. defaults to 'all' if left out
+local_supervisor:
+  port: 13111             # port to listen on
+  ips: all                # allowed ip addresses. either 'all' or a list. defaults to 'all' if left out
+  max_sites: 1            # allow a single site connection
+  log:
+    prefix: '[SUPERVISOR]' # log prefix for local supervisor
+  guest:
+    sxl: tlc              # sxl of the connecting site, options are 'core' or 'tlc'
+    sxl_version: 1.2.1    # sxl version of the site
+    core_version: 3.2.2   # core version of site
+    intervals:
+      timer: 1            # main timer interval (resolution), in seconds
+      watchdog: 1         # how often to send watchdog messages, in seconds
+    timeouts:
+      watchdog: 2         # max time between incoming watchdogs, in seconds
+      acknowledgement: 2  # max time until acknowledgement is received, in seconds
 core_version: 3.2.2     # core version of site, tests not relevant for this version will be skipped
 sxl: tlc                # sxl of the connecting site, options are 'core' or 'tlc'
 sxl_version: 1.2.1      # sxl version of the site, tests not relevant for this version will be skipped
-intervals:
-  timer: 1              # main timer interval (resolution), in seconds
-  watchdog: 1           # how often to send watchdog messages, in seconds
 
 timeouts:
   watchdog: 2           # max time between incoming watchdogs, in seconds
@@ -104,68 +117,74 @@ alarm_triggers:          # how to trigger alarms by forcing inputs
     component: DL1      # and will activate on component DL1
 ```
 
-The following settings will be copied into a configuration for the local supervisor: `port`, `sxl`, `intervals`, `timeouts`, `components`, `rsmp_versions`, `skip_validation`.
-
-The supervisor config will also have `max_sites: 1` and `ips: all` meaning it will allow connections from any ip and with any RSMP site id, but will only allow one site to be connected at a time. Multiple connections will be flagged as an error.
-
-See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) for more details about these settings.
+See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) for more details about supervisor settings.
 
 ## Options for Supervisor testing
-When testing a supervisor, the settings are used by the local site without modifications.
+When testing a supervisor, the config is used to start a local site that connects to the supervisor being tested.
+
+Put all site settings under `local_site`, and keep test-only settings at the top level.
+
+Use `local_site.log` for local site logs. The top-level `log` block (if set) controls validator logs.
 
 ```yaml
 # Config for testing a supervisor running on localhost (e.g. one from the rsmp gem)
 # The settings are used for starting a local site connecting to the supervisor tested
-type: tlc               # type of local site to run
-site_id: RN+SI0001      # site id of local site
-supervisors:          # what supervisor the local site should connect to
-  - ip: 127.0.0.1       # ip
-    port: 14111         # port
+local_site:
+  type: tlc               # type of local site to run
+  site_id: RN+SI0001      # site id of local site
+  supervisors:          # what supervisor the local site should connect to
+    - ip: 127.0.0.1       # ip
+      port: 14111         # port
+  log:
+    prefix: '[TLC]'        # log prefix for local site
+  core_version: 3.2.2     # core version
+  sxl: tlc                # sxl to use, options are 'core' or 'tlc'
+  sxl_version: 1.2.1      # sxl version
+  components:           # components of local site, organized by type and name
+    main:                 # type
+      TC:                 # name
+    signal_group:       # list of signal groups
+      A1:
+      A2:
+      B1:
+      B2:
+    detector_logic:     # list of detector logics
+      DL1:
+  signal_plans:         # list of signal plans
+    1:                    # signal plan number
+      cycle_time: 6         # cycle time
+      states:               # signal group states
+        A1: '111NBB'          # states per second
+        A2: '11NBBB'
+        B1: 'BBB11N'
+        B2: 'BBB1NB'
+      dynamic_bands:        # list of dynamic bands
+        1: 0                  # band 1 has the value 0
+        2: 5
+    2:
+      cycle_time: 6
+      states:
+        A1: 'NNNNBB'
+        A2: 'NNNNBN'
+        B1: 'BBNNNN'
+        B2: 'BNNNNN'
+  intervals:            # intervals
+    timer: 0.1            # basic timer resolution in seconds, in seconds
+    watchdog: 0.1         # time between sending watchdog messages, in seconds
+    reconnect: 0.1        # interval between retries if supervisor is unreachable, in seconds
+    after_connect: 0.2    # delay after connecting before starting handshake, in seconds
+  timeouts:             # timeouts
+    connect: 1            # max time it should take to connect, in seconds
+    ready: 1              # max time to complete handshake sequence, in seconds
+    watchdog: 0.2         # max time between receiving watchdogs, in seconds
+    acknowledgement: 0.2  # max time unless a message we send is acknowledged, in seconds
+  secrets:                # place secrets or in a separate file, see below
+    security_codes:       # RSMP security codes. there are no defaults for these
+      1: '1111'           # level 1
+      2: '2222'           # level 2
 core_version: 3.2.2     # core version, tests not relevant for this version will be skipped
 sxl: tlc                # sxl to use, options are 'core' or 'tlc'
 sxl_version: 1.2.1      # sxl version, tests not relevant for this version will be skipped
-components:           # components of local site, organized by type and name
-  main:                 # type
-    TC:                 # name
-  signal_group:       # list of signal groups
-    A1:
-    A2:
-    B1:
-    B2:
-  detector_logic:     # list of detector logics
-    DL1:
-signal_plans:         # list of signal plans
-  1:                    # signal plan number
-    cycle_time: 6         # cycle time
-    states:               # signal group states
-      A1: '111NBB'          # states per second
-      A2: '11NBBB'
-      B1: 'BBB11N'
-      B2: 'BBB1NB'
-    dynamic_bands:        # list of dynamic bands
-      1: 0                  # band 1 has the value 0
-      2: 5
-  2:
-    cycle_time: 6
-    states:
-      A1: 'NNNNBB'
-      A2: 'NNNNBN'
-      B1: 'BBNNNN'
-      B2: 'BNNNNN'
-intervals:            # intervals
-  timer: 0.1            # basic timer resolution in seconds, in seconds
-  watchdog: 0.1         # time between sending watchdog messages, in seconds
-  reconnect: 0.1        # interval between retries if supervisor is unreachable, in seconds
-  after_connect: 0.2    # delay after connecting before starting handshake, in seconds
-timeouts:             # timeouts
-  connect: 1            # max time it should take to connect, in seconds
-  ready: 1              # max time to complete handshake sequence, in seconds
-  watchdog: 0.2         # max time between receiving watchdogs, in seconds
-  acknowledgement: 0.2  # max time unless a message we send is acknowledged, in seconds
-secrets:                # place secrets or in a separate file, see below
-  security_codes:       # RSMP security codes. there are no defaults for these
-    1: '1111'           # level 1
-    2: '2222'           # level 2
 ```
 
 ## SXL Option

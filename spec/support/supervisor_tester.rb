@@ -27,17 +27,24 @@ module Validator
       end
     end
 
+    def parse_config
+      @site_config = config['local_site']
+      raise "config 'local_site' is missing" unless @site_config
+    end
+
     # build local site
     def build_node(options)
-      klass = case config['type']
+      klass = case @site_config['type']
               when 'tlc'
                 RSMP::TLC::TrafficControllerSite
               else
                 RSMP::Site
               end
+      site_settings = Validator::ConfigNormalizer.normalize_site_settings(@site_config)
+      logger = create_site_logger(@site_config)
       @site = klass.new(
-        site_settings: config.deep_merge(options),
-        logger: Validator.logger,
+        site_settings: site_settings.deep_merge(options),
+        logger: logger,
         collect: options['collect']
       )
     end
@@ -58,6 +65,16 @@ module Validator
       @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
     rescue RSMP::TimeoutError
       raise RSMP::ConnectionError, "Handshake didn't complete within #{config['timeouts']['ready']}s"
+    end
+
+    def create_site_logger(site_config)
+      log_settings = site_config.is_a?(Hash) ? site_config['log'] : nil
+      return Validator.logger unless log_settings && !log_settings.empty?
+
+      logger_settings = Validator.logger.settings.dup
+      logger_settings.merge!(log_settings)
+      logger_settings.delete('stream') if log_settings['path']
+      RSMP::Logger.new(logger_settings)
     end
   end
 end

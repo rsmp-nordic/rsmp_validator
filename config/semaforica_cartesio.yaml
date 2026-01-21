@@ -1,11 +1,15 @@
 # Config for testing Cross RS4S traffic light controller.
 # The settings are used for starting a local supervisor listening for the site tested
 # See https://rsmp-nordic.github.io/rsmp_validator/config/
+local_supervisor:
+  ips: all
+  max_sites: 1
+  guest:
+    intervals:   
+      timer: 1    # main validator timer resolution in seconds
+      watchdog: 60 # send watchdog every x seconds
 sxl: tlc
 sxl_version: '1.2.1'
-intervals:   
-  timer: 1    # main validator timer resolution in seconds
-  watchdog: 60 # send watchdog every x seconds
 timeouts:     # Timeouts used when waiting for messages from site.
   watchdog: 60
   acknowledgement: 60

@@ -64,15 +64,10 @@ module Validator
     end
 
     def parse_config
-      # build rsmp supervisor config by
-      # picking elements from the config
-      want = %w[sxl intervals timeouts components rsmp_versions core_version skip_validation]
-      guest_settings = config.select { |key| want.include? key }
-      @supervisor_config = {
-        'max_sites' => 1,
-        'guest' => guest_settings
-      }
-      @supervisor_config['port'] = config['port'] if config['port']
+      @supervisor_config = config['local_supervisor']
+      raise "config 'local_supervisor' is missing" unless @supervisor_config
+
+      @supervisor_config['max_sites'] ||= 1
 
       %w[
         connect
@@ -91,9 +86,10 @@ module Validator
 
     # build local supervisor
     def build_node(options)
+      logger = create_supervisor_logger(@supervisor_config)
       RSMP::Supervisor.new(
         supervisor_settings: @supervisor_config.deep_merge(options),
-        logger: Validator.logger,
+        logger: logger,
         collect: options['collect']
       )
     end
@@ -116,6 +112,16 @@ module Validator
       Validator::Log.log 'Waiting for handskake to complete'
       @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
       Validator::Log.log 'Ready'
+    end
+
+    def create_supervisor_logger(supervisor_config)
+      log_settings = supervisor_config.is_a?(Hash) ? supervisor_config['log'] : nil
+      return Validator.logger unless log_settings && !log_settings.empty?
+
+      logger_settings = Validator.logger.settings.dup
+      logger_settings.merge!(log_settings)
+      logger_settings.delete('stream') if log_settings['path']
+      RSMP::Logger.new(logger_settings)
     end
   end
 end

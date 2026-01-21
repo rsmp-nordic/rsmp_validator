@@ -18,7 +18,7 @@ For testing real equipment or production systems, you should connect to external
 ## How It Works
 Usually, when testing a site, the validator starts a supervisor and waits for the external site to connect.
 
-With the auto node feature, the validator start a local site which connect to the supervisor and is then tested. Similarly, when testing a supervisor, it will start a local supervisor which will be tested.
+With the auto node feature, the validator starts a local site that connects to the supervisor and is then tested. Similarly, when testing a supervisor, it starts a local supervisor that is tested.
 
 The auto site/supervisor runs inside the same Async reactor as the validator.
 
@@ -41,7 +41,7 @@ Or:
 # automatically start a supervisor to be tested
 auto_supervisor: config/simulator/supervisor.yaml
 ```
-###  Environment Variables
+### Environment Variables
 You can also enable the auto node feature using environment variables.
 
 Automatically start a site to be tested:
@@ -65,7 +65,7 @@ You can use these as templates:
 - `config/simulator/supervisor.yaml`
 
 ## Logging
-Auto nodes create their own logger instance, which allows you to control their output independently from the validator/supervisor logger.
+Auto nodes create their own logger instance, which allows you to control their output independently from the validator and local node loggers.
 
 ### Interleaved Output (Default)
 By default, output from the auto node is interleaved with the validator's output using the same RSpec formatter. To distinguish between the validator and auto node output, you can use the `prefix` option in the auto node's log configuration:
