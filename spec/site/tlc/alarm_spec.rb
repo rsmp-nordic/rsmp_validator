@@ -129,7 +129,7 @@ RSpec.describe Site::Tlc::Alarm do
 
     specify 'A0302 has different timestamps for active and inactive states', :programming, core: '>=3.1.4',
                                                                                            sxl: '>=1.0.7' do |_example|
-      Validator::Site.connected do |task, _supervisor, site|
+      Validator::SiteTester.connected do |task, _supervisor, site|
         alarm_code_id = 'A0302'
         prepare task, site
 
@@ -169,7 +169,7 @@ RSpec.describe Site::Tlc::Alarm do
 
     specify 'A0302 alarm timestamps in RSMP core < 3.1.4 versions', :programming, core: '<3.1.4',
                                                                                   sxl: '>=1.0.7' do |_example|
-      Validator::Site.connected do |task, _supervisor, site|
+      Validator::SiteTester.connected do |task, _supervisor, site|
         alarm_code_id = 'A0302'
         prepare task, site
 
