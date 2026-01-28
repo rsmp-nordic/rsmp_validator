@@ -1,8 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'rsmp'
-
 gem 'activesupport'
+gem 'rsmp', path: '../rsmp'
 
 group :development do
   gem 'rake'
