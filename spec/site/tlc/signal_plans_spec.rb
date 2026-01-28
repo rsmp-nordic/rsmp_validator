@@ -10,12 +10,21 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 3. We should receive a status response before timeout
     specify 'currently active is read with S0014', sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |_task, _supervisor, site|
-        status_list = if RSMP::Proxy.version_meets_requirement?(site.sxl_version, '>=1.1')
-                        { S0014: %i[status source] }
-                      else
-                        { S0014: [:status] }
-                      end
-        request_status_and_confirm site, 'current time plan', status_list
+        if site.respond_to?(:fetch_signal_plan)
+          result = site.fetch_signal_plan(options: {
+                                            collect!: {
+                                              timeout: Validator.get_config('timeouts', 'status_response')
+                                            }
+                                          })
+          expect(result[:collector].messages.first).to be_a(RSMP::StatusResponse)
+        else
+          status_list = if RSMP::Proxy.version_meets_requirement?(site.sxl_version, '>=1.1')
+                          { S0014: %i[status source] }
+                        else
+                          { S0014: [:status] }
+                        end
+          request_status_and_confirm site, 'current time plan', status_list
+        end
       end
     end
 
@@ -31,7 +40,30 @@ RSpec.describe Site::Tlc::SignalPlans do
       skip('No time plans configured') if plans.nil? || plans.empty?
       Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
-        plans.each { |plan| switch_plan plan }
+
+        if site.respond_to?(:set_timeplan) && site.respond_to?(:fetch_signal_plan)
+          security_code = Validator.get_config('secrets', 'security_codes', 2)
+          plans.each do |plan|
+            result = site.set_timeplan(plan, security_code: security_code, options: {
+                                        collect!: {
+                                          timeout: Validator.get_config('timeouts', 'command_response')
+                                        }
+                                      })
+            expect(result[:collector].messages.first).to be_a(RSMP::CommandResponse)
+
+            status_result = site.fetch_signal_plan(options: {
+                                                     collect!: {
+                                                       timeout: Validator.get_config('timeouts', 'status_response')
+                                                     }
+                                                   })
+            status_message = status_result[:collector].messages.first
+            expect(status_message).to be_a(RSMP::StatusResponse)
+            status_values = status_message.attributes['sS'].to_h { |item| [item['n'], item['s']] }
+            expect(status_values['status'].to_i).to eq(plan)
+          end
+        else
+          plans.each { |plan| switch_plan plan }
+        end
       end
     end
 
