@@ -1,3 +1,15 @@
+PATH
+  remote: ../rsmp
+  specs:
+    rsmp (0.40.1)
+      async (~> 2.32)
+      colorize (~> 1.1)
+      io-endpoint (~> 0.15)
+      io-stream (~> 0.10)
+      logger (~> 1.6)
+      ostruct (~> 0.6)
+      rsmp_schema (~> 0.8)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -64,14 +76,6 @@ GEM
     rainbow (3.1.1)
     rake (13.3.1)
     regexp_parser (2.11.3)
-    rsmp (0.40.1)
-      async (~> 2.32)
-      colorize (~> 1.1)
-      io-endpoint (~> 0.15)
-      io-stream (~> 0.10)
-      logger (~> 1.6)
-      ostruct (~> 0.6)
-      rsmp_schema (~> 0.8)
     rsmp_schema (0.9.1)
       json_schemer (~> 2.4.0)
       thor (~> 1.4.0)
@@ -130,7 +134,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   rake
-  rsmp
+  rsmp!
   rspec
   rubocop
   rubocop-rspec

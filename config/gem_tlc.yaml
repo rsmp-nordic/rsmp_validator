@@ -5,6 +5,7 @@ local_supervisor:
   port: 13111
   ips: all
   max_sites: 1
+  proxy_type: tlc
   log:
     prefix: '[SUPERVISOR]'
     acknowledgements: false
