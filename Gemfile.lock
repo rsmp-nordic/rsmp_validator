@@ -42,7 +42,7 @@ GEM
     io-endpoint (0.16.0)
     io-event (1.14.2)
     io-stream (0.11.1)
-    json (2.18.0)
+    json (2.19.2)
     json_schemer (2.4.0)
       bigdecimal
       hana (~> 1.3)
