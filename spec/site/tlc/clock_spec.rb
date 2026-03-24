@@ -40,8 +40,7 @@ RSpec.describe Site::Tlc::Clock do
     # 3. Expect status response before timeout
     it 'can be set with M0104', sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |_task, _supervisor, site|
-        @site = site
-        @site.set_clock(clock)
+        site.set_clock(clock)
       end
     end
 
@@ -53,8 +52,7 @@ RSpec.describe Site::Tlc::Clock do
     # 4. Compare set_clock and status timestamp
     # 5. Expect the difference to be within max_diff
     it 'is used for S0096 status response', sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
             status_list = { S0096: %i[
@@ -106,8 +104,7 @@ RSpec.describe Site::Tlc::Clock do
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
     it 'is used for S0096 response timestamp', sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
             status_list = { S0096: %i[
@@ -146,8 +143,7 @@ RSpec.describe Site::Tlc::Clock do
     # 5. Compare set_clock and response timestamp
     # 6. Expect the difference to be within max_diff
     it 'is used for aggregated status timestamp', core: '>=3.1.5', sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
             result = site.request_aggregated_status Validator.get_config('main_component'), collect!: {
@@ -173,12 +169,12 @@ RSpec.describe Site::Tlc::Clock do
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
     it 'is used for M0001 response timestamp', sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
-            result = @site.set_functional_position('NormalControl',
-                                                     options: { collect!: { timeout: Validator.get_config('timeouts', 'command_response') } })
+            result = site.set_functional_position('NormalControl',
+                                                  options: { collect!: { timeout: Validator.get_config('timeouts',
+                                                                                                       'command_response') } })
             collector = result[:collector]
             max_diff = Validator.get_config('timeouts', 'command_response') * 2
             diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
@@ -198,12 +194,12 @@ RSpec.describe Site::Tlc::Clock do
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
     it 'is used for M0104 response timestamp', sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
-            result = @site.set_functional_position('NormalControl',
-                                                     options: { collect!: { timeout: Validator.get_config('timeouts', 'command_response') } })
+            result = site.set_functional_position('NormalControl',
+                                                  options: { collect!: { timeout: Validator.get_config('timeouts',
+                                                                                                       'command_response') } })
             collector = result[:collector]
             max_diff = Validator.get_config('timeouts', 'command_response')
             diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
@@ -228,7 +224,6 @@ RSpec.describe Site::Tlc::Clock do
 
     it 'is used for alarm timestamp', :programming, sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do # set clock
             with_alarm_activated(task, site, 'A0302') do |alarm| # raise alarm, by activating input
@@ -253,7 +248,6 @@ RSpec.describe Site::Tlc::Clock do
     # 5. Expect the difference to be within max_diff
     it 'is used for watchdog timestamp', sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
             log 'Checking watchdog timestamp'

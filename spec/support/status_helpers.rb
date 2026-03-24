@@ -22,8 +22,8 @@ module Validator
       end.flatten
     end
 
-    def unsubscribe_from_all
-      @site.unsubscribe_to_status Validator.get_config('main_component'), [
+    def unsubscribe_from_all(site)
+      site.unsubscribe_to_status Validator.get_config('main_component'), [
         { 'sCI' => 'S0015', 'n' => 'status' },
         { 'sCI' => 'S0014', 'n' => 'status' },
         { 'sCI' => 'S0011', 'n' => 'status' },
@@ -41,27 +41,20 @@ module Validator
       ]
     end
 
-    def wait_for_status(description, status_list,
-                        update_rate: 0,
-                        timeout: Validator.get_config('timeouts', 'command'),
-                        component_id: Validator.get_config('main_component'))
+    def wait_for_status(site, description, status_list, **options)
       log "Wait for #{description}"
-      @site.wait_for_status(
+      site.wait_for_status(
         description,
         convert_status_list(status_list),
-        update_rate: update_rate,
-        timeout: timeout,
-        component_id: component_id
+        **options
       )
     end
 
     def request_status_and_confirm(site, description, status_list, component = Validator.get_config('main_component'))
-      @site = site
       log "Read #{description}"
       site.request_status component, convert_status_list(status_list), collect!: {
         timeout: Validator.get_config('timeouts', 'status_response')
       }
     end
-
   end
 end
