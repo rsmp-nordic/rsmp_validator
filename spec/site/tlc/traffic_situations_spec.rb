@@ -28,11 +28,11 @@ RSpec.describe Site::Tlc::TrafficSituations do
     it 'is set with M0003', sxl: '>=1.0.7' do |_example|
       situations = Validator.get_config('items', 'traffic_situations')
       skip('No traffic situations configured') if situations.nil? || situations.empty?
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-        situations.each { |traffic_situation| switch_traffic_situation traffic_situation.to_s }
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        @site = site
+        situations.each { |traffic_situation| @site.set_traffic_situation(traffic_situation.to_s, options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } }) }
       ensure
-        unset_traffic_situation
+        @site.unset_traffic_situation
       end
     end
 
