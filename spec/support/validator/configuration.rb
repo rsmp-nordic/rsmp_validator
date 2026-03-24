@@ -221,7 +221,7 @@ module Validator
     end
 
     def top_level_supervisor_settings?
-      config['supervisors'] || config['port'] || config['guest']
+      config['supervisors'] || config['port'] || config['sites']
     end
 
     def validate_components_config!

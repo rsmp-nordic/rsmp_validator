@@ -9,9 +9,7 @@ module Validator
 
       Validator::SiteTester.isolated(
         'collect' => { timeout: timeout, num: length, ingoing: true, outgoing: true },
-        'guest' => {
-          'rsmp_versions' => [core_version]
-        }
+        'sites' => { 'default' => { 'rsmp_versions' => [core_version] } }
       ) do |task, _supervisor, site|
         expect(site.ready?).to be true
         collector = site.collector
