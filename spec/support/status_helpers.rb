@@ -41,29 +41,18 @@ module Validator
       ]
     end
 
-    def verify_status(_parent_task, description, status_list)
-      log description
-      @site.request_status Validator.get_config('main_component'), convert_status_list(status_list), collect!: {
-        timeout: Validator.get_config('timeouts', 'status_update', assume: 0)
-      }
-    end
-
     def wait_for_status(description, status_list,
                         update_rate: 0,
                         timeout: Validator.get_config('timeouts', 'command'),
                         component_id: Validator.get_config('main_component'))
       log "Wait for #{description}"
-      subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt' => update_rate.to_s }
-      subscribe_list.map! { |item| item.merge!('sOc' => true) } if use_soc?(@site)
-
-      begin
-        @site.subscribe_to_status component_id, subscribe_list, collect!: {
-          timeout: timeout
-        }
-      ensure
-        unsubscribe_list = convert_status_list(status_list).map { |item| item.slice('sCI', 'n') }
-        @site.unsubscribe_to_status component_id, unsubscribe_list
-      end
+      @site.wait_for_status(
+        description,
+        convert_status_list(status_list),
+        update_rate: update_rate,
+        timeout: timeout,
+        component_id: component_id
+      )
     end
 
     def wait_for_groups(state, timeout:)

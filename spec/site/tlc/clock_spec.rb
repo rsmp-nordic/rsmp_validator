@@ -38,9 +38,9 @@ RSpec.describe Site::Tlc::Clock do
     # 2. Send command
     # 3. Expect status response before timeout
     it 'can be set with M0104', sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-        apply_clock(clock)
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        @site = site
+        @site.set_clock(clock)
       end
     end
 
@@ -176,7 +176,8 @@ RSpec.describe Site::Tlc::Clock do
         prepare task, site
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
-            result = set_functional_position 'NormalControl'
+            result = @site.set_functional_position('NormalControl',
+                                                     options: { collect!: { timeout: Validator.get_config('timeouts', 'command_response') } })
             collector = result[:collector]
             max_diff = Validator.get_config('timeouts', 'command_response') * 2
             diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
@@ -200,7 +201,8 @@ RSpec.describe Site::Tlc::Clock do
         prepare task, site
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
-            result = set_functional_position 'NormalControl'
+            result = @site.set_functional_position('NormalControl',
+                                                     options: { collect!: { timeout: Validator.get_config('timeouts', 'command_response') } })
             collector = result[:collector]
             max_diff = Validator.get_config('timeouts', 'command_response')
             diff = Time.parse(collector.messages.first.attributes['cTS']) - clock

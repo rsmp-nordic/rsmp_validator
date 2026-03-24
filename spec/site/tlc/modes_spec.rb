@@ -104,10 +104,10 @@ RSpec.describe Site::Tlc::Modes do
     # 4. Send command to switch to fixed time = false
     # 5. Wait for status = false
     specify 'fixed time control can be activated with M0007', sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-        switch_fixed_time 'True'
-        switch_fixed_time 'False'
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        @site = site
+        @site.set_fixed_time('True', options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } })
+        @site.set_fixed_time('False', options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } })
       end
     end
 
@@ -163,10 +163,10 @@ RSpec.describe Site::Tlc::Modes do
     # 4. Send command to switch to normal control
     # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
     specify 'yellow flash can be activated with M0001', sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-        switch_yellow_flash
-        switch_normal_control
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        @site = site
+        @site.set_functional_position('YellowFlash', options: { confirm!: { timeout: Validator.get_config('timeouts', 'yellow_flash') } })
+        @site.set_functional_position('NormalControl', options: { confirm!: { timeout: Validator.get_config('timeouts', 'startup_sequence') } })
       end
     end
 
@@ -178,14 +178,14 @@ RSpec.describe Site::Tlc::Modes do
     # 4. Send command to switch to normal control
     # 5. Wait for all groups to switch do something else that 'c'
     specify 'yellow flash affects all signal groups', sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        @site = site
         timeout = Validator.get_config('timeouts', 'yellow_flash')
 
-        switch_yellow_flash
+        @site.set_functional_position('YellowFlash', options: { confirm!: { timeout: timeout } })
         wait_for_groups 'c', timeout: timeout      # c mean s yellow flash
 
-        switch_normal_control
+        @site.set_functional_position('NormalControl', options: { confirm!: { timeout: Validator.get_config('timeouts', 'startup_sequence') } })
         wait_for_groups '[^c]', timeout: timeout   # not c, ie. not yellow flash
       end
     end
@@ -226,10 +226,10 @@ RSpec.describe Site::Tlc::Modes do
     # 4. Send command to switch to normal control
     # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
     specify 'dark mode can be activated with M0001', sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-        switch_dark_mode
-        switch_normal_control
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        @site = site
+        @site.set_functional_position('Dark', options: { confirm!: { timeout: Validator.get_config('timeouts', 'functional_position') } })
+        @site.set_functional_position('NormalControl', options: { confirm!: { timeout: Validator.get_config('timeouts', 'startup_sequence') } })
       end
     end
 
@@ -241,11 +241,11 @@ RSpec.describe Site::Tlc::Modes do
     # 3. Wait for status Yellow flash
     # 5. Wait for automatic revert to Normal Control
     specify 'yellow flash be used with a timeout of one minute', :slow, sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-        switch_normal_control
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        @site = site
+        @site.set_functional_position('NormalControl', options: { confirm!: { timeout: Validator.get_config('timeouts', 'startup_sequence') } })
         minutes = 1
-        switch_yellow_flash timeout_minutes: minutes
+        @site.set_functional_position('YellowFlash', timeout_minutes: minutes, options: { confirm!: { timeout: Validator.get_config('timeouts', 'yellow_flash') } })
         wait_normal_control timeout: (minutes * 60) + Validator.get_config('timeouts', 'functional_position')
       end
     end
