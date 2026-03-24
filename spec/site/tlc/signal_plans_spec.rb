@@ -203,16 +203,16 @@ RSpec.describe Site::Tlc::SignalPlans do
         plan = Validator.get_config('items', 'plans').first
         band = 3
 
-        value = get_dynamic_bands(plan, band) || 0
+        value = @site.read_dynamic_band(plan: plan, band: band) || 0
         expect(value).to be_a(Integer)
 
         new_value = value + 1
 
         @site.set_dynamic_bands(plan: plan, status: "#{band}-#{new_value}")
-        expect(get_dynamic_bands(plan, band)).to eq(new_value)
+        expect(@site.read_dynamic_band(plan: plan, band: band)).to eq(new_value)
 
         @site.set_dynamic_bands(plan: plan, status: "#{band}-#{value}")
-        expect(get_dynamic_bands(plan, band)).to eq(value)
+        expect(@site.read_dynamic_band(plan: plan, band: band)).to eq(value)
       end
     end
 
