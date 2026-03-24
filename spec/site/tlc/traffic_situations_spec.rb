@@ -29,10 +29,12 @@ RSpec.describe Site::Tlc::TrafficSituations do
       situations = Validator.get_config('items', 'traffic_situations')
       skip('No traffic situations configured') if situations.nil? || situations.empty?
       Validator::SiteTester.connected do |_task, _supervisor, site|
-        @site = site
-        situations.each { |traffic_situation| @site.set_traffic_situation(traffic_situation.to_s, options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } }) }
+        situations.each do |traffic_situation|
+          site.set_traffic_situation(traffic_situation.to_s,
+                                     options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } })
+        end
       ensure
-        @site.unset_traffic_situation
+        site.unset_traffic_situation
       end
     end
 
