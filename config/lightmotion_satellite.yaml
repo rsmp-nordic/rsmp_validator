@@ -4,10 +4,11 @@
 local_supervisor:
   ips: all
   max_sites: 1
-  guest:
-    intervals:
-      timer: 1    # main validator timer resolution in seconds
-      watchdog: 20 # send watchdog every x seconds
+  sites:
+    default:
+      intervals:
+        timer: 1    # main validator timer resolution in seconds
+        watchdog: 20 # send watchdog every x seconds
 sxl: tlc
 sxl_version: '1.2'
 core_version: '3.2.1'
