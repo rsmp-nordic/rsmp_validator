@@ -9,9 +9,10 @@ RSpec.describe Site::Tlc::SignalGroups do
     # 2. Send control command to start signalgrup, set_signal_start= true, include security_code
     # 3. Wait for status = true
     it 'is ordered to green with M0010', :important, sxl: '>=1.0.8' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-        set_signal_start
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        @site = site
+        component = Validator.get_config('components', 'signal_group').keys[0]
+        @site.order_signal_start(component)
       end
     end
 
@@ -19,9 +20,10 @@ RSpec.describe Site::Tlc::SignalGroups do
     # 2. Send control command to stop signalgrup, set_signal_start= false, include security_code
     # 3. Wait for status = true
     it 'is ordered to red with M0011', :important, sxl: '>=1.0.8' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-        set_signal_stop
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        @site = site
+        component = Validator.get_config('components', 'signal_group').keys[0]
+        @site.order_signal_stop(component)
       end
     end
 
@@ -79,10 +81,10 @@ RSpec.describe Site::Tlc::SignalGroups do
       Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
         verify_startup_sequence do
-          switch_yellow_flash
-          set_functional_position 'NormalControl'
+          @site.set_functional_position('YellowFlash', options: { confirm!: { timeout: Validator.get_config('timeouts', 'yellow_flash') } })
+          @site.set_functional_position('NormalControl')
         end
-        set_functional_position 'NormalControl'
+        @site.set_functional_position('NormalControl')
       end
     end
   end
