@@ -10,7 +10,7 @@ local_supervisor:
     prefix: '[SUPERVISOR]'
     acknowledgements: false
     watchdogs: false
-  guest:
+  default:
     intervals:
       timer: 0.1
       watchdog: 0.1

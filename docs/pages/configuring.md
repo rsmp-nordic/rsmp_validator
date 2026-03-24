@@ -59,7 +59,7 @@ local_supervisor:
   max_sites: 1            # allow a single site connection
   log:
     prefix: '[SUPERVISOR]' # log prefix for local supervisor
-  guest:
+  default:
     sxl: tlc              # sxl of the connecting site, options are 'core' or 'tlc'
     sxl_version: 1.2.1    # sxl version of the site
     core_version: 3.2.2   # core version of site
@@ -72,6 +72,22 @@ local_supervisor:
 core_version: 3.2.2     # core version of site, tests not relevant for this version will be skipped
 sxl: tlc                # sxl of the connecting site, options are 'core' or 'tlc'
 sxl_version: 1.2.1      # sxl version of the site, tests not relevant for this version will be skipped
+
+## Note on `sites` entries
+
+When building supervisor settings you can add a `sites` mapping where each key is a site id and the value is the supervisor-side configuration for that site. The supervisor uses this information to determine which SXL/schema and proxy behaviour to use for incoming connections. Each site entry must include `sxl`.
+
+Example:
+
+```yaml
+local_supervisor:
+  sites:
+    TLC001:
+      sxl: tlc
+      sxl_version: '1.2.1'
+      timeouts:
+        acknowledgement: 1
+```
 
 timeouts:
   watchdog: 2           # max time between incoming watchdogs, in seconds
