@@ -1,18 +1,18 @@
 module Validator
   module StartupHelpers
-    def verify_startup_sequence
+    def verify_startup_sequence(task, site)
       status_list = [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus' }]
       subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt' => 0.to_s }
-      subscribe_list.map! { |item| item.merge!('sOc' => true) } if @site.use_soc?
+      subscribe_list.map! { |item| item.merge!('sOc' => true) } if site.use_soc?
 
       unsubscribe_list = convert_status_list(status_list)
       component = Validator.get_config('main_component')
       timeout = Validator.get_config('timeouts', 'startup_sequence')
-      collector = RSMP::StatusCollector.new @site, status_list, timeout: timeout
+      collector = RSMP::StatusCollector.new site, status_list, timeout: timeout
       sequencer = Validator::StatusHelpers::SignalGroupSequenceHelper.new Validator.get_config('startup_sequence')
       states = nil
 
-      collector_task = @task.async do
+      collector_task = task.async do
         log 'Verifying startup sequence'
         collector.collect do |_message, item| # listen for status messages
           next unless item
@@ -26,16 +26,17 @@ module Validator
       yield
 
       # subscribe, so we start getting status updates
-      @site.subscribe_to_status component, subscribe_list
+      site.subscribe_to_status component, subscribe_list
 
       handle_startup_sequence_result(collector_task.wait, sequencer, collector, timeout)
 
       wait_for_status(
+        site,
         'control mode to be startup',
         [{ 'sCI' => 'S0020', 'n' => 'controlmode', 's' => 'control' }]
       )
     ensure
-      @site.unsubscribe_to_status component, unsubscribe_list # unsubscribe
+      site.unsubscribe_to_status component, unsubscribe_list # unsubscribe
     end
 
     private

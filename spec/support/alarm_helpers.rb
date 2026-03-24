@@ -6,7 +6,7 @@ module Validator
     def with_alarm_activated(task, site, alarm_code_id, initial_deactivation: true)
       input_nr, component_id = find_alarm_programming(alarm_code_id)
       component_id ||= Validator.get_config('main_component')
-      force_input_and_confirm input: input_nr, value: 'False' if initial_deactivation
+      force_input_and_confirm site, input: input_nr, value: 'False' if initial_deactivation
       state = false
       begin
         if RSMP::Proxy.version_meets_requirement? site.core_version, '>=3.2'
@@ -34,7 +34,7 @@ module Validator
           collector.collect!
           collector.messages.first
         end
-        force_input_and_confirm input: input_nr, value: 'True'
+        force_input_and_confirm site, input: input_nr, value: 'True'
         state = true
         yield collect_task.wait, component_id
 
@@ -51,11 +51,11 @@ module Validator
           collector.collect!
           collector.messages.first
         end
-        force_input_and_confirm input: input_nr, value: 'False'
+        force_input_and_confirm site, input: input_nr, value: 'False'
         state = false
         [collect_task.wait, component_id]
       ensure
-        force_input_and_confirm input: input_nr, value: 'False' if state == true
+        force_input_and_confirm site, input: input_nr, value: 'False' if state == true
       end
     end
   end

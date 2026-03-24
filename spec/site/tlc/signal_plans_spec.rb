@@ -30,8 +30,7 @@ RSpec.describe Site::Tlc::SignalPlans do
       plans = Validator.get_config('items', 'plans')
       skip('No time plans configured') if plans.nil? || plans.empty?
       Validator::SiteTester.connected do |_task, _supervisor, site|
-
-        security_code = Validator.get_config('secrets', 'security_codes', 2)
+        Validator.get_config('secrets', 'security_codes', 2)
         plans.each do |plan|
           result = site.set_timeplan(plan, options: {
                                        collect!: {
@@ -98,8 +97,7 @@ RSpec.describe Site::Tlc::SignalPlans do
     specify 'week table is set with M0016', sxl: '>=1.0.13' do |_example|
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status = '0-1,6-2'
-        @site = site
-        @site.set_week_table(status)
+        site.set_week_table(status)
       end
     end
 
@@ -123,8 +121,7 @@ RSpec.describe Site::Tlc::SignalPlans do
     specify 'day table is set with M0017', sxl: '>=1.0.13' do |_example|
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status = '12-1-12-59,1-0-23-12'
-        @site = site
-        @site.set_day_table(status)
+        site.set_day_table(status)
       end
     end
 
@@ -183,8 +180,7 @@ RSpec.describe Site::Tlc::SignalPlans do
       Validator::SiteTester.connected do |_task, _supervisor, site|
         plan = Validator.get_config('items', 'plans').first
         status = '1-12'
-        @site = site
-        @site.set_dynamic_bands(plan: plan, status: status)
+        site.set_dynamic_bands(plan: plan, status: status)
       end
     end
 
@@ -199,20 +195,19 @@ RSpec.describe Site::Tlc::SignalPlans do
 
     specify 'dynamic bands values can be changed and read back', sxl: '>=1.0.13' do |_example|
       Validator::SiteTester.connected do |_task, _supervisor, site|
-        @site = site
         plan = Validator.get_config('items', 'plans').first
         band = 3
 
-        value = @site.read_dynamic_band(plan: plan, band: band) || 0
+        value = site.read_dynamic_band(plan: plan, band: band) || 0
         expect(value).to be_a(Integer)
 
         new_value = value + 1
 
-        @site.set_dynamic_bands(plan: plan, status: "#{band}-#{new_value}")
-        expect(@site.read_dynamic_band(plan: plan, band: band)).to eq(new_value)
+        site.set_dynamic_bands(plan: plan, status: "#{band}-#{new_value}")
+        expect(site.read_dynamic_band(plan: plan, band: band)).to eq(new_value)
 
-        @site.set_dynamic_bands(plan: plan, status: "#{band}-#{value}")
-        expect(@site.read_dynamic_band(plan: plan, band: band)).to eq(value)
+        site.set_dynamic_bands(plan: plan, status: "#{band}-#{value}")
+        expect(site.read_dynamic_band(plan: plan, band: band)).to eq(value)
       end
     end
 
@@ -225,11 +220,10 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 3. Then we should get a confirmation
     specify 'timeout for dynamic bands is set with M0023', sxl: '>=1.1' do |_example|
       Validator::SiteTester.connected do |_task, _supervisor, site|
-        @site = site
         status = 10
-        @site.set_dynamic_bands_timeout(status)
+        site.set_dynamic_bands_timeout(status)
         status = 0
-        @site.set_dynamic_bands_timeout(status)
+        site.set_dynamic_bands_timeout(status)
       end
     end
 
@@ -252,8 +246,7 @@ RSpec.describe Site::Tlc::SignalPlans do
       Validator::SiteTester.connected do |_task, _supervisor, site|
         plan = Validator.get_config('items', 'plans').first
         offset = 99
-        @site = site
-        @site.set_offset(plan: plan, offset: offset)
+        site.set_offset(plan: plan, offset: offset)
       end
     end
 

@@ -31,7 +31,6 @@ RSpec.describe Site::Tlc::Alarm do
     specify 'Alarm A0302 is raised when input is activated', :programming, sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |task, _supervisor, site|
         alarm_code_id = 'A0302'
-        prepare task, site
         def verify_timestamp(alarm, duration = 1.minute)
           alarm_time = Time.parse(alarm.attributes['aTs'])
           expect(alarm_time).to be_within(duration).of Time.now.utc
@@ -60,7 +59,6 @@ RSpec.describe Site::Tlc::Alarm do
 
     specify 'A0302 can be acknowledged', :programming, sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
         alarm_code_id = 'A0302' # what alarm to expect
         timeout = Validator.get_config('timeouts', 'alarm')
 

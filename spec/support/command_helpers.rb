@@ -1,10 +1,10 @@
 module Validator
   module CommandHelpers
     # Send an RSMP command and wait for confirmation response
-    def send_command_and_confirm(command_list, message,
+    def send_command_and_confirm(site, command_list, message,
                                  component = Validator.get_config('main_component'))
       log message
-      @site.send_command component, command_list, collect!: {
+      site.send_command component, command_list, collect!: {
         timeout: Validator.get_config('timeouts', 'command_response')
       }
     end
@@ -60,12 +60,13 @@ module Validator
       skip 'Security codes are not configured'
     end
 
-    def force_input_and_confirm(input:, value:)
-      @site.force_input(input: input, status: 'True', value: value)
+    def force_input_and_confirm(site, input:, value:)
+      site.force_input(input: input, status: 'True', value: value)
       digit = (value == 'True' ? '1' : '0')
 
       # Index is 1-based, convert to 0-based for regex
       wait_for_status(
+        site,
         "input #{input} to be #{value}",
         [
           { 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{input - 1}}#{digit}/ }
@@ -80,14 +81,14 @@ module Validator
     end
 
     def with_clock_set(site, clock)
-      @site.set_clock(clock, options: { collect!: { timeout: Validator.get_config('timeouts', 'command_response') } })
+      site.set_clock(clock, options: { collect!: { timeout: Validator.get_config('timeouts', 'command_response') } })
       site.clear_alarm_timestamps
       yield
     ensure
-      @site.set_clock(Time.now.utc)
+      site.set_clock(Time.now.utc)
     end
 
-    def wrong_security_code
+    def wrong_security_code(site)
       log 'Try to force detector logic with wrong security code'
       command_list = build_command_list :M0008, :setForceDetectorLogic, {
         securityCode: '1111',
@@ -95,36 +96,33 @@ module Validator
         mode: 'True'
       }
       component = Validator.get_config('components', 'detector_logic').keys[0]
-      @site.send_command component, command_list, collect!: {
+      site.send_command component, command_list, collect!: {
         timeout: Validator.get_config('timeouts', 'command_response')
       }
     end
 
-    def wait_normal_control(timeout: Validator.get_config('timeouts', 'startup_sequence'))
-      @site.wait_for_normal_control(timeout: timeout)
+    def wait_normal_control(site, timeout: Validator.get_config('timeouts', 'startup_sequence'))
+      site.wait_for_normal_control(timeout: timeout)
     end
 
-    def switch_input(indx)
-      @site.set_input(input: indx.to_s, status: 'True')
+    def switch_input(site, indx)
+      site.set_input(input: indx.to_s, status: 'True')
 
       # Index is 1-based, convert to 0-based for regex
       wait_for_status(
+        site,
         "input #{indx} to be True",
         [
           { 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{indx - 1}}1/ }
         ]
       )
 
-      @site.set_input(input: indx.to_s, status: 'False')
+      site.set_input(input: indx.to_s, status: 'False')
       wait_for_status(
+        site,
         "input #{indx} to be False",
         [{ 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{indx - 1}}0/ }]
       )
-    end
-
-    def prepare(task, site)
-      @task = task
-      @site = site
     end
   end
 end

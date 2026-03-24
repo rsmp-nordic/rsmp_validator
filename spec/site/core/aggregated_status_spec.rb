@@ -8,8 +8,7 @@ RSpec.describe 'Site::Core' do
     # 2. When we request aggregated status
     # 3. Then we should receive an aggregated status
     it 'can be requested', core: '>=3.1.5' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         log 'Request aggregated status'
         site.request_aggregated_status Validator.get_config('main_component'), collect!: {
           timeout: Validator.get_config('timeouts', 'status_response')

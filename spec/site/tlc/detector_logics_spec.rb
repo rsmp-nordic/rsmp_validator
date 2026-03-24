@@ -44,17 +44,17 @@ RSpec.describe Site::Tlc::DetectorLogics do
     # 3. Wait for status = true
     specify 'forcing is set with M0008', sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |_task, _supervisor, site|
-        @site = site
-
         Validator.get_config('components', 'detector_logic').keys.each_with_index do |component, indx|
-          @site.force_detector_logic(component, status: 'True', mode: 'True')
+          site.force_detector_logic(component, status: 'True', mode: 'True')
           wait_for_status(
+            site,
             "detector logic #{component} to be True",
             [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /^.{#{indx}}1/ }]
           )
 
-          @site.force_detector_logic(component, status: 'True', mode: 'False')
+          site.force_detector_logic(component, status: 'True', mode: 'False')
           wait_for_status(
+            site,
             "detector logic #{component} to be False",
             [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /^.{#{indx}}0/ }]
           )
