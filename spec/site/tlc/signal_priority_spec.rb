@@ -22,7 +22,7 @@ RSpec.describe Site::Tlc::SignalPriority do
           vehicleType: 'car'
         }
         prepare task, site
-        send_command_and_confirm task, command_list,
+        send_command_and_confirm command_list,
                                  "Request signal priority for signal group #{signal_group}"
       end
     end
@@ -49,7 +49,7 @@ RSpec.describe Site::Tlc::SignalPriority do
       Validator::SiteTester.connected do |task, _supervisor, site|
         prepare task, site
         status_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
-        status_list.map! { |item| item.merge!('sOc' => true) } if use_soc?(site)
+        status_list.map! { |item| item.merge!('sOc' => true) } if site.use_soc?
         wait_for_status 'signal priority status', status_list
       end
     end
