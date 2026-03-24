@@ -38,7 +38,7 @@ RSpec.describe Site::Tlc::EmergencyRoutes do
 
       def set_emergency_states(emergency_routes, state)
         emergency_routes.each do |emergency_route|
-          set_emergency_route emergency_route.to_s, state
+          @site.set_emergency_route(route: emergency_route.to_s, active: state)
         end
         wait_for_status("emergency route #{emergency_routes.last} to be enabled",
                         [
@@ -48,8 +48,8 @@ RSpec.describe Site::Tlc::EmergencyRoutes do
                         ])
       end
 
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        @site = site
         set_emergency_states emergency_routes, false
         begin
           set_emergency_states emergency_routes, true
@@ -70,14 +70,14 @@ RSpec.describe Site::Tlc::EmergencyRoutes do
     specify 'emergency routes can be activated with M0005 and read with S0035', core: '>=3.2',
                                                                                 sxl: '>=1.2' do |_example|
       def enable_routes(emergency_routes)
-        emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, true }
+        emergency_routes.each { |emergency_route| @site.set_emergency_route(route: emergency_route.to_s, active: true) }
         routes = emergency_routes.map { |i| { 'id' => i.to_s } }
         wait_for_status("emergency routes #{emergency_routes} to be enabled",
                         [{ 'sCI' => 'S0035', 'n' => 'emergencyroutes', 's' => routes }])
       end
 
       def disable_routes(emergency_routes)
-        emergency_routes.each { |emergency_route| set_emergency_route emergency_route.to_s, false }
+        emergency_routes.each { |emergency_route| @site.set_emergency_route(route: emergency_route.to_s, active: false) }
         routes = []
         wait_for_status('all emergency routes to be disabled',
                         [{ 'sCI' => 'S0035', 'n' => 'emergencyroutes', 's' => routes }])
@@ -87,8 +87,8 @@ RSpec.describe Site::Tlc::EmergencyRoutes do
 
       skip('No emergency routes configured') if emergency_routes.nil? || emergency_routes.empty?
 
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        @site = site
         disable_routes emergency_routes
         begin
           enable_routes emergency_routes
