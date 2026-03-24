@@ -19,25 +19,26 @@ module Validator
         local_supervisor = options['local_supervisor']
         return options unless local_supervisor.is_a?(Hash)
 
-        local_supervisor['guest'] = merge_guest_defaults(options, local_supervisor['guest'])
+        local_supervisor['sites'] ||= {}
+        local_supervisor['sites']['default'] = merge_default_defaults(options, local_supervisor.dig('sites', 'default'))
         local_supervisor = RSMP::Supervisor::Options.new(local_supervisor).to_h
         options.merge('local_supervisor' => local_supervisor)
       end
 
-      def merge_guest_defaults(options, guest)
-        merged_guest = guest.is_a?(Hash) ? guest.dup : {}
+      def merge_default_defaults(options, default)
+        merged_default = default.is_a?(Hash) ? default.dup : {}
 
-        guest_defaults.each do |key|
+        site_defaults.each do |key|
           value = options[key]
-          next if value.nil? || merged_guest.key?(key)
+          next if value.nil? || merged_default.key?(key)
 
-          merged_guest[key] = value
+          merged_default[key] = value
         end
 
-        merged_guest
+        merged_default
       end
 
-      def guest_defaults
+      def site_defaults
         %w[
           sxl
           sxl_version

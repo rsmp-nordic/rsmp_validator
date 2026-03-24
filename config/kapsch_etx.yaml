@@ -4,10 +4,11 @@
 local_supervisor:
   ips: all
   max_sites: 1
-  guest:
-    intervals:
-      timer: 1
-      watchdog: 10
+  sites:
+    default:
+      intervals:
+        timer: 1
+        watchdog: 10
 sxl: tlc
 sxl_version: "1.2.1"
 timeouts:
