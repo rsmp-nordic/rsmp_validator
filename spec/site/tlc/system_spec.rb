@@ -53,10 +53,11 @@ RSpec.describe Site::Tlc::System do
     # 4. Send control command to setsecuritycode_level
     # 5. Wait for status = true
     specify 'security code is set with M0103', sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-        apply_security_code 1
-        apply_security_code 2
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        code1 = Validator.get_config('secrets', 'security_codes', 1)
+        code2 = Validator.get_config('secrets', 'security_codes', 2)
+        site.set_security_code(level: 'Level1', old_code: code1, new_code: code1)
+        site.set_security_code(level: 'Level2', old_code: code2, new_code: code2)
       end
     end
 
@@ -67,9 +68,8 @@ RSpec.describe Site::Tlc::System do
     # 2. When we send a M0008 command with incorrect security codes
     # 3. Then we should received a NotAck
     specify 'security code is rejected when incorrect', sxl: '>=1.1' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-        expect { wrong_security_code }.to raise_error(RSMP::MessageRejected)
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        expect { wrong_security_code(site) }.to raise_error(RSMP::MessageRejected)
       end
     end
   end

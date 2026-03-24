@@ -72,11 +72,10 @@ RSpec.describe Site::Tlc::TrafficData do
     # 2. Request status
     # 3. Expect status response before timeout
     specify 'occupancy for all detectors is read with S0207', sxl: '>=1.0.14' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-        result = wait_for_status 'traffic counting: occupancy',
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        result = wait_for_status(site, 'traffic counting: occupancy',
                                  { S0207: %i[start occupancy] },
-                                 update_rate: 60
+                                 update_rate: 60)
 
         occupancies = result[:collector].matcher_got_hash.dig('S0207', 'occupancy')
         start = result[:collector].matcher_got_hash.dig('S0207', 'start')

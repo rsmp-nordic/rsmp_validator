@@ -46,15 +46,14 @@ RSpec.describe Site::Tlc::Io do
       # 3. Then S0003 should show the input on
 
       specify 'forcing is set with M0019', sxl: '>=1.0.13' do |_example|
-        Validator::SiteTester.connected do |task, _supervisor, site|
-          prepare task, site
+        Validator::SiteTester.connected do |_task, _supervisor, site|
           inputs = Validator.get_config('items', 'inputs')
           skip('No inputs configured') if inputs.nil? || inputs.empty?
           inputs.each do |input|
-            force_input input: input, status: 'True', value: 'False'
-            force_input input: input, status: 'True', value: 'True'
+            site.force_input(input: input, status: 'True', value: 'False')
+            site.force_input(input: input, status: 'True', value: 'True')
           ensure
-            force_input input: input, status: 'False', validate: false
+            site.force_input(input: input, status: 'False', value: 'True')
           end
         end
       end
@@ -67,12 +66,10 @@ RSpec.describe Site::Tlc::Io do
       # 5. Then S0003 should show the input is inactive
 
       it 'is activated with M0006', sxl: '>=1.0.7' do |_example|
-        Validator::SiteTester.connected do |task, _supervisor, site|
-          prepare task, site
+        Validator::SiteTester.connected do |_task, _supervisor, site|
           inputs = Validator.get_config('items', 'inputs')
           skip('No inputs configured') if inputs.nil? || inputs.empty?
-          prepare task, site
-          inputs.each { |input| switch_input input }
+          inputs.each { |input| switch_input(site, input) }
         end
       end
 
@@ -81,12 +78,11 @@ RSpec.describe Site::Tlc::Io do
       # 2. Send control command to set a serie of input
       # 3. Wait for status = true
       specify 'series is activated with M0013', sxl: '>=1.0.8' do |_example|
-        Validator::SiteTester.connected do |task, _supervisor, site|
-          prepare task, site
+        Validator::SiteTester.connected do |_task, _supervisor, site|
           inputs = Validator.get_config('items', 'inputs')
           skip('No inputs configured') if inputs.nil? || inputs.empty?
           status = '1,3,12;5,5,10'
-          apply_series_of_inputs status
+          site.set_inputs(status)
         end
       end
 
@@ -95,10 +91,9 @@ RSpec.describe Site::Tlc::Io do
       # 2. When we set sensitivity with M0021
       # 3. Then we receive a confirmation
       specify 'sensitivity is set with M0021', sxl: '>=1.0.15' do |_example|
-        Validator::SiteTester.connected do |task, _supervisor, site|
-          prepare task, site
+        Validator::SiteTester.connected do |_task, _supervisor, site|
           status = '1-50'
-          apply_trigger_level status
+          site.set_trigger_level(status)
         end
       end
     end
@@ -110,8 +105,7 @@ RSpec.describe Site::Tlc::Io do
       # 3. We should receive a status updated
       # 4. And the outputstatus attribute should be a digit string
       specify 'is read with S0004', sxl: ['>=1.0.7', '<1.2'] do |_example|
-        Validator::SiteTester.connected do |task, _supervisor, site|
-          prepare task, site
+        Validator::SiteTester.connected do |_task, _supervisor, site|
           request_status_and_confirm site, 'output status',
                                      { S0004: %i[outputstatus extendedoutputstatus] }
         end
@@ -123,8 +117,7 @@ RSpec.describe Site::Tlc::Io do
       # 3. We should receive a status updated
       # 4. And the outputstatus attribute should be a digit string
       specify 'is read with S0004', sxl: ['>=1.2'] do |_example|
-        Validator::SiteTester.connected do |task, _supervisor, site|
-          prepare task, site
+        Validator::SiteTester.connected do |_task, _supervisor, site|
           request_status_and_confirm site, 'output status',
                                      { S0004: [:outputstatus] }
         end
@@ -135,8 +128,7 @@ RSpec.describe Site::Tlc::Io do
       # 2. Request status
       # 3. Expect status response before timeout
       specify 'forcing is read with S0030', sxl: '>=1.0.15' do |_example|
-        Validator::SiteTester.connected do |task, _supervisor, site|
-          prepare task, site
+        Validator::SiteTester.connected do |_task, _supervisor, site|
           request_status_and_confirm site, 'forced output status',
                                      { S0030: [:status] }
         end
@@ -147,15 +139,14 @@ RSpec.describe Site::Tlc::Io do
       # 2. When we force output with M0020
       # 3. Wait for status = true
       specify 'forcing is set with M0020', sxl: '>=1.0.15' do |_example|
-        Validator::SiteTester.connected do |task, _supervisor, site|
-          prepare task, site
+        Validator::SiteTester.connected do |_task, _supervisor, site|
           outputs = Validator.get_config('items', 'outputs')
           skip('No outputs configured') if outputs.nil? || outputs.empty?
           outputs.each do |output|
-            force_output output: output, status: 'True', value: 'True'
-            force_output output: output, status: 'True', value: 'False'
+            site.force_output(output: output, status: 'True', value: 'True')
+            site.force_output(output: output, status: 'True', value: 'False')
           ensure
-            force_output output: output, status: 'False', validate: false
+            site.force_output(output: output, status: 'False', value: 'True')
           end
         end
       end

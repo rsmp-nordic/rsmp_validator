@@ -1,12 +1,13 @@
-port: 14111
-guest:
-  sxl: tlc
-  intervals:
-    timer: 0.1
-    watchdog: 0.1
-  timeouts:
-    watchdog: 0.5
-    acknowledgement: 0.5
+port: 13111
+sites:
+  default:
+    sxl: tlc
+    intervals:
+      timer: 0.1
+      watchdog: 0.1
+    timeouts:
+      watchdog: 0.5
+      acknowledgement: 0.5
 log:
   prefix: '[SUPERVISOR]'
   id: true

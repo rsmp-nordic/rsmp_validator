@@ -43,18 +43,18 @@ RSpec.describe Site::Tlc::DetectorLogics do
     # 2. Send control command to switch detector_logic= true
     # 3. Wait for status = true
     specify 'forcing is set with M0008', sxl: '>=1.0.7' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         Validator.get_config('components', 'detector_logic').keys.each_with_index do |component, indx|
-          force_detector_logic component, mode: 'True'
+          site.force_detector_logic(component, status: 'True', mode: 'True')
           wait_for_status(
+            site,
             "detector logic #{component} to be True",
             [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /^.{#{indx}}1/ }]
           )
 
-          force_detector_logic component, mode: 'False'
+          site.force_detector_logic(component, status: 'True', mode: 'False')
           wait_for_status(
+            site,
             "detector logic #{component} to be False",
             [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /^.{#{indx}}0/ }]
           )

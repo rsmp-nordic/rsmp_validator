@@ -11,7 +11,7 @@ RSpec.describe Site::Tlc::SignalPriority do
     # 2. When we send a signal priority request
     # 3. Then we should receive an acknowledgement
     it 'can be requested with M0022', core: '>=3.2', sxl: '>=1.1' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         signal_group = Validator.get_config('components', 'signal_group').keys.first
         command_list = build_command_list :M0022, :requestPriority, {
           requestId: SecureRandom.uuid[0..3],
@@ -21,9 +21,8 @@ RSpec.describe Site::Tlc::SignalPriority do
           eta: 10,
           vehicleType: 'car'
         }
-        prepare task, site
-        send_command_and_confirm task, command_list,
-                                 "Request signal priority for signal group #{signal_group}"
+        send_command_and_confirm(site, command_list,
+                                 "Request signal priority for signal group #{signal_group}")
       end
     end
 
@@ -46,11 +45,10 @@ RSpec.describe Site::Tlc::SignalPriority do
     # 4. Then we should receive an acknowledgement
     # 5. And we should reive a status updates
     it 'status can be subscribed to with S0033', core: '>=3.2', sxl: '>=1.1' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
-        status_list.map! { |item| item.merge!('sOc' => true) } if use_soc?(site)
-        wait_for_status 'signal priority status', status_list
+        status_list.map! { |item| item.merge!('sOc' => true) } if site.use_soc?
+        wait_for_status(site, 'signal priority status', status_list)
       end
     end
 

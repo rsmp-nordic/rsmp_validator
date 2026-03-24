@@ -2,6 +2,7 @@ RSpec.describe Site::Tlc::Alarm do
   include Validator::CommandHelpers
   include Validator::StatusHelpers
   include Validator::ProgrammingHelpers
+  include Validator::AlarmHelpers
 
   # Testing alarms require a reliable way of rainsing them.
   #
@@ -30,7 +31,6 @@ RSpec.describe Site::Tlc::Alarm do
     specify 'Alarm A0302 is raised when input is activated', :programming, sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |task, _supervisor, site|
         alarm_code_id = 'A0302'
-        prepare task, site
         def verify_timestamp(alarm, duration = 1.minute)
           alarm_time = Time.parse(alarm.attributes['aTs'])
           expect(alarm_time).to be_within(duration).of Time.now.utc
@@ -59,7 +59,6 @@ RSpec.describe Site::Tlc::Alarm do
 
     specify 'A0302 can be acknowledged', :programming, sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
         alarm_code_id = 'A0302' # what alarm to expect
         timeout = Validator.get_config('timeouts', 'alarm')
 
@@ -118,19 +117,19 @@ RSpec.describe Site::Tlc::Alarm do
         _, component_id = find_alarm_programming(alarm_code_id)
 
         # first resume alarm to make sure something happens when we suspend
-        resume_alarm site, task, c_id: component_id, a_c_id: alarm_code_id, collect: false
+        site.resume_alarm task, c_id: component_id, a_c_id: alarm_code_id, collect: false
 
         begin
           # suspend alarm
-          _, response = suspend_alarm site, task, c_id: component_id, a_c_id: alarm_code_id, collect: true
+          _, response = site.suspend_alarm task, c_id: component_id, a_c_id: alarm_code_id, collect: true
           expect(response).to be_a(RSMP::AlarmSuspended)
 
           # resume alarm
-          _, response = resume_alarm site, task, c_id: component_id, a_c_id: alarm_code_id, collect: true
+          _, response = site.resume_alarm task, c_id: component_id, a_c_id: alarm_code_id, collect: true
           expect(response).to be_a(RSMP::AlarmResumed)
         ensure
           # always end with resuming alarm
-          resume_alarm site, task, c_id: component_id, a_c_id: alarm_code_id, collect: false
+          site.resume_alarm task, c_id: component_id, a_c_id: alarm_code_id, collect: false
         end
       end
     end

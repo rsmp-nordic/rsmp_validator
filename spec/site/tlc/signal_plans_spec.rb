@@ -10,12 +10,12 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 3. We should receive a status response before timeout
     specify 'currently active is read with S0014', sxl: '>=1.0.7' do |_example|
       Validator::SiteTester.connected do |_task, _supervisor, site|
-        status_list = if RSMP::Proxy.version_meets_requirement?(site.sxl_version, '>=1.1')
-                        { S0014: %i[status source] }
-                      else
-                        { S0014: [:status] }
-                      end
-        request_status_and_confirm site, 'current time plan', status_list
+        result = site.fetch_signal_plan(options: {
+                                          collect!: {
+                                            timeout: Validator.get_config('timeouts', 'status_response')
+                                          }
+                                        })
+        expect(result[:collector].messages.first).to be_a(RSMP::StatusResponse)
       end
     end
 
@@ -29,9 +29,26 @@ RSpec.describe Site::Tlc::SignalPlans do
     specify 'currently active is set with M0002', sxl: '>=1.0.7' do |_example|
       plans = Validator.get_config('items', 'plans')
       skip('No time plans configured') if plans.nil? || plans.empty?
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
-        plans.each { |plan| switch_plan plan }
+      Validator::SiteTester.connected do |_task, _supervisor, site|
+        Validator.get_config('secrets', 'security_codes', 2)
+        plans.each do |plan|
+          result = site.set_timeplan(plan, options: {
+                                       collect!: {
+                                         timeout: Validator.get_config('timeouts', 'command_response')
+                                       }
+                                     })
+          expect(result[:collector].messages.first).to be_a(RSMP::CommandResponse)
+
+          status_result = site.fetch_signal_plan(options: {
+                                                   collect!: {
+                                                     timeout: Validator.get_config('timeouts', 'status_response')
+                                                   }
+                                                 })
+          status_message = status_result[:collector].messages.first
+          expect(status_message).to be_a(RSMP::StatusResponse)
+          status_values = status_message.attributes['sS'].to_h { |item| [item['n'], item['s']] }
+          expect(status_values['status'].to_i).to eq(plan)
+        end
       end
     end
 
@@ -78,10 +95,9 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 2. When we send the command
     # 3. We should receive a confirmative command response before timeout
     specify 'week table is set with M0016', sxl: '>=1.0.13' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         status = '0-1,6-2'
-        prepare task, site
-        apply_week_table status
+        site.set_week_table(status)
       end
     end
 
@@ -103,10 +119,9 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 2. When we send the command
     # 3. We should receive a confirmative command response before timeout
     specify 'day table is set with M0017', sxl: '>=1.0.13' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         status = '12-1-12-59,1-0-23-12'
-        prepare task, site
-        apply_day_table status
+        site.set_day_table(status)
       end
     end
 
@@ -162,11 +177,10 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 2. When we send the command
     # 3. We should receive a confirmative command response before timeout
     specify 'dynamic bands are set with M0014', sxl: '>=1.0.13' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         plan = Validator.get_config('items', 'plans').first
         status = '1-12'
-        prepare task, site
-        set_dynamic_bands plan, status
+        site.set_dynamic_bands(plan: plan, status: status)
       end
     end
 
@@ -180,21 +194,20 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 6. Then reading dynamic bands should confirm the reversion
 
     specify 'dynamic bands values can be changed and read back', sxl: '>=1.0.13' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         plan = Validator.get_config('items', 'plans').first
         band = 3
 
-        value = get_dynamic_bands(plan, band) || 0
+        value = site.read_dynamic_band(plan: plan, band: band) || 0
         expect(value).to be_a(Integer)
 
         new_value = value + 1
 
-        set_dynamic_bands plan, "#{band}-#{new_value}"
-        expect(get_dynamic_bands(plan, band)).to eq(new_value)
+        site.set_dynamic_bands(plan: plan, status: "#{band}-#{new_value}")
+        expect(site.read_dynamic_band(plan: plan, band: band)).to eq(new_value)
 
-        set_dynamic_bands plan, "#{band}-#{value}"
-        expect(get_dynamic_bands(plan, band)).to eq(value)
+        site.set_dynamic_bands(plan: plan, status: "#{band}-#{value}")
+        expect(site.read_dynamic_band(plan: plan, band: band)).to eq(value)
       end
     end
 
@@ -206,12 +219,11 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 2. When we send command to disable timeout
     # 3. Then we should get a confirmation
     specify 'timeout for dynamic bands is set with M0023', sxl: '>=1.1' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
-        prepare task, site
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         status = 10
-        apply_timeout_for_dynamic_bands status
+        site.set_dynamic_bands_timeout(status)
         status = 0
-        apply_timeout_for_dynamic_bands status
+        site.set_dynamic_bands_timeout(status)
       end
     end
 
@@ -231,11 +243,10 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 2. Send control command to set dynamic_bands
     # 3. Wait for status = true
     specify 'offset is set with M0015', sxl: '>=1.0.13' do |_example|
-      Validator::SiteTester.connected do |task, _supervisor, site|
+      Validator::SiteTester.connected do |_task, _supervisor, site|
         plan = Validator.get_config('items', 'plans').first
-        status = 99
-        prepare task, site
-        set_offset status, plan
+        offset = 99
+        site.set_offset(plan: plan, offset: offset)
       end
     end
 

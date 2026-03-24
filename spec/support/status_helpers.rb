@@ -22,8 +22,8 @@ module Validator
       end.flatten
     end
 
-    def unsubscribe_from_all
-      @site.unsubscribe_to_status Validator.get_config('main_component'), [
+    def unsubscribe_from_all(site)
+      site.unsubscribe_to_status Validator.get_config('main_component'), [
         { 'sCI' => 'S0015', 'n' => 'status' },
         { 'sCI' => 'S0014', 'n' => 'status' },
         { 'sCI' => 'S0011', 'n' => 'status' },
@@ -41,70 +41,20 @@ module Validator
       ]
     end
 
-    def verify_status(_parent_task, description, status_list)
-      log description
-      @site.request_status Validator.get_config('main_component'), convert_status_list(status_list), collect!: {
-        timeout: Validator.get_config('timeouts', 'status_update', assume: 0)
-      }
-    end
-
-    def wait_for_status(description, status_list,
-                        update_rate: 0,
-                        timeout: Validator.get_config('timeouts', 'command'),
-                        component_id: Validator.get_config('main_component'))
+    def wait_for_status(site, description, status_list, **options)
       log "Wait for #{description}"
-      subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt' => update_rate.to_s }
-      subscribe_list.map! { |item| item.merge!('sOc' => true) } if use_soc?(@site)
-
-      begin
-        @site.subscribe_to_status component_id, subscribe_list, collect!: {
-          timeout: timeout
-        }
-      ensure
-        unsubscribe_list = convert_status_list(status_list).map { |item| item.slice('sCI', 'n') }
-        @site.unsubscribe_to_status component_id, unsubscribe_list
-      end
-    end
-
-    def wait_for_groups(state, timeout:)
-      regex = /^#{state}+$/
-      wait_for_status(
-        'Wait for all groups to go to yellow flash',
-        [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus', 's' => regex }],
-        timeout: timeout
+      site.wait_for_status(
+        description,
+        convert_status_list(status_list),
+        **options
       )
     end
 
     def request_status_and_confirm(site, description, status_list, component = Validator.get_config('main_component'))
-      @site = site
       log "Read #{description}"
       site.request_status component, convert_status_list(status_list), collect!: {
         timeout: Validator.get_config('timeouts', 'status_response')
       }
-    end
-
-    # Should the sOc attribute be used?
-    # It should if the core version is 3.1.5 or higher.
-    def use_soc?(site)
-      RSMP::Proxy.version_meets_requirement? site.core_version, '>=3.1.5'
-    end
-
-    # Use S0028 to read current cycle time lengths.
-    # returns a map of signal program nr => cycle time in seconds
-    def read_cycle_times(site, description = 'cycle times')
-      result = request_status_and_confirm site, description,
-                                          { S0028: [:status] }
-      result[:collector].messages.first.attributes['sS'].first['s'].split(',').to_h do |time|
-        time.split('-').map(&:to_i)
-      end
-    end
-
-    # Use S0014 to read current plan.
-    # returns a map of signal program nr => cycle time in seconds
-    def read_current_plan(site, description = 'current plan')
-      result = request_status_and_confirm site, description,
-                                          { S0014: [:status] }
-      result[:collector].messages.first.attributes['sS'].first['s'].to_i
     end
   end
 end
