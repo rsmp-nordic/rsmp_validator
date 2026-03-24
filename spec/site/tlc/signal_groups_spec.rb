@@ -1,6 +1,7 @@
 RSpec.describe Site::Tlc::SignalGroups do
   include Validator::CommandHelpers
   include Validator::StatusHelpers
+  include Validator::StartupHelpers
 
   describe 'Signal Group' do
     # Validate that a signal group can be ordered to green using the M0010 command.

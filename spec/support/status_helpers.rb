@@ -55,15 +55,6 @@ module Validator
       )
     end
 
-    def wait_for_groups(state, timeout:)
-      regex = /^#{state}+$/
-      wait_for_status(
-        'Wait for all groups to go to yellow flash',
-        [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus', 's' => regex }],
-        timeout: timeout
-      )
-    end
-
     def request_status_and_confirm(site, description, status_list, component = Validator.get_config('main_component'))
       @site = site
       log "Read #{description}"
@@ -72,28 +63,5 @@ module Validator
       }
     end
 
-    # Should the sOc attribute be used?
-    # It should if the core version is 3.1.5 or higher.
-    def use_soc?(site)
-      RSMP::Proxy.version_meets_requirement? site.core_version, '>=3.1.5'
-    end
-
-    # Use S0028 to read current cycle time lengths.
-    # returns a map of signal program nr => cycle time in seconds
-    def read_cycle_times(site, description = 'cycle times')
-      result = request_status_and_confirm site, description,
-                                          { S0028: [:status] }
-      result[:collector].messages.first.attributes['sS'].first['s'].split(',').to_h do |time|
-        time.split('-').map(&:to_i)
-      end
-    end
-
-    # Use S0014 to read current plan.
-    # returns a map of signal program nr => cycle time in seconds
-    def read_current_plan(site, description = 'current plan')
-      result = request_status_and_confirm site, description,
-                                          { S0014: [:status] }
-      result[:collector].messages.first.attributes['sS'].first['s'].to_i
-    end
   end
 end

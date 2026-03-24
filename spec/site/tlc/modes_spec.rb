@@ -183,10 +183,10 @@ RSpec.describe Site::Tlc::Modes do
         timeout = Validator.get_config('timeouts', 'yellow_flash')
 
         @site.set_functional_position('YellowFlash', options: { confirm!: { timeout: timeout } })
-        wait_for_groups 'c', timeout: timeout      # c mean s yellow flash
+        @site.wait_for_groups 'c', timeout: timeout      # c means yellow flash
 
         @site.set_functional_position('NormalControl', options: { confirm!: { timeout: Validator.get_config('timeouts', 'startup_sequence') } })
-        wait_for_groups '[^c]', timeout: timeout   # not c, ie. not yellow flash
+        @site.wait_for_groups '[^c]', timeout: timeout   # not c, ie. not yellow flash
       end
     end
 
