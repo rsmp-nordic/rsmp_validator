@@ -1,6 +1,6 @@
 RSpec.describe Site::Tlc::EmergencyRoutes do
-  include Validator::CommandHelpers
-  include Validator::StatusHelpers
+  include Validator::Helpers::Commands
+  include Validator::Helpers::Status
 
   describe 'Emergency Route' do
     # Verify that current emergency route can be read with S0006.

@@ -1,6 +1,6 @@
 RSpec.describe 'Site::Core' do
   describe 'Connection Sequence' do
-    include Validator::HandshakeHelper
+    include Validator::Helpers::Handshake
 
     # Verify the connection sequence when using rsmp core 3.1.1
     #

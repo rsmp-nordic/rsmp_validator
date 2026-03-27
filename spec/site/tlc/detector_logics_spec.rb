@@ -1,6 +1,7 @@
 RSpec.describe Site::Tlc::DetectorLogics do
-  include Validator::CommandHelpers
-  include Validator::StatusHelpers
+  include Validator::Helpers::Commands
+  include Validator::Helpers::Status
+  include Validator::Helpers::Input
 
   describe 'Detector Logic' do
     # Verify status S0016 number of detector logics

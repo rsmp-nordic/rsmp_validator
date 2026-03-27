@@ -1,5 +1,5 @@
 RSpec.describe Site::Tlc::InvalidCommand do
-  include Validator::CommandHelpers
+  include Validator::Helpers::Commands
 
   context 'when receiving a command with an unknown component id' do
     # Verify that site reponds with age=undefined when receiving

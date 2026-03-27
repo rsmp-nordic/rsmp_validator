@@ -117,6 +117,10 @@ module Validator
       Validator::Log.log 'Waiting for handskake to complete'
       @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
       Validator::Log.log 'Ready'
+      return if @initial_unsubscribe_done
+
+      @proxy.unsubscribe_from_all Validator.get_config('main_component')
+      @initial_unsubscribe_done = true
     end
 
     def create_supervisor_logger(supervisor_config)

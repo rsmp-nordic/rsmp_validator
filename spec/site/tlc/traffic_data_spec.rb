@@ -1,6 +1,6 @@
 RSpec.describe Site::Tlc::TrafficData do
-  include Validator::StatusHelpers
-  include Validator::CommandHelpers
+  include Validator::Helpers::Status
+  include Validator::Helpers::Commands
 
   describe 'Traffic Data' do
     # Verify status S0201 traffic counting: number of vehicles

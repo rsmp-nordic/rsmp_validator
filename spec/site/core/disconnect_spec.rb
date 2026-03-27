@@ -1,5 +1,5 @@
 RSpec.describe 'Site::Core' do
-  include Validator::CommandHelpers
+  include Validator::Helpers::Commands
 
   # Check that the site closed the connection as required when faced with
   # various types of incorrect behaviour from our side.

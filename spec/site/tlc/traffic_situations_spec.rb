@@ -1,6 +1,6 @@
 RSpec.describe Site::Tlc::TrafficSituations do
-  include Validator::CommandHelpers
-  include Validator::StatusHelpers
+  include Validator::Helpers::Commands
+  include Validator::Helpers::Status
 
   describe 'Traffic Situation' do
     # Verify status S0015 current traffic situation
