@@ -1,6 +1,6 @@
 RSpec.describe Site::Tlc::Io do
-  include Validator::CommandHelpers
-  include Validator::StatusHelpers
+  include Validator::Helpers::Input
+  include Validator::Helpers::Status
 
   # Tests related to inputs and outputs.
 

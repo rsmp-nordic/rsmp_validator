@@ -1,6 +1,7 @@
 RSpec.describe Site::Tlc::System do
-  include Validator::CommandHelpers
-  include Validator::StatusHelpers
+  include Validator::Helpers::Commands
+  include Validator::Helpers::Status
+  include Validator::Helpers::Security
 
   describe 'System' do
     # Verify status S0091 operator logged in/out OP-panel
