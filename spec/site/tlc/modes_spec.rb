@@ -1,6 +1,7 @@
 RSpec.describe Site::Tlc::Modes do
-  include Validator::StatusHelpers
-  include Validator::CommandHelpers
+  include Validator::Helpers::Status
+  include Validator::Helpers::Commands
+  include Validator::Helpers::Startup
 
   describe 'Operational' do
     # Verify status S0020 control mode

@@ -1,5 +1,5 @@
 RSpec.describe Site::Tlc::InvalidStatus do
-  include Validator::StatusHelpers
+  include Validator::Helpers::Status
 
   context 'when receiving a status request with an unknown component id' do
     # Verify that site reponds with q=undefined when receiving a

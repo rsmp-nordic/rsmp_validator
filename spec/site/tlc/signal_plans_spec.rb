@@ -1,6 +1,7 @@
 RSpec.describe Site::Tlc::SignalPlans do
-  include Validator::StatusHelpers
-  include Validator::CommandHelpers
+  include Validator::Helpers::Status
+  include Validator::Helpers::Commands
+  include Validator::Helpers::SignalPlans
 
   describe 'Signal Plan' do
     # Verify status S0014 current time plan

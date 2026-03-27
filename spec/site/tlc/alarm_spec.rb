@@ -1,8 +1,7 @@
 RSpec.describe Site::Tlc::Alarm do
-  include Validator::CommandHelpers
-  include Validator::StatusHelpers
-  include Validator::ProgrammingHelpers
-  include Validator::AlarmHelpers
+  include Validator::Helpers::Commands
+  include Validator::Helpers::Status
+  include Validator::Helpers::Alarms
 
   # Testing alarms require a reliable way of rainsing them.
   #
