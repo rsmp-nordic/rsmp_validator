@@ -1,8 +1,7 @@
 RSpec.describe Site::Tlc::Clock do
-  include Validator::CommandHelpers
-  include Validator::StatusHelpers
-  include Validator::ProgrammingHelpers
-  include Validator::AlarmHelpers
+  include Validator::Helpers::Clock
+  include Validator::Helpers::Status
+  include Validator::Helpers::Alarms
 
   # Tests related to the clock.
   # When you set the clock, the adjusted time should be used

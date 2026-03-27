@@ -1,5 +1,5 @@
 RSpec.describe Site::Tlc::Subscribe do
-  include Validator::StatusHelpers
+  include Validator::Helpers::Status
 
   describe 'Subscription' do
     # Check that we can *subscribe* to status messages.

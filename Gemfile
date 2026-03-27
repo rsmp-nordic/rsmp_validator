@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'activesupport'
 gem 'rsmp', path: '../rsmp'
+gem 'rsmp_schema', path: '../rsmp_schema'
 
 group :development do
   gem 'rake'

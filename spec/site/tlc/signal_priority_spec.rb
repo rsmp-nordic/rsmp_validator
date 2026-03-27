@@ -1,6 +1,6 @@
 RSpec.describe Site::Tlc::SignalPriority do
-  include Validator::CommandHelpers
-  include Validator::StatusHelpers
+  include Validator::Helpers::Commands
+  include Validator::Helpers::Status
 
   describe 'Signal Priority' do
     # Signal requests require core >= 3.2 because they uses the Array data type.
@@ -67,7 +67,7 @@ RSpec.describe Site::Tlc::SignalPriority do
         timeout = Validator.get_config('timeouts', 'priority_completion')
         component = Validator.get_config('main_component')
         signal_group_id = Validator.get_config('components', 'signal_group').keys.first
-        prio = Validator::StatusHelpers::SignalPriorityRequestHelper.new(
+        prio = Validator::Helpers::SignalPriority::RequestHelper.new(
           site,
           component: component,
           signal_group_id: signal_group_id,
@@ -113,7 +113,7 @@ RSpec.describe Site::Tlc::SignalPriority do
         timeout = Validator.get_config('timeouts', 'priority_completion')
         component = Validator.get_config('main_component')
         signal_group_id = Validator.get_config('components', 'signal_group').keys.first
-        prio = Validator::StatusHelpers::SignalPriorityRequestHelper.new(
+        prio = Validator::Helpers::SignalPriority::RequestHelper.new(
           site,
           component: component,
           signal_group_id: signal_group_id,
