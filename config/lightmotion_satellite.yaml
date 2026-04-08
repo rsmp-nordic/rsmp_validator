@@ -11,7 +11,6 @@ local_supervisor:
         watchdog: 20 # send watchdog every x seconds
 sxl: tlc
 sxl_version: '1.2.0'
-core_version: '3.2.1'
 timeouts:     # Timeouts used when waiting for messages from site.
   watchdog: 60
   acknowledgement: 55
