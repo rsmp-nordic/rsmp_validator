@@ -171,11 +171,11 @@ RSpec.describe Site::Tlc::Clock do
       Validator::SiteTester.connected do |_task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
+            timeout = Validator.get_config('timeouts', 'command_response')
             result = site.set_functional_position('NormalControl',
-                                                  options: { collect!: { timeout: Validator.get_config('timeouts',
-                                                                                                       'command_response') } })
+                                                  options: { collect!: { timeout: timeout } })
             collector = result[:collector]
-            max_diff = Validator.get_config('timeouts', 'command_response') * 2
+            max_diff = timeout * 2
             diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
             diff = diff.round
             expect(diff.abs).to be <= max_diff,
@@ -196,11 +196,11 @@ RSpec.describe Site::Tlc::Clock do
       Validator::SiteTester.connected do |_task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
+            timeout = Validator.get_config('timeouts', 'command_response')
             result = site.set_functional_position('NormalControl',
-                                                  options: { collect!: { timeout: Validator.get_config('timeouts',
-                                                                                                       'command_response') } })
+                                                  options: { collect!: { timeout: timeout } })
             collector = result[:collector]
-            max_diff = Validator.get_config('timeouts', 'command_response')
+            max_diff = timeout
             diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
             diff = diff.round
             expect(diff.abs).to be <= max_diff,
