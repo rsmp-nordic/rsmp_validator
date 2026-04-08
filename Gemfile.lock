@@ -132,7 +132,6 @@ DEPENDENCIES
   activesupport
   rake
   rsmp
-  rsmp_schema
   rspec
   rubocop
   rubocop-rspec
