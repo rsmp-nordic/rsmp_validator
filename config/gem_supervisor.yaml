@@ -5,7 +5,7 @@ local_site:
   site_id: RN+SI0001
   supervisors:
     - ip: 127.0.0.1
-      port: 14111
+      port: 13111
   log:
     prefix: '[TLC       ]'
     acknowledgements: false
