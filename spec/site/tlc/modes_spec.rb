@@ -253,8 +253,9 @@ RSpec.describe Site::Tlc::Modes do
                                      options: { confirm!: { timeout: Validator.get_config('timeouts',
                                                                                           'startup_sequence') } })
         minutes = 1
+        timeout = Validator.get_config('timeouts', 'yellow_flash')
         site.set_functional_position('YellowFlash', timeout_minutes: minutes,
-                                                    options: { confirm!: { timeout: Validator.get_config('timeouts', 'yellow_flash') } })
+                                                    options: { confirm!: { timeout: timeout } })
         wait_normal_control(site, timeout: (minutes * 60) + Validator.get_config('timeouts', 'functional_position'))
       end
     end

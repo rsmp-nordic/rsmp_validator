@@ -64,16 +64,28 @@ module Validator
     end
 
     def parse_config
+      setup_supervisor_config
+      validate_timeouts
+    end
+
+    def setup_supervisor_config
       @supervisor_config = config['local_supervisor']
       raise "config 'local_supervisor' is missing" unless @supervisor_config
 
       @supervisor_config['max_sites'] ||= 1
       @supervisor_config['sites'] ||= {}
       @supervisor_config['sites']['default'] ||= {}
-      if config.dig('secrets', 'security_codes') && !@supervisor_config['sites']['default']['security_codes']
-        @supervisor_config['sites']['default']['security_codes'] = config.dig('secrets', 'security_codes')
-      end
+      apply_security_codes
+    end
 
+    def apply_security_codes
+      security_codes = config.dig('secrets', 'security_codes')
+      return unless security_codes && !@supervisor_config['sites']['default']['security_codes']
+
+      @supervisor_config['sites']['default']['security_codes'] = security_codes
+    end
+
+    def validate_timeouts
       %w[
         connect
         ready
