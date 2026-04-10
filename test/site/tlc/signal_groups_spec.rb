@@ -3,90 +3,88 @@ describe 'Site::Tlc::SignalGroups' do
   include Validator::Helpers::Status
   include Validator::Helpers::Startup
 
-  describe 'Signal Group' do
-    # Validate that a signal group can be ordered to green using the M0010 command.
-    #
-    # 1. Verify connection
-    # 2. Send control command to start signalgrup, set_signal_start= true, include security_code
-    # 3. Wait for status = true
-    it 'is ordered to green with M0010' do
-      with_site(:connected, sxl: '>=1.0.8') do |site_proxy|
-        component = Validator.get_config('components', 'signal_group').keys[0]
-        site_proxy.order_signal_start(component)
-      end
+  # Validate that a signal group can be ordered to green using the M0010 command.
+  #
+  # 1. Verify connection
+  # 2. Send control command to start signalgrup, set_signal_start= true, include security_code
+  # 3. Wait for status = true
+  it 'is ordered to green with M0010' do
+    with_site(:connected, sxl: '>=1.0.8') do |site_proxy|
+      component = Validator.get_config('components', 'signal_group').keys[0]
+      site_proxy.order_signal_start(component)
     end
+  end
 
-    # 1. Verify connection
-    # 2. Send control command to stop signalgrup, set_signal_start= false, include security_code
-    # 3. Wait for status = true
-    it 'is ordered to red with M0011' do
-      with_site(:connected, sxl: '>=1.0.8') do |site_proxy|
-        component = Validator.get_config('components', 'signal_group').keys[0]
-        site_proxy.order_signal_stop(component)
-      end
+  # 1. Verify connection
+  # 2. Send control command to stop signalgrup, set_signal_start= false, include security_code
+  # 3. Wait for status = true
+  it 'is ordered to red with M0011' do
+    with_site(:connected, sxl: '>=1.0.8') do |site_proxy|
+      component = Validator.get_config('components', 'signal_group').keys[0]
+      site_proxy.order_signal_stop(component)
     end
+  end
 
-    # Verify that signal group status can be read with S0001.
-    #
-    # 1. Given the site_proxy is connected
-    # 2. Request status
-    # 3. Expect status response before timeout
-    it 'state is read with S0001' do
-      with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-        request_status_and_confirm site_proxy, 'signal group status',
-                                   { S0001: %i[signalgroupstatus cyclecounter basecyclecounter stage] }
-      end
+  # Verify that signal group status can be read with S0001.
+  #
+  # 1. Given the site_proxy is connected
+  # 2. Request status
+  # 3. Expect status response before timeout
+  it 'state is read with S0001' do
+    with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+      request_status_and_confirm site_proxy, 'signal group status',
+                                 { S0001: %i[signalgroupstatus cyclecounter basecyclecounter stage] }
     end
+  end
 
-    # Verify that time-of-green/time-of-red can be read with S0025.
-    #
-    # 1. Given the site_proxy is connected
-    # 2. Request status
-    # 3. Expect status response before timeout
-    it 'red/green predictions is read with S0025' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        request_status_and_confirm site_proxy, 'time-of-green/time-of-red',
-                                   { S0025: %i[
-                                     minToGEstimate
-                                     maxToGEstimate
-                                     likelyToGEstimate
-                                     ToGConfidence
-                                     minToREstimate
-                                     maxToREstimate
-                                     likelyToREstimate
-                                   ] },
-                                   Validator.get_config('components', 'signal_group').keys.first
-      end
+  # Verify that time-of-green/time-of-red can be read with S0025.
+  #
+  # 1. Given the site_proxy is connected
+  # 2. Request status
+  # 3. Expect status response before timeout
+  it 'red/green predictions is read with S0025' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      request_status_and_confirm site_proxy, 'time-of-green/time-of-red',
+                                 { S0025: %i[
+                                   minToGEstimate
+                                   maxToGEstimate
+                                   likelyToGEstimate
+                                   ToGConfidence
+                                   minToREstimate
+                                   maxToREstimate
+                                   likelyToREstimate
+                                 ] },
+                                 Validator.get_config('components', 'signal_group').keys.first
     end
+  end
 
-    # Verify status S0017 number of signal groups
-    #
-    # 1. Given the site_proxy is connected
-    # 2. Request status
-    # 3. Expect status response before timeout
-    it 'list size is read with S0017' do
-      with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-        request_status_and_confirm site_proxy, 'number of signal groups',
-                                   { S0017: [:number] }
-      end
+  # Verify status S0017 number of signal groups
+  #
+  # 1. Given the site_proxy is connected
+  # 2. Request status
+  # 3. Expect status response before timeout
+  it 'list size is read with S0017' do
+    with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+      request_status_and_confirm site_proxy, 'number of signal groups',
+                                 { S0017: [:number] }
     end
+  end
 
-    # Verify that we can activate normal control after yellow flash mode is turned off
-    #
-    # 1. Given the site_proxy is connected and in yellow flash mode
-    # 2. When we activate normal control
-    # 3. All signal groups should go through e, f and g
-    it 'follow startup sequence after yellow flash' do
-      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
-      with_site(:connected) do |site_proxy|
-        verify_startup_sequence(site_proxy) do
-          site_proxy.set_functional_position('YellowFlash',
-                                       options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                            'yellow_flash') } })
-          site_proxy.set_functional_position('NormalControl')
-        end
+  # Verify that we can activate normal control after yellow flash mode is turned off
+  #
+  # 1. Given the site_proxy is connected and in yellow flash mode
+  # 2. When we activate normal control
+  # 3. All signal groups should go through e, f and g
+  it 'follow startup sequence after yellow flash' do
+    skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
+    with_site(:connected) do |site_proxy|
+      verify_startup_sequence(site_proxy) do
+        site_proxy.set_functional_position('YellowFlash',
+                                     options: { confirm!: { timeout: Validator.get_config('timeouts',
+                                                                                          'yellow_flash') } })
         site_proxy.set_functional_position('NormalControl')
       end
+      site_proxy.set_functional_position('NormalControl')
     end
   end
 end

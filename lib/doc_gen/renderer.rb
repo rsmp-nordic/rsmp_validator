@@ -57,7 +57,7 @@ module DocGen
     def frontmatter(ctx)
       fields = {
         layout:       'page',
-        title:        ctx.name,
+        title:        DocGen.humanize(ctx.name),
         parmalink:    DocGen.slugify(ctx.full_name),
         has_children: ctx.subcontexts.any?,
         has_toc:      false,
@@ -70,9 +70,9 @@ module DocGen
       "---\n#{lines}\n---\n\n"
     end
 
-    # H1 heading using full_name (root component dropped for nested contexts).
+    # H1 heading using humanized name.
     def page_title(ctx)
-      "# #{ctx.full_name}\n{: .no_toc}\n\n"
+      "# #{DocGen.humanize(ctx.name)}\n{: .no_toc}\n\n"
     end
 
     # Context-level docstring (comment above the describe block), if present.
@@ -85,7 +85,7 @@ module DocGen
     # Sorted list of links to child contexts.
     def context_toc(ctx)
       items = ctx.subcontexts.sort_by(&:name).map do |child|
-        "- [#{child.name}]({{ site.baseurl }}{% link #{link_path(child)} %})"
+        "- [#{DocGen.humanize(child.name)}]({{ site.baseurl }}{% link #{link_path(child)} %})"
       end.join("\n")
 
       "### Categories\n{: .no_toc .text-delta }\n#{items}\n\n"
@@ -103,7 +103,7 @@ module DocGen
 
     # One spec rendered as a ## section with docstring and collapsible source.
     def spec_section(spec)
-      heading   = "## #{spec.parent.name.capitalize} #{spec.name}"
+      heading   = "## #{DocGen.humanize(spec.parent.name)} #{spec.name}"
       docstring = spec.docstring.to_s.strip
       src       = indent(spec.source.to_s)
 
@@ -139,7 +139,7 @@ module DocGen
     # Title of the logical parent for Jekyll frontmatter.
     # Returns "Test Suite" for root contexts (depth 0).
     def parent_title(ctx)
-      ctx.parent ? ctx.parent.name : 'Test Suite'
+      ctx.parent ? DocGen.humanize(ctx.parent.name) : 'Test Suite'
     end
 
     # Title of the logical grandparent for Jekyll frontmatter.

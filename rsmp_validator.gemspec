@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.authors = ['RSMP Nordic']
   spec.email = []
 
-  spec.summary = 'RSMP conformance test suite'
+  spec.summary = 'RSMP compliance test suite'
   spec.description = 'Validates RSMP sites and supervisors using the sus test framework'
   spec.homepage = 'https://github.com/rsmp-nordic/rsmp_validator'
   spec.license = 'MIT'
