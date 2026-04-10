@@ -7,13 +7,11 @@ describe 'Site::Tlc::SignalPriority' do
 
     # Validate that a signal priority can be requested.
     #
-    # 1. Given the site is connected
+    # 1. Given the site_proxy is connected
     # 2. When we send a signal priority request
     # 3. Then we should receive an acknowledgement
     it 'can be requested with M0022' do
-      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
-      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
-      Validator::SiteTester.connected do |_task, _supervisor, site|
+      with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
         signal_group = Validator.get_config('components', 'signal_group').keys.first
         command_list = build_command_list :M0022, :requestPriority, {
           requestId: SecureRandom.uuid[0..3],
@@ -23,44 +21,40 @@ describe 'Site::Tlc::SignalPriority' do
           eta: 10,
           vehicleType: 'car'
         }
-        send_command_and_confirm(site, command_list,
+        send_command_and_confirm(site_proxy, command_list,
                                  "Request signal priority for signal group #{signal_group}")
       end
     end
 
     # Validate that signal priority status can be requested.
     #
-    # 1. Given the site is connected
+    # 1. Given the site_proxy is connected
     # 2. When we request signal priority status
     # 3. Then we should receive a status update
     it 'status can be fetched with S0033' do
-      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
-      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
-      Validator::SiteTester.connected do |_task, _supervisor, site|
-        request_status_and_confirm site, 'signal group status',
+      with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
+        request_status_and_confirm site_proxy, 'signal group status',
                                    { S0033: [:status] }
       end
     end
 
     # Validate that we can subscribe signal priority status
     #
-    # 1. Given the site is connected
+    # 1. Given the site_proxy is connected
     # 2. And we subscribe to signal priority status updates
     # 4. Then we should receive an acknowledgement
     # 5. And we should reive a status updates
     it 'status can be subscribed to with S0033' do
-      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
-      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
-      Validator::SiteTester.connected do |_task, _supervisor, site|
+      with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
         status_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
-        status_list.map! { |item| item.merge!('sOc' => true) } if site.use_soc?
-        wait_for_status(site, 'signal priority status', status_list)
+        status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
+        wait_for_status(site_proxy, 'signal priority status', status_list)
       end
     end
 
     # Validate that a signal priority completes when we cancel it.
     #
-    # 1. Given the site is connected
+    # 1. Given the site_proxy is connected
     # 2. And we subscribe to signal priority status
     # 3. When we send a signal priority request
     # 4. Then the request state should become 'received'
@@ -69,18 +63,16 @@ describe 'Site::Tlc::SignalPriority' do
     # 7. Then the state should become 'completed'
 
     it 'becomes completed when cancelled' do
-      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
-      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
-      Validator::SiteTester.connected do |task, _supervisor, site|
+      with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
         timeout = Validator.get_config('timeouts', 'priority_completion')
         component = Validator.get_config('main_component')
         signal_group_id = Validator.get_config('components', 'signal_group').keys.first
         prio = Validator::Helpers::SignalPriority::RequestHelper.new(
-          site,
+          site_proxy,
           component: component,
           signal_group_id: signal_group_id,
           timeout: timeout,
-          task: task
+          task: Async::Task.current
         )
 
         prio.run do
@@ -108,7 +100,7 @@ describe 'Site::Tlc::SignalPriority' do
 
     # Validate that a signal priority times out if not cancelled.
     #
-    # 1. Given the site is connected
+    # 1. Given the site_proxy is connected
     # 2. And we subscribe to signal priority status
     # 3. When we send a signal priority request
     # 4. Then the request state should become 'received'
@@ -117,18 +109,16 @@ describe 'Site::Tlc::SignalPriority' do
     # 7. Then the state should become 'stale'
 
     it 'becomes stale if not cancelled' do
-      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
-      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
-      Validator::SiteTester.connected do |task, _supervisor, site|
+      with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
         timeout = Validator.get_config('timeouts', 'priority_completion')
         component = Validator.get_config('main_component')
         signal_group_id = Validator.get_config('components', 'signal_group').keys.first
         prio = Validator::Helpers::SignalPriority::RequestHelper.new(
-          site,
+          site_proxy,
           component: component,
           signal_group_id: signal_group_id,
           timeout: timeout,
-          task: task
+          task: Async::Task.current
         )
 
         prio.run do

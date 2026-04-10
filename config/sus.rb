@@ -7,6 +7,9 @@ require_relative '../lib/rsmp/validator'
 # Include Validator::Log in all test instances so log() is available in all tests
 Sus::Base.include(Validator::Log)
 
+# Include Connection helpers so with_site/with_supervisor are available in all tests
+Sus::Base.include(Validator::Helpers::Connection)
+
 # Include AsyncContext so all tests run inside the shared reactor
 Sus::Base.prepend(Validator::AsyncContext)
 

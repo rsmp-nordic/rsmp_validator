@@ -9,9 +9,9 @@ describe 'Supervisor' do
       }
     end
 
-    def prepare_and_wait_for_collector(task, site_proxy)
-      collector = site_proxy.collector
-      collector.use_task task
+    def prepare_and_wait_for_collector(supervisor_proxy)
+      collector = supervisor_proxy.collector
+      collector.use_task Async::Task.current
       collector.wait!
     end
 
@@ -22,15 +22,15 @@ describe 'Supervisor' do
     def get_connection_message(core_version, length)
       timeout = Validator.get_config('timeouts', 'ready')
       got_messages = nil
-      Validator::SupervisorTester.isolated(
+      with_supervisor(:isolated,
         'rsmp_versions' => [core_version],
         'collect' => {
           **connection_collect_options(timeout, length)
         }
-      ) do |task, _supervisor, site_proxy|
-        prepare_and_wait_for_collector(task, site_proxy)
-        assert(site_proxy.ready?, 'expected site proxy to be ready')
-        got_messages = site_proxy.collector.messages
+      ) do |supervisor_proxy|
+        prepare_and_wait_for_collector(supervisor_proxy)
+        assert(supervisor_proxy.ready?, 'expected site proxy to be ready')
+        got_messages = supervisor_proxy.collector.messages
       end
       direction_and_type_pairs(got_messages)
     rescue Async::TimeoutError

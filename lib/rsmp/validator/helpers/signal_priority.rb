@@ -40,8 +40,8 @@ module Validator
         include Validator::Helpers::Status
         include Validator::Helpers::Commands
 
-        def initialize(site, component:, signal_group_id:, timeout:, task:)
-          super(site,
+        def initialize(site_proxy, component:, signal_group_id:, timeout:, task:)
+          super(site_proxy,
                 filter: RSMP::Filter.new(
                   type: 'StatusUpdate',
                   ingoing: true,
@@ -49,13 +49,13 @@ module Validator
                   component: component
                 ),
                 task: task)
-          @site = site
+          @site_proxy = site_proxy
           @component = component
           @signal_group_id = signal_group_id
           @request_id = SecureRandom.uuid[0..3]
           @matcher = S0033Matcher.new({ 'cCI' => 'S0033', 'q' => 'recent' }, request_id: @request_id)
           @subscribe_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
-          @subscribe_list.map! { |item| item.merge!('sOc' => true) } if @site.use_soc?
+          @subscribe_list.map! { |item| item.merge!('sOc' => true) } if @site_proxy.use_soc?
           @unsubscribe_list = [{ 'sCI' => 'S0033', 'n' => 'status' }]
           @got = []
           @timeout = timeout
@@ -77,7 +77,7 @@ module Validator
                                               'eta' => eta,
                                               'vehicleType' => vehicle_type
                                             })
-          @site.send_command @component, command_list
+          @site_proxy.send_command @component, command_list
         end
 
         def request_unrelated(level: 7, eta: 2, vehicle_type: 'car')
@@ -89,7 +89,7 @@ module Validator
                                               'eta' => eta,
                                               'vehicleType' => vehicle_type
                                             })
-          @site.send_command @component, command_list
+          @site_proxy.send_command @component, command_list
         end
 
         def cancel
@@ -97,7 +97,7 @@ module Validator
             requestId: @request_id,
             type: 'cancel'
           }
-          @site.send_command @component, command_list
+          @site_proxy.send_command @component, command_list
         end
 
         def expect(state)
@@ -115,11 +115,11 @@ module Validator
 
         def start
           start_receiving
-          @site.subscribe_to_status @component, @subscribe_list
+          @site_proxy.subscribe_to_status @component, @subscribe_list
         end
 
         def stop
-          @site.unsubscribe_to_status @component, @unsubscribe_list
+          @site_proxy.unsubscribe_to_status @component, @unsubscribe_list
           stop_receiving
         end
 
