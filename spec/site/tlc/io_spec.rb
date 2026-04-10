@@ -1,4 +1,4 @@
-RSpec.describe Site::Tlc::Io do
+describe 'Site::Tlc::Io' do
   include Validator::Helpers::Input
   include Validator::Helpers::Status
 
@@ -10,7 +10,8 @@ RSpec.describe Site::Tlc::Io do
       # 1. Given the site is connected
       # 2. When we read input with S0029
       # 3. Then we should receive a valid response
-      specify 'is read with S0003 with extended input status', sxl: '<1.2' do |_example|
+      it 'is read with S0003 with extended input status' do
+        skip 'requires sxl < 1.2' unless Validator.sxl_matches?('<1.2')
         Validator::SiteTester.connected do |_task, _supervisor, site|
           request_status_and_confirm site, 'input status',
                                      { S0003: %i[inputstatus extendedinputstatus] }
@@ -21,7 +22,8 @@ RSpec.describe Site::Tlc::Io do
       # 1. Given the site is connected
       # 2. When we read input with S0029
       # 3. Then we should receive a valid response
-      specify 'is read with S0003', sxl: '>=1.2' do |_example|
+      it 'is read with S0003' do
+        skip 'requires sxl >= 1.2' unless Validator.sxl_matches?('>=1.2')
         Validator::SiteTester.connected do |_task, _supervisor, site|
           request_status_and_confirm site, 'input status',
                                      { S0003: [:inputstatus] }
@@ -32,7 +34,8 @@ RSpec.describe Site::Tlc::Io do
       # 1. Given the site is connected
       # 2. When we read input with S0029
       # 3. Then we should receive a valid response
-      specify 'forcing is read with S0029', sxl: '>=1.0.13' do |_example|
+      it 'forcing is read with S0029' do
+        skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
         Validator::SiteTester.connected do |_task, _supervisor, site|
           request_status_and_confirm site, 'forced input status',
                                      { S0029: [:status] }
@@ -45,7 +48,8 @@ RSpec.describe Site::Tlc::Io do
       # 2. When we force the input on
       # 3. Then S0003 should show the input on
 
-      specify 'forcing is set with M0019', sxl: '>=1.0.13' do |_example|
+      it 'forcing is set with M0019' do
+        skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
         Validator::SiteTester.connected do |_task, _supervisor, site|
           inputs = Validator.get_config('items', 'inputs')
           skip('No inputs configured') if inputs.nil? || inputs.empty?
@@ -65,7 +69,8 @@ RSpec.describe Site::Tlc::Io do
       # 4. When we deactivate input with M0006
       # 5. Then S0003 should show the input is inactive
 
-      it 'is activated with M0006', sxl: '>=1.0.7' do |_example|
+      it 'is activated with M0006' do
+        skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
         Validator::SiteTester.connected do |_task, _supervisor, site|
           inputs = Validator.get_config('items', 'inputs')
           skip('No inputs configured') if inputs.nil? || inputs.empty?
@@ -77,7 +82,8 @@ RSpec.describe Site::Tlc::Io do
       # 1. Given the site is connected
       # 2. Send control command to set a serie of input
       # 3. Wait for status = true
-      specify 'series is activated with M0013', sxl: '>=1.0.8' do |_example|
+      it 'series is activated with M0013' do
+        skip 'requires sxl >= 1.0.8' unless Validator.sxl_matches?('>=1.0.8')
         Validator::SiteTester.connected do |_task, _supervisor, site|
           inputs = Validator.get_config('items', 'inputs')
           skip('No inputs configured') if inputs.nil? || inputs.empty?
@@ -90,7 +96,8 @@ RSpec.describe Site::Tlc::Io do
       # 1. Given the site is connected
       # 2. When we set sensitivity with M0021
       # 3. Then we receive a confirmation
-      specify 'sensitivity is set with M0021', sxl: '>=1.0.15' do |_example|
+      it 'sensitivity is set with M0021' do
+        skip 'requires sxl >= 1.0.15' unless Validator.sxl_matches?('>=1.0.15')
         Validator::SiteTester.connected do |_task, _supervisor, site|
           status = '1-50'
           site.set_trigger_level(status)
@@ -104,7 +111,8 @@ RSpec.describe Site::Tlc::Io do
       # 2. When we subscribe to S0004
       # 3. We should receive a status updated
       # 4. And the outputstatus attribute should be a digit string
-      specify 'is read with S0004', sxl: ['>=1.0.7', '<1.2'] do |_example|
+      it 'is read with S0004 with extended output status' do
+        skip 'requires sxl >= 1.0.7, < 1.2' unless Validator.sxl_matches?(['>=1.0.7', '<1.2'])
         Validator::SiteTester.connected do |_task, _supervisor, site|
           request_status_and_confirm site, 'output status',
                                      { S0004: %i[outputstatus extendedoutputstatus] }
@@ -116,7 +124,8 @@ RSpec.describe Site::Tlc::Io do
       # 2. When we subscribe to S0004
       # 3. We should receive a status updated
       # 4. And the outputstatus attribute should be a digit string
-      specify 'is read with S0004', sxl: ['>=1.2'] do |_example|
+      it 'is read with S0004' do
+        skip 'requires sxl >= 1.2' unless Validator.sxl_matches?(['>=1.2'])
         Validator::SiteTester.connected do |_task, _supervisor, site|
           request_status_and_confirm site, 'output status',
                                      { S0004: [:outputstatus] }
@@ -127,7 +136,8 @@ RSpec.describe Site::Tlc::Io do
       # 1. Given the site is connected
       # 2. Request status
       # 3. Expect status response before timeout
-      specify 'forcing is read with S0030', sxl: '>=1.0.15' do |_example|
+      it 'forcing is read with S0030' do
+        skip 'requires sxl >= 1.0.15' unless Validator.sxl_matches?('>=1.0.15')
         Validator::SiteTester.connected do |_task, _supervisor, site|
           request_status_and_confirm site, 'forced output status',
                                      { S0030: [:status] }
@@ -138,7 +148,8 @@ RSpec.describe Site::Tlc::Io do
       # 1. Given the site is connected
       # 2. When we force output with M0020
       # 3. Wait for status = true
-      specify 'forcing is set with M0020', sxl: '>=1.0.15' do |_example|
+      it 'forcing is set with M0020' do
+        skip 'requires sxl >= 1.0.15' unless Validator.sxl_matches?('>=1.0.15')
         Validator::SiteTester.connected do |_task, _supervisor, site|
           outputs = Validator.get_config('items', 'outputs')
           skip('No outputs configured') if outputs.nil? || outputs.empty?

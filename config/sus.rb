@@ -1,0 +1,34 @@
+require 'async'
+require 'active_support'
+require 'active_support/time'
+require 'fileutils'
+require_relative '../lib/rsmp/validator'
+
+# Include Validator::Log in all test instances so log() is available in all tests
+Sus::Base.include(Validator::Log)
+
+# Include AsyncContext so all tests run inside the shared reactor
+Sus::Base.prepend(Validator::AsyncContext)
+
+# Add eq helper: wraps sus's `be ==` so spec files can use eq(x) for value equality
+Sus::Base.define_method(:eq) { |value| be == value }
+
+# Override test paths to use spec/ directory
+def test_paths
+  Dir.glob('spec/site/**/*.rb', base: @root) +
+    Dir.glob('spec/supervisor/**/*.rb', base: @root)
+end
+
+# Called before tests are run: set up reactor, auto-node, initial connection
+def before_tests(assertions, output: self.output)
+  super
+
+  Validator.setup(self)
+  Validator.before_suite
+end
+
+# Called after tests are run: stop auto-node and reactor
+def after_tests(assertions, output: self.output)
+  Validator.after_suite
+  super
+end

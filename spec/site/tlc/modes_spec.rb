@@ -1,4 +1,4 @@
-RSpec.describe Site::Tlc::Modes do
+describe 'Site::Tlc::Modes' do
   include Validator::Helpers::Status
   include Validator::Helpers::Commands
   include Validator::Helpers::Startup
@@ -9,7 +9,8 @@ RSpec.describe Site::Tlc::Modes do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'control mode is read with S0020', sxl: '>=1.0.7' do |_example|
+    it 'control mode is read with S0020' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'control mode',
                                    { S0020: %i[controlmode intersection] }
@@ -21,7 +22,8 @@ RSpec.describe Site::Tlc::Modes do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'startup status is read with S0005', sxl: '>=1.0.7' do |_example|
+    it 'startup status is read with S0005' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'traffic controller starting (true/false)',
                                    { S0005: [:status] }
@@ -34,7 +36,9 @@ RSpec.describe Site::Tlc::Modes do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'startup status is read with S0005', core: '>=3.2', sxl: '>=1.2' do |_example|
+    it 'startup status is read with S0005 by intersection' do
+      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
+      skip 'requires sxl >= 1.2' unless Validator.sxl_matches?('>=1.2')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'traffic controller starting (true/false)',
                                    { S0005: [:statusByIntersection] }
@@ -46,7 +50,8 @@ RSpec.describe Site::Tlc::Modes do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'switched on is read with S0007', sxl: '>=1.0.7' do |_example|
+    it 'switched on is read with S0007' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = { S0007: %i[status intersection] }
         request_status_and_confirm site, 'controller switch on (dark mode=off)', status_list
@@ -58,7 +63,8 @@ RSpec.describe Site::Tlc::Modes do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'switched on is read with S0007', sxl: '>=1.1' do |_example|
+    it 'switched on is read with S0007 with source' do
+      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = { S0007: %i[status intersection source] }
         request_status_and_confirm site, 'controller switch on (dark mode=off)', status_list
@@ -70,7 +76,8 @@ RSpec.describe Site::Tlc::Modes do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'manual control is read with S0008', sxl: '>=1.0.7' do |_example|
+    it 'manual control is read with S0008' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = if RSMP::Proxy.version_meets_requirement?(site.sxl_version, '>=1.1')
                         { S0008: %i[status intersection source] }
@@ -86,7 +93,8 @@ RSpec.describe Site::Tlc::Modes do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'fixed time control is read with S0009', sxl: '>=1.0.7' do |_example|
+    it 'fixed time control is read with S0009' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = if RSMP::Proxy.version_meets_requirement?(site.sxl_version, '>=1.1')
                         { S0009: %i[status intersection source] }
@@ -104,7 +112,8 @@ RSpec.describe Site::Tlc::Modes do
     # 3. Wait for status = true
     # 4. Send command to switch to fixed time = false
     # 5. Wait for status = false
-    specify 'fixed time control can be activated with M0007', sxl: '>=1.0.7' do |_example|
+    it 'fixed time control can be activated with M0007' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         site.set_fixed_time('True', options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } })
         site.set_fixed_time('False', options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } })
@@ -116,7 +125,8 @@ RSpec.describe Site::Tlc::Modes do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'isolated control is read with S0010', sxl: '>=1.0.7' do |_example|
+    it 'isolated control is read with S0010' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = if RSMP::Proxy.version_meets_requirement?(site.sxl_version, '>=1.1')
                         { S0010: %i[status intersection source] }
@@ -132,7 +142,8 @@ RSpec.describe Site::Tlc::Modes do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'coordinated control is read with S0032', sxl: '>=1.1' do |_example|
+    it 'coordinated control is read with S0032' do
+      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = { S0032: %i[status intersection source] }
         request_status_and_confirm site, 'coordinated control status', status_list
@@ -144,7 +155,8 @@ RSpec.describe Site::Tlc::Modes do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'yellow flash can be read with S0011', sxl: '>=1.0.7' do |_example|
+    it 'yellow flash can be read with S0011' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = if RSMP::Proxy.version_meets_requirement?(site.sxl_version, '>=1.1')
                         { S0011: %i[status intersection source] }
@@ -162,7 +174,8 @@ RSpec.describe Site::Tlc::Modes do
     # 3. Wait for status Yellow flash
     # 4. Send command to switch to normal control
     # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
-    specify 'yellow flash can be activated with M0001', sxl: '>=1.0.7' do |_example|
+    it 'yellow flash can be activated with M0001' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         site.set_functional_position('YellowFlash',
                                      options: { confirm!: { timeout: Validator.get_config('timeouts',
@@ -180,7 +193,8 @@ RSpec.describe Site::Tlc::Modes do
     # 3. Wait for all groups to go to group 'c'
     # 4. Send command to switch to normal control
     # 5. Wait for all groups to switch do something else that 'c'
-    specify 'yellow flash affects all signal groups', sxl: '>=1.0.7' do |_example|
+    it 'yellow flash affects all signal groups' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         timeout = Validator.get_config('timeouts', 'yellow_flash')
 
@@ -199,7 +213,8 @@ RSpec.describe Site::Tlc::Modes do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'all red can be read with S0012', sxl: '>=1.0.7' do |_example|
+    it 'all red can be read with S0012' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = if RSMP::Proxy.version_meets_requirement?(site.sxl_version, '>=1.1')
                         { S0012: %i[status intersection source] }
@@ -215,7 +230,8 @@ RSpec.describe Site::Tlc::Modes do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'police key can be read with S0013', sxl: '>=1.0.7' do |_example|
+    it 'police key can be read with S0013' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'police key',
                                    { S0013: [:status] }
@@ -229,7 +245,8 @@ RSpec.describe Site::Tlc::Modes do
     # 3. Wait for status"Controller on" = false
     # 4. Send command to switch to normal control
     # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
-    specify 'dark mode can be activated with M0001', sxl: '>=1.0.7' do |_example|
+    it 'dark mode can be activated with M0001' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         site.set_functional_position('Dark',
                                      options: { confirm!: { timeout: Validator.get_config('timeouts',
@@ -247,7 +264,8 @@ RSpec.describe Site::Tlc::Modes do
     # 2. Send the control command to switch to Yellow flash
     # 3. Wait for status Yellow flash
     # 5. Wait for automatic revert to Normal Control
-    specify 'yellow flash be used with a timeout of one minute', :slow, sxl: '>=1.0.7' do |_example|
+    it 'yellow flash be used with a timeout of one minute' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         site.set_functional_position('NormalControl',
                                      options: { confirm!: { timeout: Validator.get_config('timeouts',

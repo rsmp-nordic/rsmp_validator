@@ -1,4 +1,4 @@
-RSpec.describe Site::Tlc::SignalPriority do
+describe 'Site::Tlc::SignalPriority' do
   include Validator::Helpers::Commands
   include Validator::Helpers::Status
 
@@ -10,7 +10,9 @@ RSpec.describe Site::Tlc::SignalPriority do
     # 1. Given the site is connected
     # 2. When we send a signal priority request
     # 3. Then we should receive an acknowledgement
-    it 'can be requested with M0022', core: '>=3.2', sxl: '>=1.1' do |_example|
+    it 'can be requested with M0022' do
+      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
+      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         signal_group = Validator.get_config('components', 'signal_group').keys.first
         command_list = build_command_list :M0022, :requestPriority, {
@@ -31,7 +33,9 @@ RSpec.describe Site::Tlc::SignalPriority do
     # 1. Given the site is connected
     # 2. When we request signal priority status
     # 3. Then we should receive a status update
-    it 'status can be fetched with S0033', core: '>=3.2', sxl: '>=1.1' do |_example|
+    it 'status can be fetched with S0033' do
+      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
+      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'signal group status',
                                    { S0033: [:status] }
@@ -44,7 +48,9 @@ RSpec.describe Site::Tlc::SignalPriority do
     # 2. And we subscribe to signal priority status updates
     # 4. Then we should receive an acknowledgement
     # 5. And we should reive a status updates
-    it 'status can be subscribed to with S0033', core: '>=3.2', sxl: '>=1.1' do |_example|
+    it 'status can be subscribed to with S0033' do
+      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
+      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
         status_list.map! { |item| item.merge!('sOc' => true) } if site.use_soc?
@@ -62,7 +68,9 @@ RSpec.describe Site::Tlc::SignalPriority do
     # 6. When we cancel the request
     # 7. Then the state should become 'completed'
 
-    it 'becomes completed when cancelled', core: '>=3.2', sxl: '>=1.1' do |_example|
+    it 'becomes completed when cancelled' do
+      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
+      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
       Validator::SiteTester.connected do |task, _supervisor, site|
         timeout = Validator.get_config('timeouts', 'priority_completion')
         component = Validator.get_config('main_component')
@@ -108,7 +116,9 @@ RSpec.describe Site::Tlc::SignalPriority do
     # 6. When we do not cancel the request
     # 7. Then the state should become 'stale'
 
-    it 'becomes stale if not cancelled', core: '>=3.2', sxl: '>=1.1' do |_example|
+    it 'becomes stale if not cancelled' do
+      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
+      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
       Validator::SiteTester.connected do |task, _supervisor, site|
         timeout = Validator.get_config('timeouts', 'priority_completion')
         component = Validator.get_config('main_component')

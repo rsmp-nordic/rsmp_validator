@@ -1,4 +1,4 @@
-RSpec.describe 'Supervisor' do
+describe 'Supervisor' do
   describe 'Connection Sequence' do
     def connection_collect_options(timeout, length)
       {
@@ -29,7 +29,7 @@ RSpec.describe 'Supervisor' do
         }
       ) do |task, _supervisor, site_proxy|
         prepare_and_wait_for_collector(task, site_proxy)
-        expect(site_proxy).to be_ready
+        assert(site_proxy.ready?, 'expected site proxy to be ready')
         got_messages = site_proxy.collector.messages
       end
       direction_and_type_pairs(got_messages)
@@ -63,8 +63,10 @@ RSpec.describe 'Supervisor' do
       got_version_messages = got[0..3]
       got_watchdog_messages = got[4..7]
 
-      expect(got_version_messages).to include(*expected_version_messages)
-      expect(expected_watchdog_messages).to include(*got_watchdog_messages)
+      assert(expected_version_messages.all? { |e| got_version_messages.include?(e) },
+             'expected version messages not found in connection sequence')
+      assert(got_watchdog_messages.all? { |e| expected_watchdog_messages.include?(e) },
+             'unexpected watchdog messages in connection sequence')
     end
 
     def check_sequence_v314(version)
@@ -101,7 +103,8 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.1
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.1.1', core: '3.1.1' do |_example|
+    it 'exchanges correct connection sequence of rsmp version 3.1.1' do
+      skip 'requires core == 3.1.1' unless Validator.core_matches?('3.1.1')
       check_sequence '3.1.1'
     end
 
@@ -111,7 +114,8 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.2
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.1.2', core: '3.1.2' do |_example|
+    it 'exchanges correct connection sequence of rsmp version 3.1.2' do
+      skip 'requires core == 3.1.2' unless Validator.core_matches?('3.1.2')
       check_sequence '3.1.2'
     end
 
@@ -121,7 +125,8 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.3
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.1.3', core: '3.1.3' do |_example|
+    it 'exchanges correct connection sequence of rsmp version 3.1.3' do
+      skip 'requires core == 3.1.3' unless Validator.core_matches?('3.1.3')
       check_sequence '3.1.3'
     end
 
@@ -131,7 +136,8 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.4
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.1.4', core: '3.1.4' do |_example|
+    it 'exchanges correct connection sequence of rsmp version 3.1.4' do
+      skip 'requires core == 3.1.4' unless Validator.core_matches?('3.1.4')
       check_sequence '3.1.4'
     end
 
@@ -141,7 +147,8 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.1.5', core: '3.1.5' do |_example|
+    it 'exchanges correct connection sequence of rsmp version 3.1.5' do
+      skip 'requires core == 3.1.5' unless Validator.core_matches?('3.1.5')
       check_sequence '3.1.5'
     end
 
@@ -151,7 +158,8 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.2', core: '3.2' do |_example|
+    it 'exchanges correct connection sequence of rsmp version 3.2' do
+      skip 'requires core == 3.2' unless Validator.core_matches?('3.2')
       check_sequence '3.2'
     end
 
@@ -161,7 +169,8 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.2.1', core: '3.2.1' do |_example|
+    it 'exchanges correct connection sequence of rsmp version 3.2.1' do
+      skip 'requires core == 3.2.1' unless Validator.core_matches?('3.2.1')
       check_sequence '3.2.1'
     end
 
@@ -171,7 +180,8 @@ RSpec.describe 'Supervisor' do
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.2.2', core: '3.2.2' do |_example|
+    it 'exchanges correct connection sequence of rsmp version 3.2.2' do
+      skip 'requires core == 3.2.2' unless Validator.core_matches?('3.2.2')
       check_sequence '3.2.2'
     end
   end

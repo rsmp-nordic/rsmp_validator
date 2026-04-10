@@ -1,4 +1,4 @@
-RSpec.describe Site::Tlc::SignalPlans do
+describe 'Site::Tlc::SignalPlans' do
   include Validator::Helpers::Status
   include Validator::Helpers::Commands
   include Validator::Helpers::SignalPlans
@@ -9,7 +9,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. When we request the status
     # 3. We should receive a status response before timeout
-    specify 'currently active is read with S0014', sxl: '>=1.0.7' do |_example|
+    it 'currently active is read with S0014' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         result = site.fetch_signal_plan(options: {
                                           collect!: {
@@ -27,7 +28,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 2. And there is a Validator.get_config('validator') with a time plan
     # 3. When we send the command
     # 3. We should receive a confirmative command response before timeout
-    specify 'currently active is set with M0002', sxl: '>=1.0.7' do |_example|
+    it 'currently active is set with M0002' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       plans = Validator.get_config('items', 'plans')
       skip('No time plans configured') if plans.nil? || plans.empty?
       Validator::SiteTester.connected do |_task, _supervisor, site|
@@ -59,7 +61,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. When we request the status
     # 3. We should receive a status response before timeout
-    specify 'list size is read with S0018', sxl: ['>=1.0.7', '<1.2'] do |_example|
+    it 'list size is read with S0018' do
+      skip 'requires sxl >= 1.0.7, < 1.2' unless Validator.sxl_matches?(['>=1.0.7', '<1.2'])
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'number of time plans',
                                    { S0018: [:number] }
@@ -71,7 +74,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. When we request the status
     # 3. We should receive a status response before timeout
-    specify 'list is read with S0022', sxl: '>=1.0.13' do |_example|
+    it 'list is read with S0022' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'list of time plans',
                                    { S0022: [:status] }
@@ -83,7 +87,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. When we request the status
     # 3. We should receive a status response before timeout
-    specify 'week table is read with S0026', sxl: '>=1.0.13' do |_example|
+    it 'week table is read with S0026' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'week time table',
                                    { S0026: [:status] }
@@ -95,7 +100,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. When we send the command
     # 3. We should receive a confirmative command response before timeout
-    specify 'week table is set with M0016', sxl: '>=1.0.13' do |_example|
+    it 'week table is set with M0016' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status = '0-1,6-2'
         site.set_week_table(status)
@@ -107,7 +113,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. When we request the status
     # 3. We should receive a status response before timeout
-    specify 'day table is read with S0027', sxl: '>=1.0.13' do |_example|
+    it 'day table is read with S0027' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'command table',
                                    { S0027: [:status] }
@@ -119,7 +126,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. When we send the command
     # 3. We should receive a confirmative command response before timeout
-    specify 'day table is set with M0017', sxl: '>=1.0.13' do |_example|
+    it 'day table is set with M0017' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status = '12-1-12-59,1-0-23-12'
         site.set_day_table(status)
@@ -131,7 +139,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. When we request the status
     # 3. We should receive a status response before timeout
-    specify 'version is read with S0097', sxl: '>=1.0.15' do |_example|
+    it 'version is read with S0097' do
+      skip 'requires sxl >= 1.0.15' unless Validator.sxl_matches?('>=1.0.15')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'version of traffic program',
                                    { S0097: %i[timestamp checksum] }
@@ -144,19 +153,20 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. When we request the status
     # 3. We should receive a status response before timeout
-    specify 'config is read with S0098', sxl: '>=1.0.15' do |_example|
+    it 'config is read with S0098' do
+      skip 'requires sxl >= 1.0.15' unless Validator.sxl_matches?('>=1.0.15')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         result = request_status_and_confirm site, 'config of traffic parameters',
                                             { S0098: %i[timestamp config version] }
 
         # the site  should have stored the received status
         message = result[:collector].messages.first
-        expect(message).to be_an(RSMP::StatusResponse)
+        expect(message).to be_a(RSMP::StatusResponse)
         values = message.attributes['sS'].to_h { |item| [item['n'], item['s']] }
 
-        expect(values['timestamp']).not_to be_empty
-        expect(values['config']).not_to be_empty
-        expect(values['timestamp']).not_to be_empty
+        assert(!values['timestamp'].empty?, 'expected timestamp to not be empty')
+        assert(!values['config'].empty?, 'expected config to not be empty')
+        assert(!values['timestamp'].empty?, 'expected timestamp to not be empty')
       end
     end
 
@@ -165,7 +175,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. When we request the status
     # 3. We should receive a status response before timeout
-    specify 'dynamic bands are read with S0023', sxl: '>=1.0.13' do |_example|
+    it 'dynamic bands are read with S0023' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'command table',
                                    { S0023: [:status] }
@@ -177,7 +188,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. When we send the command
     # 3. We should receive a confirmative command response before timeout
-    specify 'dynamic bands are set with M0014', sxl: '>=1.0.13' do |_example|
+    it 'dynamic bands are set with M0014' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         plan = Validator.get_config('items', 'plans').first
         status = '1-12'
@@ -194,7 +206,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 5. Finally when we revert dynamic band to previous value
     # 6. Then reading dynamic bands should confirm the reversion
 
-    specify 'dynamic bands values can be changed and read back', sxl: '>=1.0.13' do |_example|
+    it 'dynamic bands values can be changed and read back' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         plan = Validator.get_config('items', 'plans').first
         band = 3
@@ -219,7 +232,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 3. Then we should get a confirmation
     # 2. When we send command to disable timeout
     # 3. Then we should get a confirmation
-    specify 'timeout for dynamic bands is set with M0023', sxl: '>=1.1' do |_example|
+    it 'timeout for dynamic bands is set with M0023' do
+      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status = 10
         site.set_dynamic_bands_timeout(status)
@@ -233,7 +247,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'offset is read with S0024', sxl: '>=1.0.13' do |_example|
+    it 'offset is read with S0024' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'offset time',
                                    { S0024: [:status] }
@@ -243,7 +258,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Verify connection
     # 2. Send control command to set dynamic_bands
     # 3. Wait for status = true
-    specify 'offset is set with M0015', sxl: '>=1.0.13' do |_example|
+    it 'offset is set with M0015' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         plan = Validator.get_config('items', 'plans').first
         offset = 99
@@ -256,7 +272,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 1. Given the site is connected
     # 2. When we request the status
     # 3. We should receive a status response before timeout
-    specify 'cycle time is read with S0028', sxl: '>=1.0.13' do |_example|
+    it 'cycle time is read with S0028' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'cycle time',
                                    { S0028: [:status] }
@@ -271,7 +288,8 @@ RSpec.describe Site::Tlc::SignalPlans do
     # 4. Then reading the cycle time should confirm the change
     # 5. Finally when we revert cycle time to previous value
     # 6. Then reading cycle time should confirm the reversion
-    specify 'cycle time is set with M0018', sxl: '>=1.0.13' do |_example|
+    it 'cycle time is set with M0018' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         with_cycle_time_extended(site) do
           log 'Cycle time extension confirmed'

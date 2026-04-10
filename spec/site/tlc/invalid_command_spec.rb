@@ -1,7 +1,7 @@
-RSpec.describe Site::Tlc::InvalidCommand do
+describe 'Site::Tlc::InvalidCommand' do
   include Validator::Helpers::Commands
 
-  context 'when receiving a command with an unknown component id' do
+  describe 'when receiving a command with an unknown component id' do
     # Verify that site reponds with age=undefined when receiving
     # a command with an unknown component id
     #
@@ -9,7 +9,8 @@ RSpec.describe Site::Tlc::InvalidCommand do
     # 2. When we send a command with an unknown component id
     # 3. Then the site should return a command response with age=undefined
 
-    it 'returns a command response with age=undefined', core: '>=3.1.3' do |_example|
+    it 'returns a command response with age=undefined' do
+      skip 'requires core >= 3.1.3' unless Validator.core_matches?('>=3.1.3')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         log 'Sending M0001'
         command_list = build_command_list :M0001, :setValue, {
@@ -25,28 +26,28 @@ RSpec.describe Site::Tlc::InvalidCommand do
           validate: false # disable validation of outgoing message
         )
         collector = result[:collector]
-        expect(collector).to be_an(RSMP::Collector)
+        expect(collector).to be_a(RSMP::Collector)
         expect(collector.status).to eq(:ok)
         response = collector.messages.first
-        expect(response).to be_an(RSMP::CommandResponse)
+        expect(response).to be_a(RSMP::CommandResponse)
         rvs = response.attributes['rvs']
-        expect(rvs).to be_an(Array)
+        expect(rvs).to be_a(Array)
         rvs.each do |rv|
           age = rv['age']
-          expect(age).to eq('undefined'), "expected rvs age attribute to be 'undefined', got #{rv.inspect}"
+          expect(age).to eq('undefined')
         end
       end
     end
   end
 
-  context 'when receiving an unknown command code id' do
+  describe 'when receiving an unknown command code id' do
     # Verify that site returns NotAck when receiving an unknown command
     #
     # 1. Given the site is connected
     # 2. When we send a non-existing M0000 command
     # 3. Then the site should return NotAck
 
-    it 'returns NotAck' do |_example|
+    it 'returns NotAck' do
       Validator::SiteTester.connected do |_task, _supervisor, site|
         log 'Sending non-existing command M0000'
         command_list = build_command_list :M0000, :bad, {}
@@ -54,14 +55,14 @@ RSpec.describe Site::Tlc::InvalidCommand do
                                    collect: { timeout: Validator.get_config('timeouts', 'command_response') },
                                    validate: false # disable validation of outgoing message
         collector = result[:collector]
-        expect(collector).to be_an(RSMP::Collector)
+        expect(collector).to be_a(RSMP::Collector)
         expect(collector.status).to eq(:cancelled)
-        expect(collector.error).to be_an(RSMP::MessageRejected)
+        expect(collector.error).to be_a(RSMP::MessageRejected)
       end
     end
   end
 
-  context 'when receiving a command with a missing attribute' do
+  describe 'when receiving a command with a missing attribute' do
     # Verify that site returns NotAck when receiving a command
     # with a mising command attribute
     #
@@ -69,7 +70,7 @@ RSpec.describe Site::Tlc::InvalidCommand do
     # 2. When we send an M0001 command with 'status' missing
     # 3. Then the site return NotAck
 
-    it 'returns NotAck' do |_example|
+    it 'returns NotAck' do
       Validator::SiteTester.connected do |_task, _supervisor, site|
         log "Sending M0001 with 'status' attribute missing"
         command_list = build_command_list :M0001, :setValue, {
@@ -82,14 +83,14 @@ RSpec.describe Site::Tlc::InvalidCommand do
                                    collect: { timeout: Validator.get_config('timeouts', 'command_response') },
                                    validate: false # disable validation of outgoing message
         collector = result[:collector]
-        expect(collector).to be_an(RSMP::Collector)
+        expect(collector).to be_a(RSMP::Collector)
         expect(collector.status).to eq(:cancelled)
-        expect(collector.error).to be_an(RSMP::MessageRejected)
+        expect(collector.error).to be_a(RSMP::MessageRejected)
       end
     end
   end
 
-  context 'when receiving a command with a bad command name n' do
+  describe 'when receiving a command with a bad command name n' do
     # Verify that site returns NotAck when receiving a command
     # with an unknown command name
     #
@@ -97,7 +98,7 @@ RSpec.describe Site::Tlc::InvalidCommand do
     # 2. When we send an M0001 command with 'bad' as command name
     # 3. Then the site should return NotAck
 
-    it 'returns NotAck' do |_example|
+    it 'returns NotAck' do
       Validator::SiteTester.connected do |_task, _supervisor, site|
         log 'Sending M0001'
         # for M0001, cO should be :setValue, here we use the incorrect :bad
@@ -110,9 +111,9 @@ RSpec.describe Site::Tlc::InvalidCommand do
                                    collect: { timeout: Validator.get_config('timeouts', 'command_response') },
                                    validate: false # disable validation of outgoing message
         collector = result[:collector]
-        expect(collector).to be_an(RSMP::Collector)
+        expect(collector).to be_a(RSMP::Collector)
         expect(collector.status).to eq(:cancelled)
-        expect(collector.error).to be_an(RSMP::MessageRejected)
+        expect(collector.error).to be_a(RSMP::MessageRejected)
       end
     end
   end

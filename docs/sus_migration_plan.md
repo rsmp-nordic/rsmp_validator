@@ -1,14 +1,16 @@
 # Plan: Package rsmp_validator as gem with sus
 
 ## TL;DR
-Convert rsmp_validator from an RSpec-based repo checkout into a distributable gem (`rsmp-validator`) that uses the `sus` test framework. Test files ship inside the gem; users run `rsmp-validate` to execute conformance tests against their RSMP site or supervisor. This eliminates the fiber-local data hack required by RSpec's incompatibility with Async.
+Convert rsmp_validator from an RSpec-based repo checkout into a distributable gem (`rsmp_validator`) that uses the `sus` test framework. Test files ship inside the gem; users run `rsmp_validator` to execute conformance tests against their RSMP site or supervisor. This eliminates the fiber-local data hack required by RSpec's incompatibility with Async.
+
+Work is done in the existing `rsmp_validator` repo on the `sus` branch.
 
 ## Phase 1: Gemspec and project scaffold
 
-1. Create `rsmp-validator.gemspec` including `lib/`, `test/`, `config/simulator/`, and `schemas/` in `spec.files`
+1. Create `rsmp_validator.gemspec` including `lib/`, `test/`, `config/simulator/`, and `schemas/` in `spec.files`
 2. Create `gems.rb` (sus style) replacing `Gemfile`
 3. Set runtime dependencies: `rsmp`, `sus`, `sus-fixtures-async`, `activesupport`, `colorize`
-4. Create `exe/rsmp-validate` executable that:
+4. Create `exe/rsmp_validator` executable that:
    - Accepts arguments: test path filter, `--config`, `--auto-site-config`, `--auto-supervisor-config`, `--verbose`
    - Determines mode (site/supervisor) from test path
    - Loads validator config
@@ -83,17 +85,17 @@ Delete `spec/support/described_types.rb` entirely — it exists only to satisfy 
 
 ## Phase 7: Executable and gem usage
 
-27. `exe/rsmp-validate` resolves the gem's test directory via `Gem.loaded_specs['rsmp-validator'].gem_dir`
+27. `exe/rsmp_validator` resolves the gem's test directory via `Gem.loaded_specs['rsmp_validator'].gem_dir`
 28. Final usage:
     ```
     # Auto-site (full suite):
-    rsmp-validate --auto-site-config config/simulator/tlc.yaml test/site
+    rsmp_validator --auto-site-config config/simulator/tlc.yaml test/site
 
     # Specific test:
-    rsmp-validate --config config/gem_tlc.yaml test/site/tlc/modes.rb
+    rsmp_validator --config config/gem_tlc.yaml test/site/tlc/modes.rb
 
     # Verbose output:
-    rsmp-validate --auto-site-config config/simulator/tlc.yaml --verbose test/site
+    rsmp_validator --auto-site-config config/simulator/tlc.yaml --verbose test/site
     ```
 
 ## Pre-migration cleanup
@@ -125,9 +127,9 @@ These are not sus-related but should be done before or during the migration:
 - `spec/supervisor/*.rb` (3 files) → `test/supervisor/*.rb`
 
 ### New files to create
-- `rsmp-validator.gemspec`
+- `rsmp_validator.gemspec`
 - `gems.rb`
-- `exe/rsmp-validate`
+- `exe/rsmp_validator`
 - `config/sus.rb` — sus configuration with validator setup
 - `lib/rsmp/validator/async_context.rb` — sus fixture for shared reactor
 - `lib/rsmp/validator/version_filter.rb` — sxl/core version skip helpers
@@ -166,7 +168,7 @@ bundle exec rsmp site --config config/tlc.yaml
 Terminal 2 — run only the core site tests:
 ```
 cd rsmp_validator
-SITE_CONFIG=config/gem_tlc.yaml bundle exec rsmp-validate test/site/core
+SITE_CONFIG=config/gem_tlc.yaml bundle exec rsmp_validator test/site/core
 ```
 
 Expected: connect/disconnect/aggregated_status/watchdog tests pass.
@@ -191,34 +193,34 @@ bundle exec rsmp supervisor --config config/supervisor.yaml
 Terminal 2 — run supervisor tests:
 ```
 cd rsmp_validator
-SUPERVISOR_CONFIG=config/gem_supervisor.yaml bundle exec rsmp-validate test/supervisor
+SUPERVISOR_CONFIG=config/gem_supervisor.yaml bundle exec rsmp_validator test/supervisor
 ```
 
 Expected: connect/aggregated_status tests pass.
 
 ---
 
-### Stage 2: Auto-node (node started by rsmp-validate)
+### Stage 2: Auto-node (node started by rsmp_validator)
 
 This verifies the auto-node infrastructure — the validator starts its own site or supervisor internally and tests against it.
 
 **2a. Auto-site, core tests only**
 ```
-AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validate test/site/core
+AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site/core
 ```
 
 Expected: validator starts an internal TLC site, core tests pass, site stops cleanly.
 
 **2b. Auto-site, full site suite**
 ```
-AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validate test/site
+AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site
 ```
 
 Expected: all core + TLC tests pass.
 
 **2c. Auto-supervisor**
 ```
-AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rsmp-validate test/supervisor
+AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rsmp_validator test/supervisor
 ```
 
 Expected: all supervisor tests pass.
@@ -229,29 +231,29 @@ Expected: all supervisor tests pass.
 
 **Single file**
 ```
-AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validate test/site/tlc/modes.rb
+AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site/tlc/modes.rb
 ```
 
 **Version filtering** — edit `config/gem_tlc.yaml`, set `sxl_version: '1.0.7'`, then run:
 ```
-SITE_CONFIG=config/gem_tlc.yaml bundle exec rsmp-validate test/site/tlc
+SITE_CONFIG=config/gem_tlc.yaml bundle exec rsmp_validator test/site/tlc
 ```
 Expected: tests tagged `sxl: '>=1.0.8'` and above are skipped.
 
 **Verbose output**
 ```
-AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validate --verbose test/site/core
+AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator --verbose test/site/core
 ```
 
 **Gem packaging**
 ```
-gem build rsmp-validator.gemspec
-gem install rsmp-validator-*.gem
-rsmp-validate --help
+gem build rsmp_validator.gemspec
+gem install rsmp_validator-*.gem
+rsmp_validator --help
 ```
 
 ## Decisions
-- Gem name: `rsmp-validator`, executable: `rsmp-validate`
+- Gem name: `rsmp_validator`, executable: `rsmp_validator`
 - `rsmp_schema` stays as a separate gem (out of scope)
 - `--only-failures` is explicitly not needed
 - RSpec matchers are NOT used; sus has its own `expect().to` with equivalent predicates (`be_a`, `be ==`, `be :include?`, `raise_exception`, etc.)
