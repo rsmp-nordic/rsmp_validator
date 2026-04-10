@@ -50,10 +50,8 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
-        bundle exec rspec test/supervisor \
-        --format Validator::Brief \
-        --format Validator::Details \
-        --out validator-${{ steps.log_id.outputs.LOG_ID }}.log
+        bundle exec rsmp_validator test/supervisor \
+        --log validator-${{ steps.log_id.outputs.LOG_ID }}.log
       env:
         SUPERVISOR_CONFIG: config/gem_supervisor.yaml
 

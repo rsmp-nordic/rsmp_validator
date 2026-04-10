@@ -50,10 +50,8 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
-        bundle exec rspec test/site \
-        --format Validator::Brief \
-        --format Validator::Details \
-        --out validator-${{ steps.log_id.outputs.LOG_ID }}.log
+        bundle exec rsmp_validator test/site \
+        --log validator-${{ steps.log_id.outputs.LOG_ID }}.log
         
       env:
         SITE_CONFIG: config/gem_tlc.yaml
