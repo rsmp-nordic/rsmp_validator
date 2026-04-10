@@ -8,7 +8,7 @@ nav_order: 4
 
 # Running tests
 ## Organization
-Tests are located in the `spec/` folder. They are organized into sub-folders and files, according to system type, specification and functional areas.
+Tests are located in the `test/` folder. They are organized into sub-folders and files, according to system type, specification and functional areas.
 
 ```
 % tree spec -d                          
@@ -28,7 +28,7 @@ The RSMP Validator is based on the RSpec testing tool, so you use the `rspec` co
 Test a site by running tests covering the core specification:
 
 ```
-% bundle exec rspec spec/site/core
+% bundle exec rspec test/site/core
 Using test config config/gem_tlc.yaml
 Run options: exclude {:rsmp=>[unless relevant for 3.1.5]}
 ....
@@ -47,8 +47,8 @@ If you want to store your selection for easy reuse, add them to a file name .rsp
 
 ```
 % cat .rspec-local
---pattern spec/site/*   # run tests in spec/site/
---exclude-pattern spec/site/unknown_status_spec.rb    # skip tests in this file
+--pattern test/site/*   # run tests in test/site/
+--exclude-pattern test/site/unknown_status_spec.rb    # skip tests in this file
 --tag ~programming           # exclude tests tagged with :programming
 ```
 
@@ -113,17 +113,17 @@ alarm_triggers:
 Tests that rely on device programming are tagged with :programming. If the device cannot be programmed to raise alarm on input activation, you should skip tests that rely on this, by passing the `--tag ~programming` as an option to the `rspec` command:
 
 ```
-% bundle exec rspec spec/site/ --tag ~programming
+% bundle exec rspec test/site/ --tag ~programming
 ```
  
 ## RSpec Helpers and Options
-The file `spec/spec_helper.rb` will be included automatically by RSpec, because the file `.rspec` has the following options:
+The file `test/spec_helper.rb` will be included automatically by RSpec, because the file `.rspec` has the following options:
 
 ```
 --require spec_helper --force-color
 ```
  
-The file `spec/spec_helper.rb` will in turn include the required dependencies, including the rsmp gem and files in `spec/support/`, which define helper classes and methods.
+The file `test/spec_helper.rb` will in turn include the required dependencies, including the rsmp gem and files in `test/support/`, which define helper classes and methods.
 
 ## Git Ignores
 The file .gitignore is set up to ignore files and folders that are typically used for private configurations, including `config/private/` and all secrets*.yaml files in `config/`.

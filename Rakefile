@@ -7,7 +7,7 @@
 
 desc "\
 Build documentation with YARD. \
-Updates YARD docs based on relevant folders in spec/ and commits the result to the gh-pages branch.\
+Updates YARD docs based on relevant folders in test/ and commits the result to the gh-pages branch.\
 "
 task :yard do
   system 'bundle exec yardoc'

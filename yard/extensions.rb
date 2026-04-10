@@ -7,7 +7,7 @@
 #
 # If you want to generate docs only for the tests, not the support methods, run:
 #
-# % yardoc spec/site
+# % yardoc test/site
 #
 # The output will be located in the folder you are in when you run the command.
 # Use a browser to open the index.html file to view the generated documentation.

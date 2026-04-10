@@ -40,7 +40,7 @@ Note: The file `config/validator.yaml` is ignored by git.
 The other option is to set either SITE_CONFIG or SUPERVISOR_CONFIG to the path to your config, depending on whether you're testing a site or a supervisor. For example, if you're testing a site, you can run all site tests with:
 
 ```
-SITE_CONFIG=config/my_site_validation_config.yaml bundle exec rspec spec/site
+SITE_CONFIG=config/my_site_validation_config.yaml bundle exec rspec test/site
 ```
 
 If the relevant environment variable is set, the file `config/validator.yaml` will not be read.
@@ -213,7 +213,7 @@ The sxl will choose the JSON Schema used to validate all ingoing and outgoing me
 
 Equipment that doesn't yet have a standardized SXL cannot be fully validated using the RSMP validator, because there are no tests for these types yet, and because there is no JSON Schema to validate the commands and statuses for such types of equipment.
 
-However, you can still use the RSMP Validator to validate the core part of the communication, including connecting, Aggregated Status and Watchdog messages. Use 'core' as the sxl type in the configuration and then run only the tests in the folder `spec/site/core/`. Remember to also set sxl version to the version of the core specification used, e.g. 3.1.5.
+However, you can still use the RSMP Validator to validate the core part of the communication, including connecting, Aggregated Status and Watchdog messages. Use 'core' as the sxl type in the configuration and then run only the tests in the folder `test/site/core/`. Remember to also set sxl version to the version of the core specification used, e.g. 3.1.5.
 
 ## Components Option
 RSMP equipment has a list of RSMP components. For example a traffic light controller will have some signal groups and detector logics. In addition all RSMP equipment must have a main component.

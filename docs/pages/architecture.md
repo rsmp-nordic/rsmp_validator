@@ -29,7 +29,7 @@ When you run tests, a local RSMP supervisor is started, to communicate with the 
 ## Understanding Tests
 Tests are written as RSpec specifications in the Ruby language.
 
-RSpec specifications use [expectations](https://relishapp.com/rspec/rspec-expectations/docs) to check expected outcomes.
+RSpec specifications use [expectations](https://relishapp.com/rtest/rspec-expectations/docs) to check expected outcomes.
 
 ### Connecting to the Site
 The helper `Validator::Site` is used to wait for a connection to the site:
@@ -130,7 +130,7 @@ end
 Note that there is no code for handling exceptions or errors. Any error will cause the test to abort. The error will be caught and recorded by RSpec.
 
 ### Helper methods
-Many tests involve similar steps. To avoid duplicating code between tests, the common steps have been factored out as helper methods, located in files in `/spec/support/`.
+Many tests involve similar steps. To avoid duplicating code between tests, the common steps have been factored out as helper methods, located in files in `/test/support/`.
 
 For example, the method `switch_yellow_flash` first sends an M0001 command and then subscribes to the S0011 status to check that the mode actually switches to yellow flash within a defined time period. Any errors will cause the test to abort and be flagged as failed.
 

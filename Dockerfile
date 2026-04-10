@@ -4,4 +4,4 @@ COPY spec spec
 RUN bundle install
 EXPOSE 13111
 ENTRYPOINT [ "bundle", "exec", "rspec" ]
-CMD [ "spec/site/core", "spec/site/tlc" ]
+CMD [ "test/site/core", "test/site/tlc" ]

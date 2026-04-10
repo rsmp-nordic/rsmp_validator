@@ -13,10 +13,10 @@ Sus::Base.prepend(Validator::AsyncContext)
 # Add eq helper: wraps sus's `be ==` so spec files can use eq(x) for value equality
 Sus::Base.define_method(:eq) { |value| be == value }
 
-# Override test paths to use spec/ directory
+# Override test paths to use test/ directory
 def test_paths
-  Dir.glob('spec/site/**/*.rb', base: @root) +
-    Dir.glob('spec/supervisor/**/*.rb', base: @root)
+  Dir.glob('test/site/**/*.rb', base: @root) +
+    Dir.glob('test/supervisor/**/*.rb', base: @root)
 end
 
 # Called before tests are run: set up reactor, auto-node, initial connection
