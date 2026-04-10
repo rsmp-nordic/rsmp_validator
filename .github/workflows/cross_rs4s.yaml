@@ -46,7 +46,7 @@ jobs:
 
     - name: Run tests
       run: |
-        bundle exec rspec spec/site \
+        bundle exec rspec test/site \
         --format Validator::Brief \
         --format Validator::Details \
         --out validator-${{ steps.log_id.outputs.LOG_ID }}.log

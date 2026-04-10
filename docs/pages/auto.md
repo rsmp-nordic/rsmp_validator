@@ -47,13 +47,13 @@ You can also enable the auto node feature using environment variables.
 Automatically start a site to be tested:
 
 ```shell
-AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rspec spec/site/core
+AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rspec test/site/core
 ```
 
 Or automatically start a supervisor to be tested:
 
 ```shell
-AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rspec spec/supervisor
+AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rspec test/supervisor
 ```
 
 

@@ -65,13 +65,13 @@ The `Details` formatter will also show sentinel errors as they occur, as part of
 You choose the output format with the `--format` switch (or shorthand `-d`) of the `rspec` command.
 
 ```
-% bundle exec rspec spec/site --format Validator::Brief
+% bundle exec rspec test/site --format Validator::Brief
 ```
 
 By default, the output is printed to the console, but you can redirect it to a file:
 
 ```
-% bundle exec rspec spec/site --format Validator::Brief --out log/brief.log
+% bundle exec rspec test/site --format Validator::Brief --out log/brief.log
 ```
 
 ##  Multiple outputs
@@ -80,7 +80,7 @@ RSpec allows you to select several output formats, and direct each one to a sepa
 For example, you can show the brief format in the console, and also direct the detailed log to a file with:
 
 ```
-% bundle exec rspec spec/site --format Validator::Brief --format Validator::Details --out log/validation.log
+% bundle exec rspec test/site --format Validator::Brief --format Validator::Details --out log/validation.log
 ```
 
 When using the auto node feature with interleaved output (default), both validator and auto node logs will go through all configured formatters. If the auto node is configured with `path` in its log settings, its output will be written to that file independently of the RSpec formatters.

@@ -38,11 +38,11 @@ You can pass [custom options]({{ site.baseurl}}{% link pages/running.md %}) to t
 
 Use the detailed log format:
 
-`% docker run --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/core --format Validator::Details`
+`% docker run --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site/core --format Validator::Details`
 
 Run a specific test:
 
-`% docker run --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/tlc/detector_logics_spec.rb:31`
+`% docker run --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site/tlc/detector_logics_spec.rb:31`
 
 
 ### Log Files
@@ -50,7 +50,7 @@ By default, the validator produces a single output which will be sent to the ter
 
 The validator also has the option to produce [multiple outputs]({{ site.baseurl}}{% link pages/output.md %}), directing some to files. When running with Docker, this would by default be to files inside the container. If you remove the container, the files will be lost. If you want to persist these extra log files on the host, you can mount a log folder and write logs to it:
 
-`% docker run --name rsmp_validator -it -v $PWD/config:/config -v $PWD/log:/log -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator spec/site/core --format Validator::Brief --format Validator::Details --out log/validation.log`
+`% docker run --name rsmp_validator -it -v $PWD/config:/config -v $PWD/log:/log -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site/core --format Validator::Brief --format Validator::Details --out log/validation.log`
 
 
 
@@ -68,8 +68,8 @@ Start the container by clicking 'Run'. The log output is shown in Docker Desktop
 ## Default test set
 By default the container will run tests in these two folders:
 
-- `spec/site/core`: tests covering the RSMP Core spec, which apply to all types of sites (equipment).
-- `spec/site/tlc`: tests for TLCs (Traffic Light Controllers).
+- `test/site/core`: tests covering the RSMP Core spec, which apply to all types of sites (equipment).
+- `test/site/tlc`: tests for TLCs (Traffic Light Controllers).
 
 This default set of tests is defined in the CMD directive of the Dockerfile used to build the Docker image.
 

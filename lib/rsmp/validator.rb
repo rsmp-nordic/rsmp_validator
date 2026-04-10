@@ -138,7 +138,7 @@ module Validator
   # Set whether we are testing a site or a supervisor
   def self.select_mode(mode)
     if self.mode
-      abort_with_error 'Cannot run tests in both spec/site/ and spec/supervisor/' if self.mode != mode
+      abort_with_error 'Cannot run tests in both test/site/ and test/supervisor/' if self.mode != mode
       return
     end
 
@@ -153,8 +153,8 @@ module Validator
   # Determine mode from test file paths
   def self.determine_mode(sus_config)
     paths = sus_config.paths.any? ? sus_config.paths : sus_config.test_paths
-    site_dir = File.expand_path('spec/site', sus_config.root)
-    supervisor_dir = File.expand_path('spec/supervisor', sus_config.root)
+    site_dir = File.expand_path('test/site', sus_config.root)
+    supervisor_dir = File.expand_path('test/supervisor', sus_config.root)
 
     paths.each do |path_str|
       expanded = File.expand_path(path_str, sus_config.root)

@@ -10,48 +10,48 @@ AllCops:
 
 Metrics/AbcSize:
   Exclude:
-    - 'spec/support/command_helpers.rb'
+    - 'test/support/command_helpers.rb'
 
 Metrics/CyclomaticComplexity:
   Exclude:
-    - 'spec/support/command_helpers.rb'
+    - 'test/support/command_helpers.rb'
 
 Metrics/MethodLength:
   Max: 25
   Exclude:
-    - 'spec/support/command_helpers.rb'
+    - 'test/support/command_helpers.rb'
 
 Metrics/ModuleLength:
   Max: 350
   Exclude:
-    - 'spec/support/command_helpers.rb'
+    - 'test/support/command_helpers.rb'
 
 # These files contain empty blocks required by the YARD documentation generation.
 RSpec/EmptyExampleGroup:
   Exclude:
-    - 'spec/site/site_spec.rb'
-    - 'spec/site/core/core_spec.rb'
-    - 'spec/site/tlc/tlc_spec.rb'
-    - 'spec/supervisor/supervisor_spec.rb'
+    - 'test/site/site_spec.rb'
+    - 'test/site/core/core_spec.rb'
+    - 'test/site/tlc/tlc_spec.rb'
+    - 'test/supervisor/supervisor_spec.rb'
 
 RSpec/NoExpectationExample:
   Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
+    - 'test/site/**/*'
+    - 'test/supervisor/**/*'
 
 RSpec/MultipleExpectations:
   Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
+    - 'test/site/**/*'
+    - 'test/supervisor/**/*'
 
 RSpec/ExampleLength:
   Exclude:
-    - 'spec/site/**/*'
-    - 'spec/supervisor/**/*'
+    - 'test/site/**/*'
+    - 'test/supervisor/**/*'
 
 RSpec/Output:
   Exclude:
-    - 'spec/support/validator.rb'
+    - 'test/support/validator.rb'
 
 # frozen string literals is on by default from Ruby 3.4
 Style/FrozenStringLiteralComment:

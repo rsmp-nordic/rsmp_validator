@@ -39,11 +39,11 @@ First run `yardoc` if needed, then, assuming you're in the root folder:
 You can now view the site on http://localhost:4000.
 
 ## YARD
-The documentation of the RSpec test suite, including specs and helper methods in spec/, is written as code comments. The source files are read by YARD which extracts the documentation and generates an HTML site in docs/dev. The YARD documentation is published as part of the Jekyll site.
+The documentation of the RSpec test suite, including specs and helper methods in test/, is written as code comments. The source files are read by YARD which extracts the documentation and generates an HTML site in docs/dev. The YARD documentation is published as part of the Jekyll site.
 
 To update the YARD documentation:
 
-1. Edit comments in RSpec spec files in spec/ or Ruby files in spec/support/
+1. Edit comments in RSpec spec files in test/ or Ruby files in test/support/
 2. Optionally review the resulting Jekyll site locally (see below).
 2. Push changes to the master branch on GitHub.
 

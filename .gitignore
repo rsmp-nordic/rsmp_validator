@@ -9,7 +9,7 @@ config/private/
 /.yardoc
 /coverage/
 /pkg/
-/spec/reports/
+/test/reports/
 /tmp/
 /ignore/
 /docs/dev/

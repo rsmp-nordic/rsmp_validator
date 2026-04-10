@@ -16,8 +16,8 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir[
     'lib/**/*',
-    'spec/site/**/*',
-    'spec/supervisor/**/*',
+    'test/site/**/*',
+    'test/supervisor/**/*',
     'config/**/*',
     'schemas/**/*',
     'exe/*'

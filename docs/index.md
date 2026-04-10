@@ -11,7 +11,7 @@ The RSMP Validator performs automated testing of RSMP implementations. It's base
 The validator includes a growing suite of tests and can report test results in several formats, so you can quickly assess RSMP compliance and pin-point any problems. It can be used on any platform that supports Ruby, including Linux, Mac and Windows.
 
 ```
-% bundle exec rspec spec/site/core spec/site/tlc
+% bundle exec rspec test/site/core test/site/tlc
 Using test config config/gem_tlc.yaml
 Run options: exclude {:rsmp=>[unless relevant for 3.1.5]}
 ...............................................................................
