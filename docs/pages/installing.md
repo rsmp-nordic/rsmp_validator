@@ -50,6 +50,6 @@ Bundle complete! 4 Gemfile dependencies, 28 gems now installed.
 Use `bundle info [gemname]` to see where a bundled gem is installed.
 ```
 
-You will now have RSpec, the rsmp gem and all other dependencies installed.
+You will now have sus, the rsmp gem and all other dependencies installed.
 
 It's recommended to use [bundle exec](https://bundler.io/man/bundle-exec.1.html) to run `rspec` and other commands that come from gems, to ensure that you're using the correct version of the gems.

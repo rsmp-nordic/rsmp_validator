@@ -11,62 +11,47 @@ nav_order: 4
 Tests are located in the `test/` folder. They are organized into sub-folders and files, according to system type, specification and functional areas.
 
 ```
-% tree spec -d                          
-spec
+% tree test -d
+test
 ├── site          # tests for sites (equipment)
 │   ├── core      # tests covering core specification
 │   └── tlc       # tests for traffic light controllers
-├── supervisor    # tests for supervisor systems (experimental)
-└── support       # helper classes and other support files 
+└── supervisor    # tests for supervisor systems (experimental)
 ```
 
 ## Running Tests
 Note: Before running tests, be sure to set up your test [configuration]({{ site.baseurl}}{% link pages/configuring.md %}).
 
-The RSMP Validator is based on the RSpec testing tool, so you use the `rspec` command to run tests. You should be located in the root of the project folder when running test.
+The RSMP Validator uses the [sus](https://github.com/socketry/sus) testing framework. Use the `rsmp_validator` executable to run conformance tests. You should be located in the root of the project folder when running tests.
 
-Test a site by running tests covering the core specification:
+Test a site by running tests covering the core specification, using the auto node feature to start a local TLC site automatically:
 
 ```
-% bundle exec rspec test/site/core
-Using test config config/gem_tlc.yaml
-Run options: exclude {:rsmp=>[unless relevant for 3.1.5]}
-....
-
-Finished in 1.01 seconds (files took 0.64491 seconds to load)
-4 examples, 0 failures
+% AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site/core
 ```
 
-In this example, the tests are running against a TLC emulator from the rsmp gem, running on the local machine, which is why the tests run in just about 1 second.
+To run all site tests:
 
+```
+% AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site
+```
+
+See the [Auto Node]({{ site.baseurl}}{% link pages/auto.md %}) page for details on the auto node feature.
 
 ## Filtering Tests
-You can use rspec command line [options](https://rspec.info/) to filter which tests to run.
-
-If you want to store your selection for easy reuse, add them to a file name .rspec-local, in the root of the project folder. RSpec will automatically use the options. Example:
+You can pass one or more paths to the `rsmp_validator` command to select which tests to run:
 
 ```
-% cat .rspec-local
---pattern test/site/*   # run tests in test/site/
---exclude-pattern test/site/unknown_status_spec.rb    # skip tests in this file
---tag ~programming           # exclude tests tagged with :programming
-```
-
- .rspec-local is git ignored, and will therefore not be added to the repo. 
-
-You can also keep different configurations, and pick one when running tests, e.g.:
-
-```
-% bundle exec rspec --options my_rspec_options
+% AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site/core test/site/tlc/clock_spec.rb
 ```
 
 ### Running tests against a local RSMP site
 
 There are two ways to test against a local RSMP site:
 
-#### Option 1: Auto Node Feature (For Development)
+#### Option 1: Auto Node Feature (Recommended for Development)
 
-If you're developing the RSMP gem or validator itself, you can use the **auto node feature** to automatically start a local site to test. See the [Auto Node]({{ site.baseurl}}{% link pages/auto.md %}) page for details.
+Use the **auto node feature** to automatically start a local site to test. See the [Auto Node]({{ site.baseurl}}{% link pages/auto.md %}) page for details.
 
 #### Option 2: Manual RSMP Site (For Testing Real Equipment)
 
@@ -85,11 +70,7 @@ You can use short reconnect and timeout intervals in the config file, which will
 2020-01-01 23:38:48 UTC                           Will try to reconnect again every 0.1 seconds..
 ```
 
-<<<<<<< HEAD
-Once it's running, you can run the validator site specs in another terminal, and you will see the Ruby TLC site respond to e.g. request to switch signal plan:
-=======
-Once it's running, you can run the validator site specs, and you will see the Ruby TLC site respond to e.g. requests to switch signal plan:
->>>>>>> 035e48c (Fix typos, grammar, and improve clarity in main documentation files)
+Once it's running, you can run the validator site tests and you will see the Ruby TLC site respond to requests, e.g. requests to switch signal plan:
 
 ```
 2020-01-01 23:38:54 UTC  6697976b5     -->  c776  Received CommandRequest {"mType":"rSMsg","type":"CommandRequest","ntsOId":"","xNId":"","cId":"TC","arg":[{"cCI":"M0002","cO":"setPlan","n":"status","v":"True"},{"cCI":"M0002","cO":"setPlan","n":"securityCode","v":"0000"},{"cCI":"M0002","cO":"setPlan","n":"timeplan","v":"2"}],"mId":"c77665c1-f7cc-4488-8bcb-f809939e0e20"}
@@ -110,20 +91,7 @@ alarm_triggers:
     component: DL1
 ```
 
-Tests that rely on device programming are tagged with :programming. If the device cannot be programmed to raise alarm on input activation, you should skip tests that rely on this, by passing the `--tag ~programming` as an option to the `rspec` command:
-
-```
-% bundle exec rspec test/site/ --tag ~programming
-```
- 
-## RSpec Helpers and Options
-The file `test/spec_helper.rb` will be included automatically by RSpec, because the file `.rspec` has the following options:
-
-```
---require spec_helper --force-color
-```
- 
-The file `test/spec_helper.rb` will in turn include the required dependencies, including the rsmp gem and files in `test/support/`, which define helper classes and methods.
+Tests that rely on device programming are tagged with `:programming`. You can skip them by passing the relevant test paths explicitly and excluding files you don't need.
 
 ## Git Ignores
-The file .gitignore is set up to ignore files and folders that are typically used for private configurations, including `config/private/` and all secrets*.yaml files in `config/`.
+The file `.gitignore` is set up to ignore files and folders that are typically used for private configurations, including `config/private/` and all `secrets*.yaml` files in `config/`.

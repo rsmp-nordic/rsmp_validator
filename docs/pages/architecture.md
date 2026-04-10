@@ -6,20 +6,20 @@ nav_order: 2
 ---
 
 # How it Works
-The RSMP Validator is a command-line tool for validating RSMP implementations. It's based on RSpec with tests written in the Ruby language.
+The RSMP Validator is a command-line tool for validating RSMP implementations. It's based on [sus](https://github.com/socketry/sus) with tests written in the Ruby language.
 
 The `rsmp` gem is used to handle RSMP communication.
 
 The validator performs integration testing, not unit testing. The equipment you test is not guaranteed to be in the same state every time you run a test. Most tests therefore start by resetting certain settings in the equipment to a known state.
 
 ## Flow
-The RSMP Validator consists of RSpec, the individual tests and some helper classes.
+The RSMP Validator consists of the `rsmp_validator` executable, the individual tests and some helper classes.
 
 When you run tests, a local RSMP supervisor is started, to communicate with the site you're testing. The helper classes provide an interface to the supervisor. This local supervisor can in turn be used to exchange messages with the site you're testing.
 
 ![Overview]({{ site.baseurl }}/assets/images/flow.png "RSMP Validator Flow")
 
-1. Testing is initiated with the `rspec` command. RSpec runs each test, one after the other.
+1. Testing is initiated with the `rsmp_validator` command. Sus runs each test, one after the other.
 2. The test uses a helper to wait for the site to connect. The helper will start the local RSMP supervisor if it's not already running.
 3. The test uses the RSMP supervisor to send RSMP messages to the site to be tested, e.g. a command request. It will then typically wait for a specific kind of response from the site, e.g. a command response.
 4. The site responds with RSMP messages. Responses might be sent immediately, or after a while. Responses might include one or more messages.
@@ -27,16 +27,16 @@ When you run tests, a local RSMP supervisor is started, to communicate with the 
 6. The test status is reported back to RSpec. RSpec collects results from all tests and generates a report.
 
 ## Understanding Tests
-Tests are written as RSpec specifications in the Ruby language.
+Tests are written in the Ruby language using [sus](https://github.com/socketry/sus).
 
-RSpec specifications use [expectations](https://relishapp.com/rtest/rspec-expectations/docs) to check expected outcomes.
+Sus uses `expect` to check expected outcomes.
 
 ### Connecting to the Site
-The helper `Validator::Site` is used to wait for a connection to the site:
+The `with_site` helper is used to wait for a connection to the site:
 
 ```ruby
 it 'connects' do
-  Validator::Site.connected do |task,supervisor,site|
+  with_site(:connected) do |site_proxy|
     # site is now connected. ready for testing!
   end
 end
@@ -44,14 +44,14 @@ end
 
 An RSMP connection is always initiated by the site, not the supervisor. The retry interval can often be several minutes or more. Reestablishing the RSMP connection in each test would therefore be very slow.
 
-To speed up testing `Validator::Site` can keep the RSMP connection open between tests.
+To speed up testing, the RSMP connection is kept open between tests.
 
-The example above uses `Validator::Site#connected`. If the previous test left the connection open, it's reused, otherwise it waits for the site to reconnect.
+The example above uses `with_site(:connected)`. If the previous test left the connection open, it's reused, otherwise it waits for the site to reconnect.
 
-A test can also use `Validator::Site#reconnected` to request that the RSMP connection is closed and reestablished before continuing with the test, or `Validator::Site#disconnected` to ensure that the connection is closed. See the documentation of the [Validator::Site]({{ site.baseurl}}{% link pages/test_site.md %}) helper for details. 
+You can also use `with_site(:reconnected)` to request that the RSMP connection is closed and reestablished before continuing, or `with_site(:disconnected)` to ensure the connection is closed. See the documentation of the [Validator::Site]({{ site.baseurl}}{% link pages/test_site.md %}) helper for details.
 
 ### Interacting with the Site
-`Validator::Site#connected` and friends will return a `site` object which can be used to communicate with the site using the interface provided by the `rsmp` gem. For example you can send RSMP commands, wait for responses, subscribe to statuses, etc.
+`with_site` will yield a `site_proxy` object which can be used to communicate with the site using the interface provided by the `rsmp` gem. For example you can send RSMP commands, wait for responses, subscribe to statuses, etc.
 
 ### Exceptions and Timeouts
 Timeouts are essential when testing external systems. When you send a command or request, you expect a response within a certain amount of time.
