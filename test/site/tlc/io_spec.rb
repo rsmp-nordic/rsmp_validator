@@ -12,7 +12,7 @@ describe 'Site::Tlc::Io' do
       # 3. Then we should receive a valid response
       it 'is read with S0003 with extended input status' do
         with_site(:connected, sxl: '<1.2') do |site_proxy|
-          request_status_and_confirm site, 'input status',
+          request_status_and_confirm site_proxy, 'input status',
                                      { S0003: %i[inputstatus extendedinputstatus] }
         end
       end
@@ -23,7 +23,7 @@ describe 'Site::Tlc::Io' do
       # 3. Then we should receive a valid response
       it 'is read with S0003' do
         with_site(:connected, sxl: '>=1.2') do |site_proxy|
-          request_status_and_confirm site, 'input status',
+          request_status_and_confirm site_proxy, 'input status',
                                      { S0003: [:inputstatus] }
         end
       end
@@ -34,7 +34,7 @@ describe 'Site::Tlc::Io' do
       # 3. Then we should receive a valid response
       it 'forcing is read with S0029' do
         with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-          request_status_and_confirm site, 'forced input status',
+          request_status_and_confirm site_proxy, 'forced input status',
                                      { S0029: [:status] }
         end
       end
@@ -50,10 +50,10 @@ describe 'Site::Tlc::Io' do
           inputs = Validator.get_config('items', 'inputs')
           skip('No inputs configured') if inputs.nil? || inputs.empty?
           inputs.each do |input|
-            site.force_input(input: input, status: 'True', value: 'False')
-            site.force_input(input: input, status: 'True', value: 'True')
+            site_proxy.force_input(input: input, status: 'True', value: 'False')
+            site_proxy.force_input(input: input, status: 'True', value: 'True')
           ensure
-            site.force_input(input: input, status: 'False', value: 'True')
+            site_proxy.force_input(input: input, status: 'False', value: 'True')
           end
         end
       end
@@ -69,7 +69,7 @@ describe 'Site::Tlc::Io' do
         with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
           inputs = Validator.get_config('items', 'inputs')
           skip('No inputs configured') if inputs.nil? || inputs.empty?
-          inputs.each { |input| switch_input(site, input) }
+          inputs.each { |input| switch_input(site_proxy, input) }
         end
       end
 
@@ -82,7 +82,7 @@ describe 'Site::Tlc::Io' do
           inputs = Validator.get_config('items', 'inputs')
           skip('No inputs configured') if inputs.nil? || inputs.empty?
           status = '1,3,12;5,5,10'
-          site.set_inputs(status)
+          site_proxy.set_inputs(status)
         end
       end
 
@@ -93,7 +93,7 @@ describe 'Site::Tlc::Io' do
       it 'sensitivity is set with M0021' do
         with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
           status = '1-50'
-          site.set_trigger_level(status)
+          site_proxy.set_trigger_level(status)
         end
       end
     end
@@ -106,7 +106,7 @@ describe 'Site::Tlc::Io' do
       # 4. And the outputstatus attribute should be a digit string
       it 'is read with S0004 with extended output status' do
         with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
-          request_status_and_confirm site, 'output status',
+          request_status_and_confirm site_proxy, 'output status',
                                      { S0004: %i[outputstatus extendedoutputstatus] }
         end
       end
@@ -118,7 +118,7 @@ describe 'Site::Tlc::Io' do
       # 4. And the outputstatus attribute should be a digit string
       it 'is read with S0004' do
         with_site(:connected, sxl: ['>=1.2']) do |site_proxy|
-          request_status_and_confirm site, 'output status',
+          request_status_and_confirm site_proxy, 'output status',
                                      { S0004: [:outputstatus] }
         end
       end
@@ -129,7 +129,7 @@ describe 'Site::Tlc::Io' do
       # 3. Expect status response before timeout
       it 'forcing is read with S0030' do
         with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
-          request_status_and_confirm site, 'forced output status',
+          request_status_and_confirm site_proxy, 'forced output status',
                                      { S0030: [:status] }
         end
       end
@@ -143,10 +143,10 @@ describe 'Site::Tlc::Io' do
           outputs = Validator.get_config('items', 'outputs')
           skip('No outputs configured') if outputs.nil? || outputs.empty?
           outputs.each do |output|
-            site.force_output(output: output, status: 'True', value: 'True')
-            site.force_output(output: output, status: 'True', value: 'False')
+            site_proxy.force_output(output: output, status: 'True', value: 'True')
+            site_proxy.force_output(output: output, status: 'True', value: 'False')
           ensure
-            site.force_output(output: output, status: 'False', value: 'True')
+            site_proxy.force_output(output: output, status: 'False', value: 'True')
           end
         end
       end

@@ -3,6 +3,14 @@ module Validator
   module Lifecycle
     # Initialize the validator system at sus startup.
     def setup(sus_config)
+      @verbose = sus_config.verbose?
+      @log_stream = if sus_config.respond_to?(:log_path) && sus_config.log_path
+        File.open(sus_config.log_path, 'w')
+      elsif sus_config.respond_to?(:log_to_stdout) && sus_config.log_to_stdout
+        $stdout
+      else
+        File.open(File::NULL, 'w')
+      end
       determine_mode sus_config
       initialize_logging log_settings: {} # minimal init so log() works during config loading
       load_tester_config
@@ -15,7 +23,7 @@ module Validator
     # Set up logging with configuration-specific settings.
     def setup_logging
       settings = {
-        'stream' => $stdout,
+        'stream' => @log_stream,
         'color' => {
           'info' => 'light_black',
           'log' => 'white',

@@ -1,6 +1,0 @@
--e yard/extensions.rb
--o docs/dev
-
-test/site
-test/supervisor
-test/support/
