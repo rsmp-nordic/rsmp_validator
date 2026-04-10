@@ -34,23 +34,21 @@ After running, you can start the container again to re-run the same set of tests
 To run with different options, remove the container and run again with different options. You can pass `--rm` when running to automatically remove the container after each completion. See the Docker docs for more info about managing containers.
 
 ### Custom Options
-You can pass [custom options]({{ site.baseurl}}{% link pages/running.md %}) to the validator, e.g. to run specific tests, filter tests by tags or use a custom reporting format.
+You can pass [custom options]({{ site.baseurl}}{% link pages/running.md %}) to the validator, e.g. to run specific tests or enable RSMP logging.
 
-Use the detailed log format:
+Enable RSMP logging:
 
-`% docker run --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site/core --format Validator::Details`
+`% docker run --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site --log`
 
 Run a specific test:
 
-`% docker run --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site/tlc/detector_logics_spec.rb:31`
+`% docker run --name rsmp_validator -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site/tlc/detector_logics_spec.rb`
 
 
 ### Log Files
-By default, the validator produces a single output which will be sent to the terminal. If you like you can direct this output to a file to keep it.
+By default, the validator produces output to the terminal. You can also write RSMP logs to a file inside the container using `--log`. If you want to persist log files on the host, mount a log folder:
 
-The validator also has the option to produce [multiple outputs]({{ site.baseurl}}{% link pages/output.md %}), directing some to files. When running with Docker, this would by default be to files inside the container. If you remove the container, the files will be lost. If you want to persist these extra log files on the host, you can mount a log folder and write logs to it:
-
-`% docker run --name rsmp_validator -it -v $PWD/config:/config -v $PWD/log:/log -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site/core --format Validator::Brief --format Validator::Details --out log/validation.log`
+`% docker run --name rsmp_validator -it -v $PWD/config:/config -v $PWD/log:/log -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site --log /log/rsmp.log`
 
 
 

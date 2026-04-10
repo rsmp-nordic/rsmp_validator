@@ -47,13 +47,13 @@ You can also enable the auto node feature using environment variables.
 Automatically start a site to be tested:
 
 ```shell
-AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rspec test/site/core
+AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site/core
 ```
 
 Or automatically start a supervisor to be tested:
 
 ```shell
-AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rspec test/supervisor
+AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rsmp_validator test/supervisor
 ```
 
 
@@ -68,7 +68,7 @@ You can use these as templates:
 Auto nodes create their own logger instance, which allows you to control their output independently from the validator and local node loggers.
 
 ### Interleaved Output (Default)
-By default, output from the auto node is interleaved with the validator's output using the same RSpec formatter. To distinguish between the validator and auto node output, you can use the `prefix` option in the auto node's log configuration:
+By default, output from the auto node is interleaved with the validator's output. To distinguish between the validator and auto node output, you can use the `prefix` option in the auto node's log configuration:
 
 ```yaml
 # config/simulator/tlc.yaml
@@ -79,21 +79,16 @@ log:
   watchdogs: false
 ```
 
-When you run tests with a formatter like `--format Validator::Details`, both the validator and auto node output will be formatted consistently and appear in the same stream, differentiated by the prefix.
-
-RSpec's `--out` flag controls where the interleaved output goes:
+Enable RSMP logging with the `--log` flag:
 
 ```shell
-# Both validator and auto node output go to details.log
-bundle exec rspec --format Validator::Details --out logs/details.log
+bundle exec rsmp_validator test/site --log
 ```
 
-You can use multiple formatters, and the interleaved output will go through all of them:
+Or write RSMP logs to a file:
 
 ```shell
-# Interleaved output goes to both progress.log and details.log
-bundle exec rspec --format progress --out logs/progress.log \
-                  --format Validator::Details --out logs/details.log
+bundle exec rsmp_validator test/site --log logs/details.log
 ```
 
 ### Separate Log File

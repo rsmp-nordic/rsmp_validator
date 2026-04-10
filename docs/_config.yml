@@ -29,7 +29,7 @@ github_username:  rsmp-nordic
 
 # Build settings
 #theme: just-the-docs
-remote_theme: pmarsceill/just-the-docs
+remote_theme: just-the-docs/just-the-docs
 
 plugins:
   - jekyll-feed
@@ -70,3 +70,8 @@ color_scheme: rsmp
 # disable processing of markdown files witouth frontmatter
 optional_front_matter:
   enabled: false
+
+sass:
+  quiet_deps: true
+  silence_deprecations:
+    - import
