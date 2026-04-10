@@ -10,5 +10,4 @@ gem 'sus-fixtures-async'
 group :development do
   gem 'rake'
   gem 'rubocop'
-  gem 'rubocop-rspec'
 end

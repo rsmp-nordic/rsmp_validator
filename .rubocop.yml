@@ -1,6 +1,3 @@
-plugins:
-  - rubocop-rspec
-
 AllCops:
   NewCops: enable
   SuggestExtensions: false
@@ -8,50 +5,12 @@ AllCops:
     - 'yard/**/*'
     - 'vendor/**/*'
 
-Metrics/AbcSize:
-  Exclude:
-    - 'test/support/command_helpers.rb'
-
-Metrics/CyclomaticComplexity:
-  Exclude:
-    - 'test/support/command_helpers.rb'
-
 Metrics/MethodLength:
   Max: 25
-  Exclude:
-    - 'test/support/command_helpers.rb'
 
-Metrics/ModuleLength:
-  Max: 350
+Metrics/BlockLength:
   Exclude:
-    - 'test/support/command_helpers.rb'
-
-# These files contain empty blocks required by the YARD documentation generation.
-RSpec/EmptyExampleGroup:
-  Exclude:
-    - 'test/site/site_spec.rb'
-    - 'test/site/core/core_spec.rb'
-    - 'test/site/tlc/tlc_spec.rb'
-    - 'test/supervisor/supervisor_spec.rb'
-
-RSpec/NoExpectationExample:
-  Exclude:
-    - 'test/site/**/*'
-    - 'test/supervisor/**/*'
-
-RSpec/MultipleExpectations:
-  Exclude:
-    - 'test/site/**/*'
-    - 'test/supervisor/**/*'
-
-RSpec/ExampleLength:
-  Exclude:
-    - 'test/site/**/*'
-    - 'test/supervisor/**/*'
-
-RSpec/Output:
-  Exclude:
-    - 'test/support/validator.rb'
+    - 'test/**/*'
 
 # frozen string literals is on by default from Ruby 3.4
 Style/FrozenStringLiteralComment:
