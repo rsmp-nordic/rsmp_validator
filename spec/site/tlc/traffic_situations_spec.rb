@@ -1,4 +1,4 @@
-RSpec.describe Site::Tlc::TrafficSituations do
+describe 'Site::Tlc::TrafficSituations' do
   include Validator::Helpers::Commands
   include Validator::Helpers::Status
 
@@ -8,7 +8,8 @@ RSpec.describe Site::Tlc::TrafficSituations do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    it 'is read with S0015', sxl: '>=1.0.7' do |_example|
+    it 'is read with S0015' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = if RSMP::Proxy.version_meets_requirement?(site.sxl_version, '>=1.1')
                         { S0015: %i[status source] }
@@ -25,7 +26,8 @@ RSpec.describe Site::Tlc::TrafficSituations do
     # 2. Verify that there is a Validator.get_config('validator') with a traffic situation
     # 3. Send the control command to switch traffic situation for each traffic situation
     # 4. Wait for status "Current traffic situation" = requested traffic situation
-    it 'is set with M0003', sxl: '>=1.0.7' do |_example|
+    it 'is set with M0003' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       situations = Validator.get_config('items', 'traffic_situations')
       skip('No traffic situations configured') if situations.nil? || situations.empty?
       Validator::SiteTester.connected do |_task, _supervisor, site|
@@ -43,7 +45,8 @@ RSpec.describe Site::Tlc::TrafficSituations do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'list size is read with S0019', sxl: '>=1.0.7' do |_example|
+    it 'list size is read with S0019' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'number of traffic situations',
                                    { S0019: [:number] }

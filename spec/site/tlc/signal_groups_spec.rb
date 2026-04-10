@@ -1,4 +1,4 @@
-RSpec.describe Site::Tlc::SignalGroups do
+describe 'Site::Tlc::SignalGroups' do
   include Validator::Helpers::Commands
   include Validator::Helpers::Status
   include Validator::Helpers::Startup
@@ -9,7 +9,8 @@ RSpec.describe Site::Tlc::SignalGroups do
     # 1. Verify connection
     # 2. Send control command to start signalgrup, set_signal_start= true, include security_code
     # 3. Wait for status = true
-    it 'is ordered to green with M0010', :important, sxl: '>=1.0.8' do |_example|
+    it 'is ordered to green with M0010' do
+      skip 'requires sxl >= 1.0.8' unless Validator.sxl_matches?('>=1.0.8')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         component = Validator.get_config('components', 'signal_group').keys[0]
         site.order_signal_start(component)
@@ -19,7 +20,8 @@ RSpec.describe Site::Tlc::SignalGroups do
     # 1. Verify connection
     # 2. Send control command to stop signalgrup, set_signal_start= false, include security_code
     # 3. Wait for status = true
-    it 'is ordered to red with M0011', :important, sxl: '>=1.0.8' do |_example|
+    it 'is ordered to red with M0011' do
+      skip 'requires sxl >= 1.0.8' unless Validator.sxl_matches?('>=1.0.8')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         component = Validator.get_config('components', 'signal_group').keys[0]
         site.order_signal_stop(component)
@@ -31,7 +33,8 @@ RSpec.describe Site::Tlc::SignalGroups do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'state is read with S0001', sxl: '>=1.0.7' do |_example|
+    it 'state is read with S0001' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'signal group status',
                                    { S0001: %i[signalgroupstatus cyclecounter basecyclecounter stage] }
@@ -43,7 +46,8 @@ RSpec.describe Site::Tlc::SignalGroups do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'red/green predictions is read with S0025', sxl: '>=1.0.13' do |_example|
+    it 'red/green predictions is read with S0025' do
+      skip 'requires sxl >= 1.0.13' unless Validator.sxl_matches?('>=1.0.13')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'time-of-green/time-of-red',
                                    { S0025: %i[
@@ -64,7 +68,8 @@ RSpec.describe Site::Tlc::SignalGroups do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'list size is read with S0017', sxl: '>=1.0.7' do |_example|
+    it 'list size is read with S0017' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'number of signal groups',
                                    { S0017: [:number] }
@@ -76,7 +81,8 @@ RSpec.describe Site::Tlc::SignalGroups do
     # 1. Given the site is connected and in yellow flash mode
     # 2. When we activate normal control
     # 3. All signal groups should go through e, f and g
-    it 'follow startup sequence after yellow flash', :functional, sxl: '>=1.0.7' do |_example|
+    it 'follow startup sequence after yellow flash' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |task, _supervisor, site|
         verify_startup_sequence(task, site) do
           site.set_functional_position('YellowFlash',

@@ -1,4 +1,4 @@
-RSpec.describe 'Site::Core' do
+describe 'Site::Core' do
   include Validator::Helpers::Commands
 
   # Check that the site closed the connection as required when faced with
@@ -13,7 +13,8 @@ RSpec.describe 'Site::Core' do
     # 1. Given the site has just connected
     # 2. When our supervisor does not acknowledge watchdogs
     # 3. Then the site should disconnect
-    it 'is closed if watchdogs are not acknowledged', sxl: '>=1.0.7' do |_example|
+    it 'is closed if watchdogs are not acknowledged' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       timeout = Validator.get_config('timeouts', 'disconnect')
       Validator::SiteTester.isolated do |_task, supervisor, site_proxy|
         supervisor.ignore_errors RSMP::DisconnectError do
@@ -35,7 +36,8 @@ RSpec.describe 'Site::Core' do
     # 1. Given the site has just connected
     # 2. When our supervisor stops sending watchdogs
     # 3. Then the site should not disconnect
-    it 'is not closed if watchdogs are not received', :slow, sxl: '>=1.0.7' do |_example|
+    it 'is not closed if watchdogs are not received' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.isolated do |task, _supervisor, site|
         timeout = Validator.get_config('timeouts', 'disconnect')
 

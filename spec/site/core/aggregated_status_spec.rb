@@ -1,4 +1,4 @@
-RSpec.describe 'Site::Core' do
+describe 'Site::Core' do
   include Validator::Helpers::Commands
 
   describe 'Aggregated Status' do
@@ -7,7 +7,8 @@ RSpec.describe 'Site::Core' do
     # 1. Given the site is connected
     # 2. When we request aggregated status
     # 3. Then we should receive an aggregated status
-    it 'can be requested', core: '>=3.1.5' do |_example|
+    it 'can be requested' do
+      skip 'requires core >= 3.1.5' unless Validator.core_matches?('>=3.1.5')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         log 'Request aggregated status'
         site.request_aggregated_status Validator.get_config('main_component'), collect!: {
@@ -22,7 +23,8 @@ RSpec.describe 'Site::Core' do
     # 1. Given the is reconnected
     # 2. When we receive an aggregated status
     # 3. Then fP and fS should be null
-    it 'uses null for functional position/state', sxl: '>=1.1' do |_example|
+    it 'uses null for functional position/state' do
+      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
       Validator::SiteTester.isolated(
         'collect' => {
           filter: RSMP::Filter.new(type: 'AggregatedStatus'),
@@ -36,7 +38,7 @@ RSpec.describe 'Site::Core' do
         collector.wait!
         aggregated_status = site_proxy.collector.messages.first
 
-        expect(aggregated_status).to be_an(RSMP::AggregatedStatus)
+        expect(aggregated_status).to be_a(RSMP::AggregatedStatus)
         expect(aggregated_status.attribute('fP')).to be_nil
         expect(aggregated_status.attribute('fS')).to be_nil
       end

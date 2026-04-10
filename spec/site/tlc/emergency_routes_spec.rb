@@ -1,4 +1,4 @@
-RSpec.describe Site::Tlc::EmergencyRoutes do
+describe 'Site::Tlc::EmergencyRoutes' do
   include Validator::Helpers::Commands
   include Validator::Helpers::Status
 
@@ -8,7 +8,8 @@ RSpec.describe Site::Tlc::EmergencyRoutes do
     # 1. Given the site is connected.
     # 2. When we request S0006.
     # 3. Then we should receive a status response.
-    specify 'emergency route is read with S0006', sxl: ['>=1.0.7', '<1.2'] do |_example|
+    it 'emergency route is read with S0006' do
+      skip 'requires sxl >= 1.0.7, < 1.2' unless Validator.sxl_matches?(['>=1.0.7', '<1.2'])
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'emergency route status',
                                    { S0006: %i[status emergencystage] }
@@ -20,7 +21,9 @@ RSpec.describe Site::Tlc::EmergencyRoutes do
     # 1. Given the site is connected.
     # 2. When we request S0035.
     # 3. Then we should receive a status response.
-    specify 'emergency route is read with S0035', core: '>=3.2', sxl: '>=1.2' do |_example|
+    it 'emergency route is read with S0035' do
+      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
+      skip 'requires sxl >= 1.2' unless Validator.sxl_matches?('>=1.2')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'emergency route status',
                                    { S0035: [:emergencyroutes] }
@@ -32,7 +35,8 @@ RSpec.describe Site::Tlc::EmergencyRoutes do
     # 1. Given the site is connected.
     # 2. When we send M0005 to set emergency route.
     # 3. Then we should get a command responds confirming the change.
-    it 'can be activated with M0005 and read with S0006', sxl: ['>=1.0.7', '<1.2'] do |_example|
+    it 'can be activated with M0005 and read with S0006' do
+      skip 'requires sxl >= 1.0.7, < 1.2' unless Validator.sxl_matches?(['>=1.0.7', '<1.2'])
       emergency_routes = Validator.get_config('items', 'emergency_routes')
       skip('No emergency routes configured') if emergency_routes.nil? || emergency_routes.empty?
 
@@ -66,8 +70,9 @@ RSpec.describe Site::Tlc::EmergencyRoutes do
     # 4. When we request the current emergency routes with S035.
     # 5. Then we should receive the list of active routes.
 
-    specify 'emergency routes can be activated with M0005 and read with S0035', core: '>=3.2',
-                                                                                sxl: '>=1.2' do |_example|
+    it 'emergency routes can be activated with M0005 and read with S0035' do
+      skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
+      skip 'requires sxl >= 1.2' unless Validator.sxl_matches?('>=1.2')
       def enable_routes(site, emergency_routes)
         emergency_routes.each { |emergency_route| site.set_emergency_route(route: emergency_route.to_s, active: true) }
         routes = emergency_routes.map { |i| { 'id' => i.to_s } }

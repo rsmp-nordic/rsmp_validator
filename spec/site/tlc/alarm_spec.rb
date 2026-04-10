@@ -1,4 +1,4 @@
-RSpec.describe Site::Tlc::Alarm do
+describe 'Site::Tlc::Alarm' do
   include Validator::Helpers::Commands
   include Validator::Helpers::Status
   include Validator::Helpers::Alarms
@@ -27,12 +27,13 @@ RSpec.describe Site::Tlc::Alarm do
     # 4. When we force the input to False
     # 5. Then the alarm issue should become inactive, with a timestamp close to now
 
-    specify 'Alarm A0302 is raised when input is activated', :programming, sxl: '>=1.0.7' do |_example|
+    it 'Alarm A0302 is raised when input is activated' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |task, _supervisor, site|
         alarm_code_id = 'A0302'
         def verify_timestamp(alarm, duration = 1.minute)
           alarm_time = Time.parse(alarm.attributes['aTs'])
-          expect(alarm_time).to be_within(duration).of Time.now.utc
+          expect(alarm_time).to be_within(duration).of(Time.now.utc)
         end
         # Raise alarm by activating input
         deactivated, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id|
@@ -56,7 +57,8 @@ RSpec.describe Site::Tlc::Alarm do
     # 4. When we acknowledge the alarm
     # 5. Then we should receive an acknowledged alarm issue
 
-    specify 'A0302 can be acknowledged', :programming, sxl: '>=1.0.7' do |_example|
+    it 'A0302 can be acknowledged' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |task, _supervisor, site|
         alarm_code_id = 'A0302' # what alarm to expect
         timeout = Validator.get_config('timeouts', 'alarm')
@@ -67,11 +69,11 @@ RSpec.describe Site::Tlc::Alarm do
 
           # verify timestamp
           alarm_time = Time.parse(alarm.attributes['aTs'])
-          expect(alarm_time).to be_within(1.minute).of Time.now.utc
+          expect(alarm_time).to be_within(1.minute).of(Time.now.utc)
 
           # verify that the alarm is not acknowledged when initially raised
           ack_message = "Alarm should not be acknowledged when raised, got: #{alarm.attributes['ack']}"
-          expect(alarm.attributes['ack']).to match(/notAcknowledged/i), ack_message
+          assert(alarm.attributes['ack'].match?(/notAcknowledged/i), ack_message)
           log "Verified alarm #{alarm_code_id} is correctly not acknowledged when raised"
 
           # test acknowledge and confirm
@@ -95,7 +97,7 @@ RSpec.describe Site::Tlc::Alarm do
             'aCId' => alarm_code_id
           )
           messages = collect_task.wait
-          expect(messages).to be_an(Array)
+          expect(messages).to be_a(Array)
           expect(messages.first).to be_a(RSMP::Alarm)
         end
       end

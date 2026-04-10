@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require 'sus'
+require 'sus/config'
+
+config = Sus::Config.load
+
+registry = config.registry
+
+output = config.verbose? ? config.output : Sus::Output::Null.new
+verbose = config.verbose?
+
+assertions = Sus::Assertions.default(output: output, verbose: verbose)
+
+config.before_tests(assertions)
+registry.call(assertions)
+config.after_tests(assertions)
+
+exit(1) unless assertions.passed?

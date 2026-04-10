@@ -1,4 +1,4 @@
-RSpec.describe Site::Tlc::Subscribe do
+describe 'Site::Tlc::Subscribe' do
   include Validator::Helpers::Status
 
   describe 'Subscription' do
@@ -12,7 +12,7 @@ RSpec.describe Site::Tlc::Subscribe do
     # 1. check that we receive a status update with a predefined time
     # 1. unsubscribe
 
-    it 'can be turned on and off for S0001' do |_example|
+    it 'can be turned on and off for S0001' do
       Validator::SiteTester.connected do |_task, _supervisor, site|
         log 'Subscribe to status and wait for update'
         component = Validator.get_config('main_component')
@@ -38,7 +38,7 @@ RSpec.describe Site::Tlc::Subscribe do
     # 3. Send the same subscription again with update rate 1s
     # 4. Verify that the new update rate is in effect by checking next update is received within 2s
 
-    it 'can change interval during active subscription' do |_example|
+    it 'can change interval during active subscription' do
       Validator::SiteTester.connected do |_task, _supervisor, site|
         component = Validator.get_config('main_component')
 
@@ -61,9 +61,9 @@ RSpec.describe Site::Tlc::Subscribe do
           timeout: 2
         }
 
-        expect(result).not_to be_nil
-        expect(result[:collector].messages).not_to be_empty,
-                                                   'Expected to receive status update within 2s with new 1s update rate'
+        assert(!result.nil?, 'Expected subscribe_to_status to return a result')
+        assert(!result[:collector].messages.empty?,
+               'Expected to receive status update within 2s with new 1s update rate')
         log 'Successfully received status update within 2s, confirming 1s update rate is active'
       ensure
         # Clean up subscription

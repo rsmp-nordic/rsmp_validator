@@ -1,4 +1,4 @@
-RSpec.describe Site::Tlc::Clock do
+describe 'Site::Tlc::Clock' do
   include Validator::Helpers::Clock
   include Validator::Helpers::Status
   include Validator::Helpers::Alarms
@@ -18,7 +18,8 @@ RSpec.describe Site::Tlc::Clock do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    it 'can be read with S0096', sxl: '>=1.0.7' do |_example|
+    it 'can be read with S0096' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'current date and time',
                                    { S0096: %i[
@@ -37,7 +38,8 @@ RSpec.describe Site::Tlc::Clock do
     # 1. Given the site is connected
     # 2. Send command
     # 3. Expect status response before timeout
-    it 'can be set with M0104', sxl: '>=1.0.7' do |_example|
+    it 'can be set with M0104' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         site.set_clock(clock)
       end
@@ -50,7 +52,8 @@ RSpec.describe Site::Tlc::Clock do
     # 3. Request status S0096
     # 4. Compare set_clock and status timestamp
     # 5. Expect the difference to be within max_diff
-    it 'is used for S0096 status response', sxl: '>=1.0.7' do |_example|
+    it 'is used for S0096 status response' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
@@ -88,8 +91,8 @@ RSpec.describe Site::Tlc::Clock do
 
             diff = received - clock
             diff = diff.round
-            expect(diff.abs).to be <= max_diff,
-                                "Clock reported by S0096 is off by #{diff}s, should be within #{max_diff}s"
+            assert(diff.abs <= max_diff,
+                   "Clock reported by S0096 is off by #{diff}s, should be within #{max_diff}s")
           end
         end
       end
@@ -102,7 +105,8 @@ RSpec.describe Site::Tlc::Clock do
     # 3. Request status S0096
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
-    it 'is used for S0096 response timestamp', sxl: '>=1.0.7' do |_example|
+    it 'is used for S0096 response timestamp' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
@@ -126,8 +130,8 @@ RSpec.describe Site::Tlc::Clock do
                                             'command_response') + Validator.get_config('timeouts', 'status_response')
             diff = Time.parse(collector.messages.first.attributes['sTs']) - clock
             diff = diff.round
-            expect(diff.abs).to be <= max_diff,
-                                "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s"
+            assert(diff.abs <= max_diff,
+                   "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s")
           end
         end
       end
@@ -141,7 +145,9 @@ RSpec.describe Site::Tlc::Clock do
     # 4. Request aggregated status
     # 5. Compare set_clock and response timestamp
     # 6. Expect the difference to be within max_diff
-    it 'is used for aggregated status timestamp', core: '>=3.1.5', sxl: '>=1.0.7' do |_example|
+    it 'is used for aggregated status timestamp' do
+      skip 'requires core >= 3.1.5' unless Validator.core_matches?('>=3.1.5')
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
@@ -153,8 +159,8 @@ RSpec.describe Site::Tlc::Clock do
                                             'command_response') + Validator.get_config('timeouts', 'status_response')
             diff = Time.parse(collector.messages.first.attributes['aSTS']) - clock
             diff = diff.round
-            expect(diff.abs).to be <= max_diff,
-                                "Timestamp of aggregated status is off by #{diff}s, should be within #{max_diff}s"
+            assert(diff.abs <= max_diff,
+                   "Timestamp of aggregated status is off by #{diff}s, should be within #{max_diff}s")
           end
         end
       end
@@ -167,7 +173,8 @@ RSpec.describe Site::Tlc::Clock do
     # 3. Send command to set functional position
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
-    it 'is used for M0001 response timestamp', sxl: '>=1.0.7' do |_example|
+    it 'is used for M0001 response timestamp' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
@@ -178,8 +185,8 @@ RSpec.describe Site::Tlc::Clock do
             max_diff = timeout * 2
             diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
             diff = diff.round
-            expect(diff.abs).to be <= max_diff,
-                                "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s"
+            assert(diff.abs <= max_diff,
+                   "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s")
           end
         end
       end
@@ -192,7 +199,8 @@ RSpec.describe Site::Tlc::Clock do
     # 3. Send command to set functional position
     # 4. Compare set_clock and response timestamp
     # 5. Expect the difference to be within max_diff
-    it 'is used for M0104 response timestamp', sxl: '>=1.0.7' do |_example|
+    it 'is used for M0104 response timestamp' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
@@ -203,8 +211,8 @@ RSpec.describe Site::Tlc::Clock do
             max_diff = timeout
             diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
             diff = diff.round
-            expect(diff.abs).to be <= max_diff,
-                                "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s"
+            assert(diff.abs <= max_diff,
+                   "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s")
           end
         end
       end
@@ -221,7 +229,8 @@ RSpec.describe Site::Tlc::Clock do
     # 4. Then we should receive an alarm
     # 5. And the alarm timestamp should be close to the time set the clock to
 
-    it 'is used for alarm timestamp', :programming, sxl: '>=1.0.7' do |_example|
+    it 'is used for alarm timestamp' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do # set clock
@@ -230,8 +239,8 @@ RSpec.describe Site::Tlc::Clock do
               max_diff = Validator.get_config('timeouts',
                                               'command_response') + Validator.get_config('timeouts', 'status_response')
               diff = alarm_time - clock
-              expect(diff.round.abs).to be <= max_diff,
-                                        "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s"
+              assert(diff.round.abs <= max_diff,
+                     "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s")
             end
           end
         end
@@ -245,7 +254,8 @@ RSpec.describe Site::Tlc::Clock do
     # 3. Wait for Watchdog
     # 4. Compare set_clock and alarm response timestamp
     # 5. Expect the difference to be within max_diff
-    it 'is used for watchdog timestamp', sxl: '>=1.0.7' do |_example|
+    it 'is used for watchdog timestamp' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |task, _supervisor, site|
         site.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
           with_clock_set site, clock do
@@ -257,8 +267,8 @@ RSpec.describe Site::Tlc::Clock do
                                             'command_response') + Validator.get_config('timeouts', 'status_response')
             diff = Time.parse(collector.messages.first.attributes['wTs']) - clock
             diff = diff.round
-            expect(diff.abs).to be <= max_diff,
-                                "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s"
+            assert(diff.abs <= max_diff,
+                   "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s")
           end
         end
       end

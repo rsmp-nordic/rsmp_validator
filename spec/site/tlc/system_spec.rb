@@ -1,4 +1,4 @@
-RSpec.describe Site::Tlc::System do
+describe 'Site::Tlc::System' do
   include Validator::Helpers::Commands
   include Validator::Helpers::Status
   include Validator::Helpers::Security
@@ -9,7 +9,8 @@ RSpec.describe Site::Tlc::System do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'operator logged in/out of OP-panel is read with S0091', sxl: '>=1.0.7' do |_example|
+    it 'operator logged in/out of OP-panel is read with S0091' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = if RSMP::Proxy.version_meets_requirement?(site.sxl_version, '>=1.1')
                         { S0091: [:user] }
@@ -25,7 +26,8 @@ RSpec.describe Site::Tlc::System do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'operator logged in/out of web-interface is read with S0092', sxl: '>=1.0.7' do |_example|
+    it 'operator logged in/out of web-interface is read with S0092' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         status_list = if RSMP::Proxy.version_meets_requirement?(site.sxl_version, '>=1.1')
                         { S0092: [:user] }
@@ -41,7 +43,8 @@ RSpec.describe Site::Tlc::System do
     # 1. Given the site is connected
     # 2. Request status
     # 3. Expect status response before timeout
-    specify 'version is read with S0095', sxl: '>=1.0.7' do |_example|
+    it 'version is read with S0095' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         request_status_and_confirm site, 'version of traffic controller',
                                    { S0095: [:status] }
@@ -53,7 +56,8 @@ RSpec.describe Site::Tlc::System do
     # 3. Wait for status = true
     # 4. Send control command to setsecuritycode_level
     # 5. Wait for status = true
-    specify 'security code is set with M0103', sxl: '>=1.0.7' do |_example|
+    it 'security code is set with M0103' do
+      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
       Validator::SiteTester.connected do |_task, _supervisor, site|
         code1 = Validator.get_config('secrets', 'security_codes', 1)
         code2 = Validator.get_config('secrets', 'security_codes', 2)
@@ -68,9 +72,10 @@ RSpec.describe Site::Tlc::System do
     # 1. Given the site is connected
     # 2. When we send a M0008 command with incorrect security codes
     # 3. Then we should received a NotAck
-    specify 'security code is rejected when incorrect', sxl: '>=1.1' do |_example|
+    it 'security code is rejected when incorrect' do
+      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
       Validator::SiteTester.connected do |_task, _supervisor, site|
-        expect { wrong_security_code(site) }.to raise_error(RSMP::MessageRejected)
+        expect { wrong_security_code(site) }.to raise_exception(RSMP::MessageRejected)
       end
     end
   end
