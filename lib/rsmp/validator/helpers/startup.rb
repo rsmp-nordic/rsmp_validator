@@ -75,37 +75,37 @@ module Validator
         end
       end
 
-      def wait_normal_control(site, timeout: Validator.get_config('timeouts', 'startup_sequence'))
-        site.wait_for_normal_control(timeout: timeout)
+      def wait_normal_control(site_proxy, timeout: Validator.get_config('timeouts', 'startup_sequence'))
+        site_proxy.wait_for_normal_control(timeout: timeout)
       end
 
-      def verify_startup_sequence(task, site)
+      def verify_startup_sequence(site_proxy)
         status_list = [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus' }]
-        subscribe_list, unsubscribe_list = build_subscribe_lists(site, status_list)
+        subscribe_list, unsubscribe_list = build_subscribe_lists(site_proxy, status_list)
         component = Validator.get_config('main_component')
         timeout = Validator.get_config('timeouts', 'startup_sequence')
-        collector = RSMP::StatusCollector.new site, status_list, timeout: timeout
+        collector = RSMP::StatusCollector.new site_proxy, status_list, timeout: timeout
         sequencer = SignalGroupSequence.new Validator.get_config('startup_sequence')
-        collector_task = start_sequence_collector(task, collector, sequencer)
+        collector_task = start_sequence_collector(collector, sequencer)
         yield
-        site.subscribe_to_status component, subscribe_list
+        site_proxy.subscribe_to_status component, subscribe_list
         handle_startup_sequence_result(collector_task.wait, sequencer, collector, timeout)
-        wait_for_status(site, 'control mode to be startup',
+        wait_for_status(site_proxy, 'control mode to be startup',
                         [{ 'sCI' => 'S0020', 'n' => 'controlmode', 's' => 'control' }])
       ensure
-        site.unsubscribe_to_status component, unsubscribe_list
+        site_proxy.unsubscribe_to_status component, unsubscribe_list
       end
 
       private
 
-      def build_subscribe_lists(site, status_list)
+      def build_subscribe_lists(site_proxy, status_list)
         subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt' => 0.to_s }
-        subscribe_list.map! { |item| item.merge!('sOc' => true) } if site.use_soc?
+        subscribe_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
         [subscribe_list, convert_status_list(status_list)]
       end
 
-      def start_sequence_collector(task, collector, sequencer)
-        task.async do
+      def start_sequence_collector(collector, sequencer)
+        Async::Task.current.async do
           log 'Verifying startup sequence'
           collector.collect do |_message, item|
             next unless item

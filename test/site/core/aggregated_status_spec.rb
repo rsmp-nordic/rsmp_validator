@@ -8,10 +8,9 @@ describe 'Site::Core' do
     # 2. When we request aggregated status
     # 3. Then we should receive an aggregated status
     it 'can be requested' do
-      skip 'requires core >= 3.1.5' unless Validator.core_matches?('>=3.1.5')
-      Validator::SiteTester.connected do |_task, _supervisor, site|
+      with_site(:connected, core: '>=3.1.5') do |site_proxy|
         log 'Request aggregated status'
-        site.request_aggregated_status Validator.get_config('main_component'), collect!: {
+        site_proxy.request_aggregated_status Validator.get_config('main_component'), collect!: {
           timeout: Validator.get_config('timeouts', 'status_response')
         }
       end
@@ -24,17 +23,16 @@ describe 'Site::Core' do
     # 2. When we receive an aggregated status
     # 3. Then fP and fS should be null
     it 'uses null for functional position/state' do
-      skip 'requires sxl >= 1.1' unless Validator.sxl_matches?('>=1.1')
-      Validator::SiteTester.isolated(
+      with_site(:isolated, sxl: '>=1.1',
         'collect' => {
           filter: RSMP::Filter.new(type: 'AggregatedStatus'),
           timeout: Validator.get_config('timeouts', 'ready'),
           num: 1,
           ingoing: true
         }
-      ) do |task, _supervisor, site_proxy|
+      ) do |site_proxy|
         collector = site_proxy.collector
-        collector.use_task task
+        collector.use_task Async::Task.current
         collector.wait!
         aggregated_status = site_proxy.collector.messages.first
 

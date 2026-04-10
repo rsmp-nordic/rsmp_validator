@@ -12,12 +12,12 @@ module Validator
         end.flatten
       end
 
-      def wait_for_status(site, description, status_list, **options)
+      def wait_for_status(site_proxy, description, status_list, **options)
         update_rate = options.fetch(:update_rate, 0)
         timeout = options.fetch(:timeout, Validator.get_config('timeouts', 'command'))
         component_id = options.fetch(:component_id, Validator.get_config('main_component'))
         log "Wait for #{description}"
-        site.wait_for_status(
+        site_proxy.wait_for_status(
           description,
           convert_status_list(status_list),
           update_rate: update_rate,
@@ -26,10 +26,10 @@ module Validator
         )
       end
 
-      def request_status_and_confirm(site, description, status_list,
+      def request_status_and_confirm(site_proxy, description, status_list,
                                      component = Validator.get_config('main_component'))
         log "Read #{description}"
-        site.request_status component, convert_status_list(status_list), collect!: {
+        site_proxy.request_status component, convert_status_list(status_list), collect!: {
           timeout: Validator.get_config('timeouts', 'status_response')
         }
       end

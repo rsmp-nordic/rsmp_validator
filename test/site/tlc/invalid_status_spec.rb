@@ -2,19 +2,18 @@ describe 'Site::Tlc::InvalidStatus' do
   include Validator::Helpers::Status
 
   describe 'when receiving a status request with an unknown component id' do
-    # Verify that site reponds with q=undefined when receiving a
+    # Verify that site_proxy reponds with q=undefined when receiving a
     # status request with an unknown component id.
     #
-    # 1. Given the site is connected
+    # 1. Given the site_proxy is connected
     # 2. When we send a status request with an unknown component id
-    # 3. Then the site should return a status response with q=undefined
+    # 3. Then the site_proxy should return a status response with q=undefined
 
     it 'return a command response with age=undefined' do
-      skip 'requires core >= 3.1.3' unless Validator.core_matches?('>=3.1.3')
-      Validator::SiteTester.connected do |_task, _supervisor, site|
+      with_site(:connected, core: '>=3.1.3') do |site_proxy|
         log 'Sending M0001 with bad component id'
         status_list = convert_status_list(S0001: [:signalgroupstatus])
-        result = site.request_status(
+        result = site_proxy.request_status(
           'bad',
           status_list,
           collect: { timeout: Validator.get_config('timeouts', 'status_response') },
@@ -36,17 +35,17 @@ describe 'Site::Tlc::InvalidStatus' do
   end
 
   describe 'when receiving a status request for an unknown status' do
-    # Verify that site returns NotAck when receiving
+    # Verify that site_proxy returns NotAck when receiving
     # a request for an unknown status
     #
-    # 1. Given the site is connected
+    # 1. Given the site_proxy is connected
     # 2. When we send a non-existing S000 status request
-    # 3. Then the site should return NotAck
+    # 3. Then the site_proxy should return NotAck
     it 'returns NotAck' do
-      Validator::SiteTester.connected do |_task, _supervisor, site|
+      with_site(:connected) do |site_proxy|
         log 'Requesting non-existing status S0000'
         status_list = convert_status_list(S0000: [:status])
-        result = site.request_status(
+        result = site_proxy.request_status(
           Validator.get_config('main_component'), status_list,
           collect: { timeout: Validator.get_config('timeouts', 'status_response') },
           validate: false
@@ -60,17 +59,17 @@ describe 'Site::Tlc::InvalidStatus' do
   end
 
   describe 'when receiving a status request with an invalid status name' do
-    # Verify that site returns NotAck when receiving
+    # Verify that site_proxy returns NotAck when receiving
     # a request for an unknown status
     #
-    # 1. Given the site is connected
+    # 1. Given the site_proxy is connected
     # 2. When we send an S0001 request with the stauts name 'bad'
-    # 3. Then the site should return NotAck
+    # 3. Then the site_proxy should return NotAck
     it 'returns NotAck' do
-      Validator::SiteTester.connected do |_task, _supervisor, site|
+      with_site(:connected) do |site_proxy|
         log 'Requesting S0001 with non-existing status name'
         status_list = convert_status_list(S0001: [:bad])
-        result = site.request_status(
+        result = site_proxy.request_status(
           Validator.get_config('main_component'), status_list,
           collect: { timeout: Validator.get_config('timeouts', 'status_response') },
           validate: false

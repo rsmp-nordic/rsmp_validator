@@ -28,15 +28,14 @@ describe 'Site::Tlc::Alarm' do
     # 5. Then the alarm issue should become inactive, with a timestamp close to now
 
     it 'Alarm A0302 is raised when input is activated' do
-      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
-      Validator::SiteTester.connected do |task, _supervisor, site|
+      with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
         alarm_code_id = 'A0302'
         def verify_timestamp(alarm, duration = 1.minute)
           alarm_time = Time.parse(alarm.attributes['aTs'])
           expect(alarm_time).to be_within(duration).of(Time.now.utc)
         end
         # Raise alarm by activating input
-        deactivated, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id|
+        deactivated, component_id = with_alarm_activated(site_proxy, alarm_code_id) do |alarm, component_id|
           verify_timestamp alarm
           log "Alarm #{alarm_code_id} is now Active on component #{component_id}"
         end
@@ -58,13 +57,12 @@ describe 'Site::Tlc::Alarm' do
     # 5. Then we should receive an acknowledged alarm issue
 
     it 'A0302 can be acknowledged' do
-      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
-      Validator::SiteTester.connected do |task, _supervisor, site|
+      with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
         alarm_code_id = 'A0302' # what alarm to expect
         timeout = Validator.get_config('timeouts', 'alarm')
 
         log "Activating alarm #{alarm_code_id}"
-        with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id| # raise alarm, by activating input
+        with_alarm_activated(site_proxy, alarm_code_id) do |alarm, component_id| # raise alarm, by activating input
           log "Alarm #{alarm_code_id} is now active on component #{component_id}"
 
           # verify timestamp
@@ -79,8 +77,8 @@ describe 'Site::Tlc::Alarm' do
           # test acknowledge and confirm
           log "Acknowledge alarm #{alarm_code_id}"
 
-          collect_task = task.async do
-            RSMP::AlarmCollector.new(site,
+          collect_task = Async::Task.current.async do
+            RSMP::AlarmCollector.new(site_proxy,
                                      num: 1,
                                      matcher: {
                                        'aCId' => alarm_code_id,
@@ -91,9 +89,9 @@ describe 'Site::Tlc::Alarm' do
                                      timeout: timeout).collect!
           end
 
-          site.send_message RSMP::AlarmAcknowledge.new(
+          site_proxy.send_message RSMP::AlarmAcknowledge.new(
             'cId' => component_id,
-            'aTs' => site.clock.to_s,
+            'aTs' => site_proxy.clock.to_s,
             'aCId' => alarm_code_id
           )
           messages = collect_task.wait
@@ -113,24 +111,24 @@ describe 'Site::Tlc::Alarm' do
     # 6. Then we should receive an alarm resumed message
 
     it 'A0302 can be suspended and resumed' do
-      Validator::SiteTester.connected do |task, _supervisor, site|
+      with_site(:connected) do |site_proxy|
         alarm_code_id = 'A0302'
         _, component_id = find_alarm_programming(alarm_code_id)
 
         # first resume alarm to make sure something happens when we suspend
-        site.resume_alarm task, c_id: component_id, a_c_id: alarm_code_id, collect: false
+        site_proxy.resume_alarm Async::Task.current, c_id: component_id, a_c_id: alarm_code_id, collect: false
 
         begin
           # suspend alarm
-          _, response = site.suspend_alarm task, c_id: component_id, a_c_id: alarm_code_id, collect: true
+          _, response = site_proxy.suspend_alarm Async::Task.current, c_id: component_id, a_c_id: alarm_code_id, collect: true
           expect(response).to be_a(RSMP::AlarmSuspended)
 
           # resume alarm
-          _, response = site.resume_alarm task, c_id: component_id, a_c_id: alarm_code_id, collect: true
+          _, response = site_proxy.resume_alarm Async::Task.current, c_id: component_id, a_c_id: alarm_code_id, collect: true
           expect(response).to be_a(RSMP::AlarmResumed)
         ensure
           # always end with resuming alarm
-          site.resume_alarm task, c_id: component_id, a_c_id: alarm_code_id, collect: false
+          site_proxy.resume_alarm Async::Task.current, c_id: component_id, a_c_id: alarm_code_id, collect: false
         end
       end
     end

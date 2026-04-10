@@ -4,7 +4,7 @@ module Validator
     module Security
       include Commands
 
-      def wrong_security_code(site)
+      def wrong_security_code(site_proxy)
         log 'Try to force detector logic with wrong security code'
         command_list = build_command_list :M0008, :setForceDetectorLogic, {
           securityCode: '1111',
@@ -12,7 +12,7 @@ module Validator
           mode: 'True'
         }
         component = Validator.get_config('components', 'detector_logic').keys[0]
-        site.send_command component, command_list, collect!: {
+        site_proxy.send_command component, command_list, collect!: {
           timeout: Validator.get_config('timeouts', 'command_response')
         }
       end

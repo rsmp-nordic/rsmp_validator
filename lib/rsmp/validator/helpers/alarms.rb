@@ -4,49 +4,49 @@ module Validator
     module Alarms
       include Input
 
-      def with_alarm_activated(task, site, alarm_code_id, initial_deactivation: true, &block)
+      def with_alarm_activated(site_proxy, alarm_code_id, initial_deactivation: true, &block)
         input_nr, component_id = find_alarm_programming(alarm_code_id)
         component_id ||= Validator.get_config('main_component')
-        force_input_and_confirm site, input: input_nr, value: 'False' if initial_deactivation
-        run_alarm_lifecycle(task, site, alarm_code_id, component_id, input_nr, &block)
+        force_input_and_confirm site_proxy, input: input_nr, value: 'False' if initial_deactivation
+        run_alarm_lifecycle(site_proxy, alarm_code_id, component_id, input_nr, &block)
       end
 
       private
 
-      def run_alarm_lifecycle(task, site, alarm_code_id, component_id, input_nr)
-        specialization, alarm_active, alarm_inactive = build_alarm_matchers(site)
+      def run_alarm_lifecycle(site_proxy, alarm_code_id, component_id, input_nr)
+        specialization, alarm_active, alarm_inactive = build_alarm_matchers(site_proxy)
         timeout = Validator.get_config('timeouts', 'alarm')
         state = false
         begin
           matcher = { 'cId' => component_id, 'aCId' => alarm_code_id,
                       'aSp' => specialization, 'aS' => alarm_active }
-          collect_task = start_alarm_collector(task, site, matcher, timeout)
-          force_input_and_confirm site, input: input_nr, value: 'True'
+          collect_task = start_alarm_collector(site_proxy, matcher, timeout)
+          force_input_and_confirm site_proxy, input: input_nr, value: 'True'
           state = true
           yield collect_task.wait, component_id
 
           matcher = { 'cId' => component_id, 'aCId' => alarm_code_id,
                       'aSp' => /Issue/i, 'aS' => alarm_inactive }
-          collect_task = start_alarm_collector(task, site, matcher, timeout)
-          force_input_and_confirm site, input: input_nr, value: 'False'
+          collect_task = start_alarm_collector(site_proxy, matcher, timeout)
+          force_input_and_confirm site_proxy, input: input_nr, value: 'False'
           state = false
           [collect_task.wait, component_id]
         ensure
-          force_input_and_confirm site, input: input_nr, value: 'False' if state == true
+          force_input_and_confirm site_proxy, input: input_nr, value: 'False' if state == true
         end
       end
 
-      def build_alarm_matchers(site)
-        if RSMP::Proxy.version_meets_requirement? site.core_version, '>=3.2'
+      def build_alarm_matchers(site_proxy)
+        if RSMP::Proxy.version_meets_requirement? site_proxy.core_version, '>=3.2'
           [/Issue/, /Active/, /inActive/]
         else
           [/issue/i, /active/i, /inactive/i]
         end
       end
 
-      def start_alarm_collector(task, site, matcher, timeout)
-        task.async do
-          collector = RSMP::AlarmCollector.new(site, num: 1, matcher: matcher, timeout: timeout)
+      def start_alarm_collector(site_proxy, matcher, timeout)
+        Async::Task.current.async do
+          collector = RSMP::AlarmCollector.new(site_proxy, num: 1, matcher: matcher, timeout: timeout)
           collector.collect!
           collector.messages.first
         end

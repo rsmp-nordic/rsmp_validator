@@ -3,8 +3,8 @@ describe 'Supervisor' do
   describe 'Aggregated Status' do
     # Validate that the supervisor responds correctly when we send an aggregated status message
     it 'receives aggregated status' do
-      Validator::SupervisorTester.connected do |_task, site, _supervisor_proxy|
-        component = site.find_component Validator.get_config('main_component')
+      with_supervisor(:connected) do |supervisor_proxy|
+        component = supervisor_proxy.node.find_component Validator.get_config('main_component')
 
         # setting ':collect' will cause set_aggregated_status() to wait for the
         # outgoing aggregated status is acknowledged

@@ -14,10 +14,9 @@ describe 'Site::Core' do
     # 2. When our supervisor does not acknowledge watchdogs
     # 3. Then the site should disconnect
     it 'is closed if watchdogs are not acknowledged' do
-      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
-      timeout = Validator.get_config('timeouts', 'disconnect')
-      Validator::SiteTester.isolated do |_task, supervisor, site_proxy|
-        supervisor.ignore_errors RSMP::DisconnectError do
+      with_site(:isolated, sxl: '>=1.0.7') do |site_proxy|
+        timeout = Validator.get_config('timeouts', 'disconnect')
+        site_proxy.node.ignore_errors RSMP::DisconnectError do
           log 'Disabling watchdog acknowledgements, site should disconnect'
           def site_proxy.acknowledge(original)
             if original.is_a? RSMP::Watchdog
@@ -37,19 +36,18 @@ describe 'Site::Core' do
     # 2. When our supervisor stops sending watchdogs
     # 3. Then the site should not disconnect
     it 'is not closed if watchdogs are not received' do
-      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
-      Validator::SiteTester.isolated do |task, _supervisor, site|
+      with_site(:isolated, sxl: '>=1.0.7') do |site_proxy|
         timeout = Validator.get_config('timeouts', 'disconnect')
 
-        wait_task = task.async do
-          site.wait_for_state :disconnected, timeout: timeout
+        wait_task = Async::Task.current.async do
+          site_proxy.wait_for_state :disconnected, timeout: timeout
           raise RSMP::DisconnectError
         rescue RSMP::TimeoutError
           # ok, no disconnect happened
         end
 
         log 'Stop sending watchdogs, site should not disconnect'
-        site.with_watchdog_disabled do
+        site_proxy.with_watchdog_disabled do
           wait_task.wait
         end
       end
