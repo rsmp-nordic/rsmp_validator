@@ -1,3 +1,13 @@
+PATH
+  remote: .
+  specs:
+    rsmp_validator (0.1.0)
+      activesupport
+      colorize
+      rsmp
+      sus
+      sus-fixtures-async
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -114,6 +124,7 @@ DEPENDENCIES
   colorize
   rake
   rsmp
+  rsmp_validator!
   rubocop
   sus
   sus-fixtures-async
@@ -154,6 +165,7 @@ CHECKSUMS
   regexp_parser (2.12.0) sha256=35a916a1d63190ab5c9009457136ae5f3c0c7512d60291d0d1378ba18ce08ebb
   rsmp (0.41.0) sha256=365851f7b40fbe83864c57c197733b21ea8bc0efdac819f51b9cd1c3be05defc
   rsmp_schema (0.10.1) sha256=c2c4cb8b27a4a611fb4bc896931974c565a3a823ec1487d4a2d3ec4a72bd62cf
+  rsmp_validator (0.1.0)
   rubocop (1.86.0) sha256=4ff1186fe16ebe9baff5e7aad66bb0ad4cabf5cdcd419f773146dbba2565d186
   rubocop-ast (1.49.1) sha256=4412f3ee70f6fe4546cc489548e0f6fcf76cafcfa80fa03af67098ffed755035
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33

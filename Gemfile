@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gemspec
+
 # runtime dependencies
 gem 'activesupport'
 gem 'colorize'
