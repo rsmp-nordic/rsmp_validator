@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gem 'activesupport'
 gem 'colorize'
 gem 'rsmp'
-gem 'sus', path: '../sus'
+gem 'sus'
 gem 'sus-fixtures-async'
 
 group :development do
