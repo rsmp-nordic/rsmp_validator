@@ -14,7 +14,11 @@ module Validator
       VALID_STATES = %i[connected reconnected isolated disconnected].freeze
 
       def with_site(state, sxl: nil, core: nil, **opts, &block)
-        raise ArgumentError, "Unknown state #{state.inspect}, must be one of #{VALID_STATES}" unless VALID_STATES.include?(state)
+        unless VALID_STATES.include?(state)
+          raise ArgumentError,
+                "Unknown state #{state.inspect}, must be one of #{VALID_STATES}"
+        end
+
         skip "requires sxl #{sxl}" unless sxl.nil? || Validator.sxl_matches?(sxl)
         skip "requires core #{core}" unless core.nil? || Validator.core_matches?(core)
         if state == :disconnected
@@ -27,7 +31,11 @@ module Validator
       end
 
       def with_supervisor(state, sxl: nil, core: nil, **opts, &block)
-        raise ArgumentError, "Unknown state #{state.inspect}, must be one of #{VALID_STATES}" unless VALID_STATES.include?(state)
+        unless VALID_STATES.include?(state)
+          raise ArgumentError,
+                "Unknown state #{state.inspect}, must be one of #{VALID_STATES}"
+        end
+
         skip "requires sxl #{sxl}" unless sxl.nil? || Validator.sxl_matches?(sxl)
         skip "requires core #{core}" unless core.nil? || Validator.core_matches?(core)
         if state == :disconnected

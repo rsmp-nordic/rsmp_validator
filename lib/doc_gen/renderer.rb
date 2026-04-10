@@ -56,12 +56,12 @@ module DocGen
     # Jekyll frontmatter block.
     def frontmatter(ctx)
       fields = {
-        layout:       'page',
-        title:        DocGen.humanize(ctx.name),
-        parmalink:    DocGen.slugify(ctx.full_name),
+        layout: 'page',
+        title: DocGen.humanize(ctx.name),
+        parmalink: DocGen.slugify(ctx.full_name),
         has_children: ctx.subcontexts.any?,
-        has_toc:      false,
-        parent:       parent_title(ctx)
+        has_toc: false,
+        parent: parent_title(ctx)
       }
       grand = grand_parent_title(ctx)
       fields[:grand_parent] = grand if grand
@@ -109,13 +109,13 @@ module DocGen
 
       parts = [heading]
       parts << "\n\n#{docstring}" unless docstring.empty?
-      parts << "\n\n<details markdown=\"block\">\n" \
-               "  <summary>\n" \
-               "     View Source\n" \
-               "  </summary>\n" \
+      parts << "\n\n<details markdown=\"block\">\n  " \
+               "<summary>\n     " \
+               "View Source\n  " \
+               "</summary>\n" \
                "```ruby\n#{src}\n```\n" \
-               "</details>"
-      parts.join + "\n"
+               '</details>'
+      "#{parts.join}\n"
     end
 
     # De-indent source by the leading whitespace of the last line (YARD convention).

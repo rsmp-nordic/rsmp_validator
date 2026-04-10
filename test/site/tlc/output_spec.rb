@@ -11,7 +11,7 @@ describe 'Site::Tlc::Output' do
   it 'is read with S0004 with extended output status' do
     with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
       request_status_and_confirm site_proxy, 'output status',
-                                  { S0004: %i[outputstatus extendedoutputstatus] }
+                                 { S0004: %i[outputstatus extendedoutputstatus] }
     end
   end
 
@@ -23,7 +23,7 @@ describe 'Site::Tlc::Output' do
   it 'is read with S0004' do
     with_site(:connected, sxl: ['>=1.2']) do |site_proxy|
       request_status_and_confirm site_proxy, 'output status',
-                                  { S0004: [:outputstatus] }
+                                 { S0004: [:outputstatus] }
     end
   end
 
@@ -34,7 +34,7 @@ describe 'Site::Tlc::Output' do
   it 'forcing is read with S0030' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
       request_status_and_confirm site_proxy, 'forced output status',
-                                  { S0030: [:status] }
+                                 { S0030: [:status] }
     end
   end
 
@@ -55,4 +55,3 @@ describe 'Site::Tlc::Output' do
     end
   end
 end
-

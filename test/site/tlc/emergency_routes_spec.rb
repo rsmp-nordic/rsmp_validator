@@ -10,7 +10,7 @@ describe 'Site::Tlc::EmergencyRoutes' do
   it 'emergency route is read with S0006' do
     with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
       request_status_and_confirm site_proxy, 'emergency route status',
-                                  { S0006: %i[status emergencystage] }
+                                 { S0006: %i[status emergencystage] }
     end
   end
 
@@ -23,7 +23,7 @@ describe 'Site::Tlc::EmergencyRoutes' do
     skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
     with_site(:connected, sxl: '>=1.2') do |site_proxy|
       request_status_and_confirm site_proxy, 'emergency route status',
-                                  { S0035: [:emergencyroutes] }
+                                 { S0035: [:emergencyroutes] }
     end
   end
 
@@ -71,14 +71,18 @@ describe 'Site::Tlc::EmergencyRoutes' do
     skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
     skip 'requires sxl >= 1.2' unless Validator.sxl_matches?('>=1.2')
     def enable_routes(site_proxy, emergency_routes)
-      emergency_routes.each { |emergency_route| site_proxy.set_emergency_route(route: emergency_route.to_s, active: true) }
+      emergency_routes.each do |emergency_route|
+        site_proxy.set_emergency_route(route: emergency_route.to_s, active: true)
+      end
       routes = emergency_routes.map { |i| { 'id' => i.to_s } }
       wait_for_status(site_proxy, "emergency routes #{emergency_routes} to be enabled",
                       [{ 'sCI' => 'S0035', 'n' => 'emergencyroutes', 's' => routes }])
     end
 
     def disable_routes(site_proxy, emergency_routes)
-      emergency_routes.each { |emergency_route| site_proxy.set_emergency_route(route: emergency_route.to_s, active: false) }
+      emergency_routes.each do |emergency_route|
+        site_proxy.set_emergency_route(route: emergency_route.to_s, active: false)
+      end
       routes = []
       wait_for_status(site_proxy, 'all emergency routes to be disabled',
                       [{ 'sCI' => 'S0035', 'n' => 'emergencyroutes', 's' => routes }])

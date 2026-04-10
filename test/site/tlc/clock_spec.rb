@@ -115,10 +115,10 @@ describe 'Site::Tlc::Clock' do
           ] }
 
           result = site_proxy.request_status Validator.get_config('main_component'),
-                                       convert_status_list(status_list),
-                                       collect!: {
-                                         timeout: Validator.get_config('timeouts', 'status_response')
-                                       }
+                                             convert_status_list(status_list),
+                                             collect!: {
+                                               timeout: Validator.get_config('timeouts', 'status_response')
+                                             }
           collector = result[:collector]
 
           max_diff = Validator.get_config('timeouts',
@@ -173,7 +173,7 @@ describe 'Site::Tlc::Clock' do
         with_clock_set site_proxy, clock do
           timeout = Validator.get_config('timeouts', 'command_response')
           result = site_proxy.set_functional_position('NormalControl',
-                                                options: { collect!: { timeout: timeout } })
+                                                      options: { collect!: { timeout: timeout } })
           collector = result[:collector]
           max_diff = timeout * 2
           diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
@@ -198,7 +198,7 @@ describe 'Site::Tlc::Clock' do
         with_clock_set site_proxy, clock do
           timeout = Validator.get_config('timeouts', 'command_response')
           result = site_proxy.set_functional_position('NormalControl',
-                                                options: { collect!: { timeout: timeout } })
+                                                      options: { collect!: { timeout: timeout } })
           collector = result[:collector]
           max_diff = timeout
           diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
@@ -251,7 +251,7 @@ describe 'Site::Tlc::Clock' do
         with_clock_set site_proxy, clock do
           log 'Checking watchdog timestamp'
           collector = RSMP::Collector.new site_proxy, task: Async::Task.current, type: 'Watchdog', num: 1,
-                                                timeout: Validator.get_config('timeouts', 'watchdog')
+                                                      timeout: Validator.get_config('timeouts', 'watchdog')
           collector.collect!
           max_diff = Validator.get_config('timeouts',
                                           'command_response') + Validator.get_config('timeouts', 'status_response')

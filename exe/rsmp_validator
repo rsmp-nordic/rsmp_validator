@@ -27,8 +27,8 @@ validator_config_class = Class.new(Sus::Config) do
   attr_accessor :log_to_stdout, :log_path
 
   def self.path(root)
-    path = ::File.join(root, 'config/validator.rb')
-    ::File.exist?(path) ? path : nil
+    path = File.join(root, 'config/validator.rb')
+    File.exist?(path) ? path : nil
   end
 end
 

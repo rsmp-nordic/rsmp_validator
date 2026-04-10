@@ -17,12 +17,12 @@ module DocGen
   Context = Struct.new(:name, :docstring, :children, :file, :line, :parent, keyword_init: true) do
     # Direct child specs (it/specify blocks).
     def specs
-      children.select { |c| c.is_a?(Spec) }
+      children.grep(Spec)
     end
 
     # Direct child contexts (nested describe blocks).
     def subcontexts
-      children.select { |c| c.is_a?(Context) }
+      children.grep(Context)
     end
 
     # Full display name, dropping the root component when nested (matches YARD behaviour).
@@ -53,7 +53,7 @@ module DocGen
         parts.unshift(DocGen.slugify(ctx.name))
         ctx = ctx.parent
       end
-      parts.join('/') + '.md'
+      "#{parts.join('/')}.md"
     end
   end
 
@@ -112,7 +112,7 @@ module DocGen
     # Stub contexts (plain 'Site' or 'Supervisor' with empty inner describes) have
     # their docstrings merged into the tree and empty children dropped.
     def build_namespace_tree(raw_contexts)
-      node_map = {}  # 'Site::Tlc' => Context node
+      node_map = {} # 'Site::Tlc' => Context node
 
       # Process namespaced contexts first so intermediate nodes exist when stubs run
       sorted = raw_contexts.sort_by { |ctx| ctx.name.include?('::') ? 0 : 1 }
@@ -125,7 +125,7 @@ module DocGen
           path = segments[0..i].join('::')
           next if node_map.key?(path)
 
-          parent_path = i > 0 ? segments[0...i].join('::') : nil
+          parent_path = i.positive? ? segments[0...i].join('::') : nil
           parent_node = parent_path ? node_map[parent_path] : nil
 
           node = Context.new(
@@ -246,7 +246,6 @@ module DocGen
       case first
       when Prism::StringNode then first.unescaped
       when Prism::SymbolNode then first.unescaped
-      else nil
       end
     end
 

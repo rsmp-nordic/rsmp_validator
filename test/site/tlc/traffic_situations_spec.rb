@@ -31,7 +31,8 @@ describe 'Site::Tlc::TrafficSituations' do
     with_site(:connected) do |site_proxy|
       situations.each do |traffic_situation|
         site_proxy.set_traffic_situation(traffic_situation.to_s,
-                                   options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } })
+                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
+                                                                                              'command') } })
       end
     ensure
       site_proxy.unset_traffic_situation

@@ -5,12 +5,12 @@ module Validator
     def setup(sus_config)
       @verbose = sus_config.verbose?
       @log_stream = if sus_config.respond_to?(:log_path) && sus_config.log_path
-        File.open(sus_config.log_path, 'w')
-      elsif sus_config.respond_to?(:log_to_stdout) && sus_config.log_to_stdout
-        $stdout
-      else
-        File.open(File::NULL, 'w')
-      end
+                      File.open(sus_config.log_path, 'w')
+                    elsif sus_config.respond_to?(:log_to_stdout) && sus_config.log_to_stdout
+                      $stdout
+                    else
+                      File.open(File::NULL, 'w')
+                    end
       determine_mode sus_config
       initialize_logging log_settings: {} # minimal init so log() works during config loading
       load_tester_config
