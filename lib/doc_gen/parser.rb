@@ -81,6 +81,18 @@ module DocGen
         .downcase
   end
 
+  # Convert a raw describe name to a human-readable title.
+  # Takes the last :: segment and splits CamelCase into words.
+  # Examples:
+  #   'Site::Tlc::DetectorLogics' => 'Detector Logics'
+  #   'Site::Core'                => 'Core'
+  #   'Detector Logic'            => 'Detector Logic'  (already readable)
+  def self.humanize(name)
+    segment = name.split('::').last || name
+    segment.gsub(/([a-z\d])([A-Z])/, '\1 \2')
+           .gsub(/([A-Z]+)([A-Z][a-z])/, '\1 \2')
+  end
+
   # Parses Ruby test files using Prism and builds a tree of Context and Spec objects.
   class Parser
     # Parse an array of file paths and return an array of root Context objects.
@@ -89,10 +101,75 @@ module DocGen
     end
 
     def parse_files(paths)
-      Array(paths).flat_map { |path| parse_file(path) }
+      raw = Array(paths).flat_map { |path| parse_file(path) }
+      build_namespace_tree(raw)
     end
 
     private
+
+    # Merge raw contexts into a tree by splitting their names on '::'.
+    # e.g. 'Site::Tlc::Alarm' becomes Site -> Tlc -> Alarm in the tree.
+    # Stub contexts (plain 'Site' or 'Supervisor' with empty inner describes) have
+    # their docstrings merged into the tree and empty children dropped.
+    def build_namespace_tree(raw_contexts)
+      node_map = {}  # 'Site::Tlc' => Context node
+
+      # Process namespaced contexts first so intermediate nodes exist when stubs run
+      sorted = raw_contexts.sort_by { |ctx| ctx.name.include?('::') ? 0 : 1 }
+
+      sorted.each do |raw|
+        segments = raw.name.split('::')
+
+        # Create or find each prefix node
+        segments.each_with_index do |seg, i|
+          path = segments[0..i].join('::')
+          next if node_map.key?(path)
+
+          parent_path = i > 0 ? segments[0...i].join('::') : nil
+          parent_node = parent_path ? node_map[parent_path] : nil
+
+          node = Context.new(
+            name: seg,
+            docstring: nil,
+            children: [],
+            file: raw.file,
+            line: raw.line,
+            parent: parent_node
+          )
+          node_map[path] = node
+          parent_node.children << node if parent_node
+        end
+
+        # Fill leaf node
+        leaf = node_map[raw.name]
+        leaf.docstring ||= raw.docstring
+
+        # Adopt children, merging namespace-matched children and dropping empty stubs
+        raw.children.each do |child|
+          if child.is_a?(Context)
+            existing = leaf.children.find { |c| c.is_a?(Context) && c.name == child.name }
+            if existing
+              # Merge docstring and adopt grandchildren for non-empty stubs
+              existing.docstring ||= child.docstring
+              child.children.each do |grandchild|
+                grandchild.parent = existing
+                existing.children << grandchild
+              end
+            elsif child.children.any?
+              # Non-empty literal child: add as-is
+              child.parent = leaf
+              leaf.children << child
+            end
+            # Empty unmatched literal child (YARD stub): silently drop
+          else
+            child.parent = leaf
+            leaf.children << child
+          end
+        end
+      end
+
+      node_map.values.select { |n| n.parent.nil? }
+    end
 
     def parse_file(path)
       source = File.read(path)

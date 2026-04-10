@@ -3,280 +3,278 @@ describe 'Site::Tlc::SignalPlans' do
   include Validator::Helpers::Commands
   include Validator::Helpers::SignalPlans
 
-  describe 'Signal Plan' do
-    # Verify status S0014 current time plan
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we request the status
-    # 3. We should receive a status response before timeout
-    it 'currently active is read with S0014' do
-      with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-        result = site_proxy.fetch_signal_plan(options: {
-                                          collect!: {
-                                            timeout: Validator.get_config('timeouts', 'status_response')
-                                          }
-                                        })
-        expect(result[:collector].messages.first).to be_a(RSMP::StatusResponse)
+  # Verify status S0014 current time plan
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we request the status
+  # 3. We should receive a status response before timeout
+  it 'currently active is read with S0014' do
+    with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+      result = site_proxy.fetch_signal_plan(options: {
+                                        collect!: {
+                                          timeout: Validator.get_config('timeouts', 'status_response')
+                                        }
+                                      })
+      expect(result[:collector].messages.first).to be_a(RSMP::StatusResponse)
+    end
+  end
+
+  # Verify that we change time plan (signal program)
+  # We try switching all programs configured
+  #
+  # 1. Given the site_proxy is connected
+  # 2. And there is a Validator.get_config('validator') with a time plan
+  # 3. When we send the command
+  # 3. We should receive a confirmative command response before timeout
+  it 'currently active is set with M0002' do
+    skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
+    plans = Validator.get_config('items', 'plans')
+    skip('No time plans configured') if plans.nil? || plans.empty?
+    with_site(:connected) do |site_proxy|
+      Validator.get_config('secrets', 'security_codes', 2)
+      plans.each do |plan|
+        result = site_proxy.set_timeplan(plan, options: {
+                                     collect!: {
+                                       timeout: Validator.get_config('timeouts', 'command_response')
+                                     }
+                                   })
+        expect(result[:collector].messages.first).to be_a(RSMP::CommandResponse)
+
+        status_result = site_proxy.fetch_signal_plan(options: {
+                                                 collect!: {
+                                                   timeout: Validator.get_config('timeouts', 'status_response')
+                                                 }
+                                               })
+        status_message = status_result[:collector].messages.first
+        expect(status_message).to be_a(RSMP::StatusResponse)
+        status_values = status_message.attributes['sS'].to_h { |item| [item['n'], item['s']] }
+        expect(status_values['status'].to_i).to eq(plan)
       end
     end
+  end
 
-    # Verify that we change time plan (signal program)
-    # We try switching all programs configured
-    #
-    # 1. Given the site_proxy is connected
-    # 2. And there is a Validator.get_config('validator') with a time plan
-    # 3. When we send the command
-    # 3. We should receive a confirmative command response before timeout
-    it 'currently active is set with M0002' do
-      skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
-      plans = Validator.get_config('items', 'plans')
-      skip('No time plans configured') if plans.nil? || plans.empty?
-      with_site(:connected) do |site_proxy|
-        Validator.get_config('secrets', 'security_codes', 2)
-        plans.each do |plan|
-          result = site_proxy.set_timeplan(plan, options: {
-                                       collect!: {
-                                         timeout: Validator.get_config('timeouts', 'command_response')
-                                       }
-                                     })
-          expect(result[:collector].messages.first).to be_a(RSMP::CommandResponse)
-
-          status_result = site_proxy.fetch_signal_plan(options: {
-                                                   collect!: {
-                                                     timeout: Validator.get_config('timeouts', 'status_response')
-                                                   }
-                                                 })
-          status_message = status_result[:collector].messages.first
-          expect(status_message).to be_a(RSMP::StatusResponse)
-          status_values = status_message.attributes['sS'].to_h { |item| [item['n'], item['s']] }
-          expect(status_values['status'].to_i).to eq(plan)
-        end
-      end
+  # Verify status S0018 number of time plans
+  # Deprecated from 1.2, use S0022 instead.
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we request the status
+  # 3. We should receive a status response before timeout
+  it 'list size is read with S0018' do
+    with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
+      request_status_and_confirm site_proxy, 'number of time plans',
+                                 { S0018: [:number] }
     end
+  end
 
-    # Verify status S0018 number of time plans
-    # Deprecated from 1.2, use S0022 instead.
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we request the status
-    # 3. We should receive a status response before timeout
-    it 'list size is read with S0018' do
-      with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
-        request_status_and_confirm site_proxy, 'number of time plans',
-                                   { S0018: [:number] }
-      end
+  # Verify status S0022 list of time plans
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we request the status
+  # 3. We should receive a status response before timeout
+  it 'list is read with S0022' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      request_status_and_confirm site_proxy, 'list of time plans',
+                                 { S0022: [:status] }
     end
+  end
 
-    # Verify status S0022 list of time plans
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we request the status
-    # 3. We should receive a status response before timeout
-    it 'list is read with S0022' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        request_status_and_confirm site_proxy, 'list of time plans',
-                                   { S0022: [:status] }
-      end
+  # Verify status S0026 week time table
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we request the status
+  # 3. We should receive a status response before timeout
+  it 'week table is read with S0026' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      request_status_and_confirm site_proxy, 'week time table',
+                                 { S0026: [:status] }
     end
+  end
 
-    # Verify status S0026 week time table
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we request the status
-    # 3. We should receive a status response before timeout
-    it 'week table is read with S0026' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        request_status_and_confirm site_proxy, 'week time table',
-                                   { S0026: [:status] }
-      end
+  # Verify that we can set week table with M0016
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we send the command
+  # 3. We should receive a confirmative command response before timeout
+  it 'week table is set with M0016' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      status = '0-1,6-2'
+      site_proxy.set_week_table(status)
     end
+  end
 
-    # Verify that we can set week table with M0016
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we send the command
-    # 3. We should receive a confirmative command response before timeout
-    it 'week table is set with M0016' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        status = '0-1,6-2'
-        site_proxy.set_week_table(status)
-      end
+  # Verify status S0027 time tables
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we request the status
+  # 3. We should receive a status response before timeout
+  it 'day table is read with S0027' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      request_status_and_confirm site_proxy, 'command table',
+                                 { S0027: [:status] }
     end
+  end
 
-    # Verify status S0027 time tables
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we request the status
-    # 3. We should receive a status response before timeout
-    it 'day table is read with S0027' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        request_status_and_confirm site_proxy, 'command table',
-                                   { S0027: [:status] }
-      end
+  # Verify that we can set day table with M0017
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we send the command
+  # 3. We should receive a confirmative command response before timeout
+  it 'day table is set with M0017' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      status = '12-1-12-59,1-0-23-12'
+      site_proxy.set_day_table(status)
     end
+  end
 
-    # Verify that we can set day table with M0017
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we send the command
-    # 3. We should receive a confirmative command response before timeout
-    it 'day table is set with M0017' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        status = '12-1-12-59,1-0-23-12'
-        site_proxy.set_day_table(status)
-      end
+  # Verify status S0097 version of traffic program
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we request the status
+  # 3. We should receive a status response before timeout
+  it 'version is read with S0097' do
+    with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
+      request_status_and_confirm site_proxy, 'version of traffic program',
+                                 { S0097: %i[timestamp checksum] }
     end
+  end
 
-    # Verify status S0097 version of traffic program
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we request the status
-    # 3. We should receive a status response before timeout
-    it 'version is read with S0097' do
-      with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
-        request_status_and_confirm site_proxy, 'version of traffic program',
-                                   { S0097: %i[timestamp checksum] }
-      end
+  #
+  # Verify status S0098 configuration of traffic parameters
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we request the status
+  # 3. We should receive a status response before timeout
+  it 'config is read with S0098' do
+    with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
+      result = request_status_and_confirm site_proxy, 'config of traffic parameters',
+                                          { S0098: %i[timestamp config version] }
+
+      # the site_proxy  should have stored the received status
+      message = result[:collector].messages.first
+      expect(message).to be_a(RSMP::StatusResponse)
+      values = message.attributes['sS'].to_h { |item| [item['n'], item['s']] }
+
+      assert(!values['timestamp'].empty?, 'expected timestamp to not be empty')
+      assert(!values['config'].empty?, 'expected config to not be empty')
+      assert(!values['timestamp'].empty?, 'expected timestamp to not be empty')
     end
+  end
 
-    #
-    # Verify status S0098 configuration of traffic parameters
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we request the status
-    # 3. We should receive a status response before timeout
-    it 'config is read with S0098' do
-      with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
-        result = request_status_and_confirm site_proxy, 'config of traffic parameters',
-                                            { S0098: %i[timestamp config version] }
-
-        # the site_proxy  should have stored the received status
-        message = result[:collector].messages.first
-        expect(message).to be_a(RSMP::StatusResponse)
-        values = message.attributes['sS'].to_h { |item| [item['n'], item['s']] }
-
-        assert(!values['timestamp'].empty?, 'expected timestamp to not be empty')
-        assert(!values['config'].empty?, 'expected config to not be empty')
-        assert(!values['timestamp'].empty?, 'expected timestamp to not be empty')
-      end
+  # Verify status S0023 command table
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we request the status
+  # 3. We should receive a status response before timeout
+  it 'dynamic bands are read with S0023' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      request_status_and_confirm site_proxy, 'command table',
+                                 { S0023: [:status] }
     end
+  end
 
-    # Verify status S0023 command table
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we request the status
-    # 3. We should receive a status response before timeout
-    it 'dynamic bands are read with S0023' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        request_status_and_confirm site_proxy, 'command table',
-                                   { S0023: [:status] }
-      end
+  # Verify that dynamic bands can the set with M0014
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we send the command
+  # 3. We should receive a confirmative command response before timeout
+  it 'dynamic bands are set with M0014' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      plan = Validator.get_config('items', 'plans').first
+      status = '1-12'
+      site_proxy.set_dynamic_bands(plan: plan, status: status)
     end
+  end
 
-    # Verify that dynamic bands can the set with M0014
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we send the command
-    # 3. We should receive a confirmative command response before timeout
-    it 'dynamic bands are set with M0014' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        plan = Validator.get_config('items', 'plans').first
-        status = '1-12'
-        site_proxy.set_dynamic_bands(plan: plan, status: status)
-      end
+  # Verify that dynamic bands can be read and changed
+  #
+  # 1. Given the site_proxy is connected
+  # 2. And we read dynamic band
+  # 3. When we set dynamic band to 2x previous value
+  # 4. Then reading dynamic bands should confirm the change
+  # 5. Finally when we revert dynamic band to previous value
+  # 6. Then reading dynamic bands should confirm the reversion
+
+  it 'dynamic bands values can be changed and read back' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      plan = Validator.get_config('items', 'plans').first
+      band = 3
+
+      value = site_proxy.read_dynamic_band(plan: plan, band: band) || 0
+      expect(value).to be_a(Integer)
+
+      new_value = value + 1
+
+      site_proxy.set_dynamic_bands(plan: plan, status: "#{band}-#{new_value}")
+      expect(site_proxy.read_dynamic_band(plan: plan, band: band)).to eq(new_value)
+
+      site_proxy.set_dynamic_bands(plan: plan, status: "#{band}-#{value}")
+      expect(site_proxy.read_dynamic_band(plan: plan, band: band)).to eq(value)
     end
+  end
 
-    # Verify that dynamic bands can be read and changed
-    #
-    # 1. Given the site_proxy is connected
-    # 2. And we read dynamic band
-    # 3. When we set dynamic band to 2x previous value
-    # 4. Then reading dynamic bands should confirm the change
-    # 5. Finally when we revert dynamic band to previous value
-    # 6. Then reading dynamic bands should confirm the reversion
-
-    it 'dynamic bands values can be changed and read back' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        plan = Validator.get_config('items', 'plans').first
-        band = 3
-
-        value = site_proxy.read_dynamic_band(plan: plan, band: band) || 0
-        expect(value).to be_a(Integer)
-
-        new_value = value + 1
-
-        site_proxy.set_dynamic_bands(plan: plan, status: "#{band}-#{new_value}")
-        expect(site_proxy.read_dynamic_band(plan: plan, band: band)).to eq(new_value)
-
-        site_proxy.set_dynamic_bands(plan: plan, status: "#{band}-#{value}")
-        expect(site_proxy.read_dynamic_band(plan: plan, band: band)).to eq(value)
-      end
+  # Verify command M0023 timeout of dynamic bands
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we send command to set timeout
+  # 3. Then we should get a confirmation
+  # 2. When we send command to disable timeout
+  # 3. Then we should get a confirmation
+  it 'timeout for dynamic bands is set with M0023' do
+    with_site(:connected, sxl: '>=1.1') do |site_proxy|
+      status = 10
+      site_proxy.set_dynamic_bands_timeout(status)
+      status = 0
+      site_proxy.set_dynamic_bands_timeout(status)
     end
+  end
 
-    # Verify command M0023 timeout of dynamic bands
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we send command to set timeout
-    # 3. Then we should get a confirmation
-    # 2. When we send command to disable timeout
-    # 3. Then we should get a confirmation
-    it 'timeout for dynamic bands is set with M0023' do
-      with_site(:connected, sxl: '>=1.1') do |site_proxy|
-        status = 10
-        site_proxy.set_dynamic_bands_timeout(status)
-        status = 0
-        site_proxy.set_dynamic_bands_timeout(status)
-      end
+  # Verify status S0024 offset time
+  #
+  # 1. Given the site_proxy is connected
+  # 2. Request status
+  # 3. Expect status response before timeout
+  it 'offset is read with S0024' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      request_status_and_confirm site_proxy, 'offset time',
+                                 { S0024: [:status] }
     end
+  end
 
-    # Verify status S0024 offset time
-    #
-    # 1. Given the site_proxy is connected
-    # 2. Request status
-    # 3. Expect status response before timeout
-    it 'offset is read with S0024' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        request_status_and_confirm site_proxy, 'offset time',
-                                   { S0024: [:status] }
-      end
+  # 1. Verify connection
+  # 2. Send control command to set dynamic_bands
+  # 3. Wait for status = true
+  it 'offset is set with M0015' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      plan = Validator.get_config('items', 'plans').first
+      offset = 99
+      site_proxy.set_offset(plan: plan, offset: offset)
     end
+  end
 
-    # 1. Verify connection
-    # 2. Send control command to set dynamic_bands
-    # 3. Wait for status = true
-    it 'offset is set with M0015' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        plan = Validator.get_config('items', 'plans').first
-        offset = 99
-        site_proxy.set_offset(plan: plan, offset: offset)
-      end
+  # Verify status S0028 cycle time
+  #
+  # 1. Given the site_proxy is connected
+  # 2. When we request the status
+  # 3. We should receive a status response before timeout
+  it 'cycle time is read with S0028' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      request_status_and_confirm site_proxy, 'cycle time',
+                                 { S0028: [:status] }
     end
+  end
 
-    # Verify status S0028 cycle time
-    #
-    # 1. Given the site_proxy is connected
-    # 2. When we request the status
-    # 3. We should receive a status response before timeout
-    it 'cycle time is read with S0028' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        request_status_and_confirm site_proxy, 'cycle time',
-                                   { S0028: [:status] }
-      end
-    end
-
-    # Verify that cycle time can be changed with M0018
-    #
-    # 1. Given the site_proxy is connected
-    # 2. And we read cycle times
-    # 3. When we extend cycle time of curent plan with 5s
-    # 4. Then reading the cycle time should confirm the change
-    # 5. Finally when we revert cycle time to previous value
-    # 6. Then reading cycle time should confirm the reversion
-    it 'cycle time is set with M0018' do
-      with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-        with_cycle_time_extended(site_proxy) do
-          log 'Cycle time extension confirmed'
-        end
+  # Verify that cycle time can be changed with M0018
+  #
+  # 1. Given the site_proxy is connected
+  # 2. And we read cycle times
+  # 3. When we extend cycle time of curent plan with 5s
+  # 4. Then reading the cycle time should confirm the change
+  # 5. Finally when we revert cycle time to previous value
+  # 6. Then reading cycle time should confirm the reversion
+  it 'cycle time is set with M0018' do
+    with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
+      with_cycle_time_extended(site_proxy) do
+        log 'Cycle time extension confirmed'
       end
     end
   end

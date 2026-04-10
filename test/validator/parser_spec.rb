@@ -7,72 +7,79 @@ FIXTURES_PATH = File.expand_path('../../fixtures/doc_gen', __dir__)
 describe DocGen::Parser do
 	with 'simple.rb — flat describe with specs' do
 		let(:contexts) { DocGen::Parser.parse_files(["#{FIXTURES_PATH}/simple.rb"]) }
-		let(:ctx) { contexts.first }
+		let(:site) { contexts.first }
+		let(:core) { site.subcontexts.first }
 
 		it 'returns one root context' do
 			expect(contexts.size).to be == 1
 		end
 
-		it 'has the correct name' do
-			expect(ctx.name).to be == 'Site::Core'
+		it 'root has name Site' do
+			expect(site.name).to be == 'Site'
 		end
 
-		it 'has no parent' do
-			expect(ctx.parent).to be == nil
+		it 'root has no parent' do
+			expect(site.parent).to be == nil
 		end
 
-		it 'has three specs' do
-			expect(ctx.specs.size).to be == 3
+		it 'root has one subcontext (Core)' do
+			expect(site.subcontexts.size).to be == 1
+		end
+
+		it 'Core has three specs' do
+			expect(core.specs.size).to be == 3
 		end
 
 		it 'has the expected spec names' do
-			names = ctx.specs.map(&:name)
+			names = core.specs.map(&:name)
 			expect(names).to be(:include?, 'connects')
 			expect(names).to be(:include?, 'disconnects')
 			expect(names).to be(:include?, 'has no docstring')
 		end
 
 		it 'extracts a multi-line docstring' do
-			connects = ctx.specs.find { |s| s.name == 'connects' }
+			connects = core.specs.find { |s| s.name == 'connects' }
 			expect(connects.docstring).to be(:include?, 'Verify the site connects correctly.')
 			expect(connects.docstring).to be(:include?, '1. Given the site is connected')
 		end
 
 		it 'returns empty docstring when no comment precedes the spec' do
-			no_doc = ctx.specs.find { |s| s.name == 'has no docstring' }
+			no_doc = core.specs.find { |s| s.name == 'has no docstring' }
 			expect(no_doc.docstring).to be == ''
 		end
 
 		it 'extracts a single-line docstring' do
-			disconnects = ctx.specs.find { |s| s.name == 'disconnects' }
+			disconnects = core.specs.find { |s| s.name == 'disconnects' }
 			expect(disconnects.docstring).to be(:include?, 'Verify the site disconnects.')
 		end
 
 		it 'captures spec source containing the it keyword' do
-			connects = ctx.specs.find { |s| s.name == 'connects' }
+			connects = core.specs.find { |s| s.name == 'connects' }
 			expect(connects.source).to be =~ /\bit\b/
 			expect(connects.source).to be(:include?, 'connects')
 		end
 
-		it 'sets the spec parent to the enclosing context' do
-			connects = ctx.specs.find { |s| s.name == 'connects' }
-			expect(connects.parent.object_id).to be == ctx.object_id
+		it 'sets the spec parent to the Core context' do
+			connects = core.specs.find { |s| s.name == 'connects' }
+			expect(connects.parent.object_id).to be == core.object_id
 		end
 
 		it 'records the file and line' do
-			expect(ctx.file).to be == "#{FIXTURES_PATH}/simple.rb"
-			expect(ctx.line).to be > 0
+			expect(site.file).to be == "#{FIXTURES_PATH}/simple.rb"
+			expect(site.line).to be > 0
 		end
 	end
 
 	with 'nested.rb — two-level nesting' do
-		let(:ctx) { DocGen::Parser.parse_files(["#{FIXTURES_PATH}/nested.rb"]).first }
+		let(:site) { DocGen::Parser.parse_files(["#{FIXTURES_PATH}/nested.rb"]).first }
+		let(:tlc)  { site.subcontexts.first }
+		let(:ctx)  { tlc.subcontexts.first }  # Alarm namespace node
 
-		it 'has two subcontexts' do
+		it 'has two subcontexts under Alarm' do
 			expect(ctx.subcontexts.size).to be == 2
 		end
 
-		it 'has no direct specs' do
+		it 'Alarm namespace has no direct specs' do
 			expect(ctx.specs.size).to be == 0
 		end
 
@@ -87,7 +94,7 @@ describe DocGen::Parser do
 			expect(alarm.specs.size).to be == 2
 		end
 
-		it 'child context parent points to root' do
+		it 'child context parent points to Alarm namespace' do
 			alarm = ctx.subcontexts.find { |c| c.name == 'Alarm' }
 			expect(alarm.parent.object_id).to be == ctx.object_id
 		end
@@ -99,61 +106,80 @@ describe DocGen::Parser do
 		end
 	end
 
-	with 'deep.rb — three-level nesting' do
+	with 'deep.rb — namespace tree plus nested describes' do
 		let(:contexts) { DocGen::Parser.parse_files(["#{FIXTURES_PATH}/deep.rb"]) }
-		let(:root)  { contexts.first }
-		let(:io)    { root.subcontexts.first }
-		let(:input) { io.subcontexts.first }
+		let(:site)   { contexts.first }
+		let(:tlc)    { site.subcontexts.first }
+		let(:io_ns)  { tlc.subcontexts.first }   # Io namespace node
+		let(:io)     { io_ns.subcontexts.first }  # IO literal describe
+		let(:input)  { io.subcontexts.first }     # Input literal describe
 
-		it 'parses all three levels' do
-			expect(root.name).to be == 'Site::Tlc::Io'
+		it 'parses all levels' do
+			expect(site.name).to be == 'Site'
+			expect(tlc.name).to be == 'Tlc'
+			expect(io_ns.name).to be == 'Io'
 			expect(io.name).to be == 'IO'
 			expect(input.name).to be == 'Input'
 			expect(input.specs.first.name).to be == 'is read with S0003'
 		end
 
 		it 'builds the correct parent chain' do
-			expect(io.parent.object_id).to be == root.object_id
+			expect(io.parent.object_id).to be == io_ns.object_id
 			expect(input.parent.object_id).to be == io.object_id
-			expect(root.parent).to be == nil
+			expect(site.parent).to be == nil
 		end
 	end
 
 	with 'full_name' do
-		it 'returns the context name for a root context' do
-			ctx = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/simple.rb"]).first
-			expect(ctx.full_name).to be == 'Site::Core'
+		it 'returns the name for a root context' do
+			site = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/simple.rb"]).first
+			expect(site.full_name).to be == 'Site'
 		end
 
-		it 'drops the root component for a child context' do
-			ctx = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/nested.rb"]).first
-			alarm = ctx.subcontexts.find { |c| c.name == 'Alarm' }
-			expect(alarm.full_name).to be == 'Alarm'
+		it 'returns just the name for a direct child (root dropped)' do
+			site = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/simple.rb"]).first
+			core = site.subcontexts.first
+			expect(core.full_name).to be == 'Core'
 		end
 
-		it 'joins parent and child names for a grandchild' do
-			input = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/deep.rb"])
-				.first.subcontexts.first.subcontexts.first
-			expect(input.full_name).to be == 'IO Input'
+		it 'joins grandparent and child names (root dropped)' do
+			site  = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/nested.rb"]).first
+			tlc   = site.subcontexts.first
+			alarm = tlc.subcontexts.first
+			expect(alarm.full_name).to be == 'Tlc Alarm'
+		end
+
+		it 'joins all ancestor names for deep context (root dropped)' do
+			site    = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/deep.rb"]).first
+			io_ns   = site.subcontexts.first.subcontexts.first
+			io_lit  = io_ns.subcontexts.first
+			input   = io_lit.subcontexts.first
+			expect(input.full_name).to be == 'Tlc Io IO Input'
 		end
 	end
 
 	with 'output_path' do
 		it 'slugifies the root name' do
-			ctx = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/simple.rb"]).first
-			expect(ctx.output_path).to be == 'site_core.md'
+			site = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/simple.rb"]).first
+			expect(site.output_path).to be == 'site.md'
 		end
 
 		it 'nests child path under root slug' do
-			ctx = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/nested.rb"]).first
-			alarm = ctx.subcontexts.find { |c| c.name == 'Alarm' }
-			expect(alarm.output_path).to be == 'site_tlc_alarm/alarm.md'
+			site = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/simple.rb"]).first
+			core = site.subcontexts.first
+			expect(core.output_path).to be == 'site/core.md'
 		end
 
-		it 'nests grandchild path two levels deep' do
-			input = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/deep.rb"])
-				.first.subcontexts.first.subcontexts.first
-			expect(input.output_path).to be == 'site_tlc_io/io/input.md'
+		it 'nests namespace and literal levels' do
+			site   = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/nested.rb"]).first
+			alarm  = site.subcontexts.first.subcontexts.first
+			expect(alarm.output_path).to be == 'site/tlc/alarm.md'
+		end
+
+		it 'nests deeply for literal describes inside namespace' do
+			site  = DocGen::Parser.parse_files(["#{FIXTURES_PATH}/deep.rb"]).first
+			input = site.subcontexts.first.subcontexts.first.subcontexts.first.subcontexts.first
+			expect(input.output_path).to be == 'site/tlc/io/io/input.md'
 		end
 	end
 
@@ -161,14 +187,14 @@ describe DocGen::Parser do
 		let(:contexts) { DocGen::Parser.parse_files(["#{FIXTURES_PATH}/edge_cases.rb"]) }
 
 		it 'parses specify as an alias for it' do
-			conn = contexts.first.subcontexts.first
-			expect(conn.specs.size).to be == 1
-			expect(conn.specs.first.name).to be == 'uses specify alias'
+			conn_seq = contexts.first.subcontexts.first.subcontexts.first
+			expect(conn_seq.specs.size).to be == 1
+			expect(conn_seq.specs.first.name).to be == 'uses specify alias'
 		end
 
 		it 'extracts a docstring from a describe block' do
-			conn = contexts.first.subcontexts.first
-			expect(conn.docstring).to be == 'A context with its own docstring.'
+			conn_seq = contexts.first.subcontexts.first.subcontexts.first
+			expect(conn_seq.docstring).to be == 'A context with its own docstring.'
 		end
 	end
 
