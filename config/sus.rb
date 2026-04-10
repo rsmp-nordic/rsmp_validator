@@ -1,37 +1,13 @@
-require 'async'
-require 'active_support'
-require 'active_support/time'
-require 'fileutils'
-require_relative '../lib/rsmp/validator'
+# Internal sus config: runs unit/integration tests in test/validator/
+# No RSMP connection or reactor setup needed here.
+#
+# Usage:
+#   bundle exec sus                  # runs test/validator/**/*.rb
+#   bundle exec sus test/validator
+#
+# To run conformance tests against real equipment, use the rsmp_validator executable:
+#   bundle exec rsmp_validator
 
-# Include Validator::Log in all test instances so log() is available in all tests
-Sus::Base.include(Validator::Log)
-
-# Include Connection helpers so with_site/with_supervisor are available in all tests
-Sus::Base.include(Validator::Helpers::Connection)
-
-# Include AsyncContext so all tests run inside the shared reactor
-Sus::Base.prepend(Validator::AsyncContext)
-
-# Add eq helper: wraps sus's `be ==` so spec files can use eq(x) for value equality
-Sus::Base.define_method(:eq) { |value| be == value }
-
-# Override test paths to use test/ directory
 def test_paths
-  Dir.glob('test/site/**/*.rb', base: @root) +
-    Dir.glob('test/supervisor/**/*.rb', base: @root)
-end
-
-# Called before tests are run: set up reactor, auto-node, initial connection
-def before_tests(assertions, output: self.output)
-  super
-
-  Validator.setup(self)
-  Validator.before_suite
-end
-
-# Called after tests are run: stop auto-node and reactor
-def after_tests(assertions, output: self.output)
-  Validator.after_suite
-  super
+  Dir.glob('test/validator/**/*.rb', base: @root)
 end

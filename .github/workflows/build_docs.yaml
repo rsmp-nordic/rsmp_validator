@@ -25,8 +25,6 @@ jobs:
 
       - name: Install Ruby and Gems
         uses: ruby/setup-ruby@v1
-        env:
-          BUNDLE_WITH: documentation
         with:
           bundler-cache: true   # runs 'bundle install' and caches installed gems automatically
 
@@ -35,11 +33,8 @@ jobs:
           git config user.name "GitHub Action"
           git config user.email "<>"
 
-      - name: Update YARD html
-        run: bundle exec yardoc --output docs/dev
-
-      - name: Update YARD markdown
-        run: bundle exec yardoc --template jekyll --format markdown --output docs/tests
+      - name: Generate test documentation
+        run: bundle exec rake spec_docs
 
       - name: Commit to local branch
         run: |
