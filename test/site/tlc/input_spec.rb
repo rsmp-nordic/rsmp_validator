@@ -11,7 +11,7 @@ describe 'Site::Tlc::Input' do
   it 'is read with S0003 with extended input status' do
     with_site(:connected, sxl: '<1.2') do |site_proxy|
       request_status_and_confirm site_proxy, 'input status',
-                                  { S0003: %i[inputstatus extendedinputstatus] }
+                                 { S0003: %i[inputstatus extendedinputstatus] }
     end
   end
 
@@ -22,7 +22,7 @@ describe 'Site::Tlc::Input' do
   it 'is read with S0003' do
     with_site(:connected, sxl: '>=1.2') do |site_proxy|
       request_status_and_confirm site_proxy, 'input status',
-                                  { S0003: [:inputstatus] }
+                                 { S0003: [:inputstatus] }
     end
   end
 
@@ -33,7 +33,7 @@ describe 'Site::Tlc::Input' do
   it 'forcing is read with S0029' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
       request_status_and_confirm site_proxy, 'forced input status',
-                                  { S0029: [:status] }
+                                 { S0029: [:status] }
     end
   end
 

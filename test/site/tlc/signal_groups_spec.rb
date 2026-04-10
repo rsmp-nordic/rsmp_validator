@@ -80,8 +80,8 @@ describe 'Site::Tlc::SignalGroups' do
     with_site(:connected) do |site_proxy|
       verify_startup_sequence(site_proxy) do
         site_proxy.set_functional_position('YellowFlash',
-                                     options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                          'yellow_flash') } })
+                                           options: { confirm!: { timeout: Validator.get_config('timeouts',
+                                                                                                'yellow_flash') } })
         site_proxy.set_functional_position('NormalControl')
       end
       site_proxy.set_functional_position('NormalControl')

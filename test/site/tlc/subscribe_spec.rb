@@ -62,7 +62,7 @@ describe 'Site::Tlc::Subscribe' do
 
       assert(!result.nil?, 'Expected subscribe_to_status to return a result')
       assert(!result[:collector].messages.empty?,
-              'Expected to receive status update within 2s with new 1s update rate')
+             'Expected to receive status update within 2s with new 1s update rate')
       log 'Successfully received status update within 2s, confirming 1s update rate is active'
     ensure
       # Clean up subscription

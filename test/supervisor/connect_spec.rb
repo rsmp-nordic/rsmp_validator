@@ -23,11 +23,10 @@ describe 'Supervisor' do
       timeout = Validator.get_config('timeouts', 'ready')
       got_messages = nil
       with_supervisor(:isolated,
-        'rsmp_versions' => [core_version],
-        'collect' => {
-          **connection_collect_options(timeout, length)
-        }
-      ) do |supervisor_proxy|
+                      'rsmp_versions' => [core_version],
+                      'collect' => {
+                        **connection_collect_options(timeout, length)
+                      }) do |supervisor_proxy|
         prepare_and_wait_for_collector(supervisor_proxy)
         assert(supervisor_proxy.ready?, 'expected site proxy to be ready')
         got_messages = supervisor_proxy.collector.messages

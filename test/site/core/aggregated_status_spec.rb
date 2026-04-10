@@ -24,13 +24,12 @@ describe 'Site::Core' do
     # 3. Then fP and fS should be null
     it 'uses null for functional position/state' do
       with_site(:isolated, sxl: '>=1.1',
-        'collect' => {
-          filter: RSMP::Filter.new(type: 'AggregatedStatus'),
-          timeout: Validator.get_config('timeouts', 'ready'),
-          num: 1,
-          ingoing: true
-        }
-      ) do |site_proxy|
+                           'collect' => {
+                             filter: RSMP::Filter.new(type: 'AggregatedStatus'),
+                             timeout: Validator.get_config('timeouts', 'ready'),
+                             num: 1,
+                             ingoing: true
+                           }) do |site_proxy|
         collector = site_proxy.collector
         collector.use_task Async::Task.current
         collector.wait!

@@ -48,8 +48,8 @@ describe 'Site::Tlc::InvalidCommand' do
       log 'Sending non-existing command M0000'
       command_list = build_command_list :M0000, :bad, {}
       result = site_proxy.send_command Validator.get_config('main_component'), command_list,
-                                  collect: { timeout: Validator.get_config('timeouts', 'command_response') },
-                                  validate: false # disable validation of outgoing message
+                                       collect: { timeout: Validator.get_config('timeouts', 'command_response') },
+                                       validate: false # disable validation of outgoing message
       collector = result[:collector]
       expect(collector).to be_a(RSMP::Collector)
       expect(collector.status).to eq(:cancelled)
@@ -74,8 +74,8 @@ describe 'Site::Tlc::InvalidCommand' do
         # intentionally not setting 'status'
       }
       result = site_proxy.send_command Validator.get_config('main_component'), command_list,
-                                  collect: { timeout: Validator.get_config('timeouts', 'command_response') },
-                                  validate: false # disable validation of outgoing message
+                                       collect: { timeout: Validator.get_config('timeouts', 'command_response') },
+                                       validate: false # disable validation of outgoing message
       collector = result[:collector]
       expect(collector).to be_a(RSMP::Collector)
       expect(collector.status).to eq(:cancelled)
@@ -100,8 +100,8 @@ describe 'Site::Tlc::InvalidCommand' do
         timeout: '0'
       }
       result = site_proxy.send_command Validator.get_config('main_component'), command_list,
-                                  collect: { timeout: Validator.get_config('timeouts', 'command_response') },
-                                  validate: false # disable validation of outgoing message
+                                       collect: { timeout: Validator.get_config('timeouts', 'command_response') },
+                                       validate: false # disable validation of outgoing message
       collector = result[:collector]
       expect(collector).to be_a(RSMP::Collector)
       expect(collector.status).to eq(:cancelled)

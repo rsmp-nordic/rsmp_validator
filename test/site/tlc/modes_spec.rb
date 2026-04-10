@@ -107,7 +107,8 @@ describe 'Site::Tlc::Modes' do
   it 'fixed time control can be activated with M0007' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       site_proxy.set_fixed_time('True', options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } })
-      site_proxy.set_fixed_time('False', options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } })
+      site_proxy.set_fixed_time('False',
+                                options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } })
     end
   end
 
@@ -165,11 +166,11 @@ describe 'Site::Tlc::Modes' do
   it 'yellow flash can be activated with M0001' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       site_proxy.set_functional_position('YellowFlash',
-                                   options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                        'yellow_flash') } })
+                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
+                                                                                              'yellow_flash') } })
       site_proxy.set_functional_position('NormalControl',
-                                   options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                        'startup_sequence') } })
+                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
+                                                                                              'startup_sequence') } })
     end
   end
 
@@ -188,8 +189,8 @@ describe 'Site::Tlc::Modes' do
       site_proxy.wait_for_groups 'c', timeout: timeout      # c means yellow flash
 
       site_proxy.set_functional_position('NormalControl',
-                                   options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                        'startup_sequence') } })
+                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
+                                                                                              'startup_sequence') } })
       site_proxy.wait_for_groups '[^c]', timeout: timeout   # not c, ie. not yellow flash
     end
   end
@@ -232,11 +233,11 @@ describe 'Site::Tlc::Modes' do
   it 'dark mode can be activated with M0001' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       site_proxy.set_functional_position('Dark',
-                                   options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                        'functional_position') } })
+                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
+                                                                                              'functional_position') } })
       site_proxy.set_functional_position('NormalControl',
-                                   options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                        'startup_sequence') } })
+                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
+                                                                                              'startup_sequence') } })
     end
   end
 
@@ -250,12 +251,12 @@ describe 'Site::Tlc::Modes' do
   it 'yellow flash be used with a timeout of one minute' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       site_proxy.set_functional_position('NormalControl',
-                                   options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                        'startup_sequence') } })
+                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
+                                                                                              'startup_sequence') } })
       minutes = 1
       timeout = Validator.get_config('timeouts', 'yellow_flash')
       site_proxy.set_functional_position('YellowFlash', timeout_minutes: minutes,
-                                                  options: { confirm!: { timeout: timeout } })
+                                                        options: { confirm!: { timeout: timeout } })
       wait_normal_control(site_proxy, timeout: (minutes * 60) + Validator.get_config('timeouts', 'functional_position'))
     end
   end

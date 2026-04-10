@@ -119,11 +119,13 @@ describe 'Site::Tlc::Alarm' do
 
       begin
         # suspend alarm
-        _, response = site_proxy.suspend_alarm Async::Task.current, c_id: component_id, a_c_id: alarm_code_id, collect: true
+        _, response = site_proxy.suspend_alarm Async::Task.current, c_id: component_id, a_c_id: alarm_code_id,
+                                                                    collect: true
         expect(response).to be_a(RSMP::AlarmSuspended)
 
         # resume alarm
-        _, response = site_proxy.resume_alarm Async::Task.current, c_id: component_id, a_c_id: alarm_code_id, collect: true
+        _, response = site_proxy.resume_alarm Async::Task.current, c_id: component_id, a_c_id: alarm_code_id,
+                                                                   collect: true
         expect(response).to be_a(RSMP::AlarmResumed)
       ensure
         # always end with resuming alarm

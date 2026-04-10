@@ -11,10 +11,10 @@ describe 'Site::Tlc::SignalPlans' do
   it 'currently active is read with S0014' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       result = site_proxy.fetch_signal_plan(options: {
-                                        collect!: {
-                                          timeout: Validator.get_config('timeouts', 'status_response')
-                                        }
-                                      })
+                                              collect!: {
+                                                timeout: Validator.get_config('timeouts', 'status_response')
+                                              }
+                                            })
       expect(result[:collector].messages.first).to be_a(RSMP::StatusResponse)
     end
   end
@@ -34,17 +34,17 @@ describe 'Site::Tlc::SignalPlans' do
       Validator.get_config('secrets', 'security_codes', 2)
       plans.each do |plan|
         result = site_proxy.set_timeplan(plan, options: {
-                                     collect!: {
-                                       timeout: Validator.get_config('timeouts', 'command_response')
-                                     }
-                                   })
+                                           collect!: {
+                                             timeout: Validator.get_config('timeouts', 'command_response')
+                                           }
+                                         })
         expect(result[:collector].messages.first).to be_a(RSMP::CommandResponse)
 
         status_result = site_proxy.fetch_signal_plan(options: {
-                                                 collect!: {
-                                                   timeout: Validator.get_config('timeouts', 'status_response')
-                                                 }
-                                               })
+                                                       collect!: {
+                                                         timeout: Validator.get_config('timeouts', 'status_response')
+                                                       }
+                                                     })
         status_message = status_result[:collector].messages.first
         expect(status_message).to be_a(RSMP::StatusResponse)
         status_values = status_message.attributes['sS'].to_h { |item| [item['n'], item['s']] }

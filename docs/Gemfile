@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 gem 'jekyll', '~> 4.4'
 gem 'jekyll-include-cache'
-gem 'just-the-docs'   # Jekyll theme
-gem 'sass-embedded', '< 1.84'  # to support older Mac OS 13
+gem 'just-the-docs' # Jekyll theme
+gem 'sass-embedded', '< 1.84' # to support older Mac OS 13
 gem 'wdm', platforms: %i[mingw x64_mingw mswin] # Performance-booster for watching directories on Windows
 
 gem 'base64'
@@ -22,5 +22,3 @@ platforms :mingw, :x64_mingw, :mswin, :jruby do
   gem 'tzinfo'
   gem 'tzinfo-data'
 end
-
-
