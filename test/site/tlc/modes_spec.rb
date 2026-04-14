@@ -232,9 +232,8 @@ describe 'Site::Tlc::Modes' do
   # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
   it 'dark mode can be activated with M0001' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      site_proxy.set_functional_position('Dark',
-                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                              'functional_position') } })
+      timeout = Validator.get_config('timeouts', 'functional_position')
+      site_proxy.set_functional_position('Dark', options: { confirm!: { timeout: timeout } })
       site_proxy.set_functional_position('NormalControl',
                                          options: { confirm!: { timeout: Validator.get_config('timeouts',
                                                                                               'startup_sequence') } })

@@ -19,7 +19,7 @@ describe DocGen::Parser do
     end
 
     it 'root has no parent' do
-      expect(site.parent).to be == nil
+      expect(site.parent).to be_nil
     end
 
     it 'root has one subcontext (Core)' do
@@ -66,7 +66,7 @@ describe DocGen::Parser do
 
     it 'records the file and line' do
       expect(site.file).to be == "#{FIXTURES_PATH}/simple.rb"
-      expect(site.line).to be > 0
+      expect(site.line).to be(:positive?)
     end
   end
 
@@ -80,7 +80,7 @@ describe DocGen::Parser do
     end
 
     it 'Alarm namespace has no direct specs' do
-      expect(ctx.specs.size).to be == 0
+      expect(ctx.specs.size).to be(:zero?)
     end
 
     it 'has the expected subcontext names' do
@@ -126,7 +126,7 @@ describe DocGen::Parser do
     it 'builds the correct parent chain' do
       expect(io.parent.object_id).to be == io_ns.object_id
       expect(input.parent.object_id).to be == io.object_id
-      expect(site.parent).to be == nil
+      expect(site.parent).to be_nil
     end
   end
 

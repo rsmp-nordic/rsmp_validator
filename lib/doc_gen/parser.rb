@@ -11,7 +11,6 @@ require 'prism'
 #
 #   contexts = DocGen::Parser.parse_files(Dir['test/**/*_spec.rb'])
 #   DocGen::Renderer.render(contexts, output_dir: 'docs/tests')
-
 module DocGen
   # A context represents a `describe` block. It holds child contexts and specs.
   Context = Struct.new(:name, :docstring, :children, :file, :line, :parent, keyword_init: true) do
@@ -93,6 +92,67 @@ module DocGen
            .gsub(/([A-Z]+)([A-Z][a-z])/, '\1 \2')
   end
 
+  # Builds a namespace tree from flat parsed contexts by merging on '::' segments.
+  # e.g. 'Site::Tlc::Alarm' becomes Site -> Tlc -> Alarm in the tree.
+  class NamespaceBuilder
+    def build(raw_contexts)
+      @node_map = {}
+      sorted = raw_contexts.sort_by { |ctx| ctx.name.include?('::') ? 0 : 1 }
+      sorted.each { |raw| process_raw_context(raw) }
+      @node_map.values.select { |n| n.parent.nil? }
+    end
+
+    private
+
+    def process_raw_context(raw)
+      segments = raw.name.split('::')
+      segments.each_with_index { |_seg, idx| ensure_namespace_node(segments, idx, raw) }
+      leaf = @node_map[raw.name]
+      leaf.docstring ||= raw.docstring
+      raw.children.each { |child| adopt_child(leaf, child) }
+    end
+
+    def ensure_namespace_node(segments, idx, raw)
+      path = segments[0..idx].join('::')
+      return if @node_map.key?(path)
+
+      parent_node = idx.positive? ? @node_map[segments[0...idx].join('::')] : nil
+      node = Context.new(
+        name: segments[idx], docstring: nil, children: [],
+        file: raw.file, line: raw.line, parent: parent_node
+      )
+      @node_map[path] = node
+      parent_node.children << node if parent_node
+    end
+
+    def adopt_child(leaf, child)
+      if child.is_a?(Context)
+        adopt_context_child(leaf, child)
+      else
+        child.parent = leaf
+        leaf.children << child
+      end
+    end
+
+    def adopt_context_child(leaf, child)
+      existing = leaf.children.find { |c| c.is_a?(Context) && c.name == child.name }
+      if existing
+        merge_into_existing(existing, child)
+      elsif child.children.any?
+        child.parent = leaf
+        leaf.children << child
+      end
+    end
+
+    def merge_into_existing(existing, child)
+      existing.docstring ||= child.docstring
+      child.children.each do |grandchild|
+        grandchild.parent = existing
+        existing.children << grandchild
+      end
+    end
+  end
+
   # Parses Ruby test files using Prism and builds a tree of Context and Spec objects.
   class Parser
     # Parse an array of file paths and return an array of root Context objects.
@@ -102,74 +162,10 @@ module DocGen
 
     def parse_files(paths)
       raw = Array(paths).flat_map { |path| parse_file(path) }
-      build_namespace_tree(raw)
+      NamespaceBuilder.new.build(raw)
     end
 
     private
-
-    # Merge raw contexts into a tree by splitting their names on '::'.
-    # e.g. 'Site::Tlc::Alarm' becomes Site -> Tlc -> Alarm in the tree.
-    # Stub contexts (plain 'Site' or 'Supervisor' with empty inner describes) have
-    # their docstrings merged into the tree and empty children dropped.
-    def build_namespace_tree(raw_contexts)
-      node_map = {} # 'Site::Tlc' => Context node
-
-      # Process namespaced contexts first so intermediate nodes exist when stubs run
-      sorted = raw_contexts.sort_by { |ctx| ctx.name.include?('::') ? 0 : 1 }
-
-      sorted.each do |raw|
-        segments = raw.name.split('::')
-
-        # Create or find each prefix node
-        segments.each_with_index do |seg, i|
-          path = segments[0..i].join('::')
-          next if node_map.key?(path)
-
-          parent_path = i.positive? ? segments[0...i].join('::') : nil
-          parent_node = parent_path ? node_map[parent_path] : nil
-
-          node = Context.new(
-            name: seg,
-            docstring: nil,
-            children: [],
-            file: raw.file,
-            line: raw.line,
-            parent: parent_node
-          )
-          node_map[path] = node
-          parent_node.children << node if parent_node
-        end
-
-        # Fill leaf node
-        leaf = node_map[raw.name]
-        leaf.docstring ||= raw.docstring
-
-        # Adopt children, merging namespace-matched children and dropping empty stubs
-        raw.children.each do |child|
-          if child.is_a?(Context)
-            existing = leaf.children.find { |c| c.is_a?(Context) && c.name == child.name }
-            if existing
-              # Merge docstring and adopt grandchildren for non-empty stubs
-              existing.docstring ||= child.docstring
-              child.children.each do |grandchild|
-                grandchild.parent = existing
-                existing.children << grandchild
-              end
-            elsif child.children.any?
-              # Non-empty literal child: add as-is
-              child.parent = leaf
-              leaf.children << child
-            end
-            # Empty unmatched literal child (YARD stub): silently drop
-          else
-            child.parent = leaf
-            leaf.children << child
-          end
-        end
-      end
-
-      node_map.values.select { |n| n.parent.nil? }
-    end
 
     def parse_file(path)
       source = File.read(path)
@@ -180,8 +176,7 @@ module DocGen
       parse_block(top_nodes, path, comment_map, lines, nil)
     end
 
-    # Recursively parses a list of AST nodes, building Context/Spec objects.
-    # Returns root-level contexts when parent_context is nil; otherwise mutates parent.
+    # Recursively parses AST nodes into Context/Spec objects.
     def parse_block(nodes, file, comment_map, lines, parent_context)
       roots = []
       Array(nodes).each do |node|
@@ -189,42 +184,46 @@ module DocGen
 
         case node.name
         when :describe
-          name = string_arg(node)
-          next unless name
-
-          docstring = extract_docstring(node.location.start_line, comment_map)
-          ctx = Context.new(
-            name: name,
-            docstring: docstring,
-            children: [],
-            file: file,
-            line: node.location.start_line,
-            parent: parent_context
-          )
-          parent_context ? parent_context.children << ctx : roots << ctx
-          if (body = block_body(node))
-            parse_block(body, file, comment_map, lines, ctx)
-          end
-
+          ctx = handle_describe(node, file, comment_map, lines, parent_context)
+          roots << ctx if ctx && parent_context.nil?
         when :it, :specify
-          name = string_arg(node)
-          next unless name
-          next unless parent_context.is_a?(Context)
-
-          docstring = extract_docstring(node.location.start_line, comment_map)
-          source = extract_source(node, lines)
-          spec = Spec.new(
-            name: name,
-            docstring: docstring,
-            source: source,
-            file: file,
-            line: node.location.start_line,
-            parent: parent_context
-          )
-          parent_context.children << spec
+          handle_spec(node, file, comment_map, lines, parent_context)
         end
       end
       roots
+    end
+
+    def handle_describe(node, file, comment_map, lines, parent_context)
+      ctx = make_context(node, file, comment_map, parent_context)
+      return unless ctx
+
+      parent_context.children << ctx if parent_context
+      body = block_body(node)
+      parse_block(body, file, comment_map, lines, ctx) if body
+      ctx
+    end
+
+    def handle_spec(node, file, comment_map, lines, parent_context)
+      spec = make_spec(node, file, comment_map, lines, parent_context)
+      parent_context.children << spec if spec
+    end
+
+    def make_context(node, file, comment_map, parent_context)
+      name = string_arg(node)
+      return unless name
+
+      Context.new(name: name, docstring: extract_docstring(node.location.start_line, comment_map),
+                  children: [], file: file, line: node.location.start_line, parent: parent_context)
+    end
+
+    def make_spec(node, file, comment_map, lines, parent_context)
+      name = string_arg(node)
+      return unless name
+      return unless parent_context.is_a?(Context)
+
+      Spec.new(name: name, docstring: extract_docstring(node.location.start_line, comment_map),
+               source: extract_source(node, lines), file: file,
+               line: node.location.start_line, parent: parent_context)
     end
 
     # Build a map of line_number => comment_text for standalone comment lines only.
@@ -244,8 +243,7 @@ module DocGen
 
       first = node.arguments.arguments.first
       case first
-      when Prism::StringNode then first.unescaped
-      when Prism::SymbolNode then first.unescaped
+      when Prism::StringNode, Prism::SymbolNode then first.unescaped
       end
     end
 
