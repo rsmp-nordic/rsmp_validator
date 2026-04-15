@@ -45,14 +45,15 @@ describe 'Site::Tlc::DetectorLogics' do
   it 'forcing is set with M0008' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       Validator.get_config('components', 'detector_logic').keys.each_with_index do |component, indx|
-        site_proxy.force_detector_logic(component, status: 'True', mode: 'True')
+        timeout = Validator.get_config('timeouts', 'command_response')
+        site_proxy.force_detector_logic(component, status: 'True', mode: 'True', within: timeout)
         wait_for_status(
           site_proxy,
           "detector logic #{component} to be True",
           [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /^.{#{indx}}1/ }]
         )
 
-        site_proxy.force_detector_logic(component, status: 'True', mode: 'False')
+        site_proxy.force_detector_logic(component, status: 'True', mode: 'False', within: timeout)
         wait_for_status(
           site_proxy,
           "detector logic #{component} to be False",

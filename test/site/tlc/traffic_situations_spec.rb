@@ -29,13 +29,13 @@ describe 'Site::Tlc::TrafficSituations' do
     skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
     situations = Validator.get_config('items', 'traffic_situations')
     skip('No traffic situations configured') if situations.nil? || situations.empty?
+    timeout = Validator.get_config('timeouts', 'command')
     with_site(:connected) do |site_proxy|
       situations.each do |traffic_situation|
-        timeout = Validator.get_config('timeouts', 'command')
-        site_proxy.set_traffic_situation(traffic_situation.to_s, within: timeout)
+        assert site_proxy.set_traffic_situation(traffic_situation.to_s, within: timeout)
       end
     ensure
-      site_proxy.unset_traffic_situation
+      site_proxy.unset_traffic_situation(within: timeout)
     end
   end
 

@@ -3,17 +3,18 @@ module Validator
     # Helper methods for testing RSMP signal plan functionality.
     module SignalPlans
       def with_cycle_time_extended(site_proxy, extension = 5, &block)
+        timeout = Validator.get_config('timeouts', 'command_response')
         plan = site_proxy.read_current_plan
         time = read_plan_cycle_time(site_proxy, plan)
         need_to_reset = true
         time_extended = time + extension
-        site_proxy.set_cycle_time(plan: plan, cycle_time: time_extended)
+        site_proxy.set_cycle_time(plan: plan, cycle_time: time_extended, within: timeout)
         verify_cycle_time(site_proxy, plan, time_extended)
         block.yield
       ensure
         if need_to_reset
           log 'Reset cycle time'
-          site_proxy.set_cycle_time(plan: plan, cycle_time: time)
+          site_proxy.set_cycle_time(plan: plan, cycle_time: time, within: timeout)
         end
       end
 

@@ -16,16 +16,15 @@ describe 'Site::Tlc::InvalidCommand' do
                                            status: 'NormalControl',
                                            timeout: 0,
                                            intersection: 0).to_a
-      result = site_proxy.send_command(
-        'bad',
+      result = site_proxy.send_command_and_collect(
         command_list,
+        component: 'bad',
         within: Validator.get_config('timeouts', 'command_response'),
         validate: false # disable validation of outgoing message
       )
-      collector = result[:collector]
-      expect(collector).to be_a(RSMP::Collector)
-      expect(collector.status).to eq(:ok)
-      response = collector.messages.first
+      expect(result).to be_a(RSMP::Collector)
+      expect(result.status).to eq(:ok)
+      response = result.messages.first
       expect(response).to be_a(RSMP::CommandResponse)
       rvs = response.attributes['rvs']
       expect(rvs).to be_a(Array)
@@ -46,14 +45,11 @@ describe 'Site::Tlc::InvalidCommand' do
     with_site(:connected) do |site_proxy|
       log 'Sending non-existing command M0000'
       command_list = RSMP::CommandList.new(:M0000, :bad, {}).to_a
-      component = Validator.get_config('main_component')
       timeout = Validator.get_config('timeouts', 'command_response')
 
-      result = site_proxy.send_command(component, command_list,
-                                       within: timeout,
-                                       validate: false) # disable schema validation of outgoing message
-      collector = result[:collector]
-      expect(collector).to be_a(RSMP::Collector)
+      collector = site_proxy.send_command_and_collect(command_list,
+                                                      within: timeout,
+                                                      validate: false) # disable schema validation of outgoing message
       expect(collector.status).to eq(:cancelled)
       expect(collector.error).to be_a(RSMP::MessageRejected)
     end
@@ -74,13 +70,10 @@ describe 'Site::Tlc::InvalidCommand' do
                                            intersection: '0',
                                            timeout: '0').to_a
       # intentionally not setting 'status'
-      component = Validator.get_config('main_component')
       timeout = Validator.get_config('timeouts', 'command_response')
-      result = site_proxy.send_command(component, command_list,
-                                       within: timeout,
-                                       validate: false) # disable validation of outgoing message
-      collector = result[:collector]
-      expect(collector).to be_a(RSMP::Collector)
+      collector = site_proxy.send_command_and_collect(command_list,
+                                                      within: timeout,
+                                                      validate: false) # disable validation of outgoing message
       expect(collector.status).to eq(:cancelled)
       expect(collector.error).to be_a(RSMP::MessageRejected)
     end
@@ -101,13 +94,10 @@ describe 'Site::Tlc::InvalidCommand' do
                                            securityCode: '1111',
                                            intersection: '0',
                                            timeout: '0').to_a
-      component = Validator.get_config('main_component')
       timeout = Validator.get_config('timeouts', 'command_response')
-      result = site_proxy.send_command(component, command_list,
-                                       within: timeout,
-                                       validate: false) # disable validation of outgoing message
-      collector = result[:collector]
-      expect(collector).to be_a(RSMP::Collector)
+      collector = site_proxy.send_command_and_collect(command_list,
+                                                      within: timeout,
+                                                      validate: false) # disable validation of outgoing message
       expect(collector.status).to eq(:cancelled)
       expect(collector.error).to be_a(RSMP::MessageRejected)
     end

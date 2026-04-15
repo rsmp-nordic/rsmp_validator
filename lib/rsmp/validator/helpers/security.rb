@@ -11,9 +11,9 @@ module Validator
                                              status: 'True',
                                              mode: 'True').to_a
         component = Validator.get_config('components', 'detector_logic').keys[0]
-        result = site_proxy.send_command component, command_list,
-                                         within: Validator.get_config('timeouts', 'command_response')
-        result[:collector].ok!
+        timeout = Validator.get_config('timeouts', 'command_response')
+        site_proxy.send_command_and_collect(command_list, component: component,
+                                                          within: timeout).ok!
       end
 
       def require_security_codes
