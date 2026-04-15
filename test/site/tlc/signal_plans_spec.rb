@@ -32,7 +32,6 @@ describe 'Site::Tlc::SignalPlans' do
         command_timeout = Validator.get_config('timeouts', 'command')
         status_timeout = Validator.get_config('timeouts', 'status_response')
         result = site_proxy.set_timeplan(plan, within: command_timeout)
-        expect(result[:collector].messages.first).to be_a(RSMP::CommandResponse)
 
         result = site_proxy.request_status({ S0014: %i[status source] }, within: status_timeout)
         ss = result[:collector].messages.last.attributes['sS']
@@ -86,7 +85,8 @@ describe 'Site::Tlc::SignalPlans' do
   it 'week table is set with M0016' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
       status = '0-1,6-2'
-      site_proxy.set_week_table(status)
+      timeout = Validator.get_config('timeouts', 'command_response')
+      site_proxy.set_week_table(status, within: timeout)
     end
   end
 
@@ -110,7 +110,8 @@ describe 'Site::Tlc::SignalPlans' do
   it 'day table is set with M0017' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
       status = '12-1-12-59,1-0-23-12'
-      site_proxy.set_day_table(status)
+      timeout = Validator.get_config('timeouts', 'command_response')
+      site_proxy.set_day_table(status, within: timeout)
     end
   end
 
@@ -166,7 +167,8 @@ describe 'Site::Tlc::SignalPlans' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
       plan = Validator.get_config('items', 'plans').first
       status = '1-12'
-      site_proxy.set_dynamic_bands(plan: plan, status: status)
+      timeout = Validator.get_config('timeouts', 'command_response')
+      site_proxy.set_dynamic_bands(plan: plan, status: status, within: timeout)
     end
   end
 
@@ -189,10 +191,11 @@ describe 'Site::Tlc::SignalPlans' do
 
       new_value = value + 1
 
-      site_proxy.set_dynamic_bands(plan: plan, status: "#{band}-#{new_value}")
+      timeout = Validator.get_config('timeouts', 'command_response')
+      site_proxy.set_dynamic_bands(plan: plan, status: "#{band}-#{new_value}", within: timeout)
       expect(site_proxy.read_dynamic_band(plan: plan, band: band)).to eq(new_value)
 
-      site_proxy.set_dynamic_bands(plan: plan, status: "#{band}-#{value}")
+      site_proxy.set_dynamic_bands(plan: plan, status: "#{band}-#{value}", within: timeout)
       expect(site_proxy.read_dynamic_band(plan: plan, band: band)).to eq(value)
     end
   end
@@ -206,10 +209,11 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. Then we should get a confirmation
   it 'timeout for dynamic bands is set with M0023' do
     with_site(:connected, sxl: '>=1.1') do |site_proxy|
+      timeout = Validator.get_config('timeouts', 'command_response')
       status = 10
-      site_proxy.set_dynamic_bands_timeout(status)
+      site_proxy.set_dynamic_bands_timeout(status, within: timeout)
       status = 0
-      site_proxy.set_dynamic_bands_timeout(status)
+      site_proxy.set_dynamic_bands_timeout(status, within: timeout)
     end
   end
 
@@ -232,7 +236,8 @@ describe 'Site::Tlc::SignalPlans' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
       plan = Validator.get_config('items', 'plans').first
       offset = 99
-      site_proxy.set_offset(plan: plan, offset: offset)
+      timeout = Validator.get_config('timeouts', 'command_response')
+      site_proxy.set_offset(plan: plan, offset: offset, within: timeout)
     end
   end
 

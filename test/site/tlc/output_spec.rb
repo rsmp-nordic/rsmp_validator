@@ -46,11 +46,12 @@ describe 'Site::Tlc::Output' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
       outputs = Validator.get_config('items', 'outputs')
       skip('No outputs configured') if outputs.nil? || outputs.empty?
+      timeout = Validator.get_config('timeouts', 'command_response')
       outputs.each do |output|
-        site_proxy.force_output(output: output, status: 'True', value: 'True')
-        site_proxy.force_output(output: output, status: 'True', value: 'False')
+        site_proxy.force_output(output: output, status: 'True', value: 'True', within: timeout)
+        site_proxy.force_output(output: output, status: 'True', value: 'False', within: timeout)
       ensure
-        site_proxy.force_output(output: output, status: 'False', value: 'True')
+        site_proxy.force_output(output: output, status: 'False', value: 'True', within: timeout)
       end
     end
   end

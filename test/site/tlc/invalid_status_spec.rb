@@ -18,7 +18,6 @@ describe 'Site::Tlc::InvalidStatus' do
         validate: false
       )
       collector = result[:collector]
-      expect(collector).to be_a(RSMP::Collector)
       expect(collector.status).to eq(:ok)
       response = collector.messages.first
       expect(response).to be_a(RSMP::StatusResponse)

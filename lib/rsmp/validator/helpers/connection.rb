@@ -13,6 +13,13 @@ module Validator
     module Connection
       VALID_STATES = %i[connected reconnected isolated disconnected].freeze
 
+      class UncaughtException < StandardError
+        def initialize(original)
+          super("#{original.class}: #{original.message}")
+          set_backtrace(original.backtrace)
+        end
+      end
+
       def with_site(state, sxl: nil, core: nil, **opts, &block)
         unless VALID_STATES.include?(state)
           raise ArgumentError,
@@ -26,6 +33,8 @@ module Validator
         else
           Validator::SiteTester.public_send(state, **opts) do |_task, _node, proxy|
             block.call(proxy)
+          rescue StandardError => e
+            @__assertions__.error!(UncaughtException.new(e))
           end
         end
       end

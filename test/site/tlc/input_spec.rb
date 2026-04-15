@@ -52,7 +52,7 @@ describe 'Site::Tlc::Input' do
         site_proxy.force_input(input: input, status: 'True', value: 'False', within: timeout)
         site_proxy.force_input(input: input, status: 'True', value: 'True', within: timeout)
       ensure
-        site_proxy.force_input(input: input, status: 'False', value: 'True')
+        site_proxy.force_input(input: input, status: 'False', value: 'True', within: timeout)
       end
     end
   end
@@ -65,10 +65,11 @@ describe 'Site::Tlc::Input' do
   # 5. Then S0003 should show the input is inactive
 
   it 'is activated with M0006' do
+    inputs = Validator.get_config('items', 'inputs')
+    skip('No inputs configured') if inputs.nil? || inputs.empty?
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      inputs = Validator.get_config('items', 'inputs')
-      skip('No inputs configured') if inputs.nil? || inputs.empty?
-      inputs.each { |input| switch_input(site_proxy, input) }
+      timeout = Validator.get_config('timeouts', 'command_response')
+      inputs.each { |input| switch_input(site_proxy, input, within: timeout) }
     end
   end
 
@@ -92,8 +93,9 @@ describe 'Site::Tlc::Input' do
   # 3. Then we receive a confirmation
   it 'sensitivity is set with M0021' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
+      timeout = Validator.get_config('timeouts', 'command_response')
       status = '1-50'
-      site_proxy.set_trigger_level(status)
+      site_proxy.set_trigger_level(status, within: timeout)
     end
   end
 end

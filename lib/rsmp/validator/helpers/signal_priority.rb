@@ -76,7 +76,7 @@ module Validator
                                                'level' => level,
                                                'eta' => eta,
                                                'vehicleType' => vehicle_type).to_a
-          @site_proxy.send_command @component, command_list
+          @site_proxy.send_command(command_list, component: @component)
         end
 
         def request_unrelated(level: 7, eta: 2, vehicle_type: 'car')
@@ -87,14 +87,14 @@ module Validator
                                                'level' => level,
                                                'eta' => eta,
                                                'vehicleType' => vehicle_type).to_a
-          @site_proxy.send_command @component, command_list
+          @site_proxy.send_command(command_list, component: @component)
         end
 
         def cancel
           command_list = RSMP::CommandList.new(:M0022, :requestPriority,
                                                requestId: @request_id,
                                                type: 'cancel').to_a
-          @site_proxy.send_command @component, command_list
+          @site_proxy.send_command(command_list, component: @component)
         end
 
         def expect(state)

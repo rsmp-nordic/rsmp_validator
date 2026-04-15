@@ -5,34 +5,36 @@ module Validator
       include Input
 
       def with_alarm_activated(site_proxy, alarm_code_id, initial_deactivation: true, &block)
-        input_nr, component_id = find_alarm_programming(alarm_code_id)
+        input, component_id = find_alarm_programming(alarm_code_id)
         component_id ||= Validator.get_config('main_component')
-        force_input_and_confirm site_proxy, input: input_nr, value: 'False' if initial_deactivation
-        run_alarm_lifecycle(site_proxy, alarm_code_id, component_id, input_nr, &block)
+        timeout = Validator.get_config('timeouts', 'status_update')
+        force_input_and_confirm(site_proxy, input:, value: 'False', within: timeout) if initial_deactivation
+        run_alarm_lifecycle(site_proxy, alarm_code_id, component_id, input, &block)
       end
 
       private
 
-      def run_alarm_lifecycle(site_proxy, alarm_code_id, component_id, input_nr)
+      def run_alarm_lifecycle(site_proxy, alarm_code_id, component_id, input)
         specialization, alarm_active, alarm_inactive = build_alarm_matchers(site_proxy)
-        timeout = Validator.get_config('timeouts', 'alarm')
+        alarm_timeout = Validator.get_config('timeouts', 'alarm')
+        status_timeout = Validator.get_config('timeouts', 'status_update')
         state = false
         begin
           matcher = { 'cId' => component_id, 'aCId' => alarm_code_id,
                       'aSp' => specialization, 'aS' => alarm_active }
-          collect_task = start_alarm_collector(site_proxy, matcher, timeout)
-          force_input_and_confirm site_proxy, input: input_nr, value: 'True'
+          collect_task = start_alarm_collector(site_proxy, matcher, alarm_timeout)
+          force_input_and_confirm site_proxy, input:, value: 'True', within: status_timeout
           state = true
           yield collect_task.wait, component_id
 
           matcher = { 'cId' => component_id, 'aCId' => alarm_code_id,
                       'aSp' => /Issue/i, 'aS' => alarm_inactive }
-          collect_task = start_alarm_collector(site_proxy, matcher, timeout)
-          force_input_and_confirm site_proxy, input: input_nr, value: 'False'
+          collect_task = start_alarm_collector(site_proxy, matcher, alarm_timeout)
+          force_input_and_confirm site_proxy, input:, value: 'False', within: status_timeout
           state = false
           [collect_task.wait, component_id]
         ensure
-          force_input_and_confirm site_proxy, input: input_nr, value: 'False' if state == true
+          force_input_and_confirm(site_proxy, input:, value: 'False', within: status_timeout) if state == true
         end
       end
 

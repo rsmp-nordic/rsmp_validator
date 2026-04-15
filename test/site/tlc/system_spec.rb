@@ -58,8 +58,9 @@ describe 'Site::Tlc::System' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       code1 = Validator.get_config('secrets', 'security_codes', 1)
       code2 = Validator.get_config('secrets', 'security_codes', 2)
-      site_proxy.set_security_code(level: 'Level1', old_code: code1, new_code: code1)
-      site_proxy.set_security_code(level: 'Level2', old_code: code2, new_code: code2)
+      timeout = Validator.get_config('timeouts', 'command_response')
+      site_proxy.set_security_code(level: 'Level1', old_code: code1, new_code: code1, within: timeout)
+      site_proxy.set_security_code(level: 'Level2', old_code: code2, new_code: code2, within: timeout)
     end
   end
 

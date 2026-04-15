@@ -70,34 +70,36 @@ describe 'Site::Tlc::EmergencyRoutes' do
   it 'emergency routes can be activated with M0005 and read with S0035' do
     skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
     skip 'requires sxl >= 1.2' unless Validator.sxl_matches?('>=1.2')
+
+    emergency_routes = Validator.get_config('items', 'emergency_routes')
+    skip('No emergency routes configured') if emergency_routes.nil? || emergency_routes.empty?
+
     def enable_routes(site_proxy, emergency_routes)
+      timeout = Validator.get_config('timeouts', 'command_response')
       emergency_routes.each do |emergency_route|
-        site_proxy.set_emergency_route(route: emergency_route.to_s, active: true)
+        site_proxy.set_emergency_route(route: emergency_route.to_s, active: true, within: timeout)
       end
       routes = emergency_routes.map { |i| { 'id' => i.to_s } }
       wait_for_status(site_proxy, "emergency routes #{emergency_routes} to be enabled",
                       [{ 'sCI' => 'S0035', 'n' => 'emergencyroutes', 's' => routes }])
     end
 
-    def disable_routes(site_proxy, emergency_routes)
+    def disable_routes(site_proxy, emergency_routes, within:)
       emergency_routes.each do |emergency_route|
-        site_proxy.set_emergency_route(route: emergency_route.to_s, active: false)
+        site_proxy.set_emergency_route(route: emergency_route.to_s, active: false, within:)
       end
       routes = []
       wait_for_status(site_proxy, 'all emergency routes to be disabled',
                       [{ 'sCI' => 'S0035', 'n' => 'emergencyroutes', 's' => routes }])
     end
 
-    emergency_routes = Validator.get_config('items', 'emergency_routes')
-
-    skip('No emergency routes configured') if emergency_routes.nil? || emergency_routes.empty?
-
     with_site(:connected) do |site_proxy|
-      disable_routes(site_proxy, emergency_routes)
+      timeout = Validator.get_config('timeouts', 'command_response')
+      disable_routes(site_proxy, emergency_routes, within: timeout)
       begin
         enable_routes(site_proxy, emergency_routes)
       ensure
-        disable_routes(site_proxy, emergency_routes)
+        disable_routes(site_proxy, emergency_routes, within: timeout)
       end
     end
   end
