@@ -9,8 +9,8 @@ describe 'Site::Tlc::EmergencyRoutes' do
   # 3. Then we should receive a status response.
   it 'emergency route is read with S0006' do
     with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
-      request_status_and_confirm site_proxy, 'emergency route status',
-                                 { S0006: %i[status emergencystage] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0006: %i[status emergencystage] }, within: timeout)
     end
   end
 
@@ -22,8 +22,8 @@ describe 'Site::Tlc::EmergencyRoutes' do
   it 'emergency route is read with S0035' do
     skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
     with_site(:connected, sxl: '>=1.2') do |site_proxy|
-      request_status_and_confirm site_proxy, 'emergency route status',
-                                 { S0035: [:emergencyroutes] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0035: [:emergencyroutes] }, within: timeout)
     end
   end
 

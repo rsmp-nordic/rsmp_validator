@@ -88,7 +88,7 @@ module Validator
         sequencer = SignalGroupSequence.new Validator.get_config('startup_sequence')
         collector_task = start_sequence_collector(collector, sequencer)
         yield
-        site_proxy.subscribe_to_status component, subscribe_list
+        site_proxy.subscribe_to_status subscribe_list, component: component
         handle_startup_sequence_result(collector_task.wait, sequencer, collector, timeout)
         wait_for_status(site_proxy, 'control mode to be startup',
                         [{ 'sCI' => 'S0020', 'n' => 'controlmode', 's' => 'control' }])
@@ -99,9 +99,10 @@ module Validator
       private
 
       def build_subscribe_lists(site_proxy, status_list)
-        subscribe_list = convert_status_list(status_list).map { |item| item.merge 'uRt' => 0.to_s }
+        raw_list = RSMP::StatusList.new(status_list).to_a
+        subscribe_list = raw_list.map { |item| item.merge 'uRt' => 0.to_s }
         subscribe_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
-        [subscribe_list, convert_status_list(status_list)]
+        [subscribe_list, raw_list]
       end
 
       def start_sequence_collector(collector, sequencer)

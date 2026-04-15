@@ -6,15 +6,14 @@ module Validator
 
       def wrong_security_code(site_proxy)
         log 'Try to force detector logic with wrong security code'
-        command_list = build_command_list :M0008, :setForceDetectorLogic, {
-          securityCode: '1111',
-          status: 'True',
-          mode: 'True'
-        }
+        command_list = RSMP::CommandList.new(:M0008, :setForceDetectorLogic,
+                                             securityCode: '1111',
+                                             status: 'True',
+                                             mode: 'True').to_a
         component = Validator.get_config('components', 'detector_logic').keys[0]
-        site_proxy.send_command component, command_list, collect!: {
-          timeout: Validator.get_config('timeouts', 'command_response')
-        }
+        result = site_proxy.send_command component, command_list,
+                                         within: Validator.get_config('timeouts', 'command_response')
+        result[:collector].ok!
       end
 
       def require_security_codes

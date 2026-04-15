@@ -19,9 +19,9 @@ describe 'Site::Tlc::Subscribe' do
       status_list = [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus', 'uRt' => '1' }]
       status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
 
-      site_proxy.subscribe_to_status component, status_list, collect!: {
-        timeout: Validator.get_config('timeouts', 'status_update')
-      }
+      site_proxy.subscribe_to_status status_list,
+                                     component: component,
+                                     within: Validator.get_config('timeouts', 'status_update')
     ensure
       unsubscribe_list = status_list.map { |item| item.slice('sCI', 'n') }
       site_proxy.unsubscribe_to_status component, unsubscribe_list
@@ -47,7 +47,7 @@ describe 'Site::Tlc::Subscribe' do
       initial_status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
 
       # Subscribe but don't wait for updates (since 60s is too long)
-      site_proxy.subscribe_to_status component, initial_status_list
+      site_proxy.subscribe_to_status initial_status_list, component: component
       log 'Initial subscription with 60s update rate successful'
 
       # Step 3: Change update rate to 1s by re-subscribing and verify we get update within 2s
@@ -56,9 +56,9 @@ describe 'Site::Tlc::Subscribe' do
       updated_status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
 
       # This should collect at least one status update within 2s if the 1s rate is working
-      result = site_proxy.subscribe_to_status component, updated_status_list, collect!: {
-        timeout: 2
-      }
+      result = site_proxy.subscribe_to_status updated_status_list,
+                                              component: component,
+                                              within: 2
 
       assert(!result.nil?, 'Expected subscribe_to_status to return a result')
       assert(!result[:collector].messages.empty?,

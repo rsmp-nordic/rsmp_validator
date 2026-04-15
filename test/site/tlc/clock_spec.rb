@@ -19,15 +19,10 @@ describe 'Site::Tlc::Clock' do
   # 3. Expect status response before timeout
   it 'can be read with S0096' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      request_status_and_confirm site_proxy, 'current date and time',
-                                 { S0096: %i[
-                                   year
-                                   month
-                                   day
-                                   hour
-                                   minute
-                                   second
-                                 ] }
+      site_proxy.request_status(
+        { S0096: %i[year month day hour minute second] },
+        within: Validator.get_config('timeouts', 'status_response'),
+      )
     end
   end
 
@@ -61,12 +56,10 @@ describe 'Site::Tlc::Clock' do
             minute
             second
           ] }
+          timeout = Validator.get_config('timeouts', 'status_update')
           result = site_proxy.request_status(
-            Validator.get_config('main_component'),
-            convert_status_list(status_list),
-            collect!: {
-              timeout: Validator.get_config('timeouts', 'status_update')
-            }
+            status_list,
+            within: timeout,
           )
           collector = result[:collector]
           status = status_list.keys.first.to_s
@@ -81,9 +74,8 @@ describe 'Site::Tlc::Clock' do
             'UTC'
           )
 
-          max_diff =
-            Validator.get_config('timeouts', 'command_response') +
-            Validator.get_config('timeouts', 'status_response')
+          max_diff = Validator.get_config('timeouts', 'command_response') +
+                     Validator.get_config('timeouts', 'status_response')
 
           diff = received - clock
           diff = diff.round
@@ -114,15 +106,12 @@ describe 'Site::Tlc::Clock' do
             second
           ] }
 
-          result = site_proxy.request_status Validator.get_config('main_component'),
-                                             convert_status_list(status_list),
-                                             collect!: {
-                                               timeout: Validator.get_config('timeouts', 'status_response')
-                                             }
+          timeout = Validator.get_config('timeouts', 'status_response')
+          result = site_proxy.request_status(status_list,
+                                             within: timeout)
           collector = result[:collector]
 
-          max_diff = Validator.get_config('timeouts',
-                                          'command_response') + Validator.get_config('timeouts', 'status_response')
+          max_diff = Validator.get_config('timeouts', 'command_response') + timeout
           diff = Time.parse(collector.messages.first.attributes['sTs']) - clock
           diff = diff.round
           assert(diff.abs <= max_diff,
@@ -145,12 +134,11 @@ describe 'Site::Tlc::Clock' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
         with_clock_set site_proxy, clock do
-          result = site_proxy.request_aggregated_status Validator.get_config('main_component'), collect!: {
-            timeout: Validator.get_config('timeouts', 'status_response')
-          }
+          component = Validator.get_config('main_component')
+          timeout = Validator.get_config('timeouts', 'status_response')
+          result = site_proxy.request_aggregated_status(component, within: timeout)
           collector = result[:collector]
-          max_diff = Validator.get_config('timeouts',
-                                          'command_response') + Validator.get_config('timeouts', 'status_response')
+          max_diff = Validator.get_config('timeouts', 'command_response') + timeout
           diff = Time.parse(collector.messages.first.attributes['aSTS']) - clock
           diff = diff.round
           assert(diff.abs <= max_diff,
@@ -172,8 +160,7 @@ describe 'Site::Tlc::Clock' do
       site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
         with_clock_set site_proxy, clock do
           timeout = Validator.get_config('timeouts', 'command_response')
-          result = site_proxy.set_functional_position('NormalControl',
-                                                      options: { collect!: { timeout: timeout } })
+          result = site_proxy.set_functional_position('NormalControl', within: timeout)
           collector = result[:collector]
           max_diff = timeout * 2
           diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
@@ -197,8 +184,7 @@ describe 'Site::Tlc::Clock' do
       site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
         with_clock_set site_proxy, clock do
           timeout = Validator.get_config('timeouts', 'command_response')
-          result = site_proxy.set_functional_position('NormalControl',
-                                                      options: { collect!: { timeout: timeout } })
+          result = site_proxy.set_functional_position('NormalControl', within: timeout)
           collector = result[:collector]
           max_diff = timeout
           diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
@@ -227,8 +213,8 @@ describe 'Site::Tlc::Clock' do
         with_clock_set site_proxy, clock do # set clock
           with_alarm_activated(site_proxy, 'A0302') do |alarm| # raise alarm, by activating input
             alarm_time = Time.parse(alarm.attributes['aTs'])
-            max_diff = Validator.get_config('timeouts',
-                                            'command_response') + Validator.get_config('timeouts', 'status_response')
+            max_diff = Validator.get_config('timeouts', 'command_response') +
+                       Validator.get_config('timeouts', 'status_response')
             diff = alarm_time - clock
             assert(diff.round.abs <= max_diff,
                    "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s")
@@ -250,11 +236,12 @@ describe 'Site::Tlc::Clock' do
       site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
         with_clock_set site_proxy, clock do
           log 'Checking watchdog timestamp'
-          collector = RSMP::Collector.new site_proxy, task: Async::Task.current, type: 'Watchdog', num: 1,
-                                                      timeout: Validator.get_config('timeouts', 'watchdog')
+          watchdog_timeout = Validator.get_config('timeouts', 'watchdog')
+          collector = RSMP::Collector.new(site_proxy, task: Async::Task.current, type: 'Watchdog', num: 1,
+                                                      timeout: watchdog_timeout)
           collector.collect!
-          max_diff = Validator.get_config('timeouts',
-                                          'command_response') + Validator.get_config('timeouts', 'status_response')
+          max_diff = Validator.get_config('timeouts', 'command_response') +
+                     Validator.get_config('timeouts', 'status_response')
           diff = Time.parse(collector.messages.first.attributes['wTs']) - clock
           diff = diff.round
           assert(diff.abs <= max_diff,

@@ -10,8 +10,8 @@ describe 'Site::Tlc::Input' do
   # 3. Then we should receive a valid response
   it 'is read with S0003 with extended input status' do
     with_site(:connected, sxl: '<1.2') do |site_proxy|
-      request_status_and_confirm site_proxy, 'input status',
-                                 { S0003: %i[inputstatus extendedinputstatus] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0003: %i[inputstatus extendedinputstatus] }, within: timeout)
     end
   end
 
@@ -21,8 +21,8 @@ describe 'Site::Tlc::Input' do
   # 3. Then we should receive a valid response
   it 'is read with S0003' do
     with_site(:connected, sxl: '>=1.2') do |site_proxy|
-      request_status_and_confirm site_proxy, 'input status',
-                                 { S0003: [:inputstatus] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0003: [:inputstatus] }, within: timeout)
     end
   end
 
@@ -32,8 +32,8 @@ describe 'Site::Tlc::Input' do
   # 3. Then we should receive a valid response
   it 'forcing is read with S0029' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      request_status_and_confirm site_proxy, 'forced input status',
-                                 { S0029: [:status] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0029: [:status] }, within: timeout)
     end
   end
 
@@ -48,8 +48,9 @@ describe 'Site::Tlc::Input' do
       inputs = Validator.get_config('items', 'inputs')
       skip('No inputs configured') if inputs.nil? || inputs.empty?
       inputs.each do |input|
-        site_proxy.force_input(input: input, status: 'True', value: 'False')
-        site_proxy.force_input(input: input, status: 'True', value: 'True')
+        timeout = Validator.get_config('timeouts', 'command')
+        site_proxy.force_input(input: input, status: 'True', value: 'False', within: timeout)
+        site_proxy.force_input(input: input, status: 'True', value: 'True', within: timeout)
       ensure
         site_proxy.force_input(input: input, status: 'False', value: 'True')
       end
@@ -80,7 +81,8 @@ describe 'Site::Tlc::Input' do
       inputs = Validator.get_config('items', 'inputs')
       skip('No inputs configured') if inputs.nil? || inputs.empty?
       status = '1,3,12;5,5,10'
-      site_proxy.set_inputs(status)
+      timeout = Validator.get_config('timeouts', 'command')
+      site_proxy.set_inputs(status, within: timeout)
     end
   end
 

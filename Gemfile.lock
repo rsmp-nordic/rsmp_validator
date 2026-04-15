@@ -8,6 +8,18 @@ PATH
       sus
       sus-fixtures-async
 
+PATH
+  remote: /Users/emiltin/Documents/code/rsmp
+  specs:
+    rsmp (0.41.0)
+      async (~> 2.32)
+      colorize (~> 1.1)
+      io-endpoint (~> 0.15)
+      io-stream (~> 0.10)
+      logger (~> 1.6)
+      ostruct (~> 0.6)
+      rsmp_schema (~> 0.10)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -74,14 +86,6 @@ GEM
     rainbow (3.1.1)
     rake (13.3.1)
     regexp_parser (2.12.0)
-    rsmp (0.41.0)
-      async (~> 2.32)
-      colorize (~> 1.1)
-      io-endpoint (~> 0.15)
-      io-stream (~> 0.10)
-      logger (~> 1.6)
-      ostruct (~> 0.6)
-      rsmp_schema (~> 0.10)
     rsmp_schema (0.10.1)
       json_schemer (~> 2.5)
       thor (~> 1.5)
@@ -123,7 +127,7 @@ DEPENDENCIES
   activesupport
   colorize
   rake
-  rsmp
+  rsmp!
   rsmp_validator!
   rubocop
   sus
@@ -163,7 +167,7 @@ CHECKSUMS
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.3.1) sha256=8c9e89d09f66a26a01264e7e3480ec0607f0c497a861ef16063604b1b08eb19c
   regexp_parser (2.12.0) sha256=35a916a1d63190ab5c9009457136ae5f3c0c7512d60291d0d1378ba18ce08ebb
-  rsmp (0.41.0) sha256=365851f7b40fbe83864c57c197733b21ea8bc0efdac819f51b9cd1c3be05defc
+  rsmp (0.41.0)
   rsmp_schema (0.10.1) sha256=c2c4cb8b27a4a611fb4bc896931974c565a3a823ec1487d4a2d3ec4a72bd62cf
   rsmp_validator (0.1.0)
   rubocop (1.86.0) sha256=4ff1186fe16ebe9baff5e7aad66bb0ad4cabf5cdcd419f773146dbba2565d186

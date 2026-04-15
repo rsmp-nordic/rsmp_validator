@@ -26,7 +26,7 @@ describe 'Site::Tlc::Alarm' do
   # 4. When we force the input to False
   # 5. Then the alarm issue should become inactive, with a timestamp close to now
 
-  it 'Alarm A0302 is raised when input is activated' do
+  it 'raises A0302 when input is activated' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       alarm_code_id = 'A0302'
       def verify_timestamp(alarm, duration = 1.minute)
@@ -55,7 +55,7 @@ describe 'Site::Tlc::Alarm' do
   # 4. When we acknowledge the alarm
   # 5. Then we should receive an acknowledged alarm issue
 
-  it 'A0302 can be acknowledged' do
+  it 'can acknowledge A0302' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       alarm_code_id = 'A0302' # what alarm to expect
       timeout = Validator.get_config('timeouts', 'alarm')
@@ -109,7 +109,7 @@ describe 'Site::Tlc::Alarm' do
   # 5. When we resume the alarm
   # 6. Then we should receive an alarm resumed message
 
-  it 'A0302 can be suspended and resumed' do
+  it 'can suspende and resume A0302' do
     with_site(:connected) do |site_proxy|
       alarm_code_id = 'A0302'
       _, component_id = find_alarm_programming(alarm_code_id)

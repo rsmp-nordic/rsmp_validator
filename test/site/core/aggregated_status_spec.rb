@@ -10,9 +10,8 @@ describe 'Site::Core' do
     it 'can be requested' do
       with_site(:connected, core: '>=3.1.5') do |site_proxy|
         log 'Request aggregated status'
-        site_proxy.request_aggregated_status Validator.get_config('main_component'), collect!: {
-          timeout: Validator.get_config('timeouts', 'status_response')
-        }
+        site_proxy.request_aggregated_status Validator.get_config('main_component'),
+                                             within: Validator.get_config('timeouts', 'status_response')
       end
     end
 

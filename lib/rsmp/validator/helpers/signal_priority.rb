@@ -69,34 +69,31 @@ module Validator
         end
 
         def request(level: 7, eta: 2, vehicle_type: 'car')
-          command_list = build_command_list(:M0022, :requestPriority, {
-                                              'requestId' => @request_id,
-                                              'signalGroupId' => @signal_group_id,
-                                              'type' => 'new',
-                                              'level' => level,
-                                              'eta' => eta,
-                                              'vehicleType' => vehicle_type
-                                            })
+          command_list = RSMP::CommandList.new(:M0022, :requestPriority,
+                                               'requestId' => @request_id,
+                                               'signalGroupId' => @signal_group_id,
+                                               'type' => 'new',
+                                               'level' => level,
+                                               'eta' => eta,
+                                               'vehicleType' => vehicle_type).to_a
           @site_proxy.send_command @component, command_list
         end
 
         def request_unrelated(level: 7, eta: 2, vehicle_type: 'car')
-          command_list = build_command_list(:M0022, :requestPriority, {
-                                              'requestId' => SecureRandom.uuid[0..3],
-                                              'signalGroupId' => @signal_group_id,
-                                              'type' => 'new',
-                                              'level' => level,
-                                              'eta' => eta,
-                                              'vehicleType' => vehicle_type
-                                            })
+          command_list = RSMP::CommandList.new(:M0022, :requestPriority,
+                                               'requestId' => SecureRandom.uuid[0..3],
+                                               'signalGroupId' => @signal_group_id,
+                                               'type' => 'new',
+                                               'level' => level,
+                                               'eta' => eta,
+                                               'vehicleType' => vehicle_type).to_a
           @site_proxy.send_command @component, command_list
         end
 
         def cancel
-          command_list = build_command_list :M0022, :requestPriority, {
-            requestId: @request_id,
-            type: 'cancel'
-          }
+          command_list = RSMP::CommandList.new(:M0022, :requestPriority,
+                                               requestId: @request_id,
+                                               type: 'cancel').to_a
           @site_proxy.send_command @component, command_list
         end
 
@@ -115,7 +112,7 @@ module Validator
 
         def start
           start_receiving
-          @site_proxy.subscribe_to_status @component, @subscribe_list
+          @site_proxy.subscribe_to_status @subscribe_list, component: @component
         end
 
         def stop

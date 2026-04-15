@@ -12,14 +12,13 @@ describe 'Site::Tlc::SignalPriority' do
   it 'can be requested with M0022' do
     with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
       signal_group = Validator.get_config('components', 'signal_group').keys.first
-      command_list = build_command_list :M0022, :requestPriority, {
-        requestId: SecureRandom.uuid[0..3],
-        signalGroupId: signal_group,
-        type: 'new',
-        level: 7,
-        eta: 10,
-        vehicleType: 'car'
-      }
+      command_list = RSMP::CommandList.new(:M0022, :requestPriority,
+                                           requestId: SecureRandom.uuid[0..3],
+                                           signalGroupId: signal_group,
+                                           type: 'new',
+                                           level: 7,
+                                           eta: 10,
+                                           vehicleType: 'car').to_a
       send_command_and_confirm(site_proxy, command_list,
                                "Request signal priority for signal group #{signal_group}")
     end
@@ -32,8 +31,8 @@ describe 'Site::Tlc::SignalPriority' do
   # 3. Then we should receive a status update
   it 'status can be fetched with S0033' do
     with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
-      request_status_and_confirm site_proxy, 'signal group status',
-                                 { S0033: [:status] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0033: [:status] }, within: timeout)
     end
   end
 
