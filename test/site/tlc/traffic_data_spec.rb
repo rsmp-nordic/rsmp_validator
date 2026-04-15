@@ -9,9 +9,13 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'number of vehicles for a single detector is read with S0201' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      request_status_and_confirm site_proxy, 'traffic counting: number of vehicles',
-                                 { S0201: %i[starttime vehicles] },
-                                 Validator.get_config('components', 'detector_logic').keys.first
+      timeout = Validator.get_config('timeouts', 'status_response')
+      component = Validator.get_config('components', 'detector_logic').keys.first
+      site_proxy.request_status(
+        { S0201: %i[starttime vehicles] },
+        component: component,
+        within: timeout,
+      )
     end
   end
 
@@ -22,8 +26,8 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'number of vehicles for all detectors is read with S0205' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
-      request_status_and_confirm site_proxy, 'traffic counting: number of vehicles',
-                                 { S0205: %i[start vehicles] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0205: %i[start vehicles] }, within: timeout)
     end
   end
 
@@ -34,9 +38,13 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'vehicle speed for a single detector is read with S0202' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      request_status_and_confirm site_proxy, 'traffic counting: vehicle speed',
-                                 { S0202: %i[starttime speed] },
-                                 Validator.get_config('components', 'detector_logic').keys.first
+      timeout = Validator.get_config('timeouts', 'status_response')
+      component = Validator.get_config('components', 'detector_logic').keys.first
+      site_proxy.request_status(
+        { S0202: %i[starttime speed] },
+        component: component,
+        within: timeout,
+      )
     end
   end
 
@@ -47,8 +55,8 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'vehicle speed for all detectors is read with S0206' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
-      request_status_and_confirm site_proxy, 'traffic counting: vehicle speed',
-                                 { S0206: %i[start speed] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0206: %i[start speed] }, within: timeout)
     end
   end
 
@@ -59,9 +67,13 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'occupancy for a single detector is read with S0203' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      request_status_and_confirm site_proxy, 'traffic counting: occupancy',
-                                 { S0203: %i[starttime occupancy] },
-                                 Validator.get_config('components', 'detector_logic').keys.first
+      timeout = Validator.get_config('timeouts', 'status_response')
+      component = Validator.get_config('components', 'detector_logic').keys.first
+      site_proxy.request_status(
+        { S0203: %i[starttime occupancy] },
+        component: component,
+        within: timeout,
+      )
     end
   end
 
@@ -96,20 +108,24 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'classification for a single detector is read with S0204' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      request_status_and_confirm site_proxy, 'traffic counting: classification',
-                                 { S0204: %i[
-                                   starttime
-                                   P
-                                   PS
-                                   L
-                                   LS
-                                   B
-                                   SP
-                                   MC
-                                   C
-                                   F
-                                 ] },
-                                 Validator.get_config('components', 'detector_logic').keys.first
+      timeout = Validator.get_config('timeouts', 'status_response')
+      component = Validator.get_config('components', 'detector_logic').keys.first
+      site_proxy.request_status(
+        { S0204: %i[
+          starttime
+          P
+          PS
+          L
+          LS
+          B
+          SP
+          MC
+          C
+          F
+        ] },
+        component: component,
+        within: timeout,
+      )
     end
   end
 
@@ -120,19 +136,22 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'classification for all detectors is read with S0208' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
-      request_status_and_confirm site_proxy, 'traffic counting: classification',
-                                 { S0208: %i[
-                                   start
-                                   P
-                                   PS
-                                   L
-                                   LS
-                                   B
-                                   SP
-                                   MC
-                                   C
-                                   F
-                                 ] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status(
+        { S0208: %i[
+          start
+          P
+          PS
+          L
+          LS
+          B
+          SP
+          MC
+          C
+          F
+        ] },
+        within: timeout,
+      )
     end
   end
 end

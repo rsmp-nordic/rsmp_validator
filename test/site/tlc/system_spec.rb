@@ -15,7 +15,8 @@ describe 'Site::Tlc::System' do
                     else
                       { S0091: %i[user status] }
                     end
-      request_status_and_confirm site_proxy, 'operator logged in/out OP-panel', status_list
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status(status_list, within: timeout)
     end
   end
 
@@ -31,7 +32,8 @@ describe 'Site::Tlc::System' do
                     else
                       { S0092: %i[user status] }
                     end
-      request_status_and_confirm site_proxy, 'operator logged in/out web-interface', status_list
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status(status_list, within: timeout)
     end
   end
 
@@ -42,8 +44,8 @@ describe 'Site::Tlc::System' do
   # 3. Expect status response before timeout
   it 'version is read with S0095' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      request_status_and_confirm site_proxy, 'version of traffic controller',
-                                 { S0095: [:status] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0095: [:status] }, within: timeout)
     end
   end
 

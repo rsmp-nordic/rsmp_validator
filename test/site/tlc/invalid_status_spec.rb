@@ -11,11 +11,10 @@ describe 'Site::Tlc::InvalidStatus' do
   it 'return a command response with age=undefined when component id is unknown' do
     with_site(:connected, core: '>=3.1.3') do |site_proxy|
       log 'Sending M0001 with bad component id'
-      status_list = convert_status_list(S0001: [:signalgroupstatus])
       result = site_proxy.request_status(
-        'bad',
-        status_list,
-        collect: { timeout: Validator.get_config('timeouts', 'status_response') },
+        { S0001: [:signalgroupstatus] },
+        component: 'bad',
+        within: Validator.get_config('timeouts', 'status_response'),
         validate: false
       )
       collector = result[:collector]
@@ -41,16 +40,14 @@ describe 'Site::Tlc::InvalidStatus' do
   it 'returns NotAck when status code is unknown' do
     with_site(:connected) do |site_proxy|
       log 'Requesting non-existing status S0000'
-      status_list = convert_status_list(S0000: [:status])
-      result = site_proxy.request_status(
-        Validator.get_config('main_component'), status_list,
-        collect: { timeout: Validator.get_config('timeouts', 'status_response') },
-        validate: false
-      )
-      collector = result[:collector]
-      expect(collector).to be_a(RSMP::Collector)
-      expect(collector.status).to eq(:cancelled)
-      expect(collector.error).to be_a(RSMP::MessageRejected)
+      expect do
+        site_proxy.request_status(
+          { S0000: [:status] },
+          component: Validator.get_config('main_component'),
+          within: Validator.get_config('timeouts', 'status_response'),
+          validate: false
+        )
+      end.to raise_exception(RSMP::MessageRejected)
     end
   end
 
@@ -63,16 +60,14 @@ describe 'Site::Tlc::InvalidStatus' do
   it 'returns NotAck when status name is unknown' do
     with_site(:connected) do |site_proxy|
       log 'Requesting S0001 with non-existing status name'
-      status_list = convert_status_list(S0001: [:bad])
-      result = site_proxy.request_status(
-        Validator.get_config('main_component'), status_list,
-        collect: { timeout: Validator.get_config('timeouts', 'status_response') },
-        validate: false
-      )
-      collector = result[:collector]
-      expect(collector).to be_a(RSMP::Collector)
-      expect(collector.status).to eq(:cancelled)
-      expect(collector.error).to be_a(RSMP::MessageRejected)
+      expect do
+        site_proxy.request_status(
+          { S0001: [:bad] },
+          component: Validator.get_config('main_component'),
+          within: Validator.get_config('timeouts', 'status_response'),
+          validate: false
+        )
+      end.to raise_exception(RSMP::MessageRejected)
     end
   end
 end

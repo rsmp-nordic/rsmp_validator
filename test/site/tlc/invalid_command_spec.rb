@@ -11,16 +11,15 @@ describe 'Site::Tlc::InvalidCommand' do
   it 'returns a command response with age=undefined if compoent id is unknown' do
     with_site(:connected, core: '>=3.1.3') do |site_proxy|
       log 'Sending M0001'
-      command_list = build_command_list :M0001, :setValue, {
-        securityCode: Validator.get_config('secrets', 'security_codes', 2),
-        status: 'NormalControl',
-        timeout: 0,
-        intersection: 0
-      }
+      command_list = RSMP::CommandList.new(:M0001, :setValue,
+                                           securityCode: Validator.get_config('secrets', 'security_codes', 2),
+                                           status: 'NormalControl',
+                                           timeout: 0,
+                                           intersection: 0).to_a
       result = site_proxy.send_command(
         'bad',
         command_list,
-        collect: { timeout: Validator.get_config('timeouts', 'command_response') },
+        within: Validator.get_config('timeouts', 'command_response'),
         validate: false # disable validation of outgoing message
       )
       collector = result[:collector]
@@ -46,10 +45,13 @@ describe 'Site::Tlc::InvalidCommand' do
   it 'returns NotAck if command code id is unknown' do
     with_site(:connected) do |site_proxy|
       log 'Sending non-existing command M0000'
-      command_list = build_command_list :M0000, :bad, {}
-      result = site_proxy.send_command Validator.get_config('main_component'), command_list,
-                                       collect: { timeout: Validator.get_config('timeouts', 'command_response') },
-                                       validate: false # disable validation of outgoing message
+      command_list = RSMP::CommandList.new(:M0000, :bad, {}).to_a
+      component = Validator.get_config('main_component')
+      timeout = Validator.get_config('timeouts', 'command_response')
+
+      result = site_proxy.send_command(component, command_list,
+                                       within: timeout,
+                                       validate: false) # disable schema validation of outgoing message
       collector = result[:collector]
       expect(collector).to be_a(RSMP::Collector)
       expect(collector.status).to eq(:cancelled)
@@ -67,15 +69,16 @@ describe 'Site::Tlc::InvalidCommand' do
   it 'returns NotAck if attribute is missing' do
     with_site(:connected) do |site_proxy|
       log "Sending M0001 with 'status' attribute missing"
-      command_list = build_command_list :M0001, :setValue, {
-        securityCode: '1111',
-        intersection: '0',
-        timeout: '0'
-        # intentionally not setting 'status'
-      }
-      result = site_proxy.send_command Validator.get_config('main_component'), command_list,
-                                       collect: { timeout: Validator.get_config('timeouts', 'command_response') },
-                                       validate: false # disable validation of outgoing message
+      command_list = RSMP::CommandList.new(:M0001, :setValue,
+                                           securityCode: '1111',
+                                           intersection: '0',
+                                           timeout: '0').to_a
+      # intentionally not setting 'status'
+      component = Validator.get_config('main_component')
+      timeout = Validator.get_config('timeouts', 'command_response')
+      result = site_proxy.send_command(component, command_list,
+                                       within: timeout,
+                                       validate: false) # disable validation of outgoing message
       collector = result[:collector]
       expect(collector).to be_a(RSMP::Collector)
       expect(collector.status).to eq(:cancelled)
@@ -94,14 +97,15 @@ describe 'Site::Tlc::InvalidCommand' do
     with_site(:connected) do |site_proxy|
       log 'Sending M0001'
       # for M0001, cO should be :setValue, here we use the incorrect :bad
-      command_list = build_command_list :M0001, :bad, {
-        securityCode: '1111',
-        intersection: '0',
-        timeout: '0'
-      }
-      result = site_proxy.send_command Validator.get_config('main_component'), command_list,
-                                       collect: { timeout: Validator.get_config('timeouts', 'command_response') },
-                                       validate: false # disable validation of outgoing message
+      command_list = RSMP::CommandList.new(:M0001, :bad,
+                                           securityCode: '1111',
+                                           intersection: '0',
+                                           timeout: '0').to_a
+      component = Validator.get_config('main_component')
+      timeout = Validator.get_config('timeouts', 'command_response')
+      result = site_proxy.send_command(component, command_list,
+                                       within: timeout,
+                                       validate: false) # disable validation of outgoing message
       collector = result[:collector]
       expect(collector).to be_a(RSMP::Collector)
       expect(collector.status).to eq(:cancelled)

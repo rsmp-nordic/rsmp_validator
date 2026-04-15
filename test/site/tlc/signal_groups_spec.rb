@@ -32,8 +32,8 @@ describe 'Site::Tlc::SignalGroups' do
   # 3. Expect status response before timeout
   it 'state is read with S0001' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      request_status_and_confirm site_proxy, 'signal group status',
-                                 { S0001: %i[signalgroupstatus cyclecounter basecyclecounter stage] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0001: %i[signalgroupstatus cyclecounter basecyclecounter stage] }, within: timeout)
     end
   end
 
@@ -44,17 +44,21 @@ describe 'Site::Tlc::SignalGroups' do
   # 3. Expect status response before timeout
   it 'red/green predictions is read with S0025' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      request_status_and_confirm site_proxy, 'time-of-green/time-of-red',
-                                 { S0025: %i[
-                                   minToGEstimate
-                                   maxToGEstimate
-                                   likelyToGEstimate
-                                   ToGConfidence
-                                   minToREstimate
-                                   maxToREstimate
-                                   likelyToREstimate
-                                 ] },
-                                 Validator.get_config('components', 'signal_group').keys.first
+      timeout = Validator.get_config('timeouts', 'status_response')
+      component = Validator.get_config('components', 'signal_group').keys.first
+      site_proxy.request_status(
+        { S0025: %i[
+          minToGEstimate
+          maxToGEstimate
+          likelyToGEstimate
+          ToGConfidence
+          minToREstimate
+          maxToREstimate
+          likelyToREstimate
+        ] },
+        component: component,
+        within: timeout
+      )
     end
   end
 
@@ -65,8 +69,8 @@ describe 'Site::Tlc::SignalGroups' do
   # 3. Expect status response before timeout
   it 'list size is read with S0017' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      request_status_and_confirm site_proxy, 'number of signal groups',
-                                 { S0017: [:number] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0017: [:number] }, within: timeout)
     end
   end
 
@@ -79,9 +83,8 @@ describe 'Site::Tlc::SignalGroups' do
     skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
     with_site(:connected) do |site_proxy|
       verify_startup_sequence(site_proxy) do
-        site_proxy.set_functional_position('YellowFlash',
-                                           options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                                'yellow_flash') } })
+        timeout = Validator.get_config('timeouts', 'yellow_flash')
+        site_proxy.set_functional_position('YellowFlash', within: timeout)
         site_proxy.set_functional_position('NormalControl')
       end
       site_proxy.set_functional_position('NormalControl')

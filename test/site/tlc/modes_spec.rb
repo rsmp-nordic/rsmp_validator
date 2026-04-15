@@ -10,8 +10,8 @@ describe 'Site::Tlc::Modes' do
   # 3. Expect status response before timeout
   it 'control mode is read with S0020' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      request_status_and_confirm site_proxy, 'control mode',
-                                 { S0020: %i[controlmode intersection] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0020: %i[controlmode intersection] }, within: timeout)
     end
   end
 
@@ -22,8 +22,8 @@ describe 'Site::Tlc::Modes' do
   # 3. Expect status response before timeout
   it 'startup status is read with S0005' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      request_status_and_confirm site_proxy, 'traffic controller starting (true/false)',
-                                 { S0005: [:status] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0005: [:status] }, within: timeout)
     end
   end
 
@@ -36,8 +36,8 @@ describe 'Site::Tlc::Modes' do
   it 'startup status is read with S0005 by intersection' do
     skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
     with_site(:connected, sxl: '>=1.2') do |site_proxy|
-      request_status_and_confirm site_proxy, 'traffic controller starting (true/false)',
-                                 { S0005: [:statusByIntersection] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0005: [:statusByIntersection] }, within: timeout)
     end
   end
 
@@ -48,8 +48,8 @@ describe 'Site::Tlc::Modes' do
   # 3. Expect status response before timeout
   it 'switched on is read with S0007' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      status_list = { S0007: %i[status intersection] }
-      request_status_and_confirm site_proxy, 'controller switch on (dark mode=off)', status_list
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0007: %i[status intersection] }, within: timeout)
     end
   end
 
@@ -60,8 +60,8 @@ describe 'Site::Tlc::Modes' do
   # 3. Expect status response before timeout
   it 'switched on is read with S0007 with source' do
     with_site(:connected, sxl: '>=1.1') do |site_proxy|
-      status_list = { S0007: %i[status intersection source] }
-      request_status_and_confirm site_proxy, 'controller switch on (dark mode=off)', status_list
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0007: %i[status intersection source] }, within: timeout)
     end
   end
 
@@ -77,7 +77,8 @@ describe 'Site::Tlc::Modes' do
                     else
                       { S0008: %i[status intersection] }
                     end
-      request_status_and_confirm site_proxy, 'manual control status', status_list
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status(status_list, within: timeout)
     end
   end
 
@@ -93,7 +94,8 @@ describe 'Site::Tlc::Modes' do
                     else
                       { S0009: %i[status intersection] }
                     end
-      request_status_and_confirm site_proxy, 'fixed time control status', status_list
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status(status_list, within: timeout)
     end
   end
 
@@ -106,9 +108,9 @@ describe 'Site::Tlc::Modes' do
   # 5. Wait for status = false
   it 'fixed time control can be activated with M0007' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      site_proxy.set_fixed_time('True', options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } })
-      site_proxy.set_fixed_time('False',
-                                options: { confirm!: { timeout: Validator.get_config('timeouts', 'command') } })
+      timeout = Validator.get_config('timeouts', 'command')
+      site_proxy.set_fixed_time('True', within: timeout)
+      site_proxy.set_fixed_time('False', within: timeout)
     end
   end
 
@@ -124,7 +126,8 @@ describe 'Site::Tlc::Modes' do
                     else
                       { S0010: %i[status intersection] }
                     end
-      request_status_and_confirm site_proxy, 'isolated control status', status_list
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status(status_list, within: timeout)
     end
   end
 
@@ -135,8 +138,8 @@ describe 'Site::Tlc::Modes' do
   # 3. Expect status response before timeout
   it 'coordinated control is read with S0032' do
     with_site(:connected, sxl: '>=1.1') do |site_proxy|
-      status_list = { S0032: %i[status intersection source] }
-      request_status_and_confirm site_proxy, 'coordinated control status', status_list
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0032: %i[status intersection source] }, within: timeout)
     end
   end
 
@@ -152,7 +155,8 @@ describe 'Site::Tlc::Modes' do
                     else
                       { S0011: %i[status intersection] }
                     end
-      request_status_and_confirm site_proxy, 'yellow flash status', status_list
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status(status_list, within: timeout)
     end
   end
 
@@ -165,12 +169,10 @@ describe 'Site::Tlc::Modes' do
   # 5. Wait for status "Yellow flash" = false, "Controller starting"= false, "Controller on"= true"
   it 'yellow flash can be activated with M0001' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      site_proxy.set_functional_position('YellowFlash',
-                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                              'yellow_flash') } })
-      site_proxy.set_functional_position('NormalControl',
-                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                              'startup_sequence') } })
+      yellow_flash_timeout = Validator.get_config('timeouts', 'yellow_flash')
+      startup_timeout = Validator.get_config('timeouts', 'startup_sequence')
+      site_proxy.set_functional_position('YellowFlash', within: yellow_flash_timeout)
+      site_proxy.set_functional_position('NormalControl', within: startup_timeout)
     end
   end
 
@@ -185,12 +187,11 @@ describe 'Site::Tlc::Modes' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       timeout = Validator.get_config('timeouts', 'yellow_flash')
 
-      site_proxy.set_functional_position('YellowFlash', options: { confirm!: { timeout: timeout } })
+      site_proxy.set_functional_position('YellowFlash', within: timeout)
       site_proxy.wait_for_groups 'c', timeout: timeout      # c means yellow flash
 
-      site_proxy.set_functional_position('NormalControl',
-                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                              'startup_sequence') } })
+      startup_timeout = Validator.get_config('timeouts', 'startup_sequence')
+      site_proxy.set_functional_position('NormalControl', within: startup_timeout)
       site_proxy.wait_for_groups '[^c]', timeout: timeout   # not c, ie. not yellow flash
     end
   end
@@ -207,7 +208,8 @@ describe 'Site::Tlc::Modes' do
                     else
                       { S0012: %i[status intersection] }
                     end
-      request_status_and_confirm site_proxy, 'all-red status', status_list
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status(status_list, within: timeout)
     end
   end
 
@@ -218,8 +220,8 @@ describe 'Site::Tlc::Modes' do
   # 3. Expect status response before timeout
   it 'police key can be read with S0013' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      request_status_and_confirm site_proxy, 'police key',
-                                 { S0013: [:status] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0013: [:status] }, within: timeout)
     end
   end
 
@@ -233,10 +235,9 @@ describe 'Site::Tlc::Modes' do
   it 'dark mode can be activated with M0001' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       timeout = Validator.get_config('timeouts', 'functional_position')
-      site_proxy.set_functional_position('Dark', options: { confirm!: { timeout: timeout } })
-      site_proxy.set_functional_position('NormalControl',
-                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                              'startup_sequence') } })
+      startup_timeout = Validator.get_config('timeouts', 'startup_sequence')
+      site_proxy.set_functional_position('Dark', within: timeout)
+      site_proxy.set_functional_position('NormalControl', within: startup_timeout)
     end
   end
 
@@ -247,16 +248,15 @@ describe 'Site::Tlc::Modes' do
   # 2. Send the control command to switch to Yellow flash
   # 3. Wait for status Yellow flash
   # 5. Wait for automatic revert to Normal Control
-  it 'yellow flash be used with a timeout of one minute' do
+  it 'can use yellow flash with a timeout of one minute' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      site_proxy.set_functional_position('NormalControl',
-                                         options: { confirm!: { timeout: Validator.get_config('timeouts',
-                                                                                              'startup_sequence') } })
+      startup_timeout = Validator.get_config('timeouts', 'startup_sequence')
+      site_proxy.set_functional_position('NormalControl', within: startup_timeout)
       minutes = 1
       timeout = Validator.get_config('timeouts', 'yellow_flash')
-      site_proxy.set_functional_position('YellowFlash', timeout_minutes: minutes,
-                                                        options: { confirm!: { timeout: timeout } })
-      wait_normal_control(site_proxy, timeout: (minutes * 60) + Validator.get_config('timeouts', 'functional_position'))
+      site_proxy.set_functional_position('YellowFlash', timeout_minutes: minutes, within: timeout)
+      fp_timeout = Validator.get_config('timeouts', 'functional_position')
+      wait_normal_control(site_proxy, timeout: (minutes * 60) + fp_timeout)
     end
   end
 end

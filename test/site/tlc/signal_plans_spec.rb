@@ -10,12 +10,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'currently active is read with S0014' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      result = site_proxy.fetch_signal_plan(options: {
-                                              collect!: {
-                                                timeout: Validator.get_config('timeouts', 'status_response')
-                                              }
-                                            })
-      expect(result[:collector].messages.first).to be_a(RSMP::StatusResponse)
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0014: %i[status source] }, within: timeout)
     end
   end
 
@@ -33,22 +29,14 @@ describe 'Site::Tlc::SignalPlans' do
     with_site(:connected) do |site_proxy|
       Validator.get_config('secrets', 'security_codes', 2)
       plans.each do |plan|
-        result = site_proxy.set_timeplan(plan, options: {
-                                           collect!: {
-                                             timeout: Validator.get_config('timeouts', 'command_response')
-                                           }
-                                         })
+        command_timeout = Validator.get_config('timeouts', 'command')
+        status_timeout = Validator.get_config('timeouts', 'status_response')
+        result = site_proxy.set_timeplan(plan, within: command_timeout)
         expect(result[:collector].messages.first).to be_a(RSMP::CommandResponse)
 
-        status_result = site_proxy.fetch_signal_plan(options: {
-                                                       collect!: {
-                                                         timeout: Validator.get_config('timeouts', 'status_response')
-                                                       }
-                                                     })
-        status_message = status_result[:collector].messages.first
-        expect(status_message).to be_a(RSMP::StatusResponse)
-        status_values = status_message.attributes['sS'].to_h { |item| [item['n'], item['s']] }
-        expect(status_values['status'].to_i).to eq(plan)
+        result = site_proxy.request_status({ S0014: %i[status source] }, within: status_timeout)
+        ss = result[:collector].messages.last.attributes['sS']
+        expect(ss.find { |i| i['n'] == 'status' }&.fetch('s').to_i).to eq(plan)
       end
     end
   end
@@ -61,8 +49,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'list size is read with S0018' do
     with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
-      request_status_and_confirm site_proxy, 'number of time plans',
-                                 { S0018: [:number] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0018: [:number] }, within: timeout)
     end
   end
 
@@ -73,8 +61,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'list is read with S0022' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      request_status_and_confirm site_proxy, 'list of time plans',
-                                 { S0022: [:status] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0022: [:status] }, within: timeout)
     end
   end
 
@@ -85,8 +73,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'week table is read with S0026' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      request_status_and_confirm site_proxy, 'week time table',
-                                 { S0026: [:status] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0026: [:status] }, within: timeout)
     end
   end
 
@@ -109,8 +97,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'day table is read with S0027' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      request_status_and_confirm site_proxy, 'command table',
-                                 { S0027: [:status] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0027: [:status] }, within: timeout)
     end
   end
 
@@ -133,8 +121,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'version is read with S0097' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
-      request_status_and_confirm site_proxy, 'version of traffic program',
-                                 { S0097: %i[timestamp checksum] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0097: %i[timestamp checksum] }, within: timeout)
     end
   end
 
@@ -146,17 +134,14 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'config is read with S0098' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
-      result = request_status_and_confirm site_proxy, 'config of traffic parameters',
-                                          { S0098: %i[timestamp config version] }
-
-      # the site_proxy  should have stored the received status
-      message = result[:collector].messages.first
-      expect(message).to be_a(RSMP::StatusResponse)
-      values = message.attributes['sS'].to_h { |item| [item['n'], item['s']] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      result = site_proxy.request_status({ S0098: %i[timestamp config version] }, within: timeout)
+      ss = result[:collector].messages.last.attributes['sS']
+      values = ss.each_with_object({}) { |i, h| h[i['n']] = i['s'] }
 
       assert(!values['timestamp'].empty?, 'expected timestamp to not be empty')
       assert(!values['config'].empty?, 'expected config to not be empty')
-      assert(!values['timestamp'].empty?, 'expected timestamp to not be empty')
+      assert(!values['version'].empty?, 'expected version to not be empty')
     end
   end
 
@@ -167,8 +152,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'dynamic bands are read with S0023' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      request_status_and_confirm site_proxy, 'command table',
-                                 { S0023: [:status] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0023: [:status] }, within: timeout)
     end
   end
 
@@ -235,8 +220,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. Expect status response before timeout
   it 'offset is read with S0024' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      request_status_and_confirm site_proxy, 'offset time',
-                                 { S0024: [:status] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0024: [:status] }, within: timeout)
     end
   end
 
@@ -258,8 +243,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'cycle time is read with S0028' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      request_status_and_confirm site_proxy, 'cycle time',
-                                 { S0028: [:status] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0028: [:status] }, within: timeout)
     end
   end
 

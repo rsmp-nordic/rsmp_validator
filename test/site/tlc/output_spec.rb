@@ -10,8 +10,8 @@ describe 'Site::Tlc::Output' do
   # 4. And the outputstatus attribute should be a digit string
   it 'is read with S0004 with extended output status' do
     with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
-      request_status_and_confirm site_proxy, 'output status',
-                                 { S0004: %i[outputstatus extendedoutputstatus] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0004: %i[outputstatus extendedoutputstatus] }, within: timeout)
     end
   end
 
@@ -22,8 +22,8 @@ describe 'Site::Tlc::Output' do
   # 4. And the outputstatus attribute should be a digit string
   it 'is read with S0004' do
     with_site(:connected, sxl: ['>=1.2']) do |site_proxy|
-      request_status_and_confirm site_proxy, 'output status',
-                                 { S0004: [:outputstatus] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0004: [:outputstatus] }, within: timeout)
     end
   end
 
@@ -33,8 +33,8 @@ describe 'Site::Tlc::Output' do
   # 3. Expect status response before timeout
   it 'forcing is read with S0030' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
-      request_status_and_confirm site_proxy, 'forced output status',
-                                 { S0030: [:status] }
+      timeout = Validator.get_config('timeouts', 'status_response')
+      site_proxy.request_status({ S0030: [:status] }, within: timeout)
     end
   end
 

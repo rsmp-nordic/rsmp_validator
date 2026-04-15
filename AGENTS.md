@@ -3,7 +3,7 @@
 ## About
 This repo contains the RSMP Validator, which is used to verify RSMP (Road Side Message Protocol) implementations.
 
-It's written in Ruby and uses the RSpec test framework.
+It's written in Ruby and uses the Sus test framework.
 
 ## How it works
 RSMP communication is handled by the 'rsmp' gem.
@@ -20,7 +20,7 @@ When using the auto node feature to start a local site or supervisor for testing
 ## Files
 - config/ contains test configurations.
 - docs/ contains documentation, as a Jekyll site published using Github Pages.
-- yard/ contains YARD code for extracting documentation from RSpec test code.
+- yard/ contains YARD code for extracting documentation from Sus test code.
 - test/ contains all test files.
 - test/support/ contains support files, e.g. for running tests in an Async reactor.
 - test/site/ contains test for RSMP sites.
@@ -41,18 +41,18 @@ When testing a site, the validator acts as a supervisor and waits for the site t
 
 The easiest way to run tests locally is to use the **auto node feature**, which automatically starts a local site to be tested:
 
-% AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rspec test/site --format documentation
+% bundle exec exe/rsmp_validator test/site
 
 This will automatically start a local RSMP site, run the tests against it, and stop the site when done.
 
-Use --format Validator::Details to see additional logging.
+use --verbose to see each tests and assertion and --log to see RSMP message logs.
 
 #### Alternative: Manual Background Process
 Alternatively, you can manually start a RSMP site in a separate terminal:
 % bundle exec rsmp site --config config/simulator/tlc.yaml
 
 Then run tests in another terminal:
-% SITE_CONFIG=config/gem_tlc.yaml bundle exec rspec test/site --format documentation
+% bundle exec exe/rsmp_validator test/site
 
 ### Testing RSMP supervisors
 Tests for supervisors are located in test/supervisor/.
@@ -60,18 +60,16 @@ When testing a supervisor, the validator acts as a site and connects to the supe
 
 The easiest way to run tests locally is to use the **auto node feature**, which automatically starts a local supervisor to be tested:
 
-% AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rspec test/supervisor --format documentation
+% bundle exec exe/rsmp_validator test/supervisor
 
 This will automatically start a local RSMP supervisor, run the tests against it, and stop the supervisor when done.
-
-Use --format Validator::Details to see additional logging.
 
 #### Alternative: Manual Background Process
 Alternatively, you can manually start a RSMP supervisor in a separate terminal:
 % bundle exec rsmp supervisor --config config/simulator/supervisor.yaml
 
 Then run tests in another terminal:
-% SITE_CONFIG=config/gem_supervisor.yaml bundle exec rspec test/supervisor --format documentation
+% bundle exec exe/rsmp_validator test/supervisor
 
 ## Code Quality
 Before submitting changes, you must run rubocop to check for code style violations and fix any issues:

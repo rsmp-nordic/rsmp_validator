@@ -2,16 +2,6 @@ module Validator
   module Helpers
     # Helper methods for requesting and subscribing to RSMP status values.
     module Status
-      def convert_status_list(list)
-        return list.clone if list.is_a? Array
-
-        list.map do |status_code_id, names|
-          names.map do |name|
-            { 'sCI' => status_code_id.to_s, 'n' => name.to_s }
-          end
-        end.flatten
-      end
-
       def wait_for_status(site_proxy, description, status_list, **options)
         update_rate = options.fetch(:update_rate, 0)
         timeout = options.fetch(:timeout, Validator.get_config('timeouts', 'command'))
@@ -19,7 +9,7 @@ module Validator
         log "Wait for #{description}"
         site_proxy.wait_for_status(
           description,
-          convert_status_list(status_list),
+          RSMP::StatusList.new(status_list).to_a,
           update_rate: update_rate,
           timeout: timeout,
           component_id: component_id
@@ -29,9 +19,9 @@ module Validator
       def request_status_and_confirm(site_proxy, description, status_list,
                                      component = Validator.get_config('main_component'))
         log "Read #{description}"
-        site_proxy.request_status component, convert_status_list(status_list), collect!: {
-          timeout: Validator.get_config('timeouts', 'status_response')
-        }
+        site_proxy.request_status RSMP::StatusList.new(status_list),
+                                  component: component,
+                                  within: Validator.get_config('timeouts', 'status_response')
       end
     end
   end
