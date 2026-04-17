@@ -1,5 +1,4 @@
 describe 'Site::Tlc::InvalidCommand' do
-  include Validator::Helpers::Commands
 
   # Verify that site_proxy reponds with age=undefined when receiving
   # a command with an unknown component id

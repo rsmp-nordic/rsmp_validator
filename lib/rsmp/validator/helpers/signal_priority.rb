@@ -38,7 +38,6 @@ module Validator
       # Helper queue for managing signal priority requests during tests.
       class RequestHelper < RSMP::Queue
         include Validator::Helpers::Status
-        include Validator::Helpers::Commands
 
         def initialize(site_proxy, component:, signal_group_id:, timeout:, task:)
           super(site_proxy,

@@ -1,5 +1,4 @@
 describe 'Site::Tlc::SignalPriority' do
-  include Validator::Helpers::Commands
   include Validator::Helpers::Status
 
   # Signal requests require core >= 3.2 because they uses the Array data type.
@@ -32,8 +31,7 @@ describe 'Site::Tlc::SignalPriority' do
   # 3. Then we should receive a status update
   it 'status can be fetched with S0033' do
     with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0033: [:status] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0033: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 

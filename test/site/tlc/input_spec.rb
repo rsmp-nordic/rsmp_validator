@@ -1,6 +1,5 @@
 describe 'Site::Tlc::Input' do
   include Validator::Helpers::Input
-  include Validator::Helpers::Status
 
   # Tests related to inputs and outputs.
 
@@ -10,8 +9,10 @@ describe 'Site::Tlc::Input' do
   # 3. Then we should receive a valid response
   it 'is read with S0003 with extended input status' do
     with_site(:connected, sxl: '<1.2') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0003: %i[inputstatus extendedinputstatus] }, within: timeout)
+      site_proxy.request_status_and_collect(
+        { S0003: %i[inputstatus extendedinputstatus] },
+        within: Validator.get_config('timeouts', 'status_response')
+      ).ok!
     end
   end
 
@@ -21,8 +22,7 @@ describe 'Site::Tlc::Input' do
   # 3. Then we should receive a valid response
   it 'is read with S0003' do
     with_site(:connected, sxl: '>=1.2') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0003: [:inputstatus] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0003: [:inputstatus] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -32,8 +32,7 @@ describe 'Site::Tlc::Input' do
   # 3. Then we should receive a valid response
   it 'forcing is read with S0029' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0029: [:status] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0029: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 

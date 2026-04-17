@@ -1,6 +1,5 @@
 describe 'Site::Tlc::Clock' do
   include Validator::Helpers::Clock
-  include Validator::Helpers::Status
   include Validator::Helpers::Alarms
 
   # Tests related to the clock.
@@ -19,10 +18,7 @@ describe 'Site::Tlc::Clock' do
   # 3. Expect status response before timeout
   it 'can be read with S0096' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      site_proxy.request_status(
-        { S0096: %i[year month day hour minute second] },
-        within: Validator.get_config('timeouts', 'status_response')
-      )
+      site_proxy.request_status_and_collect({ S0096: %i[year month day hour minute second] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -59,11 +55,11 @@ describe 'Site::Tlc::Clock' do
             second
           ] }
           timeout = Validator.get_config('timeouts', 'status_update')
-          result = site_proxy.request_status(
+          collector = site_proxy.request_status_and_collect(
             status_list,
             within: timeout
           )
-          collector = result[:collector]
+          collector.ok!
           status = status_list.keys.first.to_s
 
           received = Time.new(
@@ -109,9 +105,9 @@ describe 'Site::Tlc::Clock' do
           ] }
 
           timeout = Validator.get_config('timeouts', 'status_response')
-          result = site_proxy.request_status(status_list,
-                                             within: timeout)
-          collector = result[:collector]
+          collector = site_proxy.request_status_and_collect(status_list,
+                                                            within: timeout)
+          collector.ok!
 
           max_diff = Validator.get_config('timeouts', 'command_response') + timeout
           diff = Time.parse(collector.messages.first.attributes['sTs']) - clock

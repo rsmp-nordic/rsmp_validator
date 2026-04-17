@@ -2,8 +2,6 @@ module Validator
   module Helpers
     # Helper methods for testing RSMP security code handling.
     module Security
-      include Commands
-
       def wrong_security_code(site_proxy)
         log 'Try to force detector logic with wrong security code'
         command_list = RSMP::CommandList.new(:M0008, :setForceDetectorLogic,

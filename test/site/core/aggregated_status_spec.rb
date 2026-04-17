@@ -1,5 +1,4 @@
 describe 'Site::Core' do
-  include Validator::Helpers::Commands
 
   describe 'Aggregated Status' do
     # Verify that the controller responds to an aggregated status request.

@@ -1,6 +1,4 @@
 describe 'Site::Tlc::TrafficSituations' do
-  include Validator::Helpers::Commands
-  include Validator::Helpers::Status
 
   # Verify status S0015 current traffic situation
   #
@@ -14,8 +12,7 @@ describe 'Site::Tlc::TrafficSituations' do
                     else
                       { S0015: [:status] }
                     end
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status(status_list, within: timeout)
+      site_proxy.request_status_and_collect(status_list, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -46,8 +43,7 @@ describe 'Site::Tlc::TrafficSituations' do
   # 3. Expect status response before timeout
   it 'list size is read with S0019' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0019: [:number] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0019: [:number] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 end

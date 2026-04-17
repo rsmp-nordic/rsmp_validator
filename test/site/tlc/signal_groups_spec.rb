@@ -1,6 +1,4 @@
 describe 'Site::Tlc::SignalGroups' do
-  include Validator::Helpers::Commands
-  include Validator::Helpers::Status
   include Validator::Helpers::Startup
 
   # Validate that a signal group can be ordered to green using the M0010 command.
@@ -34,8 +32,10 @@ describe 'Site::Tlc::SignalGroups' do
   # 3. Expect status response before timeout
   it 'state is read with S0001' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0001: %i[signalgroupstatus cyclecounter basecyclecounter stage] }, within: timeout)
+      site_proxy.request_status_and_collect(
+        { S0001: %i[signalgroupstatus cyclecounter basecyclecounter stage] },
+        within: Validator.get_config('timeouts', 'status_response')
+      ).ok!
     end
   end
 
@@ -46,9 +46,8 @@ describe 'Site::Tlc::SignalGroups' do
   # 3. Expect status response before timeout
   it 'red/green predictions is read with S0025' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
       component = Validator.get_config('components', 'signal_group').keys.first
-      site_proxy.request_status(
+      site_proxy.request_status_and_collect(
         { S0025: %i[
           minToGEstimate
           maxToGEstimate
@@ -59,8 +58,8 @@ describe 'Site::Tlc::SignalGroups' do
           likelyToREstimate
         ] },
         component: component,
-        within: timeout
-      )
+        within: Validator.get_config('timeouts', 'status_response')
+      ).ok!
     end
   end
 
@@ -71,8 +70,7 @@ describe 'Site::Tlc::SignalGroups' do
   # 3. Expect status response before timeout
   it 'list size is read with S0017' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0017: [:number] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0017: [:number] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
