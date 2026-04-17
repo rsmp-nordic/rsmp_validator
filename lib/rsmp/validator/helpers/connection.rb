@@ -44,6 +44,8 @@ module Validator
         else
           Validator::SupervisorTester.public_send(state, **opts) do |_task, _node, proxy|
             block.call(proxy)
+          rescue StandardError => e
+            @__assertions__.error!(UncaughtException.new(e))
           end
         end
       end
