@@ -9,7 +9,8 @@ describe 'Site::Tlc::DetectorLogics' do
   # 3. Expect status response before timeout
   it 'list size is read with S0016' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0016: [:number] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0016: [:number] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -20,7 +21,8 @@ describe 'Site::Tlc::DetectorLogics' do
   # 3. Expect status response before timeout
   it 'status is read with S0002' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0002: [:detectorlogicstatus] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0002: [:detectorlogicstatus] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -31,7 +33,8 @@ describe 'Site::Tlc::DetectorLogics' do
   # 3. Expect status response before timeout
   it 'forcing is read with S0021' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0021: [:detectorlogics] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0021: [:detectorlogics] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -66,7 +69,8 @@ describe 'Site::Tlc::DetectorLogics' do
   # 3. Expect status response before timeout
   it 'sensitivity is read with S0031' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0031: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0031: [:status] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 end

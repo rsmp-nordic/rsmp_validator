@@ -31,7 +31,8 @@ describe 'Site::Tlc::SignalPriority' do
   # 3. Then we should receive a status update
   it 'status can be fetched with S0033' do
     with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0033: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0033: [:status] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 

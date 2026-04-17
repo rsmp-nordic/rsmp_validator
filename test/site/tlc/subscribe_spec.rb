@@ -1,5 +1,4 @@
 describe 'Site::Tlc::Subscribe' do
-
   # Check that we can *subscribe* to status messages.
   # The test subscribes to S0001 (signal group status), because
   # it will usually change once per second, but otherwise the choice
@@ -19,8 +18,8 @@ describe 'Site::Tlc::Subscribe' do
       status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
 
       site_proxy.subscribe_to_status_and_collect(status_list,
-                                                   component: component,
-                                                   within: Validator.get_config('timeouts', 'status_update')).ok!
+                                                 component: component,
+                                                 within: Validator.get_config('timeouts', 'status_update')).ok!
     ensure
       unsubscribe_list = status_list.map { |item| item.slice('sCI', 'n') }
       site_proxy.unsubscribe_to_status component, unsubscribe_list
@@ -56,8 +55,8 @@ describe 'Site::Tlc::Subscribe' do
 
       # This should collect at least one status update within 2s if the 1s rate is working
       collector = site_proxy.subscribe_to_status_and_collect(updated_status_list,
-                                                              component: component,
-                                                              within: 2).ok!
+                                                             component: component,
+                                                             within: 2).ok!
 
       assert(!collector.nil?, 'Expected subscribe_to_status_and_collect to return a collector')
       assert(!collector.messages.empty?,

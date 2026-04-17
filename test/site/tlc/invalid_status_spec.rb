@@ -1,5 +1,4 @@
 describe 'Site::Tlc::InvalidStatus' do
-
   # Verify that site_proxy reponds with q=undefined when receiving a
   # status request with an unknown component id.
   #
