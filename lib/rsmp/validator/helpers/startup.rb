@@ -93,7 +93,7 @@ module Validator
         wait_for_status(site_proxy, 'control mode to be startup',
                         [{ 'sCI' => 'S0020', 'n' => 'controlmode', 's' => 'control' }])
       ensure
-        site_proxy.unsubscribe_to_status component, unsubscribe_list
+        site_proxy.unsubscribe_to_status unsubscribe_list, component: component
       end
 
       private

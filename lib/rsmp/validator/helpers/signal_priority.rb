@@ -115,7 +115,7 @@ module Validator
         end
 
         def stop
-          @site_proxy.unsubscribe_to_status @component, @unsubscribe_list
+          @site_proxy.unsubscribe_to_status @unsubscribe_list, component: @component
           stop_receiving
         end
 
