@@ -1,5 +1,4 @@
 describe 'Site::Core' do
-
   describe 'Aggregated Status' do
     # Verify that the controller responds to an aggregated status request.
     #
@@ -9,8 +8,10 @@ describe 'Site::Core' do
     it 'can be requested' do
       with_site(:connected, core: '>=3.1.5') do |site_proxy|
         log 'Request aggregated status'
-        site_proxy.request_aggregated_status Validator.get_config('main_component'),
-                                             within: Validator.get_config('timeouts', 'status_response')
+        site_proxy.request_aggregated_status_and_collect(
+          Validator.get_config('main_component'),
+          within: Validator.get_config('timeouts', 'status_response')
+        ).ok!
       end
     end
 
