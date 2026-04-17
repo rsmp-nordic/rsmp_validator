@@ -92,7 +92,7 @@ module Validator
       Log.log 'Ready'
       return if @initial_unsubscribe_done
 
-      @proxy.unsubscribe_from_all Validator.get_config('main_component')
+      @proxy.unsubscribe_from_all component: Validator.get_config('main_component')
       @initial_unsubscribe_done = true
     end
 

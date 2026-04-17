@@ -22,7 +22,7 @@ describe 'Site::Tlc::Subscribe' do
                                                  within: Validator.get_config('timeouts', 'status_update')).ok!
     ensure
       unsubscribe_list = status_list.map { |item| item.slice('sCI', 'n') }
-      site_proxy.unsubscribe_to_status component, unsubscribe_list
+      site_proxy.unsubscribe_to_status unsubscribe_list, component: component
     end
   end
 
@@ -65,7 +65,7 @@ describe 'Site::Tlc::Subscribe' do
     ensure
       # Clean up subscription
       unsubscribe_list = [{ 'sCI' => 'S0001', 'n' => 'cyclecounter' }]
-      site_proxy.unsubscribe_to_status component, unsubscribe_list
+      site_proxy.unsubscribe_to_status unsubscribe_list, component: component
     end
   end
 end
