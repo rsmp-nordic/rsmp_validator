@@ -8,7 +8,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'currently active is read with S0014' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0014: %i[status source] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0014: %i[status source] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -28,7 +29,7 @@ describe 'Site::Tlc::SignalPlans' do
       plans.each do |plan|
         command_timeout = Validator.get_config('timeouts', 'command')
         status_timeout = Validator.get_config('timeouts', 'status_response')
-        result = site_proxy.set_timeplan(plan, within: command_timeout)
+        site_proxy.set_timeplan(plan, within: command_timeout)
 
         collector = site_proxy.request_status_and_collect(
           { S0014: %i[status source] },
@@ -49,7 +50,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'list size is read with S0018' do
     with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
-      site_proxy.request_status_and_collect({ S0018: [:number] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0018: [:number] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -60,7 +62,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'list is read with S0022' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0022: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0022: [:status] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -71,7 +74,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'week table is read with S0026' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0026: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0026: [:status] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -95,7 +99,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'day table is read with S0027' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0027: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0027: [:status] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -119,7 +124,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'version is read with S0097' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0097: %i[timestamp checksum] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0097: %i[timestamp checksum] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -138,7 +144,7 @@ describe 'Site::Tlc::SignalPlans' do
       )
       collector.ok!
       ss = collector.messages.last.attributes['sS']
-      values = ss.each_with_object({}) { |i, h| h[i['n']] = i['s'] }
+      values = ss.to_h { |i| [i['n'], i['s']] }
 
       assert(!values['timestamp'].empty?, 'expected timestamp to not be empty')
       assert(!values['config'].empty?, 'expected config to not be empty')
@@ -153,7 +159,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'dynamic bands are read with S0023' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0023: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0023: [:status] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -223,7 +230,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. Expect status response before timeout
   it 'offset is read with S0024' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0024: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0024: [:status] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -246,7 +254,8 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'cycle time is read with S0028' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0028: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0028: [:status] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 

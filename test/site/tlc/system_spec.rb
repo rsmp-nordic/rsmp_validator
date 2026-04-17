@@ -13,7 +13,8 @@ describe 'Site::Tlc::System' do
                     else
                       { S0091: %i[user status] }
                     end
-      site_proxy.request_status_and_collect(status_list, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect(status_list,
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -29,7 +30,8 @@ describe 'Site::Tlc::System' do
                     else
                       { S0092: %i[user status] }
                     end
-      site_proxy.request_status_and_collect(status_list, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect(status_list,
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -40,7 +42,8 @@ describe 'Site::Tlc::System' do
   # 3. Expect status response before timeout
   it 'version is read with S0095' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0095: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0095: [:status] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 

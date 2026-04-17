@@ -24,7 +24,8 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'number of vehicles for all detectors is read with S0205' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0205: %i[start vehicles] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0205: %i[start vehicles] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -51,7 +52,8 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'vehicle speed for all detectors is read with S0206' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0206: %i[start speed] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0206: %i[start speed] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 

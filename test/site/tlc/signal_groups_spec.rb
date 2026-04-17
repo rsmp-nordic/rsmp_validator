@@ -70,7 +70,8 @@ describe 'Site::Tlc::SignalGroups' do
   # 3. Expect status response before timeout
   it 'list size is read with S0017' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0017: [:number] }, within: Validator.get_config('timeouts', 'status_response')).ok!
+      site_proxy.request_status_and_collect({ S0017: [:number] },
+                                            within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
