@@ -1,6 +1,4 @@
 describe 'Site::Tlc::Modes' do
-  include Validator::Helpers::Status
-  include Validator::Helpers::Commands
   include Validator::Helpers::Startup
 
   # Verify status S0020 control mode
@@ -10,8 +8,7 @@ describe 'Site::Tlc::Modes' do
   # 3. Expect status response before timeout
   it 'control mode is read with S0020' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0020: %i[controlmode intersection] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0020: %i[controlmode intersection] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -22,8 +19,7 @@ describe 'Site::Tlc::Modes' do
   # 3. Expect status response before timeout
   it 'startup status is read with S0005' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0005: [:status] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0005: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -36,8 +32,7 @@ describe 'Site::Tlc::Modes' do
   it 'startup status is read with S0005 by intersection' do
     skip 'requires core >= 3.2' unless Validator.core_matches?('>=3.2')
     with_site(:connected, sxl: '>=1.2') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0005: [:statusByIntersection] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0005: [:statusByIntersection] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -48,8 +43,7 @@ describe 'Site::Tlc::Modes' do
   # 3. Expect status response before timeout
   it 'switched on is read with S0007' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0007: %i[status intersection] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0007: %i[status intersection] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -60,8 +54,7 @@ describe 'Site::Tlc::Modes' do
   # 3. Expect status response before timeout
   it 'switched on is read with S0007 with source' do
     with_site(:connected, sxl: '>=1.1') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0007: %i[status intersection source] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0007: %i[status intersection source] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -77,8 +70,7 @@ describe 'Site::Tlc::Modes' do
                     else
                       { S0008: %i[status intersection] }
                     end
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status(status_list, within: timeout)
+      site_proxy.request_status_and_collect(status_list, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -94,8 +86,7 @@ describe 'Site::Tlc::Modes' do
                     else
                       { S0009: %i[status intersection] }
                     end
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status(status_list, within: timeout)
+      site_proxy.request_status_and_collect(status_list, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -126,8 +117,7 @@ describe 'Site::Tlc::Modes' do
                     else
                       { S0010: %i[status intersection] }
                     end
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status(status_list, within: timeout)
+      site_proxy.request_status_and_collect(status_list, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -138,8 +128,7 @@ describe 'Site::Tlc::Modes' do
   # 3. Expect status response before timeout
   it 'coordinated control is read with S0032' do
     with_site(:connected, sxl: '>=1.1') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0032: %i[status intersection source] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0032: %i[status intersection source] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -155,8 +144,7 @@ describe 'Site::Tlc::Modes' do
                     else
                       { S0011: %i[status intersection] }
                     end
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status(status_list, within: timeout)
+      site_proxy.request_status_and_collect(status_list, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -208,8 +196,7 @@ describe 'Site::Tlc::Modes' do
                     else
                       { S0012: %i[status intersection] }
                     end
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status(status_list, within: timeout)
+      site_proxy.request_status_and_collect(status_list, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -220,8 +207,7 @@ describe 'Site::Tlc::Modes' do
   # 3. Expect status response before timeout
   it 'police key can be read with S0013' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0013: [:status] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0013: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 

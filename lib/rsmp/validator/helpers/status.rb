@@ -15,14 +15,6 @@ module Validator
           component_id: component_id
         )
       end
-
-      def request_status_and_confirm(site_proxy, description, status_list,
-                                     component = Validator.get_config('main_component'))
-        log "Read #{description}"
-        site_proxy.request_status RSMP::StatusList.new(status_list),
-                                  component: component,
-                                  within: Validator.get_config('timeouts', 'status_response')
-      end
     end
   end
 end

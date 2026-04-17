@@ -1,5 +1,4 @@
 describe 'Site::Tlc::Output' do
-  include Validator::Helpers::Status
 
   # Tests related to outputs.
 
@@ -10,8 +9,10 @@ describe 'Site::Tlc::Output' do
   # 4. And the outputstatus attribute should be a digit string
   it 'is read with S0004 with extended output status' do
     with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0004: %i[outputstatus extendedoutputstatus] }, within: timeout)
+      site_proxy.request_status_and_collect(
+        { S0004: %i[outputstatus extendedoutputstatus] },
+        within: Validator.get_config('timeouts', 'status_response')
+      ).ok!
     end
   end
 
@@ -22,8 +23,7 @@ describe 'Site::Tlc::Output' do
   # 4. And the outputstatus attribute should be a digit string
   it 'is read with S0004' do
     with_site(:connected, sxl: ['>=1.2']) do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0004: [:outputstatus] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0004: [:outputstatus] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -33,8 +33,7 @@ describe 'Site::Tlc::Output' do
   # 3. Expect status response before timeout
   it 'forcing is read with S0030' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'status_response')
-      site_proxy.request_status({ S0030: [:status] }, within: timeout)
+      site_proxy.request_status_and_collect({ S0030: [:status] }, within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 

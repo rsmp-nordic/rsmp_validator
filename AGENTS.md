@@ -6,11 +6,14 @@ This repo contains the RSMP Validator, which is used to verify RSMP (Road Side M
 It's written in Ruby and uses the Sus test framework.
 
 ## How it works
+Tests are written using the sus test framework.
+
 RSMP communication is handled by the 'rsmp' gem.
 Validation of RSMP messages is handled by the 'rsmp_schema' gem.
 
-The 'async' gem is used to handle concurrency. All tests run in an Async Reactor. The reactor is paused at the end of each test, then continued at the start of the next test. This is done to be able to keep
-the TCP connection open between test, which significantly speeds up testing.
+The 'async' gem is used to handle concurrency. All tests run in an Async Reactor.
+The TCP connection is usually kept open between test, to speeds up testing, but tests can specifify
+that they need to run freshly connected, or disconnected.
 
 You can test either RSMP sites or supervisor.
 

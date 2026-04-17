@@ -1,5 +1,4 @@
 describe 'Site::Tlc::Subscribe' do
-  include Validator::Helpers::Status
 
   # Check that we can *subscribe* to status messages.
   # The test subscribes to S0001 (signal group status), because

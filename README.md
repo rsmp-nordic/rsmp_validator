@@ -3,9 +3,9 @@ RSMP Validator is a tool for testing RSMP equipment or software. You can use the
 
 The validator will connect to the equipment or supervisor you want to test, exchange messages and produce a report on what tests succeeded and which failed - and why.
 
-The validator is based on RSpec and written in Ruby. It uses the `rsmp` gem to handle RSMP communication and the `rsmp_schemer` gem to validate the JSON format of RSMP messages.
+The validator is written in Ruby and uses the sus test framework. It uses the `rsmp` gem to handle RSMP communication and the `rsmp_schemer` gem to validate the JSON format of RSMP messages.
 
-Tests are written as RSpec specifications and it's easy to add new tests if needed.
+Tests are written as sus specifications and it's easy to add new tests if needed.
 
 # Documentation
 See the [detailed documentation](https://rsmp-nordic.github.io/rsmp_validator/).
