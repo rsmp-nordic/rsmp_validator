@@ -19,8 +19,9 @@ describe 'Site::Tlc::SignalPriority' do
                                            level: 7,
                                            eta: 10,
                                            vehicleType: 'car').to_a
-      send_command_and_confirm(site_proxy, command_list,
-                               "Request signal priority for signal group #{signal_group}")
+      log "Request signal priority for signal group #{signal_group}"
+      timeout = Validator.get_config('timeouts', 'command_response')
+      site_proxy.send_command_and_collect(command_list, within: timeout).ok!
     end
   end
 
