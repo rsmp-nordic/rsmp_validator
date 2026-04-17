@@ -82,8 +82,8 @@ describe 'Site::Tlc::TrafficData' do
                                { S0207: %i[start occupancy] },
                                update_rate: 60)
 
-      occupancies = result[:collector].matcher_got_hash.dig('S0207', 'occupancy')
-      start = result[:collector].matcher_got_hash.dig('S0207', 'start')
+      occupancies = result.matcher_got_hash.dig('S0207', 'occupancy')
+      start = result.matcher_got_hash.dig('S0207', 'start')
 
       expect(occupancies).to be_a(String)
       expect(start).to be_a(String)
