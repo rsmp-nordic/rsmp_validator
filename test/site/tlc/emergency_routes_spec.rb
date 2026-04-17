@@ -37,8 +37,9 @@ describe 'Site::Tlc::EmergencyRoutes' do
     skip('No emergency routes configured') if emergency_routes.nil? || emergency_routes.empty?
 
     def set_emergency_states(site_proxy, emergency_routes, state)
+      timeout = Validator.get_config('timeouts', 'command_response')
       emergency_routes.each do |emergency_route|
-        site_proxy.set_emergency_route(route: emergency_route.to_s, active: state)
+        site_proxy.set_emergency_route(route: emergency_route.to_s, active: state, within: timeout)
       end
       wait_for_status(site_proxy, "emergency route #{emergency_routes.last} to be enabled",
                       [

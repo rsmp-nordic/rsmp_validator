@@ -18,6 +18,7 @@ module Validator
         missing_message: "#{mode.capitalize} config file #{config_path} is missing"
       )
 
+      raw_config['core_version'] = ENV['CORE_VERSION'] if ENV['CORE_VERSION']
       options = build_tester_options(raw_config, config_path)
       apply_loaded_config(options)
 
@@ -38,6 +39,7 @@ module Validator
         using_message: '',
         missing_message: "Auto #{mode} config file #{path} is missing"
       )
+      raw_config['sxl_version'] = ENV['SXL_VERSION'] if ENV['SXL_VERSION']
       options_class = auto_node_options_class_for(raw_config)
       options = build_options_from_raw(raw_config, path, options_class)
       self.auto_node_config = options.to_h

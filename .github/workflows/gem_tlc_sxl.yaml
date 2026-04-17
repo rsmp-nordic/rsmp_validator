@@ -1,0 +1,77 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will run rsmp validator
+name: Gem TLC SXL matrix
+on: push
+jobs:
+  validator:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sxl: ['1.0.7','1.0.8','1.0.9','1.0.10','1.0.13','1.0.15','1.1.0','1.2.0','1.2.1']
+      fail-fast: false
+
+    steps:
+    - name: Set log id
+      shell: bash
+      id: log_id
+      run: |
+        echo "LOG_ID=\
+        gem-tlc-\
+        ubuntu-latest-\
+        sxl-${{ matrix.sxl }}-\
+        run-\
+        ${{ github.run_id }}-\
+        ${{ github.run_number }}-\
+        ${{ github.run_attempt }}\
+        " >> $GITHUB_OUTPUT
+
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install Ruby and gems
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+        cache-version: 1
+
+    - name: Start TLC in background
+      shell: bash
+      run: |
+        bundle exec rsmp site \
+        --config config/simulator/tlc.yaml \
+        2>&1 > simulator-${{ steps.log_id.outputs.LOG_ID }}.log \
+        &
+      env:
+        SXL_VERSION: ${{ matrix.sxl}}
+    
+    - name: Run tests
+      shell: bash
+      run: |
+        bundle exec rsmp_validator test/site \
+        --log validator-${{ steps.log_id.outputs.LOG_ID }}.log     
+      env:
+        SXL_VERSION: ${{ matrix.sxl}}
+        SITE_CONFIG: config/gem_tlc.yaml
+    
+    - name: Show detailed log
+      shell: bash
+      if: always() # even if previous steps failed
+      run: cat validator-${{ steps.log_id.outputs.LOG_ID }}.log
+    
+    - name: Upload validator.log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: validator-${{ steps.log_id.outputs.LOG_ID }}.log
+        path: validator-${{ steps.log_id.outputs.LOG_ID }}.log
+    
+    - name: Upload simulator.log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: simulator-${{ steps.log_id.outputs.LOG_ID }}.log
+        path: simulator-${{ steps.log_id.outputs.LOG_ID }}.log
