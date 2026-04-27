@@ -112,6 +112,83 @@ RSpec.describe Site::Tlc::Alarm do
     # 5. When we resume the alarm
     # 6. Then we should receive an alarm resumed message
 
+    # Validate that alarm timestamps are different when alarm turns active vs inactive.
+    #
+    # This test verifies RSMP core >= 3.1.4 behavior where the alarm timestamp (aTs) 
+    # represents when the alarm changes status, ensuring we can determine
+    # the duration of an alarm even if it turns inactive during communication interruption.
+    #
+    # In RSMP core >= 3.1.4, the alarm timestamp should be different between active and inactive states.
+    #
+    # 1. Given the site is connected
+    # 2. When we trigger an alarm by activating an input
+    # 3. Then we should receive an alarm with timestamp representing when it turned active
+    # 4. When we deactivate the input
+    # 5. Then we should receive an alarm with a different timestamp representing when it turned inactive
+    # 6. And the inactive timestamp should be after the active timestamp
+
+    specify 'A0302 has different timestamps for active and inactive states', :programming, sxl: '>=1.0.7', core: '>=3.1.4' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        alarm_code_id = 'A0302'
+        prepare task, site
+        
+        active_timestamp = nil
+        inactive_timestamp = nil
+        
+        deactivated, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id|
+          # capture active timestamp
+          active_timestamp = Time.parse(alarm.attributes["aTs"])
+          log "Alarm #{alarm_code_id} is now Active on component #{component_id} at #{active_timestamp}"
+        end
+        
+        # capture inactive timestamp
+        inactive_timestamp = Time.parse(deactivated.attributes["aTs"])
+        log "Alarm #{alarm_code_id} is now Inactive on component #{component_id} at #{inactive_timestamp}"
+        
+        # verify inactive timestamp is after active timestamp (logical sequence)
+        expect(inactive_timestamp).to be > active_timestamp,
+          "Inactive timestamp should be after active timestamp. Active: #{active_timestamp}, Inactive: #{inactive_timestamp}"
+      end
+    end
+
+    # Validate alarm timestamp behavior in RSMP core < 3.1.4 versions.
+    #
+    # This test verifies RSMP core < 3.1.4 behavior where the alarm timestamp (aTs)
+    # only represented when an alarm turned active, not when it changed status.
+    #
+    # In RSMP core < 3.1.4 versions, the alarm timestamp may be the same for both 
+    # active and inactive states, since it only tracked when the alarm first became active.
+    #
+    # 1. Given the site is connected
+    # 2. When we trigger an alarm by activating an input
+    # 3. Then we should receive an alarm with timestamp representing when it turned active
+    # 4. When we deactivate the input
+    # 5. Then we should receive an alarm indicating inactive state
+    # 6. And the timestamps may be the same (reflecting original active time)
+
+    specify 'A0302 alarm timestamps in RSMP core < 3.1.4 versions', :programming, sxl: '>=1.0.7', core: '<3.1.4' do |example|
+      Validator::Site.connected do |task,supervisor,site|
+        alarm_code_id = 'A0302'
+        prepare task, site
+        
+        active_timestamp = nil
+        inactive_timestamp = nil
+        
+        deactivated, component_id = with_alarm_activated(task, site, alarm_code_id) do |alarm, component_id|
+          # capture active timestamp
+          active_timestamp = Time.parse(alarm.attributes["aTs"])
+          log "Alarm #{alarm_code_id} is now Active on component #{component_id} at #{active_timestamp}"
+        end
+        
+        # capture inactive timestamp
+        inactive_timestamp = Time.parse(deactivated.attributes["aTs"])
+        log "Alarm #{alarm_code_id} is now Inactive on component #{component_id} at #{inactive_timestamp}"
+        
+        # In RSMP core < 3.1.4 versions, timestamps may be the same since they only track when alarm became active
+        # We just verify that we receive both active and inactive states, without requiring different timestamps
+      end
+    end
+
     it 'A0302 can be suspended and resumed' do
       Validator::SiteTester.connected do |task, _supervisor, site|
         alarm_code_id = 'A0302'
