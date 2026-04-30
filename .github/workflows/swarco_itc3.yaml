@@ -46,7 +46,7 @@ jobs:
     - name: Run tests
       run: |
         bundle exec rsmp_validator test/site \
-        --log validator-${{ steps.log_id.outputs.LOG_ID }}.log
+        --verbose --log validator-${{ steps.log_id.outputs.LOG_ID }}.log
       env:
         SITE_CONFIG: config/swarco_itc3.yaml
         CORE_VERSION: ${{ matrix.core}}
