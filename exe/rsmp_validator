@@ -7,6 +7,7 @@ require 'sus/config'
 # Parse --log [path] from ARGV before Sus::Config.load consumes remaining args.
 # --log        => RSMP logs to $stdout
 # --log <path> => RSMP logs to file, sus output to console (brief)
+#   + --verbose => sus output also goes to file (interleaved, perfectly ordered)
 # (no --log)   => RSMP logs suppressed
 log_index = ARGV.index('--log')
 log_path = nil
@@ -20,11 +21,26 @@ if log_index
   end
 end
 
+# Writes to two IOs simultaneously through a single object, so both RSMP messages
+# and Sus verbose output share one file descriptor and are perfectly interleaved.
+class TeeIO
+  def initialize(a, b)
+    @a = a
+    @b = b
+  end
+
+  def write(*args) = (@a.write(*args); @b.write(*args))
+  def puts(*args)  = (@a.puts(*args);  @b.puts(*args))
+  def flush        = (@a.flush; @b.flush)
+  def isatty       = @a.isatty
+  def tty?         = @a.tty?
+end
+
 # Load config/validator.rb instead of config/sus.rb so that conformance tests
 # live in valid/site/ and valid/supervisor/, keeping them separate from the
 # internal tests in test/ that plain `sus` runs.
 validator_config_class = Class.new(Sus::Config) do
-  attr_accessor :log_to_stdout, :log_path
+  attr_accessor :log_to_stdout, :log_path, :log_file_io
 
   def self.path(root)
     path = File.join(root, 'config/validator.rb')
@@ -38,8 +54,19 @@ config.log_path = log_path
 
 registry = config.registry
 
-output = config.verbose? ? config.output : Sus::Output::Null.new
-verbose = config.verbose?
+# When --log <path> and --verbose are both given, open the file once and share
+# the handle: Sus writes via TeeIO (terminal + file), RSMP writes to the same
+# File object directly. One fd => serialized writes => perfect ordering.
+if log_path && config.verbose?
+  log_file = File.open(log_path, 'w')
+  config.log_path = nil
+  config.log_file_io = log_file
+  output = Sus::Output.default(TeeIO.new($stderr, log_file))
+  verbose = true
+else
+  output = config.verbose? ? config.output : Sus::Output::Null.new
+  verbose = config.verbose?
+end
 
 assertions = Sus::Assertions.default(output: output, verbose: verbose)
 
