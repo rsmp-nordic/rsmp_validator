@@ -19,6 +19,7 @@ module Validator
       )
 
       raw_config['core_version'] = ENV['CORE_VERSION'] if ENV['CORE_VERSION']
+      raw_config['sxl_version'] = ENV['SXL_VERSION'] if ENV['SXL_VERSION']
       options = build_tester_options(raw_config, config_path)
       apply_loaded_config(options)
 
