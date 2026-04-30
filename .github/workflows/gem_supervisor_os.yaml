@@ -50,7 +50,7 @@ jobs:
       shell: bash
       run: |
         bundle exec rsmp_validator test/supervisor \
-        --log validator-${{ steps.log_id.outputs.LOG_ID }}.log
+        --verbose --log validator-${{ steps.log_id.outputs.LOG_ID }}.log
       env:
         SUPERVISOR_CONFIG: config/gem_supervisor.yaml
 

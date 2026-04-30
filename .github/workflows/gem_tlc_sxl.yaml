@@ -52,7 +52,7 @@ jobs:
       shell: bash
       run: |
         bundle exec rsmp_validator test/site \
-        --log validator-${{ steps.log_id.outputs.LOG_ID }}.log     
+        --verbose --log validator-${{ steps.log_id.outputs.LOG_ID }}.log     
       env:
         SXL_VERSION: ${{ matrix.sxl}}
         SITE_CONFIG: config/gem_tlc.yaml
