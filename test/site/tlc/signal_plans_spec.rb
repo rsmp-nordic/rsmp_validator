@@ -8,7 +8,12 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'currently active is read with S0014' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      site_proxy.request_status_and_collect({ S0014: %i[status source] },
+      status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+                      { S0014: %i[status source] }
+                    else
+                      { S0014: [:status] }
+                    end
+      site_proxy.request_status_and_collect(status_list,
                                             within: Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
@@ -31,8 +36,13 @@ describe 'Site::Tlc::SignalPlans' do
         status_timeout = Validator.get_config('timeouts', 'status_response')
         site_proxy.set_timeplan(plan, within: command_timeout)
 
+        s0014_fields = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+                         { S0014: %i[status source] }
+                       else
+                         { S0014: [:status] }
+                       end
         collector = site_proxy.request_status_and_collect(
-          { S0014: %i[status source] },
+          s0014_fields,
           within: status_timeout
         )
         collector.ok!
