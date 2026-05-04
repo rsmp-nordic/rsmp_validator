@@ -29,9 +29,21 @@ class TeeIO
     @b = b
   end
 
-  def write(*args) = (@a.write(*args); @b.write(*args))
-  def puts(*args)  = (@a.puts(*args);  @b.puts(*args))
-  def flush        = (@a.flush; @b.flush)
+  def write(*args)
+    @a.write(*args)
+    @b.write(*args)
+  end
+
+  def puts(*args)
+    @a.puts(*args)
+    @b.puts(*args)
+  end
+
+  def flush
+    @a.flush
+    @b.flush
+  end
+
   def isatty       = @a.isatty
   def tty?         = @a.tty?
 end
