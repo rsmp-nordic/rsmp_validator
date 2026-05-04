@@ -2,6 +2,6 @@ describe 'Site' do
   # Tests for Traffic Light Controllers.
 
   describe 'Traffic Light Controller' do
-    # This group is intentionally empty, but exist so for YARD documentation generation purposes.
+    # This group is intentionally empty, but exist so for documentation generation purposes.
   end
 end

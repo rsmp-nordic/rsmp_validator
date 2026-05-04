@@ -3,7 +3,6 @@
 require 'prism'
 
 # DocGen: Prism-based parser and Jekyll Markdown renderer for test documentation.
-# Replaces the YARD-based documentation pipeline.
 #
 # Usage:
 #   require_relative 'lib/doc_gen/parser'
@@ -24,7 +23,7 @@ module DocGen
       children.grep(Context)
     end
 
-    # Full display name, dropping the root component when nested (matches YARD behaviour).
+    # Full display name, dropping the root component when nested.
     # Examples:
     #   root 'Site::Tlc::Io'       => 'Site::Tlc::Io'
     #   child 'IO' of above         => 'IO'

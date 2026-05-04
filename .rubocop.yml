@@ -2,7 +2,6 @@ AllCops:
   NewCops: enable
   SuggestExtensions: false
   Exclude:
-    - 'yard/**/*'
     - 'vendor/**/*'
 
 Metrics/MethodLength:
