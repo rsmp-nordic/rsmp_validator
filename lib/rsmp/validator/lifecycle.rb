@@ -4,15 +4,7 @@ module Validator
     # Initialize the validator system at sus startup.
     def setup(sus_config)
       @verbose = sus_config.verbose?
-      @log_stream = if sus_config.respond_to?(:log_file_io) && sus_config.log_file_io
-                      sus_config.log_file_io
-                    elsif sus_config.respond_to?(:log_path) && sus_config.log_path
-                      File.open(sus_config.log_path, 'w')
-                    elsif sus_config.respond_to?(:log_to_stdout) && sus_config.log_to_stdout
-                      $stdout
-                    else
-                      File.open(File::NULL, 'w')
-                    end
+      @log_stream = determine_log_stream(sus_config)
       determine_mode sus_config
       initialize_logging log_settings: {} # minimal init so log() works during config loading
       load_tester_config
@@ -20,6 +12,19 @@ module Validator
       setup_logging # reinitialize with config-specific settings
       build_auto_node
       build_tester
+    end
+
+    # Determine the log stream based on sus config.
+    def determine_log_stream(sus_config)
+      if sus_config.respond_to?(:log_file_io) && sus_config.log_file_io
+        sus_config.log_file_io
+      elsif sus_config.respond_to?(:log_path) && sus_config.log_path
+        File.open(sus_config.log_path, 'w')
+      elsif sus_config.respond_to?(:log_to_stdout) && sus_config.log_to_stdout
+        $stdout
+      else
+        File.open(File::NULL, 'w')
+      end
     end
 
     # Set up logging with configuration-specific settings.

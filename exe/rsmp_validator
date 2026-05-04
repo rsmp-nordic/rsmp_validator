@@ -24,28 +24,28 @@ end
 # Writes to two IOs simultaneously through a single object, so both RSMP messages
 # and Sus verbose output share one file descriptor and are perfectly interleaved.
 class TeeIO
-  def initialize(a, b)
-    @a = a
-    @b = b
+  def initialize(primary, secondary)
+    @primary = primary
+    @secondary = secondary
   end
 
   def write(*args)
-    @a.write(*args)
-    @b.write(*args)
+    @primary.write(*args)
+    @secondary.write(*args)
   end
 
   def puts(*args)
-    @a.puts(*args)
-    @b.puts(*args)
+    @primary.puts(*args)
+    @secondary.puts(*args)
   end
 
   def flush
-    @a.flush
-    @b.flush
+    @primary.flush
+    @secondary.flush
   end
 
-  def isatty       = @a.isatty
-  def tty?         = @a.tty?
+  def isatty       = @primary.isatty
+  def tty?         = @primary.tty?
 end
 
 # Load config/validator.rb instead of config/sus.rb so that conformance tests
@@ -66,24 +66,25 @@ config.log_path = log_path
 
 registry = config.registry
 
+def run_suite(config, registry, output, verbose)
+  assertions = Sus::Assertions.default(output: output, verbose: verbose)
+  config.before_tests(assertions)
+  registry.call(assertions)
+  config.after_tests(assertions)
+  exit(1) unless assertions.passed?
+end
+
 # When --log <path> and --verbose are both given, open the file once and share
 # the handle: Sus writes via TeeIO (terminal + file), RSMP writes to the same
 # File object directly. One fd => serialized writes => perfect ordering.
 if log_path && config.verbose?
-  log_file = File.open(log_path, 'w')
-  config.log_path = nil
-  config.log_file_io = log_file
-  output = Sus::Output.default(TeeIO.new($stderr, log_file))
-  verbose = true
+  File.open(log_path, 'w') do |log_file|
+    config.log_path = nil
+    config.log_file_io = log_file
+    output = Sus::Output.default(TeeIO.new($stderr, log_file))
+    run_suite(config, registry, output, true)
+  end
 else
   output = config.verbose? ? config.output : Sus::Output::Null.new
-  verbose = config.verbose?
+  run_suite(config, registry, output, config.verbose?)
 end
-
-assertions = Sus::Assertions.default(output: output, verbose: verbose)
-
-config.before_tests(assertions)
-registry.call(assertions)
-config.after_tests(assertions)
-
-exit(1) unless assertions.passed?
