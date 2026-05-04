@@ -23,7 +23,6 @@ When using the auto node feature to start a local site or supervisor for testing
 ## Files
 - config/ contains test configurations.
 - docs/ contains documentation, as a Jekyll site published using Github Pages.
-- yard/ contains YARD code for extracting documentation from Sus test code.
 - test/ contains all test files.
 - test/support/ contains support files, e.g. for running tests in an Async reactor.
 - test/site/ contains test for RSMP sites.

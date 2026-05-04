@@ -6,7 +6,6 @@ config/*secrets.yaml
 config/validator.yaml
 config/private/
 /.bundle/
-/.yardoc
 /coverage/
 /pkg/
 /test/reports/

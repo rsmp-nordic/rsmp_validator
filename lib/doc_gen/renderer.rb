@@ -5,7 +5,6 @@ require_relative 'parser'
 
 module DocGen
   # Renders a tree of Context objects to Jekyll-compatible Markdown files.
-  # Output matches the format previously produced by the YARD jekyll template.
   #
   # Frontmatter fields produced:
   #   layout, title, parmalink (sic — preserved from original for compatibility),
@@ -118,7 +117,7 @@ module DocGen
       "#{parts.join}\n"
     end
 
-    # De-indent source by the leading whitespace of the last line (YARD convention).
+    # De-indent source by the leading whitespace of the last line.
     def indent(source)
       lines = source.lines
       return source if lines.empty?
@@ -143,7 +142,7 @@ module DocGen
     end
 
     # Title of the logical grandparent for Jekyll frontmatter.
-    # Added for all non-root contexts (depth >= 1), matching YARD behaviour.
+    # Added for all non-root contexts (depth >= 1).
     # Returns nil for root contexts.
     def grand_parent_title(ctx)
       return nil unless ctx.parent
