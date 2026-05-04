@@ -18,11 +18,18 @@ module Validator
         missing_message: "#{mode.capitalize} config file #{config_path} is missing"
       )
 
-      raw_config['core_version'] = ENV['CORE_VERSION'] if ENV['CORE_VERSION']
-      raw_config['sxl_version'] = ENV['SXL_VERSION'] if ENV['SXL_VERSION']
+      apply_env_overrides!(raw_config)
       options = build_tester_options(raw_config, config_path)
       apply_loaded_config(options)
+      validate_and_finalize_config!(config_path)
+    end
 
+    def apply_env_overrides!(raw_config)
+      raw_config['core_version'] = ENV['CORE_VERSION'] if ENV['CORE_VERSION']
+      raw_config['sxl_version'] = ENV['SXL_VERSION'] if ENV['SXL_VERSION']
+    end
+
+    def validate_and_finalize_config!(config_path)
       validate_mode_config!(config_path)
       validate_components_config!
       validate_timeouts_config!
