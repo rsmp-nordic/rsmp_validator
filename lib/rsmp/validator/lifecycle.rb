@@ -67,6 +67,10 @@ module Validator
       ensure
         reactor.interrupt
       end
+      # Explicitly close the reactor now, while the log stream is still open.
+      # Without this, Ruby's fiber scheduler hook fires after the File.open block
+      # has closed the log file, causing IOError when cancelled tasks try to log.
+      reactor.close
     rescue StandardError
       nil
     end
