@@ -7,7 +7,12 @@ local_site:
     - ip: 127.0.0.1
       port: 13111
   log:
-    prefix: '[TLC       ]'
+    prefix: '[TLC]       '
+    color:
+      warning: 'light_white'
+      info: 'white'
+      log: 'black'
+      debug: 'grey'
     acknowledgements: false
     watchdogs: false
   intervals:

@@ -31,11 +31,12 @@ module Validator
     def setup_logging
       settings = {
         'stream' => @log_stream,
+        'prefix' => '[VALIDATOR] ',
         'color' => {
-          'info' => 'light_black',
-          'log' => 'white',
-          'test' => 'white',
-          'debug' => 'light_black'
+          'warning' => 'light_yellow',
+          'info' => 'light_green',
+          'log' => 'green',
+          'debug' => 'green'
         },
         'port' => true,
         'json' => true,

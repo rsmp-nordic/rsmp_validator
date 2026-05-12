@@ -8,6 +8,11 @@ local_supervisor:
   proxy_type: tlc
   log:
     prefix: '[SUPERVISOR]'
+    color:
+      warning: 'magenta'
+      info: 'light_cyan'
+      log: 'cyan'
+      debug: 'light_cyan'
     acknowledgements: false
     watchdogs: false
   default:

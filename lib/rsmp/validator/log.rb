@@ -14,10 +14,10 @@ module Validator
       @log_indentation += 1
       yield
     rescue StandardError
-      Validator.log "  #{INDENT * previous_log_indentation}#{action}: ERROR", level: :test
+      Validator.log "  #{INDENT * previous_log_indentation}#{action}: ERROR", level: :error
       raise
     rescue Async::TimeoutError
-      Validator.log "  #{INDENT * previous_log_indentation}#{action}: TIMEOUT", level: :test
+      Validator.log "  #{INDENT * previous_log_indentation}#{action}: TIMEOUT", level: :warning
       raise RSMP::TimeoutError, "Timeout while #{action}"
     ensure
       @log_indentation = previous_log_indentation
