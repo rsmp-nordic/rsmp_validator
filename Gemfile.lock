@@ -102,7 +102,7 @@ GEM
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
     simpleidn (0.2.3)
-    sus (0.35.2)
+    sus (0.36.0)
     sus-fixtures-async (0.2.0)
       async
       sus (~> 0.10)
@@ -171,7 +171,7 @@ CHECKSUMS
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   simpleidn (0.2.3) sha256=08ce96f03fa1605286be22651ba0fc9c0b2d6272c9b27a260bc88be05b0d2c29
-  sus (0.35.2) sha256=26917b3aae6e966768e3336ea0e6872c4fd3b3d8b1d81b179516832a6f052e3f
+  sus (0.36.0) sha256=5e1828908cab1ccb1dffcf2d14dfb72e2089a0cd77ee979eee6d61beaaa3722f
   sus-fixtures-async (0.2.0) sha256=8c2b20b87f62da8cf0ce3efce3f9435370069371cd75ac23cdc7936f6402f9b7
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
   traces (0.18.2) sha256=80f1649cb4daace1d7174b81f3b3b7427af0b93047759ba349960cb8f315e214
