@@ -33,9 +33,9 @@ module Validator
         'stream' => @log_stream,
         'prefix' => '[VALIDATOR] ',
         'color' => {
-          'warning' => 'light_yellow',
-          'info' => 'light_green',
-          'log' => 'green',
+          'warning' => 'light_magenta',
+          'info' => 'magenta',
+          'log' => 'magenta',
           'debug' => 'green'
         },
         'port' => true,

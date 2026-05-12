@@ -9,10 +9,10 @@ local_supervisor:
   log:
     prefix: '[SUPERVISOR]'
     color:
-      warning: 'magenta'
-      info: 'light_cyan'
-      log: 'cyan'
-      debug: 'light_cyan'
+      warning: 'white'
+      info: 'gray'
+      log: 'black'
+      debug: 'black'
     acknowledgements: false
     watchdogs: false
   default:
