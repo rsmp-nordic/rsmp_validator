@@ -9,7 +9,7 @@ module Validator
 
     # Initial connectivity check to verify we can connect to the site/supervisor being tested.
     def check_connection
-      Log.log "Initial #{mode} connection check"
+      log "Initial #{mode} connection check"
       if mode == :site
         SiteTester.instance.connected { nil }
       elsif mode == :supervisor

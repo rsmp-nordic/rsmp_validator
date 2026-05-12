@@ -5,6 +5,8 @@ module Validator
   # Base class for testing either a site or a supervisor.
   # Handles running the corresponding local site/supervisor inside an Async reactor.
   class Tester
+    include Validator::Log
+
     def self.sentinel_errors
       @sentinel_errors ||= []
     end
@@ -49,7 +51,7 @@ module Validator
     # Stop the rsmp supervisor
     def stop(why = nil)
       if @node
-        Log.log why if why
+        log why if why
         @node.ignore_errors RSMP::DisconnectError do
           @node.stop
         end
@@ -77,7 +79,7 @@ module Validator
           sentinel.annotate 'sentinel'
           while @node
             e = @node.error_queue.dequeue
-            Log.log "Sentinel warning: #{e.class}: #{e}"
+            log "Sentinel warning: #{e.class}: #{e}"
             self.class.sentinel_errors << e
           end
         end

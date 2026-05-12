@@ -18,7 +18,7 @@ describe "Traffic Light Controller" do
   it 'responds with NotAck to invalid status request code' do
     with_site(:connected) do |site_proxy|
       # write to the validator log
-      Validator::Log.log "Requesting non-existing status S0000"
+      log "Requesting non-existing status S0000"
 
       # expect an error to be raised
       expect {
