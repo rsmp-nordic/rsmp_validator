@@ -48,7 +48,7 @@ module Validator
     end
 
     def wait_for_connection
-      Log.log 'Waiting for connection to supervisor'
+      log 'Waiting for connection to supervisor'
       @proxy = @node.find_supervisor :any
       @proxy.wait_for_state %i[connected ready], timeout: config['timeouts']['connect']
     rescue RSMP::TimeoutError

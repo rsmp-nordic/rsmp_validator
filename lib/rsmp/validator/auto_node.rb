@@ -4,6 +4,8 @@ module Validator
   # Base class for automatically starting a local RSMP node (site or supervisor)
   # when testing the validator or RSMP gem itself.
   class AutoNode
+    include Validator::Log
+
     attr_reader :node, :task
 
     def initialize
@@ -19,16 +21,17 @@ module Validator
 
       @task = Async do |task|
         task.annotate "auto_#{node_type}"
-        Log.log_block("Starting auto #{node_type}") do
-          @node.start
-        end
+        log("Starting auto #{node_type}")
+        @node.start
+      rescue Async::TimeoutError
+        raise RSMP::TimeoutError, "Timeout while starting auto #{node_type}"
       end
     end
 
     # Stop the auto node
     def stop
       if @node
-        Log.log "Stopping auto #{node_type}"
+        log("Stopping auto #{node_type}")
         @node.ignore_errors RSMP::DisconnectError do
           @node.stop
         end

@@ -78,7 +78,7 @@ module Validator
       @proxy = @node.proxies.first
       return if @proxy
 
-      Log.log 'Waiting for site to connect'
+      log 'Waiting for site to connect'
       @proxy = @node.wait_for_site(:any, timeout: config['timeouts']['connect'])
     rescue RSMP::TimeoutError
       raise RSMP::ConnectionError, "Site did not connect within #{config['timeouts']['connect']}s"
@@ -87,9 +87,9 @@ module Validator
     def wait_for_handshake
       return if @proxy.ready?
 
-      Log.log 'Waiting for handshake to complete'
+      log 'Waiting for handshake to complete'
       @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
-      Log.log 'Ready'
+      log 'Ready'
       return if @initial_unsubscribe_done
 
       @proxy.unsubscribe_from_all component: Validator.get_config('main_component')
