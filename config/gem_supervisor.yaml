@@ -12,7 +12,7 @@ local_site:
       warning: 'light_white'
       info: 'white'
       log: 'black'
-      debug: 'grey'
+      debug: 'black'
     acknowledgements: false
     watchdogs: false
   intervals:

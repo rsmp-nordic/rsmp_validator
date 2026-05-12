@@ -11,10 +11,10 @@ sites:
 log:
   prefix: '[SUPERVISOR]'
   color:
-    warning: 'magenta'
-    info: 'light_cyan'
-    log: 'cyan'
-    debug: 'light_cyan'
+    warning: 'white'
+    info: 'grey'
+    log: 'black'
+    debug: 'black'
   id: true
   port: true
   json: true

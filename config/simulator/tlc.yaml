@@ -58,9 +58,9 @@ log:
   prefix: '[TLC]       '
   color:
     warning: 'light_white'
-    info: 'white'
+    info: 'gray'
     log: 'black'
-    debug: 'grey'
+    debug: 'black'
   json: true
   acknowledgements: false
   watchdogs: false
