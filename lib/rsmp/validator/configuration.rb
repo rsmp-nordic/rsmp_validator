@@ -41,7 +41,7 @@ module Validator
       path = auto_node_config_path
       return unless path
 
-      log "Will run auto #{mode} with config: #{path}"
+      @log_stream.puts "Will run auto #{mode} with config: #{path}"
       raw_config = load_yaml_config!(
         path,
         using_message: '',

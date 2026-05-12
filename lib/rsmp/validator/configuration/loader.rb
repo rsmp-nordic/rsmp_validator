@@ -16,8 +16,7 @@ module Validator
 
       def load_yaml_config!(path, using_message:, missing_message:)
         ensure_config_exists!(path, missing_message)
-        log_using_message(using_message)
-
+        @log_stream.puts using_message if using_message && !using_message.empty?
         raw = YAML.load_file(path)
         validate_config_hash!(raw, path)
         raw || {}
@@ -27,12 +26,6 @@ module Validator
 
       def ensure_config_exists!(path, missing_message)
         abort_with_error missing_message unless File.exist?(path)
-      end
-
-      def log_using_message(using_message)
-        return if using_message.nil? || using_message.empty?
-
-        log using_message
       end
 
       def validate_config_hash!(raw, path)
