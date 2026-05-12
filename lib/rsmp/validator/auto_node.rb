@@ -28,7 +28,7 @@ module Validator
     # Stop the auto node
     def stop
       if @node
-        Log.log "Stopping auto #{node_type}", level: :info
+        Log.log "Stopping auto #{node_type}"
         @node.ignore_errors RSMP::DisconnectError do
           @node.stop
         end

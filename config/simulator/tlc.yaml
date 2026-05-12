@@ -56,6 +56,11 @@ security_codes:
   2: '2222'
 log:
   prefix: '[TLC]       '
+  color:
+    warning: 'light_white'
+    info: 'white'
+    log: 'black'
+    debug: 'grey'
   json: true
   acknowledgements: false
   watchdogs: false

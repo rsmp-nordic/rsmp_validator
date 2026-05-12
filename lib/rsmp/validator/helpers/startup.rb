@@ -100,7 +100,7 @@ module Validator
 
       def build_subscribe_lists(site_proxy, status_list)
         raw_list = RSMP::StatusList.new(status_list).to_a
-        subscribe_list = raw_list.map { |item| item.merge 'uRt' => 0.to_s }
+        subscribe_list = raw_list.map { |item| item.merge('uRt' => 0.to_s) }
         subscribe_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
         [subscribe_list, raw_list]
       end

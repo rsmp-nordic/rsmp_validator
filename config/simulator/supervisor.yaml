@@ -10,6 +10,11 @@ sites:
       acknowledgement: 0.5
 log:
   prefix: '[SUPERVISOR]'
+  color:
+    warning: 'magenta'
+    info: 'light_cyan'
+    log: 'cyan'
+    debug: 'light_cyan'
   id: true
   port: true
   json: true

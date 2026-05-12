@@ -41,11 +41,11 @@ module Validator
       end
 
       def warn_no_security_code
-        log 'Warning: No security code configured'.colorize(:yellow)
+        log 'Warning: No security code configured', level: :warning
       end
 
       def warn_security_code_not_configured(index)
-        log "Warning: Security code #{index} is not configured".colorize(:yellow)
+        log "Warning: Security code #{index} is not configured", level: :warning
       end
     end
   end

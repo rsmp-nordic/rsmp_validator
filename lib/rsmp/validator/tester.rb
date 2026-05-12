@@ -77,7 +77,7 @@ module Validator
           sentinel.annotate 'sentinel'
           while @node
             e = @node.error_queue.dequeue
-            Log.log "Sentinel warning: #{e.class}: #{e}", level: :test
+            Log.log "Sentinel warning: #{e.class}: #{e}"
             self.class.sentinel_errors << e
           end
         end
