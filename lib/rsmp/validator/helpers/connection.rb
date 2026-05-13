@@ -30,6 +30,8 @@ module Validator
         else
           Validator::SiteTester.public_send(state, **opts) do |_task, _node, proxy|
             block.call(proxy)
+          rescue RSMP::TimeoutError => e
+            @__assertions__.assert false, e.message
           rescue StandardError => e
             @__assertions__.error!(UncaughtException.new(e))
           end
@@ -44,6 +46,8 @@ module Validator
         else
           Validator::SupervisorTester.public_send(state, **opts) do |_task, _node, proxy|
             block.call(proxy)
+          rescue RSMP::TimeoutError => e
+            @__assertions__.assert false, e.message
           rescue StandardError => e
             @__assertions__.error!(UncaughtException.new(e))
           end
