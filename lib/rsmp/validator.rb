@@ -38,7 +38,7 @@ module Validator
     include RSMP::Logging
 
     attr_accessor :config, :config_log_settings, :mode, :logger, :auto_node_config,
-                  :auto_node_log_settings, :auto_node
+                  :auto_node_log_settings, :auto_node, :node_log_settings
   end
 
   # Get the global Async reactor used for RSMP communication

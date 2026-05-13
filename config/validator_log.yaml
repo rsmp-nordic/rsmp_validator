@@ -1,0 +1,12 @@
+prefix: '[VALIDATOR] '
+color:
+  warning: 'light_magenta'
+  info: 'magenta'
+  log: 'magenta'
+  debug: 'green'
+port: true
+json: true
+acknowledgements: true
+watchdogs: true
+test: true
+debug: true

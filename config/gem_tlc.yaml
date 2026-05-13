@@ -6,15 +6,6 @@ local_supervisor:
   ips: all
   max_sites: 1
   proxy_type: tlc
-  log:
-    prefix: '[SUPERVISOR]'
-    color:
-      warning: 'white'
-      info: 'gray'
-      log: 'black'
-      debug: 'black'
-    acknowledgements: false
-    watchdogs: false
   default:
     intervals:
       timer: 0.1

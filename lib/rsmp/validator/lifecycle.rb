@@ -29,25 +29,12 @@ module Validator
 
     # Set up logging with configuration-specific settings.
     def setup_logging
-      settings = {
-        'stream' => @log_stream,
-        'prefix' => '[VALIDATOR] ',
-        'color' => {
-          'warning' => 'light_magenta',
-          'info' => 'magenta',
-          'log' => 'magenta',
-          'debug' => 'green'
-        },
-        'port' => true,
-        'json' => true,
-        'acknowledgements' => true,
-        'watchdogs' => true,
-        'test' => true,
-        'debug' => true
-      }
+      settings = load_log_defaults('validator_log').merge('stream' => @log_stream)
       settings = settings.deep_merge(config_log_settings) if config_log_settings
       settings = settings.deep_merge(config['log']) if config.is_a?(Hash) && config['log']
       initialize_logging log_settings: settings
+
+      self.node_log_settings = load_log_defaults('simulator/node_log').merge('stream' => @log_stream)
     end
 
     # Called at sus startup: initializes the Async reactor and checks connectivity.
@@ -83,6 +70,11 @@ module Validator
     end
 
     private
+
+    def load_log_defaults(name)
+      path = File.expand_path("../../../config/#{name}.yaml", __dir__)
+      YAML.load_file(path)
+    end
 
     def run_startup_checks
       error = nil

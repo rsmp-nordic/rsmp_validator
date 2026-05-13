@@ -98,9 +98,9 @@ module Validator
 
     def create_supervisor_logger(supervisor_config)
       log_settings = supervisor_config.is_a?(Hash) ? supervisor_config['log'] : nil
-      return Validator.logger unless log_settings && !log_settings.empty?
+      logger_settings = Validator.node_log_settings.merge('prefix' => '[SUPERVISOR]')
+      return RSMP::Logger.new(logger_settings) unless log_settings && !log_settings.empty?
 
-      logger_settings = Validator.logger.settings.dup
       logger_settings.merge!(log_settings)
       logger_settings.delete('stream') if log_settings['path']
       RSMP::Logger.new(logger_settings)
