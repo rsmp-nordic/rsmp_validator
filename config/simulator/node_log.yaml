@@ -1,8 +1,15 @@
-color:
-  warning: 'yellow'
-  info: 'light_grey'
-  log: 'black'
-  debug: 'black'
+style:
+  warning:
+    color: yellow
+  info:
+    color: white
+  log:
+    color: grey
+  debug:
+    color: grey
+  collect:
+    color: cyan
+    mode: dim
 port: true
 json: true
 acknowledgements: false
