@@ -8,16 +8,4 @@ sites:
     timeouts:
       watchdog: 0.5
       acknowledgement: 0.5
-log:
-  prefix: '[SUPERVISOR]'
-  color:
-    warning: 'white'
-    info: 'grey'
-    log: 'black'
-    debug: 'black'
-  id: true
-  port: true
-  json: true
-  acknowledgements: false
-  watchdogs: false
 

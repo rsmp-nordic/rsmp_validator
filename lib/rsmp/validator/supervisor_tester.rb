@@ -63,9 +63,9 @@ module Validator
 
     def create_site_logger(site_config)
       log_settings = site_config.is_a?(Hash) ? site_config['log'] : nil
-      return Validator.logger unless log_settings && !log_settings.empty?
+      logger_settings = Validator.node_log_settings.merge('prefix' => '[TLC]       ')
+      return RSMP::Logger.new(logger_settings) unless log_settings && !log_settings.empty?
 
-      logger_settings = Validator.logger.settings.dup
       logger_settings.merge!(log_settings)
       logger_settings.delete('stream') if log_settings['path']
       RSMP::Logger.new(logger_settings)

@@ -1,0 +1,11 @@
+color:
+  warning: 'yellow'
+  info: 'light_grey'
+  log: 'black'
+  debug: 'black'
+port: true
+json: true
+acknowledgements: false
+watchdogs: false
+test: true
+debug: true

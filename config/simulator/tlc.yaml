@@ -54,13 +54,3 @@ timeouts:
 security_codes:
   1: '1111'
   2: '2222'
-log:
-  prefix: '[TLC]       '
-  color:
-    warning: 'light_white'
-    info: 'gray'
-    log: 'black'
-    debug: 'black'
-  json: true
-  acknowledgements: false
-  watchdogs: false

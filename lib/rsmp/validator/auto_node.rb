@@ -62,11 +62,19 @@ module Validator
     end
 
     def create_logger
-      logger_settings = Validator.logger.settings.dup
+      logger_settings = Validator.node_log_settings.dup
+      logger_settings['prefix'] = default_log_prefix
       auto_log_settings = Validator.auto_node_log_settings
       logger_settings.merge!(auto_log_settings) if auto_log_settings && !auto_log_settings.empty?
       logger_settings.delete('stream') if auto_log_settings && auto_log_settings['path']
       RSMP::Logger.new(logger_settings)
+    end
+
+    def default_log_prefix
+      case node_type
+      when 'supervisor' then '[SUPERVISOR]'
+      when 'site'       then '[TLC]       '
+      end
     end
   end
 end
