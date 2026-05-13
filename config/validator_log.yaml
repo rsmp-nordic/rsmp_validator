@@ -1,9 +1,17 @@
 prefix: '[VALIDATOR] '
-color:
-  warning: 'light_magenta'
-  info: 'magenta'
-  log: 'magenta'
-  debug: 'green'
+style:
+  warning:
+    color: yellow
+    mode: bold
+  info:
+    color: magenta
+    mode: bold
+  log:
+    color: magenta
+  debug:
+    color: magenta
+  collect:
+    color: magenta
 port: true
 json: true
 acknowledgements: true
