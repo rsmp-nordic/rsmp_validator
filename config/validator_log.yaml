@@ -16,5 +16,4 @@ port: true
 json: true
 acknowledgements: true
 watchdogs: true
-test: true
-debug: true
+debug: false
