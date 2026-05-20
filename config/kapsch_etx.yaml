@@ -6,25 +6,25 @@ local_supervisor:
   max_sites: 1
   guest:
     intervals:
-      timer: 1
-      watchdog: 10
+      timer: 1 # main validator timer resolution in seconds
+      watchdog: 60 # send watchdog every x seconds
 sxl: tlc
 sxl_version: "1.2.1"
-timeouts:
-  watchdog: 15
-  acknowledgement: 10
-  connect: 30
+timeouts: # Timeouts used when waiting for messages from site.
+  watchdog: 60
+  acknowledgement: 60
+  connect: 60
   ready: 15
-  status_response: 10
-  status_update: 10
-  subscribe: 10
-  command: 20
-  command_response: 20
-  alarm: 20
+  status_response: 60
+  status_update: 60
+  subscribe: 60
+  command: 60
+  command_response: 60
+  alarm: 60
   disconnect: 20
-  startup_sequence: 10
-  functional_position: 10
-  priority_completion: 10
+  startup_sequence: 60
+  functional_position: 60
+  priority_completion: 60
   yellow_flash: 3
 components:
   main:
@@ -40,14 +40,14 @@ components:
 items:
   plans: [1, 2]
   traffic_situations: [1, 2]
-  emergency_routes: [1]
-  inputs: [1, 2, 3, 4]
-  outputs: [1, 2, 3, 4]
+  emergency_routes: [4]
+  inputs: [1, 2, 3]
+  outputs: [1, 2, 3]
 startup_sequence: "efg"
 alarm_triggers:
   A0302:
-    input: 7
-    component: KTT+TC=101DL001
+    input: 4
+    component: KTT+TC=101DL004
 secrets:
   security_codes:
     1: "1111"
