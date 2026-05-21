@@ -12,19 +12,19 @@ sxl: tlc
 sxl_version: "1.2.1"
 timeouts: # Timeouts used when waiting for messages from site.
   watchdog: 60
-  acknowledgement: 60
-  connect: 60
+  acknowledgement: 10
+  connect: 30
   ready: 15
-  status_response: 60
-  status_update: 60
-  subscribe: 60
-  command: 60
-  command_response: 60
-  alarm: 60
+  status_response: 20
+  status_update: 20
+  subscribe: 20
+  command: 30
+  command_response: 30
+  alarm: 20
   disconnect: 20
-  startup_sequence: 60
-  functional_position: 60
-  priority_completion: 60
+  startup_sequence: 10
+  functional_position: 10
+  priority_completion: 10
   yellow_flash: 3
 components:
   main:
