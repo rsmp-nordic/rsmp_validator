@@ -10,6 +10,7 @@ module Validator
 
         def initialize(sequence)
           @pos = []
+          @prev = []
           @sequence = sequence
           @num_groups = 0
           @latest = nil
@@ -51,7 +52,10 @@ module Validator
         end
 
         def check_not_started_group(group_index, state)
-          @pos[group_index] = 0 if state == @sequence[0]
+          prev = @prev[group_index]
+          start = @sequence[0]
+          @pos[group_index] = 0 if state == start && !prev.nil? && prev != start
+          @prev[group_index] = state
           nil
         end
 
@@ -87,8 +91,8 @@ module Validator
         collector = RSMP::StatusCollector.new site_proxy, status_list, timeout: timeout
         sequencer = SignalGroupSequence.new Validator.get_config('startup_sequence')
         collector_task = start_sequence_collector(collector, sequencer)
-        yield
         site_proxy.subscribe_to_status subscribe_list, component: component
+        yield
         handle_startup_sequence_result(collector_task.wait, sequencer, collector, timeout)
         wait_for_status(site_proxy, 'control mode to be startup',
                         [{ 'sCI' => 'S0020', 'n' => 'controlmode', 's' => 'control' }])
