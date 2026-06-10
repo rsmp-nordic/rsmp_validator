@@ -62,14 +62,14 @@ local_supervisor:
   default:
     sxls:                 # sxls of the connecting site
       tlc: '1.2.1'
-    core_version: 3.2.2   # core version of site
+    core_version: 3.3.0   # core version of site
     intervals:
       timer: 1            # main timer interval (resolution), in seconds
       watchdog: 1         # how often to send watchdog messages, in seconds
     timeouts:
       watchdog: 2         # max time between incoming watchdogs, in seconds
       acknowledgement: 2  # max time until acknowledgement is received, in seconds
-core_version: 3.2.2     # core version of site, tests not relevant for this version will be skipped
+core_version: 3.3.0     # core version of site, tests not relevant for this version will be skipped
 sxls:                   # sxls of the site, tests not relevant for this version will be skipped
   tlc: '1.2.1'
 
@@ -151,7 +151,7 @@ local_site:
       port: 14111         # port
   log:
     prefix: '[TLC]'        # log prefix for local site
-  core_version: 3.2.2     # core version
+  core_version: 3.3.0     # core version
   sxls:                   # sxls to use
     tlc: '1.2.1'
   components:           # components of local site, organized by type and name
@@ -196,7 +196,7 @@ local_site:
     security_codes:       # RSMP security codes. there are no defaults for these
       1: '1111'           # level 1
       2: '2222'           # level 2
-core_version: 3.2.2     # core version, tests not relevant for this version will be skipped
+core_version: 3.3.0     # core version, tests not relevant for this version will be skipped
 sxls:                   # sxls to use; tests not relevant for this version will be skipped
   tlc: '1.2.1'
 ```
