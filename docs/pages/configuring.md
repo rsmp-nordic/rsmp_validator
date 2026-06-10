@@ -60,8 +60,8 @@ local_supervisor:
   log:
     prefix: '[SUPERVISOR]' # log prefix for local supervisor
   default:
-    sxl: tlc              # sxl of the connecting site, options are 'core' or 'tlc'
-    sxl_version: 1.2.1    # sxl version of the site
+    sxls:                 # sxls of the connecting site
+      tlc: '1.2.1'
     core_version: 3.2.2   # core version of site
     intervals:
       timer: 1            # main timer interval (resolution), in seconds
@@ -70,12 +70,12 @@ local_supervisor:
       watchdog: 2         # max time between incoming watchdogs, in seconds
       acknowledgement: 2  # max time until acknowledgement is received, in seconds
 core_version: 3.2.2     # core version of site, tests not relevant for this version will be skipped
-sxl: tlc                # sxl of the connecting site, options are 'core' or 'tlc'
-sxl_version: 1.2.1      # sxl version of the site, tests not relevant for this version will be skipped
+sxls:                   # sxls of the site, tests not relevant for this version will be skipped
+  tlc: '1.2.1'
 
 ## Note on `sites` entries
 
-When building supervisor settings you can add a `sites` mapping where each key is a site id and the value is the supervisor-side configuration for that site. The supervisor uses this information to determine which SXL/schema and proxy behaviour to use for incoming connections. Each site entry must include `sxl`.
+When building supervisor settings you can add a `sites` mapping where each key is a site id and the value is the supervisor-side configuration for that site. The supervisor uses this information to determine which SXL/schema and proxy behaviour to use for incoming connections. Each site entry can include `sxls`, or inherit it from the default settings.
 
 Example:
 
@@ -83,12 +83,10 @@ Example:
 local_supervisor:
   sites:
     TLC001:
-      sxl: tlc
-      sxl_version: '1.2.1'
+      sxls:
+        tlc: '1.2.1'
       timeouts:
         acknowledgement: 1
-```
-
 timeouts:
   watchdog: 2           # max time between incoming watchdogs, in seconds
   acknowledgement: 2    # max time until acknowledgement is received, in seconds
@@ -154,8 +152,8 @@ local_site:
   log:
     prefix: '[TLC]'        # log prefix for local site
   core_version: 3.2.2     # core version
-  sxl: tlc                # sxl to use, options are 'core' or 'tlc'
-  sxl_version: 1.2.1      # sxl version
+  sxls:                   # sxls to use
+    tlc: '1.2.1'
   components:           # components of local site, organized by type and name
     main:                 # type
       TC:                 # name
@@ -199,21 +197,26 @@ local_site:
       1: '1111'           # level 1
       2: '2222'           # level 2
 core_version: 3.2.2     # core version, tests not relevant for this version will be skipped
-sxl: tlc                # sxl to use, options are 'core' or 'tlc'
-sxl_version: 1.2.1      # sxl version, tests not relevant for this version will be skipped
+sxls:                   # sxls to use; tests not relevant for this version will be skipped
+  tlc: '1.2.1'
 ```
 
 ## SXL Option
-The `sxl` attribute of a configuration specifies what SXL to use for communication. Currently, the valid options are:
+The `sxls` attribute specifies which SXLs to use for communication:
 
-- core: Generic RSMP communication. No alarms, commands or status are allowed, only core messages.
-- tlc: Traffic Light Controllers.
+```yaml
+sxls:
+  tlc: '1.3.0'
+  vms: '1.5.4'
+```
 
-The sxl will choose the JSON Schema used to validate all ingoing and outgoing messages. It also restricts what type of components can be listed under the `components` attribute in the configuration.
+The SXL list chooses the JSON Schemas used to validate ingoing and outgoing messages. The name `core` is reserved for the RSMP core schema and cannot be used as an SXL name.
+
+If an SXL defines a prefix, the prefix is read from the SXL metadata and included in the Version request. It is not configured in validator YAML.
 
 Equipment that doesn't yet have a standardized SXL cannot be fully validated using the RSMP validator, because there are no tests for these types yet, and because there is no JSON Schema to validate the commands and statuses for such types of equipment.
 
-However, you can still use the RSMP Validator to validate the core part of the communication, including connecting, Aggregated Status and Watchdog messages. Use 'core' as the sxl type in the configuration and then run only the tests in the folder `test/site/core/`. Remember to also set sxl version to the version of the core specification used, e.g. 3.1.5.
+However, you can still use the RSMP Validator to validate the core part of the communication, including connecting, ComponentList, Aggregated Status and Watchdog messages. Use an empty `sxls: {}` hash and run only the tests in the folder `test/site/core/`.
 
 ## Components Option
 RSMP equipment has a list of RSMP components. For example a traffic light controller will have some signal groups and detector logics. In addition all RSMP equipment must have a main component.
@@ -295,7 +298,8 @@ Only tests relevant to the core and SXL version specified will be run:
 
 ```yaml
 core_version: 3.1.2
-sxl_version: 1.0.7 
+sxls:
+  tlc: '1.0.7'
 ```
 
 In this case, the S0027 test above will not run, because it requires SXL 1.0.13 or higher, but we limited testing to 1.0.7. 
@@ -314,5 +318,3 @@ To enable it, add `auto_site` or `auto_supervisor` to your `config/validator.yam
 site: config/gem_tlc.yaml
 auto_site: config/simulator/tlc.yaml  # Optional: starts a local site to test
 ```
-
-

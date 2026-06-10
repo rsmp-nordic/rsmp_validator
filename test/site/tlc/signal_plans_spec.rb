@@ -34,7 +34,7 @@ describe 'Site::Tlc::SignalPlans' do
       plans.each do |plan|
         command_timeout = Validator.get_config('timeouts', 'command')
         status_timeout = Validator.get_config('timeouts', 'status_response')
-        site_proxy.set_timeplan(plan, within: command_timeout)
+        site_proxy.tlc.set_timeplan(plan, within: command_timeout)
 
         s0014_fields = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
                          { S0014: %i[status source] }
@@ -98,7 +98,7 @@ describe 'Site::Tlc::SignalPlans' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
       status = '0-1,6-2'
       timeout = Validator.get_config('timeouts', 'command_response')
-      site_proxy.set_week_table(status, within: timeout)
+      site_proxy.tlc.set_week_table(status, within: timeout)
     end
   end
 
@@ -123,7 +123,7 @@ describe 'Site::Tlc::SignalPlans' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
       status = '12-1-12-59,1-0-23-12'
       timeout = Validator.get_config('timeouts', 'command_response')
-      site_proxy.set_day_table(status, within: timeout)
+      site_proxy.tlc.set_day_table(status, within: timeout)
     end
   end
 
@@ -184,7 +184,7 @@ describe 'Site::Tlc::SignalPlans' do
       plan = Validator.get_config('items', 'plans').first
       status = '1-12'
       timeout = Validator.get_config('timeouts', 'command_response')
-      site_proxy.set_dynamic_bands(plan: plan, status: status, within: timeout)
+      site_proxy.tlc.set_dynamic_bands(plan: plan, status: status, within: timeout)
     end
   end
 
@@ -202,17 +202,17 @@ describe 'Site::Tlc::SignalPlans' do
       plan = Validator.get_config('items', 'plans').first
       band = 3
 
-      value = site_proxy.read_dynamic_band(plan: plan, band: band) || 0
+      value = site_proxy.tlc.read_dynamic_band(plan: plan, band: band) || 0
       expect(value).to be_a(Integer)
 
       new_value = value + 1
 
       timeout = Validator.get_config('timeouts', 'command_response')
-      site_proxy.set_dynamic_bands(plan: plan, status: "#{band}-#{new_value}", within: timeout)
-      expect(site_proxy.read_dynamic_band(plan: plan, band: band)).to eq(new_value)
+      site_proxy.tlc.set_dynamic_bands(plan: plan, status: "#{band}-#{new_value}", within: timeout)
+      expect(site_proxy.tlc.read_dynamic_band(plan: plan, band: band)).to eq(new_value)
 
-      site_proxy.set_dynamic_bands(plan: plan, status: "#{band}-#{value}", within: timeout)
-      expect(site_proxy.read_dynamic_band(plan: plan, band: band)).to eq(value)
+      site_proxy.tlc.set_dynamic_bands(plan: plan, status: "#{band}-#{value}", within: timeout)
+      expect(site_proxy.tlc.read_dynamic_band(plan: plan, band: band)).to eq(value)
     end
   end
 
@@ -227,9 +227,9 @@ describe 'Site::Tlc::SignalPlans' do
     with_site(:connected, sxl: '>=1.1') do |site_proxy|
       timeout = Validator.get_config('timeouts', 'command_response')
       status = 10
-      site_proxy.set_dynamic_bands_timeout(status, within: timeout)
+      site_proxy.tlc.set_dynamic_bands_timeout(status, within: timeout)
       status = 0
-      site_proxy.set_dynamic_bands_timeout(status, within: timeout)
+      site_proxy.tlc.set_dynamic_bands_timeout(status, within: timeout)
     end
   end
 
@@ -253,7 +253,7 @@ describe 'Site::Tlc::SignalPlans' do
       plan = Validator.get_config('items', 'plans').first
       offset = 99
       timeout = Validator.get_config('timeouts', 'command_response')
-      site_proxy.set_offset(plan: plan, offset: offset, within: timeout)
+      site_proxy.tlc.set_offset(plan: plan, offset: offset, within: timeout)
     end
   end
 

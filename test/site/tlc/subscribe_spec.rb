@@ -15,7 +15,7 @@ describe 'Site::Tlc::Subscribe' do
       component = Validator.get_config('main_component')
 
       status_list = [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus', 'uRt' => '1' }]
-      status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
+      status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
 
       site_proxy.subscribe_to_status_and_collect(status_list,
                                                  component: component,
@@ -42,7 +42,7 @@ describe 'Site::Tlc::Subscribe' do
       # Step 1: Subscribe with 60s update rate (no need to wait for updates with long interval)
       log 'Subscribe to S0001 cyclecounter with 60s update rate'
       initial_status_list = [{ 'sCI' => 'S0001', 'n' => 'cyclecounter', 'uRt' => '60' }]
-      initial_status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
+      initial_status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
 
       # Subscribe but don't wait for updates (since 60s is too long)
       site_proxy.subscribe_to_status initial_status_list, component: component
@@ -51,7 +51,7 @@ describe 'Site::Tlc::Subscribe' do
       # Step 3: Change update rate to 1s by re-subscribing and verify we get update within 2s
       log 'Change update rate to 1s by re-subscribing and verify update within 2s'
       updated_status_list = [{ 'sCI' => 'S0001', 'n' => 'cyclecounter', 'uRt' => '1' }]
-      updated_status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
+      updated_status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
 
       # This should collect at least one status update within 2s if the 1s rate is working
       collector = site_proxy.subscribe_to_status_and_collect(updated_status_list,

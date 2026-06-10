@@ -29,10 +29,10 @@ describe 'Site::Tlc::TrafficSituations' do
     timeout = Validator.get_config('timeouts', 'command')
     with_site(:connected) do |site_proxy|
       situations.each do |traffic_situation|
-        assert site_proxy.set_traffic_situation(traffic_situation.to_s, within: timeout)
+        assert site_proxy.tlc.set_traffic_situation(traffic_situation.to_s, within: timeout)
       end
     ensure
-      site_proxy.unset_traffic_situation(within: timeout)
+      site_proxy.tlc.unset_traffic_situation(within: timeout)
     end
   end
 

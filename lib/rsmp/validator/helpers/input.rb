@@ -5,7 +5,7 @@ module Validator
       include Status
 
       def force_input_and_confirm(site_proxy, input:, value:, within:)
-        site_proxy.force_input(input:, status: 'True', value:, within:)
+        site_proxy.tlc.force_input(input:, status: 'True', value:, within:)
         digit = (value == 'True' ? '1' : '0')
 
         wait_for_status(
@@ -18,7 +18,7 @@ module Validator
       end
 
       def switch_input(site_proxy, indx, within:)
-        site_proxy.set_input(input: indx.to_s, status: 'True', within:)
+        site_proxy.tlc.set_input(input: indx.to_s, status: 'True', within:)
 
         wait_for_status(
           site_proxy,
@@ -28,7 +28,7 @@ module Validator
           ]
         )
 
-        site_proxy.set_input(input: indx.to_s, status: 'False', within:)
+        site_proxy.tlc.set_input(input: indx.to_s, status: 'False', within:)
         wait_for_status(
           site_proxy,
           "input #{indx} to be False",

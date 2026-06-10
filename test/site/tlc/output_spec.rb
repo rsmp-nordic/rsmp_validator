@@ -48,10 +48,10 @@ describe 'Site::Tlc::Output' do
       skip('No outputs configured') if outputs.nil? || outputs.empty?
       timeout = Validator.get_config('timeouts', 'command_response')
       outputs.each do |output|
-        site_proxy.force_output(output: output, status: 'True', value: 'True', within: timeout)
-        site_proxy.force_output(output: output, status: 'True', value: 'False', within: timeout)
+        site_proxy.tlc.force_output(output: output, status: 'True', value: 'True', within: timeout)
+        site_proxy.tlc.force_output(output: output, status: 'True', value: 'False', within: timeout)
       ensure
-        site_proxy.force_output(output: output, status: 'False', value: 'True', within: timeout)
+        site_proxy.tlc.force_output(output: output, status: 'False', value: 'True', within: timeout)
       end
     end
   end

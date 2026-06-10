@@ -1,11 +1,11 @@
 port: 13111
 sites:
   default:
-    sxl: tlc
+    sxls:
+      tlc: '1.2.1'
     intervals:
       timer: 0.1
       watchdog: 0.1
     timeouts:
       watchdog: 0.5
       acknowledgement: 0.5
-

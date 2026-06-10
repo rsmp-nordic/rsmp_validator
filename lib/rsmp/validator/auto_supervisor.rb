@@ -10,8 +10,10 @@ module Validator
     end
 
     def build_node
+      supervisor_settings = ConfigNormalizer.normalize_supervisor_settings(config)
+
       RSMP::Supervisor.new(
-        supervisor_settings: config,
+        supervisor_settings: supervisor_settings,
         logger: create_logger
       )
     end

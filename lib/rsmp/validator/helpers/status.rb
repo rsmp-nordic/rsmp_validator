@@ -7,7 +7,7 @@ module Validator
         timeout = options.fetch(:timeout, Validator.get_config('timeouts', 'command'))
         component_id = options.fetch(:component_id, Validator.get_config('main_component'))
         log "Wait for #{description}"
-        site_proxy.wait_for_status(
+        site_proxy.tlc.wait_for_status(
           description,
           RSMP::StatusList.new(status_list).to_a,
           update_rate: update_rate,

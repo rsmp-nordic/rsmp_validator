@@ -89,5 +89,16 @@ describe 'Site::Core' do
       skip 'requires core == 3.2.2' unless Validator.core_matches?('3.2.2')
       check_sequence '3.2.2'
     end
+
+    # Verify the connection sequence when using rsmp core 3.3.0
+    #
+    # 1. Given the site is connected and using core 3.3.0
+    # 2. When handshake messages are sent and received
+    # 3. Then ComponentList should be exchanged before application traffic
+    # 4. And the connection sequence should be complete
+    it 'is correct for rsmp version 3.3.0' do
+      skip 'requires core == 3.3.0' unless Validator.core_matches?('3.3.0')
+      check_sequence '3.3.0'
+    end
   end
 end

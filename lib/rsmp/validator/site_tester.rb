@@ -67,8 +67,10 @@ module Validator
 
     def build_node(options)
       logger = create_supervisor_logger(@supervisor_config)
+      supervisor_settings = ConfigNormalizer.normalize_supervisor_settings(@supervisor_config.deep_merge(options))
+
       RSMP::Supervisor.new(
-        supervisor_settings: @supervisor_config.deep_merge(options),
+        supervisor_settings: supervisor_settings,
         logger: logger,
         collect: options['collect']
       )

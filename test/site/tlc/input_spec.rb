@@ -50,10 +50,10 @@ describe 'Site::Tlc::Input' do
       skip('No inputs configured') if inputs.nil? || inputs.empty?
       inputs.each do |input|
         timeout = Validator.get_config('timeouts', 'command')
-        site_proxy.force_input(input: input, status: 'True', value: 'False', within: timeout)
-        site_proxy.force_input(input: input, status: 'True', value: 'True', within: timeout)
+        site_proxy.tlc.force_input(input: input, status: 'True', value: 'False', within: timeout)
+        site_proxy.tlc.force_input(input: input, status: 'True', value: 'True', within: timeout)
       ensure
-        site_proxy.force_input(input: input, status: 'False', value: 'True', within: timeout)
+        site_proxy.tlc.force_input(input: input, status: 'False', value: 'True', within: timeout)
       end
     end
   end
@@ -84,7 +84,7 @@ describe 'Site::Tlc::Input' do
       skip('No inputs configured') if inputs.nil? || inputs.empty?
       status = '1,3,12;5,5,10'
       timeout = Validator.get_config('timeouts', 'command')
-      site_proxy.set_inputs(status, within: timeout)
+      site_proxy.tlc.set_inputs(status, within: timeout)
     end
   end
 
@@ -96,7 +96,7 @@ describe 'Site::Tlc::Input' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
       timeout = Validator.get_config('timeouts', 'command_response')
       status = '1-50'
-      site_proxy.set_trigger_level(status, within: timeout)
+      site_proxy.tlc.set_trigger_level(status, within: timeout)
     end
   end
 end

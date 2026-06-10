@@ -3,8 +3,8 @@ site_id: RN+SI0001
 supervisors:
   - ip: 127.0.0.1
     port: 13111
-sxl: tlc
-sxl_version: '1.2.1'
+sxls:
+  tlc: '1.2.1'
 components:
   main:
     TC:

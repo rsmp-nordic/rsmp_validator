@@ -10,8 +10,8 @@ local_supervisor:
     intervals:
       timer: 0.1
       watchdog: 0.1
-sxl: tlc
-sxl_version: '1.2.1'
+sxls:
+  tlc: '1.2.1'
 timeouts:
   watchdog: 1
   acknowledgement: 1

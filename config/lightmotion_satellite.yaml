@@ -9,8 +9,8 @@ local_supervisor:
       intervals:
         timer: 1    # main validator timer resolution in seconds
         watchdog: 20 # send watchdog every x seconds
-sxl: tlc
-sxl_version: '1.2.0'
+sxls:
+  tlc: '1.2.0'
 timeouts:     # Timeouts used when waiting for messages from site.
   watchdog: 60
   acknowledgement: 55

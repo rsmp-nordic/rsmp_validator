@@ -41,8 +41,7 @@ module Validator
 
       def site_defaults
         %w[
-          sxl
-          sxl_version
+          sxls
           core_version
           rsmp_versions
           intervals

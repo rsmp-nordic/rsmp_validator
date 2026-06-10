@@ -85,12 +85,33 @@ describe 'Supervisor' do
       expect(got).to eq(expected)
     end
 
+    def check_sequence_v330(version)
+      expected = [
+        %w[out Version],
+        %w[in MessageAck],
+        %w[in Version],
+        %w[out MessageAck],
+        %w[out Watchdog],
+        %w[in MessageAck],
+        %w[in Watchdog],
+        %w[out MessageAck],
+        %w[out ComponentList],
+        %w[in MessageAck],
+        %w[out AggregatedStatus],
+        %w[in MessageAck]
+      ]
+      got = get_connection_message version, expected.length
+      expect(got).to eq(expected)
+    end
+
     def check_sequence(version)
       case version
       when '3.1.1', '3.1.2', '3.1.3'
         check_sequence_v311 version
       when '3.1.4', '3.1.5', '3.2', '3.2.1', '3.2.2'
         check_sequence_v314 version
+      when '3.3.0'
+        check_sequence_v330 version
       else
         raise "Unkown rsmp version #{version}"
       end
@@ -182,6 +203,17 @@ describe 'Supervisor' do
     it 'exchanges correct connection sequence of rsmp version 3.2.2' do
       skip 'requires core == 3.2.2' unless Validator.core_matches?('3.2.2')
       check_sequence '3.2.2'
+    end
+
+    # Verify the connection sequence when using rsmp core 3.3.0
+    #
+    # 1. Given the site is connected and using core 3.3.0
+    # 2. Send and receive handshake messages
+    # 3. Expect the ComponentList before application traffic
+    # 4. Expect the connection sequence to be complete
+    it 'exchanges correct connection sequence of rsmp version 3.3.0' do
+      skip 'requires core == 3.3.0' unless Validator.core_matches?('3.3.0')
+      check_sequence '3.3.0'
     end
   end
 end

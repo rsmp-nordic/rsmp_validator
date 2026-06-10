@@ -45,7 +45,7 @@ describe 'Site::Tlc::SignalPriority' do
   it 'status can be subscribed to with S0033' do
     with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
       status_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
-      status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
+      status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
       wait_for_status(site_proxy, 'signal priority status', status_list)
     end
   end
