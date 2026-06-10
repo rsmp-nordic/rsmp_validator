@@ -2,6 +2,25 @@ module Validator
   module Helpers
     # Helpers for validating the sequence of messages during RSMP connection establishment.
     module Handshake
+      EXPECTED_VERSION_EXCHANGE_MESSAGES = [
+        'in:Version',
+        'out:MessageAck',
+        'out:Version',
+        'in:MessageAck'
+      ].freeze
+
+      EXPECTED_WATCHDOG_EXCHANGE_MESSAGES = [
+        'in:Watchdog',
+        'out:MessageAck',
+        'out:Watchdog',
+        'in:MessageAck'
+      ].freeze
+
+      EXPECTED_COMPONENT_LIST_MESSAGES = [
+        'in:ComponentList',
+        'out:MessageAck'
+      ].freeze
+
       def get_connection_message(core_version, length)
         timeout = Validator.get_config('timeouts', 'ready')
         got = nil
@@ -22,8 +41,8 @@ module Validator
       end
 
       def check_sequence_v311_to_v313(core_version)
-        expected_version_messages = expected_version_exchange_messages
-        expected_watchdog_messages = expected_watchdog_exchange_messages
+        expected_version_messages = EXPECTED_VERSION_EXCHANGE_MESSAGES
+        expected_watchdog_messages = EXPECTED_WATCHDOG_EXCHANGE_MESSAGES
 
         length = expected_version_messages.length + expected_watchdog_messages.length
         got = get_connection_message core_version, length
@@ -43,24 +62,6 @@ module Validator
         )
       end
 
-      def expected_version_exchange_messages
-        [
-          'in:Version',
-          'out:MessageAck',
-          'out:Version',
-          'in:MessageAck'
-        ]
-      end
-
-      def expected_watchdog_exchange_messages
-        [
-          'in:Watchdog',
-          'out:MessageAck',
-          'out:Watchdog',
-          'in:MessageAck'
-        ]
-      end
-
       def expect_sequence_part!(got_part, expected:, forbidden:, context:)
         forbidden.each do |message|
           type = message.split(':').last
@@ -77,33 +78,15 @@ module Validator
       end
 
       def check_sequence_v314_or_later(version)
-        expected = [
-          'in:Version',
-          'out:MessageAck',
-          'out:Version',
-          'in:MessageAck',
-          'in:Watchdog',
-          'out:MessageAck',
-          'out:Watchdog',
-          'in:MessageAck'
-        ]
+        expected = EXPECTED_VERSION_EXCHANGE_MESSAGES + EXPECTED_WATCHDOG_EXCHANGE_MESSAGES
         got = get_connection_message version, expected.length
         assert(got == expected, "Expected connection sequence #{expected.inspect}, got #{got.inspect}")
       end
 
       def check_sequence_v330(version)
-        expected = [
-          'in:Version',
-          'out:MessageAck',
-          'out:Version',
-          'in:MessageAck',
-          'in:Watchdog',
-          'out:MessageAck',
-          'out:Watchdog',
-          'in:MessageAck',
-          'in:ComponentList',
-          'out:MessageAck'
-        ]
+        expected = EXPECTED_VERSION_EXCHANGE_MESSAGES +
+                   EXPECTED_WATCHDOG_EXCHANGE_MESSAGES +
+                   EXPECTED_COMPONENT_LIST_MESSAGES
         got = get_connection_message version, expected.length
         assert(got == expected, "Expected connection sequence #{expected.inspect}, got #{got.inspect}")
       end
