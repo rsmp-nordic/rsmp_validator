@@ -10,7 +10,14 @@ module Validator
 
       normalize_security_codes!(normalized)
       normalize_input_programming!(normalized)
+      normalize_sxls_for_config!(normalized)
 
+      normalized
+    end
+
+    def self.normalize_supervisor_settings(settings)
+      normalized = deep_dup(settings)
+      normalize_sxls_for_config!(normalized)
       normalized
     end
 
@@ -49,6 +56,35 @@ module Validator
         program_array[index] = value
       end
       program_array
+    end
+
+    def self.normalize_sxls_for_config!(value)
+      case value
+      when Hash
+        value.each do |key, child|
+          value[key] = sxls_array_to_hash(child) if key == 'sxls'
+          normalize_sxls_for_config!(value[key])
+        end
+      when Array
+        value.each { |item| normalize_sxls_for_config!(item) }
+      end
+    end
+
+    def self.sxls_array_to_hash(value)
+      return value unless value.is_a?(Array)
+
+      value.each_with_object({}) do |item, memo|
+        next unless item.is_a?(Hash)
+
+        name = item['name']
+        next unless name
+
+        sxl = item.dup
+        sxl.delete('name')
+        version = sxl.delete('version')
+        sxl.delete('prefix')
+        memo[name] = sxl.empty? ? version : sxl.merge('version' => version)
+      end
     end
 
     def self.deep_dup(value)

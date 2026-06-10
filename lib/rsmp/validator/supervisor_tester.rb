@@ -38,10 +38,10 @@ module Validator
               else
                 RSMP::Site
               end
-      site_settings = ConfigNormalizer.normalize_site_settings(@site_config)
+      site_settings = ConfigNormalizer.normalize_site_settings(@site_config.deep_merge(options))
       logger = create_site_logger(@site_config)
       @site = klass.new(
-        site_settings: site_settings.deep_merge(options),
+        site_settings: site_settings,
         logger: logger,
         collect: options['collect']
       )

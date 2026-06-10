@@ -39,7 +39,7 @@ describe 'Site::Tlc::EmergencyRoutes' do
     def set_emergency_states(site_proxy, emergency_routes, state)
       timeout = Validator.get_config('timeouts', 'command_response')
       emergency_routes.each do |emergency_route|
-        site_proxy.set_emergency_route(route: emergency_route.to_s, active: state, within: timeout)
+        site_proxy.tlc.set_emergency_route(route: emergency_route.to_s, active: state, within: timeout)
       end
       wait_for_status(site_proxy, "emergency route #{emergency_routes.last} to be enabled",
                       [
@@ -77,7 +77,7 @@ describe 'Site::Tlc::EmergencyRoutes' do
     def enable_routes(site_proxy, emergency_routes)
       timeout = Validator.get_config('timeouts', 'command_response')
       emergency_routes.each do |emergency_route|
-        site_proxy.set_emergency_route(route: emergency_route.to_s, active: true, within: timeout)
+        site_proxy.tlc.set_emergency_route(route: emergency_route.to_s, active: true, within: timeout)
       end
       routes = emergency_routes.map { |i| { 'id' => i.to_s } }
       wait_for_status(site_proxy, "emergency routes #{emergency_routes} to be enabled",
@@ -86,7 +86,7 @@ describe 'Site::Tlc::EmergencyRoutes' do
 
     def disable_routes(site_proxy, emergency_routes, within:)
       emergency_routes.each do |emergency_route|
-        site_proxy.set_emergency_route(route: emergency_route.to_s, active: false, within:)
+        site_proxy.tlc.set_emergency_route(route: emergency_route.to_s, active: false, within:)
       end
       routes = []
       wait_for_status(site_proxy, 'all emergency routes to be disabled',

@@ -26,7 +26,7 @@ module Validator
 
     def apply_env_overrides!(raw_config)
       raw_config['core_version'] = ENV['CORE_VERSION'] if ENV['CORE_VERSION']
-      raw_config['sxl_version'] = ENV['SXL_VERSION'] if ENV['SXL_VERSION']
+      raw_config['sxls'] = parse_sxls(ENV['SXLS']) if ENV['SXLS']
     end
 
     def validate_and_finalize_config!(config_path)
@@ -34,6 +34,7 @@ module Validator
       validate_components_config!
       validate_timeouts_config!
       normalize_core_version!
+      normalize_sxls!
       load_secrets config_path
     end
 
@@ -47,7 +48,7 @@ module Validator
         using_message: '',
         missing_message: "Auto #{mode} config file #{path} is missing"
       )
-      raw_config['sxl_version'] = ENV['SXL_VERSION'] if ENV['SXL_VERSION']
+      raw_config['sxls'] = parse_sxls(ENV['SXLS']) if ENV['SXLS']
       options_class = auto_node_options_class_for(raw_config)
       options = build_options_from_raw(raw_config, path, options_class)
       self.auto_node_config = options.to_h
@@ -111,6 +112,16 @@ module Validator
 
     def warning(message)
       log "Warning: #{message}", level: :warning
+    end
+
+    def parse_sxls(value)
+      value.split(',').each_with_object({}) do |item, memo|
+        parts = item.split(':')
+        abort_with_error "Invalid SXLS item #{item.inspect}, expected name:version" unless parts.length == 2
+
+        name, version = parts
+        memo[name] = version
+      end
     end
   end
 end

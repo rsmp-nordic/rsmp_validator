@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'activesupport'
   spec.add_dependency 'colorize'
-  spec.add_dependency 'rsmp'
+  spec.add_dependency 'rsmp', '>= 0.44.0'
   spec.add_dependency 'sus'
   spec.add_dependency 'sus-fixtures-async'
 end

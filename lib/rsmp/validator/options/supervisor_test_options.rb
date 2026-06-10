@@ -21,8 +21,7 @@ module Validator
         return options unless local_site.is_a?(Hash)
 
         %w[
-          sxl
-          sxl_version
+          sxls
           core_version
           rsmp_versions
           intervals

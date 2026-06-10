@@ -5,7 +5,7 @@ gemspec
 # runtime dependencies
 gem 'activesupport'
 gem 'colorize'
-gem 'rsmp'
+gem 'rsmp', path: '../rsmp'
 gem 'sus'
 gem 'sus-fixtures-async'
 

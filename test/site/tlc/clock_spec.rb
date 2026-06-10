@@ -31,7 +31,7 @@ describe 'Site::Tlc::Clock' do
   it 'can be set with M0104' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       timeout = Validator.get_config('timeouts', 'command_response')
-      site_proxy.set_clock(clock, within: timeout)
+      site_proxy.tlc.set_clock(clock, within: timeout)
     end
   end
 
@@ -158,7 +158,7 @@ describe 'Site::Tlc::Clock' do
       site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
         timeout = Validator.get_config('timeouts', 'command_response')
         with_clock_set site_proxy, clock, within: timeout do
-          result = site_proxy.set_functional_position('NormalControl', within: timeout)
+          result = site_proxy.tlc.set_functional_position('NormalControl', within: timeout)
           collector = result[:collector]
           max_diff = timeout * 2
           diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
@@ -182,7 +182,7 @@ describe 'Site::Tlc::Clock' do
       site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
         timeout = Validator.get_config('timeouts', 'command_response')
         with_clock_set site_proxy, clock, within: timeout do
-          result = site_proxy.set_functional_position('NormalControl', within: timeout)
+          result = site_proxy.tlc.set_functional_position('NormalControl', within: timeout)
           collector = result[:collector]
           max_diff = timeout
           diff = Time.parse(collector.messages.first.attributes['cTS']) - clock

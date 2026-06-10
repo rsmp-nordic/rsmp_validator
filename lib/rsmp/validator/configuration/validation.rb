@@ -91,6 +91,23 @@ module Validator
           Gem::Requirement.new(core_version).satisfied_by?(v)
         end
       end
+
+      def normalize_sxls!
+        sxls = config['sxls']
+        if sxls.nil?
+          config['sxls'] = [{ 'name' => 'tlc', 'version' => RSMP::Schema.latest_version(:tlc) }]
+          return
+        end
+
+        sxls.each do |sxl|
+          name = sxl['name']
+          abort_with_error 'SXL name cannot be core.' if name.to_s == 'core'
+
+          RSMP::Schema.find_schema! name, sxl['version'], lenient: true
+        rescue RSMP::Schema::UnknownSchemaError => e
+          abort_with_error "Unknown SXL #{name} #{sxl['version']}: #{e}"
+        end
+      end
     end
   end
 end

@@ -102,7 +102,7 @@ Delete `spec/support/described_types.rb` entirely — it exists only to satisfy 
 
 These are not sus-related but should be done before or during the migration:
 
-- **Remove `proxy_type: tlc` from `config/gem_tlc.yaml`** — this config key is no longer used by the rsmp gem. The supervisor now selects `TrafficControllerProxy` based on `sxl: tlc` in the settings. The key was left behind after the `TrafficControllerProxy` refactoring (which extracted TLC-specific proxy logic into `RSMP::TLC::Proxy::*` modules). It is harmless but misleading.
+- **Remove `proxy_type: tlc` from `config/gem_tlc.yaml`** — this config key is no longer used by the rsmp gem. The supervisor now builds a generic `SiteProxy`, and TLC-specific helpers are exposed through `site_proxy.tlc`. The key was left behind after the proxy refactoring and is harmless but misleading.
 
 ## Relevant files
 

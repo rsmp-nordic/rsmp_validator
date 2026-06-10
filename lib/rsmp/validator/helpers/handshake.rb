@@ -91,12 +91,31 @@ module Validator
         assert(got == expected, "Expected connection sequence #{expected.inspect}, got #{got.inspect}")
       end
 
+      def check_sequence_v330(version)
+        expected = [
+          'in:Version',
+          'out:MessageAck',
+          'out:Version',
+          'in:MessageAck',
+          'in:Watchdog',
+          'out:MessageAck',
+          'out:Watchdog',
+          'in:MessageAck',
+          'in:ComponentList',
+          'out:MessageAck'
+        ]
+        got = get_connection_message version, expected.length
+        assert(got == expected, "Expected connection sequence #{expected.inspect}, got #{got.inspect}")
+      end
+
       def check_sequence(version)
         case version
         when '3.1.1', '3.1.2', '3.1.3'
           check_sequence_v311_to_v313 version
         when '3.1.4', '3.1.5', '3.2', '3.2.1', '3.2.2'
           check_sequence_v314_or_later version
+        when '3.3.0'
+          check_sequence_v330 version
         else
           raise "Unknown rsmp version #{version}"
         end

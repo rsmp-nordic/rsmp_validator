@@ -80,7 +80,7 @@ module Validator
       end
 
       def wait_normal_control(site_proxy, timeout: Validator.get_config('timeouts', 'startup_sequence'))
-        site_proxy.wait_for_normal_control(timeout: timeout)
+        site_proxy.tlc.wait_for_normal_control(timeout: timeout)
       end
 
       def verify_startup_sequence(site_proxy)
@@ -105,7 +105,7 @@ module Validator
       def build_subscribe_lists(site_proxy, status_list)
         raw_list = RSMP::StatusList.new(status_list).to_a
         subscribe_list = raw_list.map { |item| item.merge('uRt' => 0.to_s) }
-        subscribe_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.use_soc?
+        subscribe_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
         [subscribe_list, raw_list]
       end
 
