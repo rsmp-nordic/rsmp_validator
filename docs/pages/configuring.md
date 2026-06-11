@@ -40,7 +40,7 @@ Note: The file `config/validator.yaml` is ignored by git.
 The other option is to set either SITE_CONFIG or SUPERVISOR_CONFIG to the path to your config, depending on whether you're testing a site or a supervisor. For example, if you're testing a site, you can run all site tests with:
 
 ```
-SITE_CONFIG=config/my_site_validation_config.yaml bundle exec rspec test/site
+SITE_CONFIG=config/my_site_validation_config.yaml bundle exec rsmp_validator test/site
 ```
 
 If the relevant environment variable is set, the file `config/validator.yaml` will not be read.
@@ -61,7 +61,7 @@ local_supervisor:
     prefix: '[SUPERVISOR]' # log prefix for local supervisor
   default:
     sxls:                 # sxls of the connecting site
-      tlc: '1.2.1'
+      tlc: '1.3.0'
     core_version: 3.3.0   # core version of site
     intervals:
       timer: 1            # main timer interval (resolution), in seconds
@@ -71,7 +71,7 @@ local_supervisor:
       acknowledgement: 2  # max time until acknowledgement is received, in seconds
 core_version: 3.3.0     # core version of site, tests not relevant for this version will be skipped
 sxls:                   # sxls of the site, tests not relevant for this version will be skipped
-  tlc: '1.2.1'
+  tlc: '1.3.0'
 
 ## Note on `sites` entries
 
@@ -84,7 +84,7 @@ local_supervisor:
   sites:
     TLC001:
       sxls:
-        tlc: '1.2.1'
+        tlc: '1.3.0'
       timeouts:
         acknowledgement: 1
 timeouts:
@@ -153,7 +153,7 @@ local_site:
     prefix: '[TLC]'        # log prefix for local site
   core_version: 3.3.0     # core version
   sxls:                   # sxls to use
-    tlc: '1.2.1'
+    tlc: '1.3.0'
   components:           # components of local site, organized by type and name
     main:                 # type
       TC:                 # name
@@ -198,7 +198,7 @@ local_site:
       2: '2222'           # level 2
 core_version: 3.3.0     # core version, tests not relevant for this version will be skipped
 sxls:                   # sxls to use; tests not relevant for this version will be skipped
-  tlc: '1.2.1'
+  tlc: '1.3.0'
 ```
 
 ## SXL Option
@@ -274,11 +274,11 @@ security_codes:
 ## Restricting tests based on Core and SXL version
 Usually there is no need to run tests that relate to core or SXL versions newer than what the site or supervisor you're testing is using.
 
-Each test is tagged with the core and SXL version it's relevant for. For example S0027 was added in SXL version 1.0.13, which is why the test for S0027 is tagged with `sxl: '>=1.0.13'`. This means the test is relevant if testing is either unrestricted or restricted to SXL 1.0.13 or higher.
+Tests declare the core and SXL versions they require, usually with `with_site` or `with_supervisor` keyword arguments. For example S0027 was added in SXL version 1.0.13, so a test for S0027 can require `sxl: '>=1.0.13'`. This means the test is relevant if testing is either unrestricted or restricted to SXL 1.0.13 or higher.
 
 ```ruby
-specify 'day table is read with S0027', sxl: '>=1.0.13'  do |example|
-  Validator::Site.connected do |task,supervisor,site|
+it 'reads day table with S0027' do
+  with_site(:connected, sxl: '>=1.0.13') do |site|
     request_status_and_confirm site, "command table",
       { S0027: [:status] }
   end
@@ -288,7 +288,8 @@ end
 The following test runs only if testing is unrestricted or restricted to exactly core version 3.1.5.
 
 ```ruby
-it 'is correct for rsmp version 3.1.5',  core: '3.1.5' do |example|
+it 'is correct for rsmp version 3.1.5' do
+  skip 'requires core == 3.1.5' unless Validator.core_matches?('3.1.5')
   check_sequence '3.1.5'
 end
 ```
