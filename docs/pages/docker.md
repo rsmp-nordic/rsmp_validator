@@ -15,7 +15,7 @@ This section explains how to run the RSMP Validator using Docker. You can also [
 
 2. Create a local folder for storing validator configurations. It will serve the same purpose as the [config folder](https://rsmp-nordic.org/rsmp_validator/config/) when you install manually.
 
-3. Create a configuration file for the equipment, simulator or supervisor that you want to test. Check out an [example for TLC emulator](https://github.com/rsmp-nordic/rsmp_validator/blob/master/config/gem_tlc.yaml) built into the rsmp Ruby gem, or read more about [site test configurations](https://rsmp-nordic.org/rsmp_validator/config/#options-for-site-testing) and [supervisor test configurations](https://rsmp-nordic.org/rsmp_validator/config/#options-for-supervisor-testing).
+3. Create a configuration file for the equipment, simulator or supervisor that you want to test. Check out the [TLC example config](https://github.com/rsmp-nordic/rsmp_validator/blob/main/config/gem_tlc.yaml), or read more about [site test configurations](https://rsmp-nordic.org/rsmp_validator/config/#options-for-site-testing) and [supervisor test configurations](https://rsmp-nordic.org/rsmp_validator/config/#options-for-supervisor-testing).
 
 4. Create a [validator.yaml](https://rsmp-nordic.org/rsmp_validator/config/#choosing-what-config-to-use) file inside your config folder and edit it to point to the test config that you created above. (Or as an alternative, set [`SITE_CONFIG` or `SUPERVISOR_CONFIG`](https://rsmp-nordic.org/rsmp_validator/config/#choosing-what-config-to-use) when you run the validator).
 
@@ -75,6 +75,6 @@ To change the set of tests run, you could modify the CMD directive in the Docker
 
 
 ## Available Images
-The latest commit of the master branch is available under the docker tags `latest`, and also as `master`.
+The latest published image is available under the docker tag `latest`.
 
 Our docker images are published on Github Container Registry. Check the [available images on github](https://github.com/rsmp-nordic/rsmp_validator/pkgs/container/rsmp_validator).

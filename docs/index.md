@@ -6,18 +6,13 @@ nav_order: 1
 
 # Automated RSMP Validation ✔︎
 
-The RSMP Validator performs automated testing of RSMP implementations. It's based on RSpec and communicates with equipment via RSMP.
+The RSMP Validator performs automated testing of RSMP implementations. It is packaged as the `rsmp_validator` gem, uses the sus test framework, and communicates with equipment via RSMP.
 
 The validator includes a growing suite of tests and can report test results in several formats, so you can quickly assess RSMP compliance and pin-point any problems. It can be used on any platform that supports Ruby, including Linux, Mac and Windows.
 
-```
-% bundle exec rspec test/site/core test/site/tlc
-Using test config config/gem_tlc.yaml
-Run options: exclude {:rsmp=>[unless relevant for 3.1.5]}
-...............................................................................
-
-Finished in 6.22 seconds (files took 0.60681 seconds to load)
-79 examples, 0 failures
+```console
+% bundle exec rsmp_validator test/site
+116 passed 13 skipped out of 129 total (58 assertions)
 ```
 
 All tests green!
@@ -33,7 +28,7 @@ Suppliers can use the validator as an aid during development of RSMP interfaces.
 * The validator will help you implement/use RSMP according to the RSMP specification.
 * Automated testing is much faster than manual testing and can be run more often.
 * With automated testing, more edge cases can be checked.
-* Because it's based on RSpec, there are many convenient options for filtering specs, configuring output, etc.
+* Tests can be selected by path, and sus provides compact or verbose output depending on how much detail you need.
 
 ## What equipment can be tested?
 The validator can be used to test all types of RSMP equipment.

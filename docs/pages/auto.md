@@ -47,13 +47,13 @@ You can also enable the auto node feature using environment variables.
 Automatically start a site to be tested:
 
 ```shell
-AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site/core
+SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site/core
 ```
 
 Or automatically start a supervisor to be tested:
 
 ```shell
-AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rsmp_validator test/supervisor
+SUPERVISOR_CONFIG=config/gem_supervisor.yaml AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rsmp_validator test/supervisor
 ```
 
 
@@ -104,15 +104,15 @@ log:
 
 With this configuration:
 - **Auto node logs** are written directly to `logs/auto_site.log` 
-- **Validator logs** continue to go through the RSpec formatters (controlled by `--out` flags)
+- **Validator logs** continue through the validator log stream controlled by `--log`
 - The two output streams are **completely independent**
 
-This means the auto node's logs bypass the RSpec formatter system entirely and are written to the configured file regardless of any `--out` flags used.
+This means the auto node's logs are written to the configured file independently from sus output.
 
 ### Log Configuration Options
 The auto node's `log` section accepts all the same options as the RSMP logger. See the [rsmp gem documentation](https://github.com/rsmp-nordic/rsmp) for complete details. Common options include:
 
-- `path`: File path for log output (bypasses RSpec formatters)
+- `path`: File path for log output
 - `prefix`: Text to prepend to each log line
 - `debug`: Enable debug messages
 - `json`: Include JSON representation of messages

@@ -21,7 +21,7 @@
 title: RSMP Validator
 #email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
-  A Ruby tool for testing RSMP implementations with RSpec.
+  A Ruby tool for testing RSMP implementations.
 #baseurl: "" # the subpath of your site, e.g. /blog
 #url: "" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb

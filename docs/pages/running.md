@@ -27,13 +27,13 @@ The RSMP Validator uses the [sus](https://github.com/socketry/sus) testing frame
 Test a site by running tests covering the core specification, using the auto node feature to start a local TLC site automatically:
 
 ```
-% AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site/core
+% SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site/core
 ```
 
 To run all site tests:
 
 ```
-% AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site
+% SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site
 ```
 
 See the [Auto Node]({{ site.baseurl}}{% link pages/auto.md %}) page for details on the auto node feature.
@@ -42,7 +42,7 @@ See the [Auto Node]({{ site.baseurl}}{% link pages/auto.md %}) page for details 
 You can pass one or more paths to the `rsmp_validator` command to select which tests to run:
 
 ```
-% AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site/core test/site/tlc/clock_spec.rb
+% SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site/core test/site/tlc/clock_spec.rb
 ```
 
 ### Running tests against a local RSMP site
