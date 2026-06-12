@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.1.0
-- package the validator as the `rsmp_validator` gem with the `rsmp_validator` executable
+- package the validator as the `rsmp-validator` gem with the `rsmp-validator` executable
 - migrate the conformance test suite from RSpec to sus
 - move reusable validator support code into `lib/rsmp/validator`
 - ship conformance tests and simulator configs with the gem

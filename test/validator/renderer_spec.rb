@@ -19,7 +19,7 @@ describe DocGen::Renderer do
   def render(contexts) = DocGen::Renderer.render(contexts, output_dir: tmp)
   def read(path)       = File.read(File.join(tmp, path))
 
-  with 'frontmatter — root context' do
+  with 'frontmatter - root context' do
     before { render(simple_contexts) }
 
     it 'sets parent to Test Suite' do
@@ -47,7 +47,7 @@ describe DocGen::Renderer do
     end
   end
 
-  with 'frontmatter — depth-1 context' do
+  with 'frontmatter - depth-1 context' do
     before { render(simple_contexts) }
 
     it 'sets parent to humanized parent name' do
@@ -63,7 +63,7 @@ describe DocGen::Renderer do
     end
   end
 
-  with 'frontmatter — deeper namespace contexts' do
+  with 'frontmatter - deeper namespace contexts' do
     before { render(nested_contexts) }
 
     it 'alarm namespace page has Tlc as parent' do
@@ -88,7 +88,7 @@ describe DocGen::Renderer do
     end
   end
 
-  with 'frontmatter — deeply nested context' do
+  with 'frontmatter - deeply nested context' do
     before { render(deep_contexts) }
 
     it 'sets parent to immediate parent name' do

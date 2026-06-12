@@ -1,7 +1,7 @@
 require_relative 'lib/rsmp/validator/version'
 
 Gem::Specification.new do |spec|
-  spec.name = 'rsmp_validator'
+  spec.name = 'rsmp-validator'
   spec.version = Validator::VERSION
   spec.authors = ['RSMP Nordic']
   spec.email = []
@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   ]
 
   spec.bindir = 'exe'
-  spec.executables = ['rsmp_validator']
+  spec.executables = ['rsmp-validator']
 
   spec.add_dependency 'activesupport'
   spec.add_dependency 'colorize'

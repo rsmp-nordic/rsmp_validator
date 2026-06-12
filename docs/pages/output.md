@@ -13,14 +13,14 @@ nav_order: 5
 When you run tests, sus reports the results. By default sus shows a compact progress indicator and a summary at the end.
 
 ## RSMP Log output
-RSMP messages exchanged during testing can optionally be logged. Use the `--log` flag with the `rsmp_validator` executable to enable RSMP logging:
+RSMP messages exchanged during testing can optionally be logged. Use the `--log` flag with the `rsmp-validator` executable to enable RSMP logging:
 
 ```
 # Print RSMP log to stdout (interleaved with test output)
-% bundle exec rsmp_validator test/site --log
+% bundle exec rsmp-validator test/site --log
 
 # Write RSMP log to a file
-% bundle exec rsmp_validator test/site --log logs/rsmp.log
+% bundle exec rsmp-validator test/site --log logs/rsmp.log
 ```
 
 With `--log <path>`, RSMP messages are written to the specified file and sus output continues to the console.

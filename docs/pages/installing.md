@@ -26,10 +26,10 @@ ruby 4.0.5 (2026-05-20 revision 64336ffd0e) +PRISM [x86_64-darwin22]
 Install the packaged validator from RubyGems:
 
 ```console
-% gem install rsmp_validator
+% gem install rsmp-validator
 ```
 
-You can then run the conformance tests with the `rsmp_validator` command.
+You can then run the conformance tests with the `rsmp-validator` command.
 
 ## Installing from source
 If you want to work on the validator itself, clone the Git repository and run Bundler:
@@ -55,4 +55,4 @@ Use `bundle info [gemname]` to see where a bundled gem is installed.
 
 You will now have sus, the rsmp gem and all other dependencies installed for the source checkout.
 
-It's recommended to use [bundle exec](https://bundler.io/man/bundle-exec.1.html) when running commands from a source checkout, for example `bundle exec rsmp_validator test/site`.
+It's recommended to use [bundle exec](https://bundler.io/man/bundle-exec.1.html) when running commands from a source checkout, for example `bundle exec rsmp-validator test/site`.

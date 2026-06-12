@@ -4,6 +4,37 @@ require 'bundler/setup'
 require 'sus'
 require 'sus/config'
 
+def print_help
+  puts <<~HELP
+    RSMP Validator runs conformance tests against RSMP sites and supervisors.
+    Full documentation: https://rsmp-nordic.github.io/rsmp_validator/
+
+    Usage:
+      rsmp-validator [OPTIONS] PATH...
+
+    Examples:
+      rsmp-validator test/site
+      rsmp-validator test/site/core
+      rsmp-validator test/supervisor/connect_spec.rb
+
+    Options:
+      --verbose      Show detailed sus output.
+      --log          Print RSMP log output to stdout.
+      --log PATH     Write RSMP log output to PATH.
+      -h, --help     Show this help.
+
+    Environment:
+      SITE_CONFIG        Path to site test configuration.
+      SUPERVISOR_CONFIG  Path to supervisor test configuration.
+      AUTO_SITE_CONFIG   Path to local site configuration to start automatically.
+  HELP
+end
+
+if ARGV.first == 'help' || ARGV.include?('--help') || ARGV.include?('-h')
+  print_help
+  exit 0
+end
+
 # Parse --log [path] from ARGV before Sus::Config.load consumes remaining args.
 # --log        => RSMP logs to $stdout
 # --log <path> => RSMP logs to file, sus output to console (brief)
