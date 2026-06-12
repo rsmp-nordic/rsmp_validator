@@ -1,5 +1,7 @@
 # Rake tasks for updating documentation and running internal tests.
 
+require 'bundler/gem_tasks'
+
 desc 'Generate Jekyll Markdown documentation from conformance test files into docs/tests/.'
 task :spec_docs do
   require 'fileutils'
