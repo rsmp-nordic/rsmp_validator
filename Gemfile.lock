@@ -83,7 +83,7 @@ GEM
       logger (~> 1.7)
       ostruct (~> 0.6)
       thor (~> 1.5)
-    rubocop (1.86.2)
+    rubocop (1.87.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -100,7 +100,7 @@ GEM
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
     simpleidn (0.2.3)
-    sus (0.36.0)
+    sus (0.37.0)
     sus-fixtures-async (0.2.0)
       async
       sus (~> 0.10)
@@ -163,12 +163,12 @@ CHECKSUMS
   regexp_parser (2.12.0) sha256=35a916a1d63190ab5c9009457136ae5f3c0c7512d60291d0d1378ba18ce08ebb
   rsmp (0.45.1) sha256=7122ed5ce8220f60a8c48710e00a45547a3e80c6b91e004f07bde7ae340bb056
   rsmp-validator (0.1.0)
-  rubocop (1.86.2) sha256=bb2e97f635eda42c448f2588f4a6ff78f221b8bdfdf65b1e9b07fbd57521b45d
+  rubocop (1.87.0) sha256=b9d9ddf55116a513f8ef2c7ae660662d8b49301f118d3f0df61865b33a5c188d
   rubocop-ast (1.49.1) sha256=4412f3ee70f6fe4546cc489548e0f6fcf76cafcfa80fa03af67098ffed755035
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   simpleidn (0.2.3) sha256=08ce96f03fa1605286be22651ba0fc9c0b2d6272c9b27a260bc88be05b0d2c29
-  sus (0.36.0) sha256=5e1828908cab1ccb1dffcf2d14dfb72e2089a0cd77ee979eee6d61beaaa3722f
+  sus (0.37.0) sha256=f84faf5aa7fb1572f3bc3ec8dea66bab7478d783ec16653fc120c460291de6b4
   sus-fixtures-async (0.2.0) sha256=8c2b20b87f62da8cf0ce3efce3f9435370069371cd75ac23cdc7936f6402f9b7
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
   traces (0.18.2) sha256=80f1649cb4daace1d7174b81f3b3b7427af0b93047759ba349960cb8f315e214
