@@ -289,7 +289,7 @@ The following test runs only if testing is unrestricted or restricted to exactly
 
 ```ruby
 it 'is correct for rsmp version 3.1.5' do
-  skip 'requires core == 3.1.5' unless Validator.core_matches?('3.1.5')
+  skip 'requires core == 3.1.5' unless RSMP::Validator.core_matches?('3.1.5')
   check_sequence '3.1.5'
 end
 ```

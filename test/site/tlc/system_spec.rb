@@ -1,5 +1,5 @@
 describe 'Site::Tlc::System' do
-  include Validator::Helpers::Security
+  include RSMP::Validator::Helpers::Security
 
   # Verify status S0091 operator logged in/out OP-panel
   #
@@ -14,7 +14,7 @@ describe 'Site::Tlc::System' do
                       { S0091: %i[user status] }
                     end
       site_proxy.request_status_and_collect(status_list,
-                                            within: Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -31,7 +31,7 @@ describe 'Site::Tlc::System' do
                       { S0092: %i[user status] }
                     end
       site_proxy.request_status_and_collect(status_list,
-                                            within: Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -43,7 +43,7 @@ describe 'Site::Tlc::System' do
   it 'version is read with S0095' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       site_proxy.request_status_and_collect({ S0095: [:status] },
-                                            within: Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -54,9 +54,9 @@ describe 'Site::Tlc::System' do
   # 5. Wait for status = true
   it 'security code is set with M0103' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      code1 = Validator.get_config('secrets', 'security_codes', 1)
-      code2 = Validator.get_config('secrets', 'security_codes', 2)
-      timeout = Validator.get_config('timeouts', 'command_response')
+      code1 = RSMP::Validator.get_config('secrets', 'security_codes', 1)
+      code2 = RSMP::Validator.get_config('secrets', 'security_codes', 2)
+      timeout = RSMP::Validator.get_config('timeouts', 'command_response')
       site_proxy.tlc.set_security_code(level: 'Level1', old_code: code1, new_code: code1, within: timeout)
       site_proxy.tlc.set_security_code(level: 'Level2', old_code: code2, new_code: code2, within: timeout)
     end

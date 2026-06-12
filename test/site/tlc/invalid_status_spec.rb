@@ -12,7 +12,7 @@ describe 'Site::Tlc::InvalidStatus' do
       collector = site_proxy.request_status_and_collect(
         { S0001: [:signalgroupstatus] },
         component: 'bad',
-        within: Validator.get_config('timeouts', 'status_response'),
+        within: RSMP::Validator.get_config('timeouts', 'status_response'),
         validate: false
       )
       collector.ok!
@@ -40,8 +40,8 @@ describe 'Site::Tlc::InvalidStatus' do
       expect do
         site_proxy.request_status_and_collect(
           { S0000: [:status] },
-          component: Validator.get_config('main_component'),
-          within: Validator.get_config('timeouts', 'status_response'),
+          component: RSMP::Validator.get_config('main_component'),
+          within: RSMP::Validator.get_config('timeouts', 'status_response'),
           validate: false
         ).ok!
       end.to raise_exception(RSMP::MessageRejected)
@@ -60,8 +60,8 @@ describe 'Site::Tlc::InvalidStatus' do
       expect do
         site_proxy.request_status_and_collect(
           { S0001: [:bad] },
-          component: Validator.get_config('main_component'),
-          within: Validator.get_config('timeouts', 'status_response'),
+          component: RSMP::Validator.get_config('main_component'),
+          within: RSMP::Validator.get_config('timeouts', 'status_response'),
           validate: false
         ).ok!
       end.to raise_exception(RSMP::MessageRejected)
