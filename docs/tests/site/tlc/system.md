@@ -1,0 +1,145 @@
+---
+layout: page
+title: System
+parmalink: tlc_system
+has_children: false
+has_toc: false
+parent: Tlc
+grand_parent: Site
+---
+
+# System
+{: .no_toc}
+
+### Tests
+{: .no_toc .text-delta }
+
+- TOC
+{:toc}
+
+## System operator logged in/out of OP-panel is read with S0091
+
+Verify status S0091 operator logged in/out OP-panel
+
+1. Given the site_proxy is connected
+2. Request status
+3. Expect status response before timeout
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'operator logged in/out of OP-panel is read with S0091' do
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+                    { S0091: [:user] }
+                  else
+                    { S0091: %i[user status] }
+                  end
+    site_proxy.request_status_and_collect(status_list,
+                                          within: Validator.get_config('timeouts', 'status_response')).ok!
+  end
+end
+```
+</details>
+
+
+## System operator logged in/out of web-interface is read with S0092
+
+Verify status S0092 operator logged in/out web-interface
+
+1. Given the site_proxy is connected
+2. Request status
+3. Expect status response before timeout
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'operator logged in/out of web-interface is read with S0092' do
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+                    { S0092: [:user] }
+                  else
+                    { S0092: %i[user status] }
+                  end
+    site_proxy.request_status_and_collect(status_list,
+                                          within: Validator.get_config('timeouts', 'status_response')).ok!
+  end
+end
+```
+</details>
+
+
+## System security code is rejected when incorrect
+
+Verify that the site_proxy responds with NotAck if we send incorrect security cdoes.
+RThis hehaviour is defined in SXL >= 1.1. For earlier versions,
+The behaviour is undefined.
+1. Given the site_proxy is connected
+2. When we send a M0008 command with incorrect security codes
+3. Then we should received a NotAck
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'security code is rejected when incorrect' do
+  with_site(:connected, sxl: '>=1.1') do |site_proxy|
+    expect { wrong_security_code(site_proxy) }.to raise_exception(RSMP::MessageRejected)
+  end
+end
+```
+</details>
+
+
+## System security code is set with M0103
+
+1. Verify connection
+2. Send control command to set securitycode_level
+3. Wait for status = true
+4. Send control command to setsecuritycode_level
+5. Wait for status = true
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'security code is set with M0103' do
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    code1 = Validator.get_config('secrets', 'security_codes', 1)
+    code2 = Validator.get_config('secrets', 'security_codes', 2)
+    timeout = Validator.get_config('timeouts', 'command_response')
+    site_proxy.tlc.set_security_code(level: 'Level1', old_code: code1, new_code: code1, within: timeout)
+    site_proxy.tlc.set_security_code(level: 'Level2', old_code: code2, new_code: code2, within: timeout)
+  end
+end
+```
+</details>
+
+
+## System version is read with S0095
+
+Verify status S0095 version of traffic controller
+
+1. Given the site_proxy is connected
+2. Request status
+3. Expect status response before timeout
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'version is read with S0095' do
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    site_proxy.request_status_and_collect({ S0095: [:status] },
+                                          within: Validator.get_config('timeouts', 'status_response')).ok!
+  end
+end
+```
+</details>

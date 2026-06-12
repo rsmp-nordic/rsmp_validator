@@ -40,26 +40,53 @@ Note: The file `config/validator.yaml` is ignored by git.
 The other option is to set either SITE_CONFIG or SUPERVISOR_CONFIG to the path to your config, depending on whether you're testing a site or a supervisor. For example, if you're testing a site, you can run all site tests with:
 
 ```
-SITE_CONFIG=config/my_site_validation_config.yaml bundle exec rspec spec/site
+SITE_CONFIG=config/my_site_validation_config.yaml bundle exec rsmp-validator test/site
 ```
 
 If the relevant environment variable is set, the file `config/validator.yaml` will not be read.
 
 ## Options for Site testing
-The config is used to start the local supervisor that will communicate with the site you're testing, but includes additional options used by the validator, like timeouts and options to restrict what tests to run.
+The config is used to start the local supervisor that will communicate with the site you're testing, and it also includes validator-only options like timeouts and items to test.
 
-All settings except `components` and `items` can be left out, in which case the default values will be used.
+`local_supervisor` is required and uses the same schema as an rsmp supervisor config. Put all supervisor settings under `local_supervisor`, and keep test settings at the top level.
+
+Use `local_supervisor.log` for supervisor logs. The top-level `log` block (if set) controls validator logs.
 
 ```yaml
-port: 13111             # port to listen on
-ips: all                # allowed ip addresses. either 'all' or a list. defaults to 'all' if left out
-core_version: 3.2.2     # core version of site, tests not relevant for this version will be skipped
-sxl: tlc                # sxl of the connecting site, options are 'core' or 'tlc'
-sxl_version: 1.2.1      # sxl version of the site, tests not relevant for this version will be skipped
-intervals:
-  timer: 1              # main timer interval (resolution), in seconds
-  watchdog: 1           # how often to send watchdog messages, in seconds
+local_supervisor:
+  port: 13111             # port to listen on
+  ips: all                # allowed ip addresses. either 'all' or a list. defaults to 'all' if left out
+  max_sites: 1            # allow a single site connection
+  log:
+    prefix: '[SUPERVISOR]' # log prefix for local supervisor
+  default:
+    sxls:                 # sxls of the connecting site
+      tlc: '1.3.0'
+    core_version: 3.3.0   # core version of site
+    intervals:
+      timer: 1            # main timer interval (resolution), in seconds
+      watchdog: 1         # how often to send watchdog messages, in seconds
+    timeouts:
+      watchdog: 2         # max time between incoming watchdogs, in seconds
+      acknowledgement: 2  # max time until acknowledgement is received, in seconds
+core_version: 3.3.0     # core version of site, tests not relevant for this version will be skipped
+sxls:                   # sxls of the site, tests not relevant for this version will be skipped
+  tlc: '1.3.0'
 
+## Note on `sites` entries
+
+When building supervisor settings you can add a `sites` mapping where each key is a site id and the value is the supervisor-side configuration for that site. The supervisor uses this information to determine which SXL/schema and proxy behaviour to use for incoming connections. Each site entry can include `sxls`, or inherit it from the default settings.
+
+Example:
+
+```yaml
+local_supervisor:
+  sites:
+    TLC001:
+      sxls:
+        tlc: '1.3.0'
+      timeouts:
+        acknowledgement: 1
 timeouts:
   watchdog: 2           # max time between incoming watchdogs, in seconds
   acknowledgement: 2    # max time until acknowledgement is received, in seconds
@@ -104,81 +131,92 @@ alarm_triggers:          # how to trigger alarms by forcing inputs
     component: DL1      # and will activate on component DL1
 ```
 
-The following settings will be copied into a configuration for the local supervisor: `port`, `sxl`, `intervals`, `timeouts`, `components`, `rsmp_versions`, `skip_validation`.
-
-The supervisor config will also have `max_sites: 1` and `ips: all` meaning it will allow connections from any ip and with any RSMP site id, but will only allow one site to be connected at a time. Multiple connections will be flagged as an error.
-
-See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) for more details about these settings.
+See the [rsmp gem](https://github.com/rsmp-nordic/rsmp) for more details about supervisor settings.
 
 ## Options for Supervisor testing
-When testing a supervisor, the settings are used by the local site without modifications.
+When testing a supervisor, the config is used to start a local site that connects to the supervisor being tested.
+
+Put all site settings under `local_site`, and keep test-only settings at the top level.
+
+Use `local_site.log` for local site logs. The top-level `log` block (if set) controls validator logs.
 
 ```yaml
 # Config for testing a supervisor running on localhost (e.g. one from the rsmp gem)
 # The settings are used for starting a local site connecting to the supervisor tested
-type: tlc               # type of local site to run
-site_id: RN+SI0001      # site id of local site
-supervisors:          # what supervisor the local site should connect to
-  - ip: 127.0.0.1       # ip
-    port: 14111         # port
-core_version: 3.2.2     # core version, tests not relevant for this version will be skipped
-sxl: tlc                # sxl to use, options are 'core' or 'tlc'
-sxl_version: 1.2.1      # sxl version, tests not relevant for this version will be skipped
-components:           # components of local site, organized by type and name
-  main:                 # type
-    TC:                 # name
-  signal_group:       # list of signal groups
-    A1:
-    A2:
-    B1:
-    B2:
-  detector_logic:     # list of detector logics
-    DL1:
-signal_plans:         # list of signal plans
-  1:                    # signal plan number
-    cycle_time: 6         # cycle time
-    states:               # signal group states
-      A1: '111NBB'          # states per second
-      A2: '11NBBB'
-      B1: 'BBB11N'
-      B2: 'BBB1NB'
-    dynamic_bands:        # list of dynamic bands
-      1: 0                  # band 1 has the value 0
-      2: 5
-  2:
-    cycle_time: 6
-    states:
-      A1: 'NNNNBB'
-      A2: 'NNNNBN'
-      B1: 'BBNNNN'
-      B2: 'BNNNNN'
-intervals:            # intervals
-  timer: 0.1            # basic timer resolution in seconds, in seconds
-  watchdog: 0.1         # time between sending watchdog messages, in seconds
-  reconnect: 0.1        # interval between retries if supervisor is unreachable, in seconds
-  after_connect: 0.2    # delay after connecting before starting handshake, in seconds
-timeouts:             # timeouts
-  connect: 1            # max time it should take to connect, in seconds
-  ready: 1              # max time to complete handshake sequence, in seconds
-  watchdog: 0.2         # max time between receiving watchdogs, in seconds
-  acknowledgement: 0.2  # max time unless a message we send is acknowledged, in seconds
-secrets:                # place secrets or in a separate file, see below
-  security_codes:       # RSMP security codes. there are no defaults for these
-    1: '1111'           # level 1
-    2: '2222'           # level 2
+local_site:
+  type: tlc               # type of local site to run
+  site_id: RN+SI0001      # site id of local site
+  supervisors:          # what supervisor the local site should connect to
+    - ip: 127.0.0.1       # ip
+      port: 14111         # port
+  log:
+    prefix: '[TLC]'        # log prefix for local site
+  core_version: 3.3.0     # core version
+  sxls:                   # sxls to use
+    tlc: '1.3.0'
+  components:           # components of local site, organized by type and name
+    main:                 # type
+      TC:                 # name
+    signal_group:       # list of signal groups
+      A1:
+      A2:
+      B1:
+      B2:
+    detector_logic:     # list of detector logics
+      DL1:
+  signal_plans:         # list of signal plans
+    1:                    # signal plan number
+      cycle_time: 6         # cycle time
+      states:               # signal group states
+        A1: '111NBB'          # states per second
+        A2: '11NBBB'
+        B1: 'BBB11N'
+        B2: 'BBB1NB'
+      dynamic_bands:        # list of dynamic bands
+        1: 0                  # band 1 has the value 0
+        2: 5
+    2:
+      cycle_time: 6
+      states:
+        A1: 'NNNNBB'
+        A2: 'NNNNBN'
+        B1: 'BBNNNN'
+        B2: 'BNNNNN'
+  intervals:            # intervals
+    timer: 0.1            # basic timer resolution in seconds, in seconds
+    watchdog: 0.1         # time between sending watchdog messages, in seconds
+    reconnect: 0.1        # interval between retries if supervisor is unreachable, in seconds
+    after_connect: 0.2    # delay after connecting before starting handshake, in seconds
+  timeouts:             # timeouts
+    connect: 1            # max time it should take to connect, in seconds
+    ready: 1              # max time to complete handshake sequence, in seconds
+    watchdog: 0.2         # max time between receiving watchdogs, in seconds
+    acknowledgement: 0.2  # max time unless a message we send is acknowledged, in seconds
+  secrets:                # place secrets or in a separate file, see below
+    security_codes:       # RSMP security codes. there are no defaults for these
+      1: '1111'           # level 1
+      2: '2222'           # level 2
+core_version: 3.3.0     # core version, tests not relevant for this version will be skipped
+sxls:                   # sxls to use; tests not relevant for this version will be skipped
+  tlc: '1.3.0'
 ```
 
 ## SXL Option
-The `sxl` attribute of a configuration specifies what SXL to use for communication. Currently, the valid options are:
+The `sxls` attribute specifies which SXLs to use for communication:
 
-- core: Generic RSMP communication. No alarms, commands or status are allowed, only core messages.
-- tlc: Traffic Light Controllers.
+```yaml
+sxls:
+  tlc: '1.3.0'
+  vms: '1.5.4'
+```
 
-The sxl will choose the JSON Schema used to validate all ingoing and outgoing messages. It also restricts what type of components can be listed under the `components` attribute in the configuration.
+The SXL list chooses the JSON Schemas used to validate ingoing and outgoing messages. The name `core` is reserved for the RSMP core schema and cannot be used as an SXL name.
+
+If an SXL defines a prefix, the prefix is read from the SXL metadata and included in the Version request. It is not configured in validator YAML.
 
 Equipment that doesn't yet have a standardized SXL cannot be fully validated using the RSMP validator, because there are no tests for these types yet, and because there is no JSON Schema to validate the commands and statuses for such types of equipment.
 
-However, you can still use the RSMP Validator to validate the core part of the communication, including connecting, Aggregated Status and Watchdog messages. Use 'core' as the sxl type in the configuration and then run only the tests in the folder `spec/site/core/`. Remember to also set sxl version to the version of the core specification used, e.g. 3.1.5.
+However, you can still use the RSMP Validator to validate the core part of the communication, including connecting, ComponentList, Aggregated Status and Watchdog messages. Use an empty `sxls: {}` hash and run only the tests in the folder `test/site/core/`.
 
 ## Components Option
 RSMP equipment has a list of RSMP components. For example a traffic light controller will have some signal groups and detector logics. In addition all RSMP equipment must have a main component.
@@ -236,11 +274,11 @@ security_codes:
 ## Restricting tests based on Core and SXL version
 Usually there is no need to run tests that relate to core or SXL versions newer than what the site or supervisor you're testing is using.
 
-Each test is tagged with the core and SXL version it's relevant for. For example S0027 was added in SXL version 1.0.13, which is why the test for S0027 is tagged with `sxl: '>=1.0.13'`. This means the test is relevant if testing is either unrestricted or restricted to SXL 1.0.13 or higher.
+Tests declare the core and SXL versions they require, usually with `with_site` or `with_supervisor` keyword arguments. For example S0027 was added in SXL version 1.0.13, so a test for S0027 can require `sxl: '>=1.0.13'`. This means the test is relevant if testing is either unrestricted or restricted to SXL 1.0.13 or higher.
 
 ```ruby
-specify 'day table is read with S0027', sxl: '>=1.0.13'  do |example|
-  Validator::Site.connected do |task,supervisor,site|
+it 'reads day table with S0027' do
+  with_site(:connected, sxl: '>=1.0.13') do |site|
     request_status_and_confirm site, "command table",
       { S0027: [:status] }
   end
@@ -250,7 +288,8 @@ end
 The following test runs only if testing is unrestricted or restricted to exactly core version 3.1.5.
 
 ```ruby
-it 'is correct for rsmp version 3.1.5',  core: '3.1.5' do |example|
+it 'is correct for rsmp version 3.1.5' do
+  skip 'requires core == 3.1.5' unless Validator.core_matches?('3.1.5')
   check_sequence '3.1.5'
 end
 ```
@@ -260,7 +299,8 @@ Only tests relevant to the core and SXL version specified will be run:
 
 ```yaml
 core_version: 3.1.2
-sxl_version: 1.0.7 
+sxls:
+  tlc: '1.0.7'
 ```
 
 In this case, the S0027 test above will not run, because it requires SXL 1.0.13 or higher, but we limited testing to 1.0.7. 
@@ -279,5 +319,3 @@ To enable it, add `auto_site` or `auto_supervisor` to your `config/validator.yam
 site: config/gem_tlc.yaml
 auto_site: config/simulator/tlc.yaml  # Optional: starts a local site to test
 ```
-
-

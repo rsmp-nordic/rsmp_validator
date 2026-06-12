@@ -1,0 +1,337 @@
+---
+layout: page
+title: Clock
+parmalink: tlc_clock
+has_children: false
+has_toc: false
+parent: Tlc
+grand_parent: Site
+---
+
+# Clock
+{: .no_toc}
+
+### Tests
+{: .no_toc .text-delta }
+
+- TOC
+{:toc}
+
+## Clock can be read with S0096
+
+Verify status 0096 current date and time
+
+1. Given the site_proxy is connected
+2. Request status
+3. Expect status response before timeout
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'can be read with S0096' do
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    site_proxy.request_status_and_collect({ S0096: %i[year month day hour minute second] },
+                                          within: Validator.get_config('timeouts', 'status_response')).ok!
+  end
+end
+```
+</details>
+
+
+## Clock can be set with M0104
+
+Verify that the controller responds to M0104
+
+1. Given the site_proxy is connected
+2. Send command
+3. Expect status response before timeout
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'can be set with M0104' do
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    timeout = Validator.get_config('timeouts', 'command_response')
+    site_proxy.tlc.set_clock(clock, within: timeout)
+  end
+end
+```
+</details>
+
+
+## Clock is used for M0001 response timestamp
+
+Verify command response timestamp after changing clock
+
+1. Given the site_proxy is connected
+2. Send control command to set clock
+3. Send command to set functional position
+4. Compare set_clock and response timestamp
+5. Expect the difference to be within max_diff
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'is used for M0001 response timestamp' do
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
+      timeout = Validator.get_config('timeouts', 'command_response')
+      with_clock_set site_proxy, clock, within: timeout do
+        result = site_proxy.tlc.set_functional_position('NormalControl', within: timeout)
+        collector = result[:collector]
+        max_diff = timeout * 2
+        diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
+        diff = diff.round
+        assert(diff.abs <= max_diff,
+               "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s")
+      end
+    end
+  end
+end
+```
+</details>
+
+
+## Clock is used for M0104 response timestamp
+
+Verify command response timestamp after changing clock
+
+1. Given the site_proxy is connected
+2. Send control command to set clock
+3. Send command to set functional position
+4. Compare set_clock and response timestamp
+5. Expect the difference to be within max_diff
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'is used for M0104 response timestamp' do
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
+      timeout = Validator.get_config('timeouts', 'command_response')
+      with_clock_set site_proxy, clock, within: timeout do
+        result = site_proxy.tlc.set_functional_position('NormalControl', within: timeout)
+        collector = result[:collector]
+        max_diff = timeout
+        diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
+        diff = diff.round
+        assert(diff.abs <= max_diff,
+               "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s")
+      end
+    end
+  end
+end
+```
+</details>
+
+
+## Clock is used for S0096 response timestamp
+
+Verify status response timestamp after changing clock
+
+1. Given the site_proxy is connected
+2. Send control command to set_clock
+3. Request status S0096
+4. Compare set_clock and response timestamp
+5. Expect the difference to be within max_diff
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'is used for S0096 response timestamp' do
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
+      with_clock_set site_proxy, clock, within: Validator.get_config('timeouts', 'command_response') do
+        status_list = { S0096: %i[
+          year
+          month
+          day
+          hour
+          minute
+          second
+        ] }
+        timeout = Validator.get_config('timeouts', 'status_response')
+        collector = site_proxy.request_status_and_collect(status_list,
+                                                          within: timeout)
+        collector.ok!
+        max_diff = Validator.get_config('timeouts', 'command_response') + timeout
+        diff = Time.parse(collector.messages.first.attributes['sTs']) - clock
+        diff = diff.round
+        assert(diff.abs <= max_diff,
+               "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s")
+      end
+    end
+  end
+end
+```
+</details>
+
+
+## Clock is used for S0096 status response
+
+Verify status S0096 clock after changing clock
+
+1. Given the site_proxy is connected
+2. Send control command to set_clock
+3. Request status S0096
+4. Compare set_clock and status timestamp
+5. Expect the difference to be within max_diff
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'is used for S0096 status response' do
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
+      command_timeout = Validator.get_config('timeouts', 'command_response')
+      with_clock_set site_proxy, clock, within: command_timeout do
+        status_list = { S0096: %i[
+          year
+          month
+          day
+          hour
+          minute
+          second
+        ] }
+        timeout = Validator.get_config('timeouts', 'status_update')
+        collector = site_proxy.request_status_and_collect(
+          status_list,
+          within: timeout
+        )
+        collector.ok!
+        status = status_list.keys.first.to_s
+        received = Time.new(
+          collector.matcher_result({ 'sCI' => status, 'n' => 'year' })['s'],
+          collector.matcher_result({ 'sCI' => status, 'n' => 'month' })['s'],
+          collector.matcher_result({ 'sCI' => status, 'n' => 'day' })['s'],
+          collector.matcher_result({ 'sCI' => status, 'n' => 'hour' })['s'],
+          collector.matcher_result({ 'sCI' => status, 'n' => 'minute' })['s'],
+          collector.matcher_result({ 'sCI' => status, 'n' => 'second' })['s'],
+          'UTC'
+        )
+        max_diff = Validator.get_config('timeouts', 'command_response') +
+                   Validator.get_config('timeouts', 'status_response')
+        diff = received - clock
+        diff = diff.round
+        assert(diff.abs <= max_diff,
+               "Clock reported by S0096 is off by #{diff}s, should be within #{max_diff}s")
+      end
+    end
+  end
+end
+```
+</details>
+
+
+## Clock is used for aggregated status timestamp
+
+Verify aggregated status response timestamp after changing clock
+
+1. Given the site_proxy is connected
+2. Send control command to set clock
+3. Wait for status = true
+4. Request aggregated status
+5. Compare set_clock and response timestamp
+6. Expect the difference to be within max_diff
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'is used for aggregated status timestamp' do
+  skip 'requires core >= 3.1.5' unless Validator.core_matches?('>=3.1.5')
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
+      with_clock_set site_proxy, clock, within: Validator.get_config('timeouts', 'command_response') do
+        component = Validator.get_config('main_component')
+        timeout = Validator.get_config('timeouts', 'status_response')
+        collector = site_proxy.request_aggregated_status_and_collect(component, within: timeout)
+        max_diff = Validator.get_config('timeouts', 'command_response') + timeout
+        diff = Time.parse(collector.messages.first.attributes['aSTS']) - clock
+        diff = diff.round
+        assert(diff.abs <= max_diff,
+               "Timestamp of aggregated status is off by #{diff}s, should be within #{max_diff}s")
+      end
+    end
+  end
+end
+```
+</details>
+
+
+## Clock is used for alarm timestamp
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'is used for alarm timestamp' do
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
+      with_clock_set site_proxy, clock, within: Validator.get_config('timeouts', 'command_response') do # set clock
+        with_alarm_activated(site_proxy, 'A0302') do |alarm| # raise alarm, by activating input
+          alarm_time = Time.parse(alarm.attributes['aTs'])
+          max_diff = Validator.get_config('timeouts', 'command_response') +
+                     Validator.get_config('timeouts', 'status_response')
+          diff = alarm_time - clock
+          assert(diff.round.abs <= max_diff,
+                 "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s")
+        end
+      end
+    end
+  end
+end
+```
+</details>
+
+
+## Clock is used for watchdog timestamp
+
+Verify timestamp of watchdog after changing clock
+
+1. Given the site_proxy is connected
+2. Send control command to setset_clock
+3. Wait for Watchdog
+4. Compare set_clock and alarm response timestamp
+5. Expect the difference to be within max_diff
+
+<details markdown="block">
+  <summary>
+     View Source
+  </summary>
+```ruby
+it 'is used for watchdog timestamp' do
+  with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
+    site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
+      with_clock_set site_proxy, clock, within: Validator.get_config('timeouts', 'command_response') do
+        log 'Checking watchdog timestamp'
+        watchdog_timeout = Validator.get_config('timeouts', 'watchdog')
+        collector = RSMP::Collector.new(site_proxy, task: Async::Task.current, type: 'Watchdog', num: 1,
+                                                    timeout: watchdog_timeout)
+        collector.collect!
+        max_diff = Validator.get_config('timeouts', 'command_response') +
+                   Validator.get_config('timeouts', 'status_response')
+        diff = Time.parse(collector.messages.first.attributes['wTs']) - clock
+        diff = diff.round
+        assert(diff.abs <= max_diff,
+               "Timestamp of watchdog is off by #{diff}s, should be within #{max_diff}s")
+      end
+    end
+  end
+end
+```
+</details>

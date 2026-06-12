@@ -21,7 +21,7 @@
 title: RSMP Validator
 #email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
-  A Ruby tool for testing RSMP implementations with RSpec.
+  A Ruby tool for testing RSMP implementations.
 #baseurl: "" # the subpath of your site, e.g. /blog
 #url: "" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
@@ -29,7 +29,7 @@ github_username:  rsmp-nordic
 
 # Build settings
 #theme: just-the-docs
-remote_theme: pmarsceill/just-the-docs
+remote_theme: just-the-docs/just-the-docs
 
 plugins:
   - jekyll-feed
@@ -56,8 +56,6 @@ plugins:
 
 # Aux links for the upper right navigation
 aux_links:
-  "YARD":
-    - "https://rsmp-nordic.github.io/rsmp_validator/dev/"
   "GitHub":
     - "https://github.com/rsmp-nordic/rsmp_validator"
   "RSMP Nordic":
@@ -72,3 +70,8 @@ color_scheme: rsmp
 # disable processing of markdown files witouth frontmatter
 optional_front_matter:
   enabled: false
+
+sass:
+  quiet_deps: true
+  silence_deprecations:
+    - import
