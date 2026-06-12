@@ -45,7 +45,7 @@ jobs:
 
     - name: Run tests
       run: |
-        bundle exec rsmp_validator test/site \
+        bundle exec rsmp-validator test/site \
         --verbose --log validator-${{ steps.log_id.outputs.LOG_ID }}.log
       env:
         SITE_CONFIG: config/kapsch_etx.yaml

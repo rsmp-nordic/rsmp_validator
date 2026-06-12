@@ -47,13 +47,13 @@ You can also enable the auto node feature using environment variables.
 Automatically start a site to be tested:
 
 ```shell
-SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp_validator test/site/core
+SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validator test/site/core
 ```
 
 Or automatically start a supervisor to be tested:
 
 ```shell
-SUPERVISOR_CONFIG=config/gem_supervisor.yaml AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rsmp_validator test/supervisor
+SUPERVISOR_CONFIG=config/gem_supervisor.yaml AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rsmp-validator test/supervisor
 ```
 
 
@@ -82,13 +82,13 @@ log:
 Enable RSMP logging with the `--log` flag:
 
 ```shell
-bundle exec rsmp_validator test/site --log
+bundle exec rsmp-validator test/site --log
 ```
 
 Or write RSMP logs to a file:
 
 ```shell
-bundle exec rsmp_validator test/site --log logs/details.log
+bundle exec rsmp-validator test/site --log logs/details.log
 ```
 
 ### Separate Log File

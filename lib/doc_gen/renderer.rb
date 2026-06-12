@@ -7,7 +7,7 @@ module DocGen
   # Renders a tree of Context objects to Jekyll-compatible Markdown files.
   #
   # Frontmatter fields produced:
-  #   layout, title, parmalink (sic — preserved from original for compatibility),
+  #   layout, title, parmalink (sic - preserved from original for compatibility),
   #   has_children, has_toc, parent, grand_parent (when applicable)
   #
   # Jekyll nav hierarchy (just-the-docs):

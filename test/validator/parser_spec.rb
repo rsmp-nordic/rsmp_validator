@@ -5,7 +5,7 @@ require_relative '../../lib/doc_gen/parser'
 FIXTURES_PATH = File.expand_path('../../fixtures/doc_gen', __dir__)
 
 describe DocGen::Parser do
-  with 'simple.rb — flat describe with specs' do
+  with 'simple.rb - flat describe with specs' do
     let(:contexts) { DocGen::Parser.parse_files(["#{FIXTURES_PATH}/simple.rb"]) }
     let(:site) { contexts.first }
     let(:core) { site.subcontexts.first }
@@ -70,7 +70,7 @@ describe DocGen::Parser do
     end
   end
 
-  with 'nested.rb — two-level nesting' do
+  with 'nested.rb - two-level nesting' do
     let(:site) { DocGen::Parser.parse_files(["#{FIXTURES_PATH}/nested.rb"]).first }
     let(:tlc)  { site.subcontexts.first }
     let(:ctx)  { tlc.subcontexts.first } # Alarm namespace node
@@ -106,7 +106,7 @@ describe DocGen::Parser do
     end
   end
 
-  with 'deep.rb — namespace tree plus nested describes' do
+  with 'deep.rb - namespace tree plus nested describes' do
     let(:contexts) { DocGen::Parser.parse_files(["#{FIXTURES_PATH}/deep.rb"]) }
     let(:site)   { contexts.first }
     let(:tlc)    { site.subcontexts.first }

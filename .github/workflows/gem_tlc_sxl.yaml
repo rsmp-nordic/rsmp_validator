@@ -51,7 +51,7 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
-        bundle exec rsmp_validator test/site \
+        bundle exec rsmp-validator test/site \
         --verbose --log validator-${{ steps.log_id.outputs.LOG_ID }}.log     
       env:
         SXL_VERSION: ${{ matrix.sxl}}
