@@ -1,9 +1,9 @@
 require_relative '../../lib/rsmp/validator'
 
-describe Validator::VersionFilter do
+describe RSMP::Validator::VersionFilter do
   before do
-    @old_config = Validator.config
-    Validator.config = {
+    @old_config = RSMP::Validator.config
+    RSMP::Validator.config = {
       'core_version' => '3.3.0',
       'sxls' => [
         { 'name' => 'tlc', 'version' => '1.3.0' },
@@ -13,21 +13,21 @@ describe Validator::VersionFilter do
   end
 
   after do
-    Validator.config = @old_config
+    RSMP::Validator.config = @old_config
   end
 
   it 'matches the primary SXL when no name is given' do
-    expect(Validator.sxl_matches?('>=1.3.0')).to be == true
-    expect(Validator.sxl_matches?('>=1.4.0')).to be == false
+    expect(RSMP::Validator.sxl_matches?('>=1.3.0')).to be == true
+    expect(RSMP::Validator.sxl_matches?('>=1.4.0')).to be == false
   end
 
   it 'matches a named SXL' do
-    expect(Validator.sxl_matches?('>=1.5.0', name: 'vms')).to be == true
-    expect(Validator.sxl_matches?('>=1.5.0', name: 'tlc')).to be == false
+    expect(RSMP::Validator.sxl_matches?('>=1.5.0', name: 'vms')).to be == true
+    expect(RSMP::Validator.sxl_matches?('>=1.5.0', name: 'tlc')).to be == false
   end
 
   it 'matches the core version' do
-    expect(Validator.core_matches?('>=3.3.0')).to be == true
-    expect(Validator.core_matches?('<3.3.0')).to be == false
+    expect(RSMP::Validator.core_matches?('>=3.3.0')).to be == true
+    expect(RSMP::Validator.core_matches?('<3.3.0')).to be == false
   end
 end

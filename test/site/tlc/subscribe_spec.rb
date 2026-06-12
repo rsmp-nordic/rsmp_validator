@@ -12,14 +12,14 @@ describe 'Site::Tlc::Subscribe' do
   it 'can be turned on and off for S0001' do
     with_site(:connected) do |site_proxy|
       log 'Subscribe to status and wait for update'
-      component = Validator.get_config('main_component')
+      component = RSMP::Validator.get_config('main_component')
 
       status_list = [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus', 'uRt' => '1' }]
       status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
 
       site_proxy.subscribe_to_status_and_collect(status_list,
                                                  component: component,
-                                                 within: Validator.get_config('timeouts', 'status_update')).ok!
+                                                 within: RSMP::Validator.get_config('timeouts', 'status_update')).ok!
     ensure
       unsubscribe_list = status_list.map { |item| item.slice('sCI', 'n') }
       site_proxy.unsubscribe_to_status unsubscribe_list, component: component
@@ -37,7 +37,7 @@ describe 'Site::Tlc::Subscribe' do
 
   it 'can change interval during active subscription' do
     with_site(:connected) do |site_proxy|
-      component = Validator.get_config('main_component')
+      component = RSMP::Validator.get_config('main_component')
 
       # Step 1: Subscribe with 60s update rate (no need to wait for updates with long interval)
       log 'Subscribe to S0001 cyclecounter with 60s update rate'

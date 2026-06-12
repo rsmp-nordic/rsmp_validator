@@ -1,5 +1,5 @@
 describe 'Site::Tlc::SignalPriority' do
-  include Validator::Helpers::Status
+  include RSMP::Validator::Helpers::Status
 
   # Signal requests require core >= 3.2 because they uses the Array data type.
 
@@ -10,7 +10,7 @@ describe 'Site::Tlc::SignalPriority' do
   # 3. Then we should receive an acknowledgement
   it 'can be requested with M0022' do
     with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
-      signal_group = Validator.get_config('components', 'signal_group').keys.first
+      signal_group = RSMP::Validator.get_config('components', 'signal_group').keys.first
       command_list = RSMP::CommandList.new(:M0022, :requestPriority,
                                            requestId: SecureRandom.uuid[0..3],
                                            signalGroupId: signal_group,
@@ -19,7 +19,7 @@ describe 'Site::Tlc::SignalPriority' do
                                            eta: 10,
                                            vehicleType: 'car').to_a
       log "Request signal priority for signal group #{signal_group}"
-      timeout = Validator.get_config('timeouts', 'command_response')
+      timeout = RSMP::Validator.get_config('timeouts', 'command_response')
       site_proxy.send_command_and_collect(command_list, within: timeout).ok!
     end
   end
@@ -32,7 +32,7 @@ describe 'Site::Tlc::SignalPriority' do
   it 'status can be fetched with S0033' do
     with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
       site_proxy.request_status_and_collect({ S0033: [:status] },
-                                            within: Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -62,10 +62,10 @@ describe 'Site::Tlc::SignalPriority' do
 
   it 'becomes completed when cancelled' do
     with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'priority_completion')
-      component = Validator.get_config('main_component')
-      signal_group_id = Validator.get_config('components', 'signal_group').keys.first
-      prio = Validator::Helpers::SignalPriority::RequestHelper.new(
+      timeout = RSMP::Validator.get_config('timeouts', 'priority_completion')
+      component = RSMP::Validator.get_config('main_component')
+      signal_group_id = RSMP::Validator.get_config('components', 'signal_group').keys.first
+      prio = RSMP::Validator::Helpers::SignalPriority::RequestHelper.new(
         site_proxy,
         component: component,
         signal_group_id: signal_group_id,
@@ -108,10 +108,10 @@ describe 'Site::Tlc::SignalPriority' do
 
   it 'becomes stale if not cancelled' do
     with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
-      timeout = Validator.get_config('timeouts', 'priority_completion')
-      component = Validator.get_config('main_component')
-      signal_group_id = Validator.get_config('components', 'signal_group').keys.first
-      prio = Validator::Helpers::SignalPriority::RequestHelper.new(
+      timeout = RSMP::Validator.get_config('timeouts', 'priority_completion')
+      component = RSMP::Validator.get_config('main_component')
+      signal_group_id = RSMP::Validator.get_config('components', 'signal_group').keys.first
+      prio = RSMP::Validator::Helpers::SignalPriority::RequestHelper.new(
         site_proxy,
         component: component,
         signal_group_id: signal_group_id,

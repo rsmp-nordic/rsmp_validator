@@ -1,5 +1,5 @@
 describe 'Site::Tlc::Alarm' do
-  include Validator::Helpers::Alarms
+  include RSMP::Validator::Helpers::Alarms
 
   # Testing alarms require a reliable way of rainsing them.
   #
@@ -56,7 +56,7 @@ describe 'Site::Tlc::Alarm' do
   it 'can acknowledge A0302' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       alarm_code_id = 'A0302' # what alarm to expect
-      timeout = Validator.get_config('timeouts', 'alarm')
+      timeout = RSMP::Validator.get_config('timeouts', 'alarm')
 
       log "Activating alarm #{alarm_code_id}"
       with_alarm_activated(site_proxy, alarm_code_id) do |alarm, component_id| # raise alarm, by activating input

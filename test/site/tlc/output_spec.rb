@@ -10,7 +10,7 @@ describe 'Site::Tlc::Output' do
     with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
       site_proxy.request_status_and_collect(
         { S0004: %i[outputstatus extendedoutputstatus] },
-        within: Validator.get_config('timeouts', 'status_response')
+        within: RSMP::Validator.get_config('timeouts', 'status_response')
       ).ok!
     end
   end
@@ -23,7 +23,7 @@ describe 'Site::Tlc::Output' do
   it 'is read with S0004' do
     with_site(:connected, sxl: ['>=1.2']) do |site_proxy|
       site_proxy.request_status_and_collect({ S0004: [:outputstatus] },
-                                            within: Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -34,7 +34,7 @@ describe 'Site::Tlc::Output' do
   it 'forcing is read with S0030' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
       site_proxy.request_status_and_collect({ S0030: [:status] },
-                                            within: Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -44,9 +44,9 @@ describe 'Site::Tlc::Output' do
   # 3. Wait for status = true
   it 'forcing is set with M0020' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
-      outputs = Validator.get_config('items', 'outputs')
+      outputs = RSMP::Validator.get_config('items', 'outputs')
       skip('No outputs configured') if outputs.nil? || outputs.empty?
-      timeout = Validator.get_config('timeouts', 'command_response')
+      timeout = RSMP::Validator.get_config('timeouts', 'command_response')
       outputs.each do |output|
         site_proxy.tlc.force_output(output: output, status: 'True', value: 'True', within: timeout)
         site_proxy.tlc.force_output(output: output, status: 'True', value: 'False', within: timeout)

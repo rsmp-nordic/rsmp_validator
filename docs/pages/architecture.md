@@ -65,16 +65,16 @@ Often, you will not need to include any exception handling in your test code. If
 ### Configurations
 Before running tests, you need to setup a configuration for the equipment you're testing. The configuration defines things like timeouts, RSMP components, etc.
 
-The configuration is stored as a YAML file and loaded into a Ruby object. A test can access the configurations using `Validator.config`. For example, a test might access a specific watchdog timeout using:
+The configuration is stored as a YAML file and loaded into a Ruby object. A test can access the configurations using `RSMP::Validator.config`. For example, a test might access a specific watchdog timeout using:
 
 ```ruby
-timeout = Validator.config['timeouts','watchdog']
+timeout = RSMP::Validator.config['timeouts','watchdog']
 ```
 
-The helper `Validator.get_config` can be used to fetch config values, while providing a default value and stopping if the config is missing. You pass an array of keys, which will be used to fetch the config, and optionally a default value:
+The helper `RSMP::Validator.get_config` can be used to fetch config values, while providing a default value and stopping if the config is missing. You pass an array of keys, which will be used to fetch the config, and optionally a default value:
 
 ```ruby
-timeout = Validator.get_config('timeouts','watchdog', default: 5)
+timeout = RSMP::Validator.get_config('timeouts','watchdog', default: 5)
 ```
 
 If the config value is not found, the default will be used if provided, but a warning will be printed.
@@ -86,7 +86,7 @@ In general, default values are not encouraged, as different types of equipment o
 During testing, the validator can generate an RSMP log. It's often useful to print to the log, for example to print information about what steps are being performed by the test. If a test fails, this will make it easier to understand the log file.
 
 ```ruby
-Validator.log "Checking watchdog timestamp"
+RSMP::Validator.log "Checking watchdog timestamp"
 ```
 
 ### Example
@@ -102,7 +102,7 @@ Finally `expect()` is used to check that the timestamp close enough to what we e
 
 ```ruby
 describe "Traffic Light Controller" do
-  include Validator::Helpers::Status
+  include RSMP::Validator::Helpers::Status
 
   describe 'Clock' do
     CLOCK = Time.new 2020,9,29,17,29,51,'+00:00'
@@ -111,8 +111,8 @@ describe "Traffic Light Controller" do
       with_site(:connected, sxl: '>=1.0.7') do |site|
         with_clock_set site, CLOCK do
           log "Checking watchdog timestamp"
-          response = site.collect type: "Watchdog", num: 1, timeout: Validator.get_config('timeouts','watchdog')
-          max_diff = Validator.get_config('timeouts','command_response') + Validator.get_config('timeouts','status_response')
+          response = site.collect type: "Watchdog", num: 1, timeout: RSMP::Validator.get_config('timeouts','watchdog')
+          max_diff = RSMP::Validator.get_config('timeouts','command_response') + RSMP::Validator.get_config('timeouts','status_response')
           diff = Time.parse(response.attributes['wTs']) - CLOCK
           diff = diff.round
           expect(diff.abs).to be <= max_diff,

@@ -20,7 +20,7 @@ describe 'Supervisor' do
     end
 
     def get_connection_message(core_version, length)
-      timeout = Validator.get_config('timeouts', 'ready')
+      timeout = RSMP::Validator.get_config('timeouts', 'ready')
       got_messages = nil
       with_supervisor(:isolated,
                       'rsmp_versions' => [core_version],
@@ -124,7 +124,7 @@ describe 'Supervisor' do
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.1
     # 4. Expect the connection sequence to be complete
     it 'exchanges correct connection sequence of rsmp version 3.1.1' do
-      skip 'requires core == 3.1.1' unless Validator.core_matches?('3.1.1')
+      skip 'requires core == 3.1.1' unless RSMP::Validator.core_matches?('3.1.1')
       check_sequence '3.1.1'
     end
 
@@ -135,7 +135,7 @@ describe 'Supervisor' do
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.2
     # 4. Expect the connection sequence to be complete
     it 'exchanges correct connection sequence of rsmp version 3.1.2' do
-      skip 'requires core == 3.1.2' unless Validator.core_matches?('3.1.2')
+      skip 'requires core == 3.1.2' unless RSMP::Validator.core_matches?('3.1.2')
       check_sequence '3.1.2'
     end
 
@@ -146,7 +146,7 @@ describe 'Supervisor' do
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.3
     # 4. Expect the connection sequence to be complete
     it 'exchanges correct connection sequence of rsmp version 3.1.3' do
-      skip 'requires core == 3.1.3' unless Validator.core_matches?('3.1.3')
+      skip 'requires core == 3.1.3' unless RSMP::Validator.core_matches?('3.1.3')
       check_sequence '3.1.3'
     end
 
@@ -157,7 +157,7 @@ describe 'Supervisor' do
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.4
     # 4. Expect the connection sequence to be complete
     it 'exchanges correct connection sequence of rsmp version 3.1.4' do
-      skip 'requires core == 3.1.4' unless Validator.core_matches?('3.1.4')
+      skip 'requires core == 3.1.4' unless RSMP::Validator.core_matches?('3.1.4')
       check_sequence '3.1.4'
     end
 
@@ -168,7 +168,7 @@ describe 'Supervisor' do
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
     it 'exchanges correct connection sequence of rsmp version 3.1.5' do
-      skip 'requires core == 3.1.5' unless Validator.core_matches?('3.1.5')
+      skip 'requires core == 3.1.5' unless RSMP::Validator.core_matches?('3.1.5')
       check_sequence '3.1.5'
     end
 
@@ -179,7 +179,7 @@ describe 'Supervisor' do
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
     it 'exchanges correct connection sequence of rsmp version 3.2' do
-      skip 'requires core == 3.2' unless Validator.core_matches?('3.2')
+      skip 'requires core == 3.2' unless RSMP::Validator.core_matches?('3.2')
       check_sequence '3.2'
     end
 
@@ -190,7 +190,7 @@ describe 'Supervisor' do
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
     it 'exchanges correct connection sequence of rsmp version 3.2.1' do
-      skip 'requires core == 3.2.1' unless Validator.core_matches?('3.2.1')
+      skip 'requires core == 3.2.1' unless RSMP::Validator.core_matches?('3.2.1')
       check_sequence '3.2.1'
     end
 
@@ -201,7 +201,7 @@ describe 'Supervisor' do
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
     it 'exchanges correct connection sequence of rsmp version 3.2.2' do
-      skip 'requires core == 3.2.2' unless Validator.core_matches?('3.2.2')
+      skip 'requires core == 3.2.2' unless RSMP::Validator.core_matches?('3.2.2')
       check_sequence '3.2.2'
     end
 
@@ -212,7 +212,7 @@ describe 'Supervisor' do
     # 3. Expect the ComponentList before application traffic
     # 4. Expect the connection sequence to be complete
     it 'exchanges correct connection sequence of rsmp version 3.3.0' do
-      skip 'requires core == 3.3.0' unless Validator.core_matches?('3.3.0')
+      skip 'requires core == 3.3.0' unless RSMP::Validator.core_matches?('3.3.0')
       check_sequence '3.3.0'
     end
   end

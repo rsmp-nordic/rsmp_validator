@@ -2,7 +2,7 @@ require_relative '../../lib/rsmp/validator'
 
 describe 'Validator options' do
   it 'normalizes site-test sxls hash into local supervisor defaults' do
-    options = Validator::SiteTest::Options.new(
+    options = RSMP::Validator::SiteTest::Options.new(
       'sxls' => { 'tlc' => '1.2.1' },
       'local_supervisor' => {}
     )
@@ -13,7 +13,7 @@ describe 'Validator options' do
   end
 
   it 'normalizes supervisor-test sxls hash into local site settings' do
-    options = Validator::SupervisorTest::Options.new(
+    options = RSMP::Validator::SupervisorTest::Options.new(
       'sxls' => { 'tlc' => '1.2.1' },
       'local_site' => {
         'site_id' => 'RN+SI0001',
@@ -27,7 +27,7 @@ describe 'Validator options' do
 
   it 'rejects sxls expanded form' do
     expect do
-      Validator::SiteTest::Options.new(
+      RSMP::Validator::SiteTest::Options.new(
         'sxls' => { 'tlc' => { 'version' => '1.2.1' } },
         'local_supervisor' => {}
       )
@@ -49,7 +49,7 @@ describe 'Validator options' do
       }
     }
 
-    normalized = Validator::ConfigNormalizer.normalize_supervisor_settings(settings)
+    normalized = RSMP::Validator::ConfigNormalizer.normalize_supervisor_settings(settings)
 
     expect(normalized['sxls']).to be == {
       'tlc' => '1.3.0',

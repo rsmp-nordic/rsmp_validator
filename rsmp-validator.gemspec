@@ -2,7 +2,7 @@ require_relative 'lib/rsmp/validator/version'
 
 Gem::Specification.new do |spec|
   spec.name = 'rsmp-validator'
-  spec.version = Validator::VERSION
+  spec.version = RSMP::Validator::VERSION
   spec.authors = ['RSMP Nordic']
   spec.email = []
 

@@ -13,7 +13,7 @@ Here's an example of a test that verifies that a Traffic Light Controller respon
 
 ```ruby
 describe "Traffic Light Controller" do
-  include Validator::Helpers::Status
+  include RSMP::Validator::Helpers::Status
 
   it 'responds with NotAck to invalid status request code' do
     with_site(:connected) do |site_proxy|
@@ -24,8 +24,8 @@ describe "Traffic Light Controller" do
       expect {
         # request a non-existing status
         status_list = convert_status_list( S0000:[:status] )
-        site_proxy.request_status Validator.get_config('main_component'), status_list, collect: {
-          timeout: Validator.get_config('timeouts','command_response')
+        site_proxy.request_status RSMP::Validator.get_config('main_component'), status_list, collect: {
+          timeout: RSMP::Validator.get_config('timeouts','command_response')
         },
         # normally we can't send S0000 because JSON Schema validation
         # will prevent it, but we can disable it for testing purposes

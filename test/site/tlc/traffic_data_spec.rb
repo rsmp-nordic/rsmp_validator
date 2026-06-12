@@ -1,5 +1,5 @@
 describe 'Site::Tlc::TrafficData' do
-  include Validator::Helpers::Status
+  include RSMP::Validator::Helpers::Status
 
   # Verify status S0201 traffic counting: number of vehicles
   #
@@ -8,11 +8,11 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'number of vehicles for a single detector is read with S0201' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      component = Validator.get_config('components', 'detector_logic').keys.first
+      component = RSMP::Validator.get_config('components', 'detector_logic').keys.first
       site_proxy.request_status_and_collect(
         { S0201: %i[starttime vehicles] },
         component: component,
-        within: Validator.get_config('timeouts', 'status_response')
+        within: RSMP::Validator.get_config('timeouts', 'status_response')
       ).ok!
     end
   end
@@ -25,7 +25,7 @@ describe 'Site::Tlc::TrafficData' do
   it 'number of vehicles for all detectors is read with S0205' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
       site_proxy.request_status_and_collect({ S0205: %i[start vehicles] },
-                                            within: Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -36,11 +36,11 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'vehicle speed for a single detector is read with S0202' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      component = Validator.get_config('components', 'detector_logic').keys.first
+      component = RSMP::Validator.get_config('components', 'detector_logic').keys.first
       site_proxy.request_status_and_collect(
         { S0202: %i[starttime speed] },
         component: component,
-        within: Validator.get_config('timeouts', 'status_response')
+        within: RSMP::Validator.get_config('timeouts', 'status_response')
       ).ok!
     end
   end
@@ -53,7 +53,7 @@ describe 'Site::Tlc::TrafficData' do
   it 'vehicle speed for all detectors is read with S0206' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
       site_proxy.request_status_and_collect({ S0206: %i[start speed] },
-                                            within: Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
     end
   end
 
@@ -64,11 +64,11 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'occupancy for a single detector is read with S0203' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      component = Validator.get_config('components', 'detector_logic').keys.first
+      component = RSMP::Validator.get_config('components', 'detector_logic').keys.first
       site_proxy.request_status_and_collect(
         { S0203: %i[starttime occupancy] },
         component: component,
-        within: Validator.get_config('timeouts', 'status_response')
+        within: RSMP::Validator.get_config('timeouts', 'status_response')
       ).ok!
     end
   end
@@ -104,7 +104,7 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'classification for a single detector is read with S0204' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      component = Validator.get_config('components', 'detector_logic').keys.first
+      component = RSMP::Validator.get_config('components', 'detector_logic').keys.first
       site_proxy.request_status_and_collect(
         { S0204: %i[
           starttime
@@ -119,7 +119,7 @@ describe 'Site::Tlc::TrafficData' do
           F
         ] },
         component: component,
-        within: Validator.get_config('timeouts', 'status_response')
+        within: RSMP::Validator.get_config('timeouts', 'status_response')
       ).ok!
     end
   end
@@ -144,7 +144,7 @@ describe 'Site::Tlc::TrafficData' do
           C
           F
         ] },
-        within: Validator.get_config('timeouts', 'status_response')
+        within: RSMP::Validator.get_config('timeouts', 'status_response')
       ).ok!
     end
   end
