@@ -30,7 +30,7 @@ it 'return a command response with age=undefined when component id is unknown' d
     collector = site_proxy.request_status_and_collect(
       { S0001: [:signalgroupstatus] },
       component: 'bad',
-      within: Validator.get_config('timeouts', 'status_response'),
+      within: RSMP::Validator.get_config('timeouts', 'status_response'),
       validate: false
     )
     collector.ok!
@@ -69,8 +69,8 @@ it 'returns NotAck when status code is unknown' do
     expect do
       site_proxy.request_status_and_collect(
         { S0000: [:status] },
-        component: Validator.get_config('main_component'),
-        within: Validator.get_config('timeouts', 'status_response'),
+        component: RSMP::Validator.get_config('main_component'),
+        within: RSMP::Validator.get_config('timeouts', 'status_response'),
         validate: false
       ).ok!
     end.to raise_exception(RSMP::MessageRejected)
@@ -100,8 +100,8 @@ it 'returns NotAck when status name is unknown' do
     expect do
       site_proxy.request_status_and_collect(
         { S0001: [:bad] },
-        component: Validator.get_config('main_component'),
-        within: Validator.get_config('timeouts', 'status_response'),
+        component: RSMP::Validator.get_config('main_component'),
+        within: RSMP::Validator.get_config('timeouts', 'status_response'),
         validate: false
       ).ok!
     end.to raise_exception(RSMP::MessageRejected)

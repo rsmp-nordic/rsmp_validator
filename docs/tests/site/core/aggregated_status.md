@@ -34,8 +34,8 @@ it 'can be requested' do
   with_site(:connected, core: '>=3.1.5') do |site_proxy|
     log 'Request aggregated status'
     site_proxy.request_aggregated_status_and_collect(
-      Validator.get_config('main_component'),
-      within: Validator.get_config('timeouts', 'status_response')
+      RSMP::Validator.get_config('main_component'),
+      within: RSMP::Validator.get_config('timeouts', 'status_response')
     ).ok!
   end
 end
@@ -61,7 +61,7 @@ it 'uses null for functional position/state' do
   with_site(:isolated, sxl: '>=1.1',
                        'collect' => {
                          filter: RSMP::Filter.new(type: 'AggregatedStatus'),
-                         timeout: Validator.get_config('timeouts', 'ready'),
+                         timeout: RSMP::Validator.get_config('timeouts', 'ready'),
                          num: 1,
                          ingoing: true
                        }) do |site_proxy|

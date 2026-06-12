@@ -27,7 +27,7 @@ grand_parent: Site
 it 'can acknowledge A0302' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     alarm_code_id = 'A0302' # what alarm to expect
-    timeout = Validator.get_config('timeouts', 'alarm')
+    timeout = RSMP::Validator.get_config('timeouts', 'alarm')
     log "Activating alarm #{alarm_code_id}"
     with_alarm_activated(site_proxy, alarm_code_id) do |alarm, component_id| # raise alarm, by activating input
       log "Alarm #{alarm_code_id} is now active on component #{component_id}"

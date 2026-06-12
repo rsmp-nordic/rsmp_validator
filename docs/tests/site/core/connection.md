@@ -30,7 +30,7 @@ grand_parent: Site
 ```ruby
 it 'is closed if watchdogs are not acknowledged' do
   with_site(:isolated, sxl: '>=1.0.7') do |site_proxy|
-    timeout = Validator.get_config('timeouts', 'disconnect')
+    timeout = RSMP::Validator.get_config('timeouts', 'disconnect')
     site_proxy.node.ignore_errors RSMP::DisconnectError do
       log 'Disabling watchdog acknowledgements, site should disconnect'
       def site_proxy.acknowledge(original)
@@ -63,7 +63,7 @@ end
 ```ruby
 it 'is not closed if watchdogs are not received' do
   with_site(:isolated, sxl: '>=1.0.7') do |site_proxy|
-    timeout = Validator.get_config('timeouts', 'disconnect')
+    timeout = RSMP::Validator.get_config('timeouts', 'disconnect')
     wait_task = Async::Task.current.async do
       site_proxy.wait_for_state :disconnected, timeout: timeout
       raise RSMP::DisconnectError

@@ -33,7 +33,7 @@ Verify status 0096 current date and time
 it 'can be read with S0096' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.request_status_and_collect({ S0096: %i[year month day hour minute second] },
-                                          within: Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
   end
 end
 ```
@@ -55,7 +55,7 @@ Verify that the controller responds to M0104
 ```ruby
 it 'can be set with M0104' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-    timeout = Validator.get_config('timeouts', 'command_response')
+    timeout = RSMP::Validator.get_config('timeouts', 'command_response')
     site_proxy.tlc.set_clock(clock, within: timeout)
   end
 end
@@ -81,7 +81,7 @@ Verify command response timestamp after changing clock
 it 'is used for M0001 response timestamp' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
-      timeout = Validator.get_config('timeouts', 'command_response')
+      timeout = RSMP::Validator.get_config('timeouts', 'command_response')
       with_clock_set site_proxy, clock, within: timeout do
         result = site_proxy.tlc.set_functional_position('NormalControl', within: timeout)
         collector = result[:collector]
@@ -116,7 +116,7 @@ Verify command response timestamp after changing clock
 it 'is used for M0104 response timestamp' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
-      timeout = Validator.get_config('timeouts', 'command_response')
+      timeout = RSMP::Validator.get_config('timeouts', 'command_response')
       with_clock_set site_proxy, clock, within: timeout do
         result = site_proxy.tlc.set_functional_position('NormalControl', within: timeout)
         collector = result[:collector]
@@ -151,7 +151,7 @@ Verify status response timestamp after changing clock
 it 'is used for S0096 response timestamp' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
-      with_clock_set site_proxy, clock, within: Validator.get_config('timeouts', 'command_response') do
+      with_clock_set site_proxy, clock, within: RSMP::Validator.get_config('timeouts', 'command_response') do
         status_list = { S0096: %i[
           year
           month
@@ -160,11 +160,11 @@ it 'is used for S0096 response timestamp' do
           minute
           second
         ] }
-        timeout = Validator.get_config('timeouts', 'status_response')
+        timeout = RSMP::Validator.get_config('timeouts', 'status_response')
         collector = site_proxy.request_status_and_collect(status_list,
                                                           within: timeout)
         collector.ok!
-        max_diff = Validator.get_config('timeouts', 'command_response') + timeout
+        max_diff = RSMP::Validator.get_config('timeouts', 'command_response') + timeout
         diff = Time.parse(collector.messages.first.attributes['sTs']) - clock
         diff = diff.round
         assert(diff.abs <= max_diff,
@@ -195,7 +195,7 @@ Verify status S0096 clock after changing clock
 it 'is used for S0096 status response' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
-      command_timeout = Validator.get_config('timeouts', 'command_response')
+      command_timeout = RSMP::Validator.get_config('timeouts', 'command_response')
       with_clock_set site_proxy, clock, within: command_timeout do
         status_list = { S0096: %i[
           year
@@ -205,7 +205,7 @@ it 'is used for S0096 status response' do
           minute
           second
         ] }
-        timeout = Validator.get_config('timeouts', 'status_update')
+        timeout = RSMP::Validator.get_config('timeouts', 'status_update')
         collector = site_proxy.request_status_and_collect(
           status_list,
           within: timeout
@@ -221,8 +221,8 @@ it 'is used for S0096 status response' do
           collector.matcher_result({ 'sCI' => status, 'n' => 'second' })['s'],
           'UTC'
         )
-        max_diff = Validator.get_config('timeouts', 'command_response') +
-                   Validator.get_config('timeouts', 'status_response')
+        max_diff = RSMP::Validator.get_config('timeouts', 'command_response') +
+                   RSMP::Validator.get_config('timeouts', 'status_response')
         diff = received - clock
         diff = diff.round
         assert(diff.abs <= max_diff,
@@ -252,14 +252,14 @@ Verify aggregated status response timestamp after changing clock
   </summary>
 ```ruby
 it 'is used for aggregated status timestamp' do
-  skip 'requires core >= 3.1.5' unless Validator.core_matches?('>=3.1.5')
+  skip 'requires core >= 3.1.5' unless RSMP::Validator.core_matches?('>=3.1.5')
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
-      with_clock_set site_proxy, clock, within: Validator.get_config('timeouts', 'command_response') do
-        component = Validator.get_config('main_component')
-        timeout = Validator.get_config('timeouts', 'status_response')
+      with_clock_set site_proxy, clock, within: RSMP::Validator.get_config('timeouts', 'command_response') do
+        component = RSMP::Validator.get_config('main_component')
+        timeout = RSMP::Validator.get_config('timeouts', 'status_response')
         collector = site_proxy.request_aggregated_status_and_collect(component, within: timeout)
-        max_diff = Validator.get_config('timeouts', 'command_response') + timeout
+        max_diff = RSMP::Validator.get_config('timeouts', 'command_response') + timeout
         diff = Time.parse(collector.messages.first.attributes['aSTS']) - clock
         diff = diff.round
         assert(diff.abs <= max_diff,
@@ -282,11 +282,12 @@ end
 it 'is used for alarm timestamp' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
-      with_clock_set site_proxy, clock, within: Validator.get_config('timeouts', 'command_response') do # set clock
+      command_timeout = RSMP::Validator.get_config('timeouts', 'command_response')
+      with_clock_set site_proxy, clock, within: command_timeout do # set clock
         with_alarm_activated(site_proxy, 'A0302') do |alarm| # raise alarm, by activating input
           alarm_time = Time.parse(alarm.attributes['aTs'])
-          max_diff = Validator.get_config('timeouts', 'command_response') +
-                     Validator.get_config('timeouts', 'status_response')
+          max_diff = RSMP::Validator.get_config('timeouts', 'command_response') +
+                     RSMP::Validator.get_config('timeouts', 'status_response')
           diff = alarm_time - clock
           assert(diff.round.abs <= max_diff,
                  "Timestamp of alarm is off by #{diff}s, should be within #{max_diff}s")
@@ -317,14 +318,14 @@ Verify timestamp of watchdog after changing clock
 it 'is used for watchdog timestamp' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
-      with_clock_set site_proxy, clock, within: Validator.get_config('timeouts', 'command_response') do
+      with_clock_set site_proxy, clock, within: RSMP::Validator.get_config('timeouts', 'command_response') do
         log 'Checking watchdog timestamp'
-        watchdog_timeout = Validator.get_config('timeouts', 'watchdog')
+        watchdog_timeout = RSMP::Validator.get_config('timeouts', 'watchdog')
         collector = RSMP::Collector.new(site_proxy, task: Async::Task.current, type: 'Watchdog', num: 1,
                                                     timeout: watchdog_timeout)
         collector.collect!
-        max_diff = Validator.get_config('timeouts', 'command_response') +
-                   Validator.get_config('timeouts', 'status_response')
+        max_diff = RSMP::Validator.get_config('timeouts', 'command_response') +
+                   RSMP::Validator.get_config('timeouts', 'status_response')
         diff = Time.parse(collector.messages.first.attributes['wTs']) - clock
         diff = diff.round
         assert(diff.abs <= max_diff,

@@ -31,15 +31,15 @@ Verify that we can activate normal control after yellow flash mode is turned off
   </summary>
 ```ruby
 it 'follow startup sequence after yellow flash' do
-  skip 'requires sxl >= 1.0.7' unless Validator.sxl_matches?('>=1.0.7')
+  skip 'requires sxl >= 1.0.7' unless RSMP::Validator.sxl_matches?('>=1.0.7')
   with_site(:connected) do |site_proxy|
     verify_startup_sequence(site_proxy) do
-      timeout = Validator.get_config('timeouts', 'yellow_flash')
+      timeout = RSMP::Validator.get_config('timeouts', 'yellow_flash')
       site_proxy.tlc.set_functional_position('YellowFlash', within: timeout)
-      command_timeout = Validator.get_config('timeouts', 'command_response')
+      command_timeout = RSMP::Validator.get_config('timeouts', 'command_response')
       site_proxy.tlc.set_functional_position('NormalControl', within: command_timeout)
     end
-    command_timeout ||= Validator.get_config('timeouts', 'command_response')
+    command_timeout ||= RSMP::Validator.get_config('timeouts', 'command_response')
     site_proxy.tlc.set_functional_position('NormalControl', within: command_timeout)
   end
 end
@@ -62,8 +62,8 @@ Validate that a signal group can be ordered to green using the M0010 command.
 ```ruby
 it 'is ordered to green with M0010' do
   with_site(:connected, sxl: '>=1.0.8') do |site_proxy|
-    component = Validator.get_config('components', 'signal_group').keys[0]
-    timeout = Validator.get_config('timeouts', 'command_response')
+    component = RSMP::Validator.get_config('components', 'signal_group').keys[0]
+    timeout = RSMP::Validator.get_config('timeouts', 'command_response')
     site_proxy.tlc.order_signal_start(component, within: timeout)
   end
 end
@@ -84,8 +84,8 @@ end
 ```ruby
 it 'is ordered to red with M0011' do
   with_site(:connected, sxl: '>=1.0.8') do |site_proxy|
-    component = Validator.get_config('components', 'signal_group').keys[0]
-    timeout = Validator.get_config('timeouts', 'command_response')
+    component = RSMP::Validator.get_config('components', 'signal_group').keys[0]
+    timeout = RSMP::Validator.get_config('timeouts', 'command_response')
     site_proxy.tlc.order_signal_stop(component, within: timeout)
   end
 end
@@ -109,7 +109,7 @@ Verify status S0017 number of signal groups
 it 'list size is read with S0017' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.request_status_and_collect({ S0017: [:number] },
-                                          within: Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
   end
 end
 ```
@@ -131,7 +131,7 @@ Verify that time-of-green/time-of-red can be read with S0025.
 ```ruby
 it 'red/green predictions is read with S0025' do
   with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
-    component = Validator.get_config('components', 'signal_group').keys.first
+    component = RSMP::Validator.get_config('components', 'signal_group').keys.first
     site_proxy.request_status_and_collect(
       { S0025: %i[
         minToGEstimate
@@ -143,7 +143,7 @@ it 'red/green predictions is read with S0025' do
         likelyToREstimate
       ] },
       component: component,
-      within: Validator.get_config('timeouts', 'status_response')
+      within: RSMP::Validator.get_config('timeouts', 'status_response')
     ).ok!
   end
 end
@@ -168,7 +168,7 @@ it 'state is read with S0001' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.request_status_and_collect(
       { S0001: %i[signalgroupstatus cyclecounter basecyclecounter stage] },
-      within: Validator.get_config('timeouts', 'status_response')
+      within: RSMP::Validator.get_config('timeouts', 'status_response')
     ).ok!
   end
 end

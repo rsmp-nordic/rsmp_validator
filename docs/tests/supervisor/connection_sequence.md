@@ -32,7 +32,7 @@ Verify the connection sequence when using rsmp core 3.1.1
   </summary>
 ```ruby
 it 'exchanges correct connection sequence of rsmp version 3.1.1' do
-  skip 'requires core == 3.1.1' unless Validator.core_matches?('3.1.1')
+  skip 'requires core == 3.1.1' unless RSMP::Validator.core_matches?('3.1.1')
   check_sequence '3.1.1'
 end
 ```
@@ -54,7 +54,7 @@ Verify the connection sequence when using rsmp core 3.1.2
   </summary>
 ```ruby
 it 'exchanges correct connection sequence of rsmp version 3.1.2' do
-  skip 'requires core == 3.1.2' unless Validator.core_matches?('3.1.2')
+  skip 'requires core == 3.1.2' unless RSMP::Validator.core_matches?('3.1.2')
   check_sequence '3.1.2'
 end
 ```
@@ -76,7 +76,7 @@ Verify the connection sequence when using rsmp core 3.1.3
   </summary>
 ```ruby
 it 'exchanges correct connection sequence of rsmp version 3.1.3' do
-  skip 'requires core == 3.1.3' unless Validator.core_matches?('3.1.3')
+  skip 'requires core == 3.1.3' unless RSMP::Validator.core_matches?('3.1.3')
   check_sequence '3.1.3'
 end
 ```
@@ -98,7 +98,7 @@ Verify the connection sequence when using rsmp core 3.1.4
   </summary>
 ```ruby
 it 'exchanges correct connection sequence of rsmp version 3.1.4' do
-  skip 'requires core == 3.1.4' unless Validator.core_matches?('3.1.4')
+  skip 'requires core == 3.1.4' unless RSMP::Validator.core_matches?('3.1.4')
   check_sequence '3.1.4'
 end
 ```
@@ -120,7 +120,7 @@ Verify the connection sequence when using rsmp core 3.1.5
   </summary>
 ```ruby
 it 'exchanges correct connection sequence of rsmp version 3.1.5' do
-  skip 'requires core == 3.1.5' unless Validator.core_matches?('3.1.5')
+  skip 'requires core == 3.1.5' unless RSMP::Validator.core_matches?('3.1.5')
   check_sequence '3.1.5'
 end
 ```
@@ -142,7 +142,7 @@ Verify the connection sequence when using rsmp core 3.2
   </summary>
 ```ruby
 it 'exchanges correct connection sequence of rsmp version 3.2' do
-  skip 'requires core == 3.2' unless Validator.core_matches?('3.2')
+  skip 'requires core == 3.2' unless RSMP::Validator.core_matches?('3.2')
   check_sequence '3.2'
 end
 ```
@@ -164,7 +164,7 @@ Verify the connection sequence when using rsmp core 3.2.1
   </summary>
 ```ruby
 it 'exchanges correct connection sequence of rsmp version 3.2.1' do
-  skip 'requires core == 3.2.1' unless Validator.core_matches?('3.2.1')
+  skip 'requires core == 3.2.1' unless RSMP::Validator.core_matches?('3.2.1')
   check_sequence '3.2.1'
 end
 ```
@@ -186,7 +186,7 @@ Verify the connection sequence when using rsmp core 3.2.2
   </summary>
 ```ruby
 it 'exchanges correct connection sequence of rsmp version 3.2.2' do
-  skip 'requires core == 3.2.2' unless Validator.core_matches?('3.2.2')
+  skip 'requires core == 3.2.2' unless RSMP::Validator.core_matches?('3.2.2')
   check_sequence '3.2.2'
 end
 ```
@@ -208,7 +208,7 @@ Verify the connection sequence when using rsmp core 3.3.0
   </summary>
 ```ruby
 it 'exchanges correct connection sequence of rsmp version 3.3.0' do
-  skip 'requires core == 3.3.0' unless Validator.core_matches?('3.3.0')
+  skip 'requires core == 3.3.0' unless RSMP::Validator.core_matches?('3.3.0')
   check_sequence '3.3.0'
 end
 ```
