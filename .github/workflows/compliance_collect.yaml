@@ -38,24 +38,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: rsmp-nordic/rsmp_website
-          ref: main
-          fetch-depth: 0
+          ref: compliance-data
           path: rsmp_website_compliance_data
           token: ${{ secrets.RSMP_WEBSITE_TOKEN }}
-
-      - name: Prepare compliance data branch
-        shell: bash
-        run: |
-          cd rsmp_website_compliance_data
-          if git ls-remote --exit-code origin compliance-data; then
-            git fetch origin compliance-data
-            git checkout compliance-data
-            echo "COMPLIANCE_DATA_BRANCH_EXISTS=true" >> $GITHUB_ENV
-          else
-            git checkout --orphan compliance-data
-            git rm -rf .
-            echo "COMPLIANCE_DATA_BRANCH_EXISTS=false" >> $GITHUB_ENV
-          fi
 
       - name: Collect compliance data
         run: bundle exec ruby exe/compliance-collector --website-dir rsmp_website --data-dir rsmp_website_compliance_data
@@ -74,9 +59,7 @@ jobs:
             exit 0
           fi
           git commit -m "Update compliance data"
-          if [ "$COMPLIANCE_DATA_BRANCH_EXISTS" = "true" ]; then
-            git pull --rebase origin compliance-data
-          fi
+          git pull --rebase origin compliance-data
           git push origin HEAD:compliance-data
 
       - name: Commit website summary
