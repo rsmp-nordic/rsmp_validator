@@ -24,6 +24,13 @@ describe RSMP::Validator::Compliance::Report do
     path
   end
 
+  def resolved_config(core: '3.2.2', sxls: { 'tlc' => '1.2.1' })
+    {
+      'core_version' => core,
+      'sxls' => sxls.map { |name, version| { 'name' => name, 'version' => version } }
+    }
+  end
+
   it 'writes config target metadata and failed status' do
     Dir.mktmpdir do |dir|
       path = File.join(dir, 'report.json')
@@ -38,12 +45,12 @@ describe RSMP::Validator::Compliance::Report do
           'GITHUB_REPOSITORY' => 'rsmp-nordic/rsmp_validator',
           'GITHUB_RUN_ID' => '123',
           'GITHUB_RUN_NUMBER' => '45',
-          'GITHUB_RUN_ATTEMPT' => '2',
-          'CORE_VERSION' => '3.2.2'
+          'GITHUB_RUN_ATTEMPT' => '2'
         },
         log_path: 'validator-cross.log',
         report_json_path: 'compliance-cross.json',
-        generated_at: Time.utc(2026, 6, 17, 8, 0, 0)
+        generated_at: Time.utc(2026, 6, 17, 8, 0, 0),
+        config: resolved_config
       )
 
       report = JSON.parse(File.read(path))
@@ -53,26 +60,41 @@ describe RSMP::Validator::Compliance::Report do
       expect(report['run']['url']).to be == 'https://github.com/rsmp-nordic/rsmp_validator/actions/runs/123'
       expect(report['run']['log_artifact']).to be == 'validator-cross.log'
       expect(report['run']['report_artifact']).to be == 'compliance-cross.json'
-      expect(report['matrix']).to be == { 'core' => '3.2.2', 'sxl' => '1.2.1' }
+      expect(report['matrix']).to be == { 'core' => '3.2.2', 'sxls' => { 'tlc' => '1.2.1' } }
       expect(report['summary']['status']).to be == 'failed'
       expect(report['summary']['failed_count']).to be == 1
       expect(report['failures'].length).to be == 1
     end
   end
 
-  it 'loads target metadata and the SXL version from validator config' do
+  it 'loads target metadata and matrix values from resolved validator config' do
     assertions = Sus::Assertions.default(output: Sus::Output::Null.new)
     assertions.assert(true)
 
     report = RSMP::Validator::Compliance::Report.new(
       assertions: assertions,
-      env: { 'SITE_CONFIG' => 'config/gem_tlc.yaml', 'CORE_VERSION' => '3.2.2' },
-      generated_at: Time.utc(2026, 6, 17, 8, 0, 0)
+      env: { 'SITE_CONFIG' => 'config/gem_tlc.yaml' },
+      generated_at: Time.utc(2026, 6, 17, 8, 0, 0),
+      config: resolved_config
     ).to_h
 
     expect(report['target']['id']).to be == 'gem-tlc'
     expect(report['target']['name']).to be == 'RSMP Nordic CLI TLC'
-    expect(report['matrix']['sxl']).to be == '1.2.1'
+    expect(report['matrix']).to be == { 'core' => '3.2.2', 'sxls' => { 'tlc' => '1.2.1' } }
     expect(report['summary']['status']).to be == 'passed'
+  end
+
+  it 'reports the SXL version from the resolved matrix config' do
+    assertions = Sus::Assertions.default(output: Sus::Output::Null.new)
+    assertions.assert(true)
+
+    report = RSMP::Validator::Compliance::Report.new(
+      assertions: assertions,
+      env: { 'SITE_CONFIG' => 'config/gem_tlc.yaml' },
+      generated_at: Time.utc(2026, 6, 17, 8, 0, 0),
+      config: resolved_config(sxls: { 'tlc' => '1.0.15' })
+    ).to_h
+
+    expect(report['matrix']['sxls']).to be == { 'tlc' => '1.0.15' }
   end
 end

@@ -46,29 +46,38 @@ jobs:
         2>&1 > simulator-${{ steps.log_id.outputs.LOG_ID }}.log \
         &
       env:
-        SXL_VERSION: ${{ matrix.sxl}}
-    
+        SXLS: tlc:${{ matrix.sxl }}
+
     - name: Run tests
       shell: bash
       run: |
         bundle exec rsmp-validator test/site \
-        --verbose --log validator-${{ steps.log_id.outputs.LOG_ID }}.log     
+        --verbose --log validator-${{ steps.log_id.outputs.LOG_ID }}.log \
+        --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json
       env:
-        SXL_VERSION: ${{ matrix.sxl}}
+        SXLS: tlc:${{ matrix.sxl }}
         SITE_CONFIG: config/gem_tlc.yaml
-    
+
     - name: Show detailed log
       shell: bash
-      if: always() # even if previous steps failed
+      if: always()
       run: cat validator-${{ steps.log_id.outputs.LOG_ID }}.log
-    
+
     - name: Upload validator.log
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: validator-${{ steps.log_id.outputs.LOG_ID }}.log
         path: validator-${{ steps.log_id.outputs.LOG_ID }}.log
-    
+
+    - name: Upload compliance result
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: compliance-${{ steps.log_id.outputs.LOG_ID }}.json
+        path: compliance-${{ steps.log_id.outputs.LOG_ID }}.json
+        if-no-files-found: warn
+
     - name: Upload simulator.log
       if: always()
       uses: actions/upload-artifact@v4

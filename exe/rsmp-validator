@@ -119,6 +119,7 @@ def run_suite(config, registry, output, verbose, report_options)
       assertions: assertions,
       env: ENV,
       args: ARGV,
+      config: RSMP::Validator.config,
       log_path: report_options[:log_path],
       report_json_path: report_json_path
     )
