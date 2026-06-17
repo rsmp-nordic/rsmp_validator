@@ -19,6 +19,7 @@ module RSMP
           @generated_at = generated_at
           @metadata = ReportMetadata.new(
             env: env,
+            config: options[:config],
             log_path: options[:log_path],
             report_json_path: options[:report_json_path]
           )

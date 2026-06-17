@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
 require_relative 'config_metadata'
-require_relative 'config_sxl_version'
+require_relative 'config_sxls'
 
 module RSMP
   module Validator
     module Compliance
       # Builds static and runtime metadata for a compliance report.
       class ReportMetadata
-        def initialize(env:, log_path: nil, report_json_path: nil)
+        def initialize(env:, config: nil, log_path: nil, report_json_path: nil)
           @env = env
+          @config = config
           @log_path = log_path
           @report_json_path = report_json_path
         end
@@ -40,11 +41,13 @@ module RSMP
         end
 
         def matrix
-          {
-            'core' => env_value('CORE_VERSION'),
-            'sxl' => sxl_version,
+          values = {
+            'core' => config_value('core_version') || env_value('CORE_VERSION'),
             'os' => env_value('RUNNER_OS')
           }.compact
+          sxls = ConfigSxls.new(@config).to_h
+          values['sxls'] = sxls unless sxls.empty?
+          values
         end
 
         private
@@ -68,12 +71,12 @@ module RSMP
           mapping.transform_values { |name| env_value(name) }.compact
         end
 
-        def sxl_version
-          env_value('SXL_VERSION') || ConfigSxlVersion.new(config_path).version
-        end
-
         def config_path
           env_value('SITE_CONFIG') || env_value('SUPERVISOR_CONFIG')
+        end
+
+        def config_value(name)
+          @config[name] if @config.is_a?(Hash)
         end
 
         def integer_env(name)
