@@ -1,6 +1,12 @@
 # Config for testing Kapsch ETX traffic light controller.
 # The settings are used for starting a local supervisor listening for the site tested
 # See https://rsmp-nordic.github.io/rsmp_validator/config/
+compliance:
+  id: kapsch-etx
+  kind: site
+  name: Kapsch EcoTrafiX
+  product_url: https://www.kapsch.net/_Resources/Persistent/f9e0a0525985dc4a9d0b3cb6b67476c0b1257b1c/Kapsch_EcoTrafiX-Controller-16_Datasheet-EN.pdf
+
 local_supervisor:
   ips: all
   max_sites: 1

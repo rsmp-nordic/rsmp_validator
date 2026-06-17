@@ -1,5 +1,11 @@
 # Config for testing a supervisor running on localhost (e.g. one from the rsmp gem)
 # The settings are used for starting a local site connecting to the supervisor tested
+compliance:
+  id: gem-supervisor
+  kind: supervisor
+  name: RSMP Nordic CLI supervisor
+  product_url: https://github.com/rsmp-nordic/rsmp
+
 local_site:
   type: tlc
   site_id: RN+SI0001
