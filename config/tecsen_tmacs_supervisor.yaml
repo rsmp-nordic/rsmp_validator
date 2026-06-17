@@ -1,5 +1,11 @@
 # The settings are used for starting a local tlc emulator connecting to the supervisor system to be tested
 
+compliance:
+  id: tecsen-tmacs
+  kind: supervisor
+  name: TECSEN TMacs
+  product_url: https://www.tmacs.it/en/
+
 local_site:
   type: tlc
   site_id: CAR_TC_001

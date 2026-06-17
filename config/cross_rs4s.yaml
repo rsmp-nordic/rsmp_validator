@@ -1,6 +1,12 @@
 # Config for testing Cross RS4S traffic light controller.
 # The settings are used for starting a local supervisor listening for the site tested
 # See https://rsmp-nordic.github.io/rsmp_validator/config/
+compliance:
+  id: cross-rs4s
+  kind: site
+  name: Cross RS4S/RS4T/RS5
+  product_url: https://www.cross-traffic.com/en/traffic-light-controllers/
+
 local_supervisor:
   ips: all
   max_sites: 1

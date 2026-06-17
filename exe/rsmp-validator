@@ -2,6 +2,7 @@
 
 require 'sus'
 require 'sus/config'
+require_relative '../lib/rsmp/validator/compliance/report'
 
 def print_help
   puts <<~HELP
@@ -17,10 +18,11 @@ def print_help
       rsmp-validator test/supervisor/connect_spec.rb
 
     Options:
-      --verbose      Show detailed sus output.
-      --log          Print RSMP log output to stdout.
-      --log PATH     Write RSMP log output to PATH.
-      -h, --help     Show this help.
+      --verbose           Show detailed sus output.
+      --log               Print RSMP log output to stdout.
+      --log PATH          Write RSMP log output to PATH.
+      --report-json PATH  Write a machine-readable compliance report to PATH.
+      -h, --help          Show this help.
 
     Environment:
       SITE_CONFIG        Path to site test configuration.
@@ -32,6 +34,15 @@ end
 if ARGV.first == 'help' || ARGV.include?('--help') || ARGV.include?('-h')
   print_help
   exit 0
+end
+
+# Parse --report-json <path> before Sus::Config.load consumes remaining args.
+report_json_index = ARGV.index('--report-json')
+report_json_path = nil
+if report_json_index
+  ARGV.delete_at(report_json_index)
+  report_json_path = ARGV.delete_at(report_json_index)
+  abort '--report-json requires a path' unless report_json_path
 end
 
 # Parse --log [path] from ARGV before Sus::Config.load consumes remaining args.
@@ -96,11 +107,22 @@ config.log_path = log_path
 
 registry = config.registry
 
-def run_suite(config, registry, output, verbose)
+def run_suite(config, registry, output, verbose, report_options)
   assertions = Sus::Assertions.default(output: output, verbose: verbose)
   config.before_tests(assertions)
   registry.call(assertions)
   config.after_tests(assertions)
+  report_json_path = report_options[:report_json_path]
+  if report_json_path
+    RSMP::Validator::Compliance::Report.write(
+      report_json_path,
+      assertions: assertions,
+      env: ENV,
+      args: ARGV,
+      log_path: log_path,
+      report_json_path: report_json_path
+    )
+  end
   exit(1) unless assertions.passed?
 end
 
@@ -112,9 +134,9 @@ if log_path && config.verbose?
     config.log_path = nil
     config.log_file_io = log_file
     output = Sus::Output.default(TeeIO.new($stderr, log_file))
-    run_suite(config, registry, output, true)
+    run_suite(config, registry, output, true, report_json_path: report_json_path, log_path: log_path)
   end
 else
   output = config.verbose? ? config.output : Sus::Output::Null.new
-  run_suite(config, registry, output, config.verbose?)
+  run_suite(config, registry, output, config.verbose?, report_json_path: report_json_path, log_path: log_path)
 end

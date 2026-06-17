@@ -11,7 +11,7 @@ on:
     # schedule runs only on the default branch. time is in UTC.
     # * is a special character in YAML so you have to quote this string.
     # run every night at 10:00PM UTC.
-    - cron:  '0 22 * * *'
+    - cron: '0 22 * * *'
 jobs:
   validator:
     if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
@@ -44,21 +44,31 @@ jobs:
         bundler-cache: true
 
     - name: Run tests
+      shell: bash
       run: |
         bundle exec rsmp-validator test/site \
-        --verbose --log validator-${{ steps.log_id.outputs.LOG_ID }}.log
+        --verbose --log validator-${{ steps.log_id.outputs.LOG_ID }}.log \
+        --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json
       env:
         SITE_CONFIG: config/swarco_itc3.yaml
         CORE_VERSION: ${{ matrix.core}}
 
     - name: Show detailed log
       shell: bash
-      if: always() # even if previous steps failed
+      if: always()
       run: cat validator-${{ steps.log_id.outputs.LOG_ID }}.log
-    
+
     - name: Upload validator.log
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: validator-${{ steps.log_id.outputs.LOG_ID }}.log
         path: validator-${{ steps.log_id.outputs.LOG_ID }}.log
+
+    - name: Upload compliance result
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: compliance-${{ steps.log_id.outputs.LOG_ID }}.json
+        path: compliance-${{ steps.log_id.outputs.LOG_ID }}.json
+        if-no-files-found: warn
