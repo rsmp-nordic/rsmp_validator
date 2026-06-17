@@ -11,7 +11,7 @@ module RSMP
     module Compliance
       # Builds the machine-readable compliance report emitted by rsmp-validator.
       class Report
-        DEFAULT_SCHEMA_VERSION = 1
+        COMPLIANCE_SCHEMA_VERSION = 1
 
         def initialize(assertions:, env: ENV, args: ARGV, generated_at: Time.now.utc, **options)
           @assertions = assertions
@@ -34,7 +34,7 @@ module RSMP
 
         def to_h
           {
-            'schema_version' => DEFAULT_SCHEMA_VERSION,
+            'schema_version' => COMPLIANCE_SCHEMA_VERSION,
             'generated_at' => @generated_at.iso8601,
             'target' => @metadata.target,
             'workflow' => @metadata.workflow,
