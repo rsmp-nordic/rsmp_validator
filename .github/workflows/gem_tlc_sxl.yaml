@@ -4,7 +4,10 @@
 # documentation.
 # This workflow will run rsmp validator
 name: Gem TLC SXL matrix
-on: push
+on:
+  push:
+  schedule:
+    - cron: '0 22 * * *'
 jobs:
   validator:
     timeout-minutes: 10
