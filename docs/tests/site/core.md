@@ -16,4 +16,5 @@ grand_parent: Test Suite
 - [Aggregated Status]({{ site.baseurl }}{% link tests/site/core/aggregated_status.md %})
 - [Connection]({{ site.baseurl }}{% link tests/site/core/connection.md %})
 - [Connection Sequence]({{ site.baseurl }}{% link tests/site/core/connection_sequence.md %})
+- [Message Buffer]({{ site.baseurl }}{% link tests/site/core/message_buffer.md %})
 
