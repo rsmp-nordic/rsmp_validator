@@ -74,9 +74,12 @@ module RSMP
 
       def run_suite(config, registry, output, verbose)
         assertions = Sus::Assertions.default(output: output, verbose: verbose)
-        config.before_tests(assertions)
-        registry.call(assertions)
-        config.after_tests(assertions)
+        begin
+          config.before_tests(assertions)
+          registry.call(assertions)
+        ensure
+          config.after_tests(assertions)
+        end
         write_report(assertions)
         assertions.passed? ? 0 : 1
       end
