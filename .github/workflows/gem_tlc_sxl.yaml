@@ -33,7 +33,7 @@ jobs:
         " >> $GITHUB_OUTPUT
 
     - name: Checkout repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install Ruby and gems
       uses: ruby/setup-ruby@v1
@@ -68,14 +68,14 @@ jobs:
 
     - name: Upload validator.log
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: validator-${{ steps.log_id.outputs.LOG_ID }}.log
         path: validator-${{ steps.log_id.outputs.LOG_ID }}.log
 
     - name: Upload compliance result
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: compliance-${{ steps.log_id.outputs.LOG_ID }}.json
         path: compliance-${{ steps.log_id.outputs.LOG_ID }}.json
@@ -83,7 +83,7 @@ jobs:
 
     - name: Upload simulator.log
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: simulator-${{ steps.log_id.outputs.LOG_ID }}.log
         path: simulator-${{ steps.log_id.outputs.LOG_ID }}.log
