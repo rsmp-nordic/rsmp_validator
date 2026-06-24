@@ -22,27 +22,27 @@ test
 ## Running Tests
 Note: Before running tests, be sure to set up your test [configuration]({{ site.baseurl}}{% link pages/configuring.md %}).
 
-The RSMP Validator uses the [sus](https://github.com/socketry/sus) testing framework. Use the `rsmp-validator` executable to run conformance tests. You should be located in the root of the project folder when running tests.
+The RSMP Validator uses the [sus](https://github.com/socketry/sus) testing framework. Use the `rsmp-validator run` command to run conformance tests. You should be located in the root of the project folder when running tests.
 
 Test a site by running tests covering the core specification, using the auto node feature to start a local TLC site automatically:
 
 ```
-% SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validator test/site/core
+% SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validator run test/site/core
 ```
 
 To run all site tests:
 
 ```
-% SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validator test/site
+% SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validator run test/site
 ```
 
 See the [Auto Node]({{ site.baseurl}}{% link pages/auto.md %}) page for details on the auto node feature.
 
 ## Filtering Tests
-You can pass one or more paths to the `rsmp-validator` command to select which tests to run:
+You can pass one or more paths to the `rsmp-validator run` command to select which tests to run:
 
 ```
-% SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validator test/site/core test/site/tlc/clock_spec.rb
+% SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validator run test/site/core test/site/tlc/clock_spec.rb
 ```
 
 ### Running tests against a local RSMP site

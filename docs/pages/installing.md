@@ -55,4 +55,4 @@ Use `bundle info [gemname]` to see where a bundled gem is installed.
 
 You will now have sus, the rsmp gem and all other dependencies installed for the source checkout.
 
-It's recommended to use [bundle exec](https://bundler.io/man/bundle-exec.1.html) when running commands from a source checkout, for example `bundle exec rsmp-validator test/site`.
+It's recommended to use [bundle exec](https://bundler.io/man/bundle-exec.1.html) when running commands from a source checkout, for example `bundle exec rsmp-validator run test/site`.

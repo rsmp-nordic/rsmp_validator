@@ -8,6 +8,7 @@ gem 'colorize'
 gem 'rsmp'
 gem 'sus'
 gem 'sus-fixtures-async'
+gem 'thor'
 
 group :development do
   gem 'rake'

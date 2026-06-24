@@ -27,4 +27,4 @@ jobs:
           -e AUTO_SITE_CONFIG=config/simulator/tlc.yaml \
           -e CORE_VERSION=3.3.0 \
           rsmp-validator:smoke \
-          test/site/core/connect_spec.rb --verbose
+          run test/site/core/connect_spec.rb --verbose

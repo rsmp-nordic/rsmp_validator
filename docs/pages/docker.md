@@ -65,7 +65,7 @@ supervisor: /config/my_supervisor.yaml
 Then run:
 
 ```console
-% docker run --rm -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site
+% docker run --rm -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator run test/site
 ```
 
 Or pass the config path directly with environment variables:
@@ -87,20 +87,20 @@ You can pass [custom options]({{ site.baseurl}}{% link pages/running.md %}) to t
 Enable RSMP logging:
 
 ```console
-% docker run --rm -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site --log
+% docker run --rm -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator run test/site --log
 ```
 
 Run a specific test:
 
 ```console
-% docker run --rm -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site/tlc/detector_logics_spec.rb
+% docker run --rm -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator run test/site/tlc/detector_logics_spec.rb
 ```
 
 ### Log Files
-By default, the validator produces output to the terminal. You can also write RSMP logs to a file inside the container using `--log`. If you want to persist log files on the host, mount a log folder:
+By default, the validator produces output to the terminal. You can also write RSMP logs to a file inside the container using `--log-path`. If you want to persist log files on the host, mount a log folder:
 
 ```console
-% docker run --rm -it -v $PWD/config:/config -v $PWD/log:/log -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator test/site --log /log/rsmp.log
+% docker run --rm -it -v $PWD/config:/config -v $PWD/log:/log -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator run test/site --log-path /log/rsmp.log
 ```
 
 ## Run from Docker Desktop

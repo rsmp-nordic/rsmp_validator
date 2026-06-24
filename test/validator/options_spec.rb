@@ -61,4 +61,11 @@ describe 'Validator options' do
       { 'name' => 'vms', 'version' => '1.5.4', 'prefix' => 'vms/' }
     ]
   end
+
+  it 'keeps collector options out of embedded rsmp node settings' do
+    tester = RSMP::Validator::SiteTester.allocate
+    node_options = tester.send(:rsmp_node_options, 'collect' => { 'timeout' => 1 }, 'core_version' => '3.3.0')
+
+    expect(node_options).to be == { 'core_version' => '3.3.0' }
+  end
 end

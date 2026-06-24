@@ -11,7 +11,7 @@ The RSMP Validator performs automated testing of RSMP implementations. It is pac
 The validator includes a growing suite of tests and can report test results in several formats, so you can quickly assess RSMP compliance and pin-point any problems. It can be used on any platform that supports Ruby, including Linux, Mac and Windows.
 
 ```console
-% bundle exec rsmp-validator test/site
+% bundle exec rsmp-validator run test/site
 116 passed 13 skipped out of 129 total (58 assertions)
 ```
 

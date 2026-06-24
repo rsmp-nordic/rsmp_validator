@@ -14,8 +14,8 @@ This repository contains the RSMP Validator, a Ruby gem for testing RSMP site an
 ## Commands
 
 - `bundle exec sus test/validator` runs the internal validator tests.
-- `bundle exec rsmp-validator test/site` runs site conformance tests, usually with an auto-started local site.
-- `bundle exec rsmp-validator test/supervisor` runs supervisor conformance tests, usually with an auto-started local supervisor.
+- `bundle exec rsmp-validator run test/site` runs site conformance tests, usually with an auto-started local site.
+- `bundle exec rsmp-validator run test/supervisor` runs supervisor conformance tests, usually with an auto-started local supervisor.
 - `bundle exec rubocop` checks Ruby style.
 - `bundle exec rake spec_docs` regenerates test documentation under `docs/tests/`.
 
