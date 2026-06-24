@@ -57,5 +57,5 @@ alarm_triggers:
     component: AA+BBCCC=DDDDL002
 secrets:
   security_codes:
-    1: default
-    2: default
+    1: 'default'
+    2: 'default'
