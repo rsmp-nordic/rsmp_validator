@@ -27,6 +27,12 @@ module RSMP
 
         def ensure_config_exists!(path, missing_message)
           abort_with_error missing_message unless File.exist?(path)
+          abort_with_error "Config #{path} is not a file" unless File.file?(path)
+          abort_with_error "Config #{path} must be a YAML file (.yml or .yaml)" unless yaml_file?(path)
+        end
+
+        def yaml_file?(path)
+          %w[.yml .yaml].include?(File.extname(path).downcase)
         end
 
         def validate_config_hash!(raw, path)

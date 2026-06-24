@@ -39,7 +39,7 @@ module RSMP
                 else
                   RSMP::Site
                 end
-        site_settings = ConfigNormalizer.normalize_site_settings(@site_config.deep_merge(options))
+        site_settings = ConfigNormalizer.normalize_site_settings(@site_config.deep_merge(rsmp_node_options(options)))
         logger = create_site_logger(@site_config)
         @site = klass.new(
           site_settings: site_settings,
@@ -70,6 +70,10 @@ module RSMP
         logger_settings.merge!(log_settings)
         logger_settings.delete('stream') if log_settings['path']
         RSMP::Logger.new(logger_settings)
+      end
+
+      def rsmp_node_options(options)
+        options.except('collect')
       end
     end
   end

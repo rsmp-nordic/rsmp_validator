@@ -19,7 +19,7 @@ When you run tests, a local RSMP supervisor is started, to communicate with the 
 
 ![Overview]({{ site.baseurl }}/assets/images/flow.png "RSMP Validator Flow")
 
-1. Testing is initiated with the `rsmp-validator` command. Sus runs each test, one after the other.
+1. Testing is initiated with the `rsmp-validator run` command. Sus runs each test, one after the other.
 2. The test uses a helper to wait for the site to connect. The helper will start the local RSMP supervisor if it's not already running.
 3. The test uses the RSMP supervisor to send RSMP messages to the site to be tested, e.g. a command request. It will then typically wait for a specific kind of response from the site, e.g. a command response.
 4. The site responds with RSMP messages. Responses might be sent immediately, or after a while. Responses might include one or more messages.

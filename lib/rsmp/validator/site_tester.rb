@@ -68,7 +68,9 @@ module RSMP
 
       def build_node(options)
         logger = create_supervisor_logger(@supervisor_config)
-        supervisor_settings = ConfigNormalizer.normalize_supervisor_settings(@supervisor_config.deep_merge(options))
+        supervisor_settings = ConfigNormalizer.normalize_supervisor_settings(
+          @supervisor_config.deep_merge(rsmp_node_options(options))
+        )
 
         RSMP::Supervisor.new(
           supervisor_settings: supervisor_settings,
@@ -107,6 +109,10 @@ module RSMP
         logger_settings.merge!(log_settings)
         logger_settings.delete('stream') if log_settings['path']
         RSMP::Logger.new(logger_settings)
+      end
+
+      def rsmp_node_options(options)
+        options.except('collect')
       end
     end
   end

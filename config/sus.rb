@@ -6,7 +6,7 @@
 #   bundle exec sus test/validator
 #
 # To run conformance tests against real equipment, use the rsmp-validator executable:
-#   bundle exec rsmp-validator
+#   bundle exec rsmp-validator run test/site
 
 def test_paths
   Dir.glob('test/validator/**/*.rb', base: @root)

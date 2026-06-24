@@ -17,13 +17,13 @@ RSMP messages exchanged during testing can optionally be logged. Use the `--log`
 
 ```
 # Print RSMP log to stdout (interleaved with test output)
-% bundle exec rsmp-validator test/site --log
+% bundle exec rsmp-validator run test/site --log
 
 # Write RSMP log to a file
-% bundle exec rsmp-validator test/site --log logs/rsmp.log
+% bundle exec rsmp-validator run test/site --log-path logs/rsmp.log
 ```
 
-With `--log <path>`, RSMP messages are written to the specified file and sus output continues to the console.
+With `--log-path <path>`, RSMP messages are written to the specified file and sus output continues to the console.
 
 The log shows each RSMP message with timestamp, port number, site id, and the message content:
 
@@ -41,7 +41,7 @@ When using the auto node feature, auto node output is interleaved with the valid
 Sometimes invalid messages are received that are not directly related to the currently executing test. For example, alarms or statuses can be received at any time. If such messages do not conform to the RSMP JSON schema, a sentinel warning will be recorded and shown in the test output.
 
 ## Following logs during testing
-If you direct RSMP logs to a file with `--log <path>`, you can use the `tail` command in a separate terminal window to follow the output as tests are running:
+If you direct RSMP logs to a file with `--log-path <path>`, you can use the `tail` command in a separate terminal window to follow the output as tests are running:
 
 ```
 % tail -f logs/rsmp.log
@@ -58,5 +58,5 @@ The recommended way to document the result of a test run is to collect the follo
 - Version of the equipment, including relevant OS, software and hardware
 - Configuration in the equipment
 - Sus test output
-- RSMP log file (if `--log <path>` was used)
+- RSMP log file (if `--log-path <path>` was used)
 - Log file(s) from the equipment

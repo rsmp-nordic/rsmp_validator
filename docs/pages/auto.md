@@ -47,13 +47,13 @@ You can also enable the auto node feature using environment variables.
 Automatically start a site to be tested:
 
 ```shell
-SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validator test/site/core
+SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validator run test/site/core
 ```
 
 Or automatically start a supervisor to be tested:
 
 ```shell
-SUPERVISOR_CONFIG=config/gem_supervisor.yaml AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rsmp-validator test/supervisor
+SUPERVISOR_CONFIG=config/gem_supervisor.yaml AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rsmp-validator run test/supervisor
 ```
 
 
@@ -82,13 +82,13 @@ log:
 Enable RSMP logging with the `--log` flag:
 
 ```shell
-bundle exec rsmp-validator test/site --log
+bundle exec rsmp-validator run test/site --log
 ```
 
 Or write RSMP logs to a file:
 
 ```shell
-bundle exec rsmp-validator test/site --log logs/details.log
+bundle exec rsmp-validator run test/site --log-path logs/details.log
 ```
 
 ### Separate Log File
@@ -104,7 +104,7 @@ log:
 
 With this configuration:
 - **Auto node logs** are written directly to `logs/auto_site.log` 
-- **Validator logs** continue through the validator log stream controlled by `--log`
+- **Validator logs** continue through the validator log stream controlled by `--log` or `--log-path`
 - The two output streams are **completely independent**
 
 This means the auto node's logs are written to the configured file independently from sus output.

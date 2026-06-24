@@ -11,4 +11,4 @@ COPY test test
 RUN bundle install
 EXPOSE 13111
 ENTRYPOINT [ "bundle", "exec", "rsmp-validator" ]
-CMD [ "test/site/core", "test/site/tlc" ]
+CMD [ "run", "test/site/core", "test/site/tlc" ]
