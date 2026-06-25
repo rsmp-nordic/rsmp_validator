@@ -41,7 +41,9 @@ module RSMP
 
       attr_accessor :config, :config_log_settings, :mode, :logger, :auto_node_config,
                     :auto_node_log_settings, :auto_node, :node_log_settings,
-                    :core_version_override, :sxls_override
+                    :core_version_override, :sxls_override, :site_config_path,
+                    :supervisor_config_path, :auto_site_config_path,
+                    :auto_supervisor_config_path, :config_path
     end
 
     # Get the global Async reactor used for RSMP communication

@@ -24,7 +24,7 @@ The auto site/supervisor runs inside the same Async reactor as the validator.
 
 ## Configuration
 There are two ways to enable the auto node feature.
-Environment variables take precedence over the `config/validator.yaml` file settings.
+Command-line options take precedence over the `config/validator.yaml` file settings.
 
 ### config/validator.yaml
 Add either `auto_site` or `auto_supervisor` to your `config/validator.yaml` file:
@@ -41,19 +41,19 @@ Or:
 # automatically start a supervisor to be tested
 auto_supervisor: config/simulator/supervisor.yaml
 ```
-### Environment Variables
-You can also enable the auto node feature using environment variables.
+### Command-Line Options
+You can also enable the auto node feature using command-line options.
 
 Automatically start a site to be tested:
 
-```shell
-SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validator run test/site/core
+```console
+% bundle exec rsmp-validator run test/site/core --site-config config/gem_tlc.yaml --auto-site-config config/simulator/tlc.yaml
 ```
 
 Or automatically start a supervisor to be tested:
 
-```shell
-SUPERVISOR_CONFIG=config/gem_supervisor.yaml AUTO_SUPERVISOR_CONFIG=config/simulator/supervisor.yaml bundle exec rsmp-validator run test/supervisor
+```console
+% bundle exec rsmp-validator run test/supervisor --supervisor-config config/gem_supervisor.yaml --auto-supervisor-config config/simulator/supervisor.yaml
 ```
 
 

@@ -37,18 +37,18 @@ You can use the file `config/validator_example.yaml` as a template.
 
 Note: The file `config/validator.yaml` is ignored by git.
 
-The other option is to set either SITE_CONFIG or SUPERVISOR_CONFIG to the path to your config, depending on whether you're testing a site or a supervisor. For example, if you're testing a site, you can run all site tests with:
+The other option is to pass the config path on the command line, depending on whether you're testing a site or a supervisor. For example, if you're testing a site, you can run all site tests with:
 
-```
-SITE_CONFIG=config/my_site_validation_config.yaml bundle exec rsmp-validator run test/site
+```console
+% bundle exec rsmp-validator run test/site --site-config config/my_site_validation_config.yaml
 ```
 
-If the relevant environment variable is set, the file `config/validator.yaml` will not be read.
+Use `--supervisor-config` when testing a supervisor. If the relevant command-line option is set, the file `config/validator.yaml` will not be read for that config path.
 
 Core and SXL versions are normally read from the selected config file. For temporary test runs, you can override them with command-line options:
 
 ```console
-% SITE_CONFIG=config/my_site_validation_config.yaml bundle exec rsmp-validator run test/site --core 3.3.0 --sxls tlc:1.3.0
+% bundle exec rsmp-validator run test/site --site-config config/my_site_validation_config.yaml --core 3.3.0 --sxls tlc:1.3.0
 ```
 
 ## Options for Site testing

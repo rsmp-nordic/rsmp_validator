@@ -34,11 +34,11 @@ describe RSMP::Validator::Compliance::Report do
   it 'writes config target metadata and failed status' do
     Dir.mktmpdir do |dir|
       path = File.join(dir, 'report.json')
+      config = config_path(dir)
       RSMP::Validator::Compliance::Report.write(
         path,
         assertions: assertions_with_failure,
         env: {
-          'SITE_CONFIG' => config_path(dir),
           'GITHUB_WORKFLOW' => 'Cross RS4S',
           'GITHUB_WORKFLOW_REF' => 'rsmp-nordic/rsmp_validator/.github/workflows/cross_rs4s.yaml@refs/heads/main',
           'GITHUB_EVENT_NAME' => 'schedule',
@@ -50,7 +50,8 @@ describe RSMP::Validator::Compliance::Report do
         log_path: 'validator-cross.log',
         report_json_path: 'compliance-cross.json',
         generated_at: Time.utc(2026, 6, 17, 8, 0, 0),
-        config: resolved_config
+        config: resolved_config,
+        config_path: config
       )
 
       report = JSON.parse(File.read(path))
@@ -73,9 +74,10 @@ describe RSMP::Validator::Compliance::Report do
 
     report = RSMP::Validator::Compliance::Report.new(
       assertions: assertions,
-      env: { 'SITE_CONFIG' => 'config/gem_tlc.yaml' },
+      env: {},
       generated_at: Time.utc(2026, 6, 17, 8, 0, 0),
-      config: resolved_config
+      config: resolved_config,
+      config_path: 'config/gem_tlc.yaml'
     ).to_h
 
     expect(report['target']['id']).to be == 'gem-tlc'
@@ -90,7 +92,7 @@ describe RSMP::Validator::Compliance::Report do
 
     report = RSMP::Validator::Compliance::Report.new(
       assertions: assertions,
-      env: { 'SITE_CONFIG' => 'config/gem_tlc.yaml' },
+      env: {},
       generated_at: Time.utc(2026, 6, 17, 8, 0, 0),
       config: resolved_config(sxls: { 'tlc' => '1.0.15' })
     ).to_h

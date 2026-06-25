@@ -8,9 +8,10 @@ module RSMP
     module Compliance
       # Builds static and runtime metadata for a compliance report.
       class ReportMetadata
-        def initialize(env:, config: nil, log_path: nil, report_json_path: nil)
+        def initialize(env:, config: nil, config_path: nil, log_path: nil, report_json_path: nil)
           @env = env
           @config = config
+          @config_path = config_path
           @log_path = log_path
           @report_json_path = report_json_path
         end
@@ -72,7 +73,7 @@ module RSMP
         end
 
         def config_path
-          env_value('SITE_CONFIG') || env_value('SUPERVISOR_CONFIG')
+          @config_path
         end
 
         def config_value(name)

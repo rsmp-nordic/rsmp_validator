@@ -49,10 +49,8 @@ jobs:
       shell: bash
       run: |
         bundle exec rsmp-validator run test/site \
-        --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log
-        
-      env:
-        SITE_CONFIG: config/gem_tlc.yaml
+        --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
+        --site-config config/gem_tlc.yaml
     
     - name: Show detailed log
       shell: bash

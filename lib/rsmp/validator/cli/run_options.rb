@@ -18,7 +18,11 @@ module RSMP
           log_path: thor_options[:log_path],
           report_json_path: thor_options[:report_json],
           core_version: thor_options[:core],
-          sxls: thor_options[:sxls]
+          sxls: thor_options[:sxls],
+          site_config_path: thor_options[:site_config],
+          supervisor_config_path: thor_options[:supervisor_config],
+          auto_site_config_path: thor_options[:auto_site_config],
+          auto_supervisor_config_path: thor_options[:auto_supervisor_config]
         }
       end
 
@@ -47,6 +51,14 @@ module RSMP
         when /\A--core=(.+)\z/ then @parsed[:core_version] = Regexp.last_match(1)
         when '--sxls' then @parsed[:sxls] = required_option_value(arg, remaining)
         when /\A--sxls=(.+)\z/ then @parsed[:sxls] = Regexp.last_match(1)
+        when '--site-config' then @parsed[:site_config_path] = required_option_value(arg, remaining)
+        when /\A--site-config=(.+)\z/ then @parsed[:site_config_path] = Regexp.last_match(1)
+        when '--supervisor-config' then @parsed[:supervisor_config_path] = required_option_value(arg, remaining)
+        when /\A--supervisor-config=(.+)\z/ then @parsed[:supervisor_config_path] = Regexp.last_match(1)
+        when '--auto-site-config' then @parsed[:auto_site_config_path] = required_option_value(arg, remaining)
+        when /\A--auto-site-config=(.+)\z/ then @parsed[:auto_site_config_path] = Regexp.last_match(1)
+        when '--auto-supervisor-config' then @parsed[:auto_supervisor_config_path] = required_option_value(arg, remaining)
+        when /\A--auto-supervisor-config=(.+)\z/ then @parsed[:auto_supervisor_config_path] = Regexp.last_match(1)
         else @parsed[:paths] << arg
         end
       end

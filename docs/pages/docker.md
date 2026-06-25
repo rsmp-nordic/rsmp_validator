@@ -16,7 +16,7 @@ This section explains how to run the RSMP Validator using Docker. You can also [
 
 3. Create a configuration file for the equipment, simulator or supervisor that you want to test. Check out the [TLC example config](https://github.com/rsmp-nordic/rsmp_validator/blob/main/config/gem_tlc.yaml), or read more about [site test configurations](https://rsmp-nordic.org/rsmp_validator/config/#options-for-site-testing) and [supervisor test configurations](https://rsmp-nordic.org/rsmp_validator/config/#options-for-supervisor-testing).
 
-4. Create a [validator.yaml](https://rsmp-nordic.org/rsmp_validator/config/#choosing-what-config-to-use) file inside your config folder and edit it to point to the test config that you created above. (Or as an alternative, set [`SITE_CONFIG` or `SUPERVISOR_CONFIG`](https://rsmp-nordic.org/rsmp_validator/config/#choosing-what-config-to-use) when you run the validator).
+4. Create a [validator.yaml](https://rsmp-nordic.org/rsmp_validator/config/#choosing-what-config-to-use) file inside your config folder and edit it to point to the test config that you created above. Or pass the config path with `--site-config` or `--supervisor-config` when you run the validator.
 
 ## Run from the Terminal
 You run the validator by starting the container. The container image includes the validator, test suite, and example configuration files under `/app`.
@@ -68,18 +68,17 @@ Then run:
 % docker run --rm -it -v $PWD/config:/config -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator run test/site
 ```
 
-Or pass the config path directly with environment variables:
+Or pass the config path directly with a command-line option:
 
 ```console
 % docker run --rm -it \
   -v $PWD/config:/config \
-  -e SITE_CONFIG=/config/my_site.yaml \
   -p 13111:13111 \
   ghcr.io/rsmp-nordic/rsmp_validator \
-  test/site
+  run test/site --site-config /config/my_site.yaml
 ```
 
-If `SITE_CONFIG` or `SUPERVISOR_CONFIG` is set, it takes precedence over `validator.yaml`.
+Use `--supervisor-config` when testing a supervisor. Config path options take precedence over `validator.yaml`.
 
 ### Custom Options
 You can pass [custom options]({{ site.baseurl}}{% link pages/running.md %}) to the validator, e.g. to run specific tests or enable RSMP logging.
