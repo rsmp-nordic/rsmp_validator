@@ -8,12 +8,14 @@ module RSMP
     # Runs the conformance test suite through Sus while preserving validator
     # specific options that Sus does not know about.
     class Runner
-      def initialize(paths:, verbose:, log_to_stdout:, log_path:, report_json_path:)
+      def initialize(paths:, verbose:, log_to_stdout:, log_path:, report_json_path:, core_version:, sxls:)
         @paths = paths
         @verbose = verbose
         @log_to_stdout = log_to_stdout
         @log_path = log_path
         @report_json_path = report_json_path
+        @core_version = core_version
+        @sxls = sxls
       end
 
       def run
@@ -23,6 +25,8 @@ module RSMP
       private
 
       def run_with_args
+        RSMP::Validator.core_version_override = @core_version
+        RSMP::Validator.sxls_override = @sxls
         config = validator_config_class.load
         config.log_to_stdout = @log_to_stdout
         config.log_path = @log_path
@@ -31,6 +35,9 @@ module RSMP
         return run_with_log_file(config, registry) if @log_path && config.verbose?
 
         run_with_default_output(config, registry)
+      ensure
+        RSMP::Validator.core_version_override = nil
+        RSMP::Validator.sxls_override = nil
       end
 
       def sus_args

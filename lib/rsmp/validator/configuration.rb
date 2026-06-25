@@ -19,15 +19,15 @@ module RSMP
           missing_message: "#{mode.capitalize} config file #{config_path} is missing"
         )
 
-        apply_env_overrides!(raw_config)
+        apply_cli_overrides!(raw_config)
         options = build_tester_options(raw_config, config_path)
         apply_loaded_config(options)
         validate_and_finalize_config!(config_path)
       end
 
-      def apply_env_overrides!(raw_config)
-        raw_config['core_version'] = ENV['CORE_VERSION'] if ENV['CORE_VERSION']
-        raw_config['sxls'] = parse_sxls(ENV['SXLS']) if ENV['SXLS']
+      def apply_cli_overrides!(raw_config)
+        raw_config['core_version'] = core_version_override if core_version_override
+        raw_config['sxls'] = parse_sxls(sxls_override) if sxls_override
       end
 
       def validate_and_finalize_config!(config_path)
@@ -49,7 +49,7 @@ module RSMP
           using_message: '',
           missing_message: "Auto #{mode} config file #{path} is missing"
         )
-        raw_config['sxls'] = parse_sxls(ENV['SXLS']) if ENV['SXLS']
+        raw_config['sxls'] = parse_sxls(sxls_override) if sxls_override
         options_class = auto_node_options_class_for(raw_config)
         options = build_options_from_raw(raw_config, path, options_class)
         self.auto_node_config = options.to_h
@@ -118,7 +118,7 @@ module RSMP
       def parse_sxls(value)
         value.split(',').each_with_object({}) do |item, memo|
           parts = item.split(':')
-          abort_with_error "Invalid SXLS item #{item.inspect}, expected name:version" unless parts.length == 2
+          abort_with_error "Invalid --sxls item #{item.inspect}, expected name:version" unless parts.length == 2
 
           name, version = parts
           memo[name] = version

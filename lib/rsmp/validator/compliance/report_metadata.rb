@@ -42,7 +42,7 @@ module RSMP
 
         def matrix
           values = {
-            'core' => config_value('core_version') || env_value('CORE_VERSION'),
+            'core' => config_value('core_version'),
             'os' => env_value('RUNNER_OS')
           }.compact
           sxls = ConfigSxls.new(@config).to_h

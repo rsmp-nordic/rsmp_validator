@@ -46,4 +46,15 @@ describe 'Validator CLI' do
     expect(result.status).to be == 1
     expect(result.error).to be(:include?, 'Could not find command')
   end
+
+  it 'parses core and sxls options after paths' do
+    result = RSMP::Validator::RunOptions.parse(
+      ['test/site', '--core', '3.3.0', '--sxls=tlc:1.3.0,vms:1.0.0'],
+      thor_options: {}
+    )
+
+    expect(result[:paths]).to be == ['test/site']
+    expect(result[:core_version]).to be == '3.3.0'
+    expect(result[:sxls]).to be == 'tlc:1.3.0,vms:1.0.0'
+  end
 end

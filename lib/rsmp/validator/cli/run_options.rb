@@ -16,7 +16,9 @@ module RSMP
           verbose: thor_options[:verbose],
           log_to_stdout: thor_options[:log],
           log_path: thor_options[:log_path],
-          report_json_path: thor_options[:report_json]
+          report_json_path: thor_options[:report_json],
+          core_version: thor_options[:core],
+          sxls: thor_options[:sxls]
         }
       end
 
@@ -41,6 +43,10 @@ module RSMP
         when /\A--log-path=(.+)\z/ then @parsed[:log_path] = Regexp.last_match(1)
         when '--report-json' then @parsed[:report_json_path] = required_option_value(arg, remaining)
         when /\A--report-json=(.+)\z/ then @parsed[:report_json_path] = Regexp.last_match(1)
+        when '--core' then @parsed[:core_version] = required_option_value(arg, remaining)
+        when /\A--core=(.+)\z/ then @parsed[:core_version] = Regexp.last_match(1)
+        when '--sxls' then @parsed[:sxls] = required_option_value(arg, remaining)
+        when /\A--sxls=(.+)\z/ then @parsed[:sxls] = Regexp.last_match(1)
         else @parsed[:paths] << arg
         end
       end

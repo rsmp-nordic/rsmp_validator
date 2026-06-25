@@ -40,7 +40,8 @@ module RSMP
       include RSMP::Logging
 
       attr_accessor :config, :config_log_settings, :mode, :logger, :auto_node_config,
-                    :auto_node_log_settings, :auto_node, :node_log_settings
+                    :auto_node_log_settings, :auto_node, :node_log_settings,
+                    :core_version_override, :sxls_override
     end
 
     # Get the global Async reactor used for RSMP communication
