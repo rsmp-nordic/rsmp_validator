@@ -48,10 +48,10 @@ jobs:
       run: |
         bundle exec rsmp-validator run test/supervisor \
         --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
-        --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json
+        --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json \
+        --core ${{ matrix.core}}
       env:
         SUPERVISOR_CONFIG: config/tecsen_tmacs_supervisor.yaml
-        CORE_VERSION: ${{ matrix.core}}
 
     - name: Show detailed log
       shell: bash

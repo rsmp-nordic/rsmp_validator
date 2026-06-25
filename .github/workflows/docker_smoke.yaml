@@ -25,6 +25,5 @@ jobs:
         docker run --rm \
           -e SITE_CONFIG=config/gem_tlc.yaml \
           -e AUTO_SITE_CONFIG=config/simulator/tlc.yaml \
-          -e CORE_VERSION=3.3.0 \
           rsmp-validator:smoke \
-          run test/site/core/connect_spec.rb --verbose
+          run test/site/core/connect_spec.rb --verbose --core 3.3.0

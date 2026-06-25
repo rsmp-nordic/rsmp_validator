@@ -77,7 +77,7 @@ module RSMP
         end
 
         def normalize_core_version!
-          core_version = ENV['CORE_VERSION'] || config['core_version'] || RSMP::Schema.latest_core_version
+          core_version = config['core_version'] || RSMP::Schema.latest_core_version
           core_version = RSMP::Schema.latest_core_version if core_version == 'latest'
 
           known_versions = RSMP::Schema.core_versions

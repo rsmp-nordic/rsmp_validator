@@ -45,6 +45,18 @@ You can pass one or more paths to the `rsmp-validator run` command to select whi
 % SITE_CONFIG=config/gem_tlc.yaml AUTO_SITE_CONFIG=config/simulator/tlc.yaml bundle exec rsmp-validator run test/site/core test/site/tlc/clock_spec.rb
 ```
 
+You can override the configured Core and SXL versions for a run without editing the YAML config:
+
+```console
+% SITE_CONFIG=config/gem_tlc.yaml bundle exec rsmp-validator run test/site --core 3.3.0 --sxls tlc:1.3.0
+```
+
+Use a comma-separated `name:version` list to test with several SXLs:
+
+```console
+% SITE_CONFIG=config/gem_tlc.yaml bundle exec rsmp-validator run test/site --sxls tlc:1.3.0,vms:1.0.0
+```
+
 ### Running tests against a local RSMP site
 
 There are two ways to test against a local RSMP site:

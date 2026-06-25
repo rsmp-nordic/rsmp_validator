@@ -13,6 +13,8 @@ module RSMP
       method_option :log, type: :boolean, desc: 'Print RSMP log output to stdout'
       method_option :log_path, type: :string, desc: 'Write RSMP log output to PATH'
       method_option :report_json, type: :string, desc: 'Write a machine-readable compliance report to PATH'
+      method_option :core, type: :string, desc: 'Override RSMP Core version for this run'
+      method_option :sxls, type: :string, desc: 'Override SXL versions as name:version,...'
       def run_tests(*paths)
         run_options = RunOptions.parse(paths, thor_options: options)
         if run_options[:log_to_stdout] && run_options[:log_path]
@@ -24,7 +26,9 @@ module RSMP
           verbose: run_options[:verbose],
           log_to_stdout: run_options[:log_to_stdout],
           log_path: run_options[:log_path],
-          report_json_path: run_options[:report_json_path]
+          report_json_path: run_options[:report_json_path],
+          core_version: run_options[:core_version],
+          sxls: run_options[:sxls]
         ).run
         exit status
       end

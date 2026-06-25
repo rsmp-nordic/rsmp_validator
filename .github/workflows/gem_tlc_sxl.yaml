@@ -46,19 +46,18 @@ jobs:
       run: |
         bundle exec rsmp site \
         --config config/simulator/tlc.yaml \
+        --sxls tlc:${{ matrix.sxl }} \
         2>&1 > simulator-${{ steps.log_id.outputs.LOG_ID }}.log \
         &
-      env:
-        SXLS: tlc:${{ matrix.sxl }}
 
     - name: Run tests
       shell: bash
       run: |
         bundle exec rsmp-validator run test/site \
         --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
-        --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json
+        --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json \
+        --sxls tlc:${{ matrix.sxl }}
       env:
-        SXLS: tlc:${{ matrix.sxl }}
         SITE_CONFIG: config/gem_tlc.yaml
 
     - name: Show detailed log

@@ -45,6 +45,12 @@ SITE_CONFIG=config/my_site_validation_config.yaml bundle exec rsmp-validator run
 
 If the relevant environment variable is set, the file `config/validator.yaml` will not be read.
 
+Core and SXL versions are normally read from the selected config file. For temporary test runs, you can override them with command-line options:
+
+```console
+% SITE_CONFIG=config/my_site_validation_config.yaml bundle exec rsmp-validator run test/site --core 3.3.0 --sxls tlc:1.3.0
+```
+
 ## Options for Site testing
 The config is used to start the local supervisor that will communicate with the site you're testing, and it also includes validator-only options like timeouts and items to test.
 
