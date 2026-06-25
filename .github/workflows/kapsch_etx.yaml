@@ -49,9 +49,8 @@ jobs:
         bundle exec rsmp-validator run test/site \
         --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
         --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json \
+        --site-config config/kapsch_etx.yaml \
         --core ${{ matrix.core}}
-      env:
-        SITE_CONFIG: config/kapsch_etx.yaml
 
     - name: Show detailed log
       shell: bash

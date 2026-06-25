@@ -50,9 +50,8 @@ jobs:
       shell: bash
       run: |
         bundle exec rsmp-validator run test/supervisor \
-        --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log
-      env:
-        SUPERVISOR_CONFIG: config/gem_supervisor.yaml
+        --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
+        --supervisor-config config/gem_supervisor.yaml
 
     - name: Show detailed log
       shell: bash

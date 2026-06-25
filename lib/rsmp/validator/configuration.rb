@@ -58,17 +58,17 @@ module RSMP
 
       def get_config_path(local: false)
         mode_name = mode.to_s
-        config_path = get_config_path_from_env(mode_name) || get_config_path_from_validator_yaml(mode_name)
+        config_path = config_path_option(mode_name) || get_config_path_from_validator_yaml(mode_name)
         abort_with_error "#{mode_name.capitalize} config path not set" unless config_path && config_path != ''
 
         config_path = File.expand_path(config_path) if local
+        self.config_path = config_path
         config_path
       end
 
       def auto_node_config_path
-        env_key = mode == :site ? 'AUTO_SITE_CONFIG' : 'AUTO_SUPERVISOR_CONFIG'
-        env_path = ENV.fetch(env_key, nil)
-        return env_path if env_path && !env_path.empty?
+        option_path = auto_config_path_option(mode.to_s)
+        return option_path if option_path && !option_path.empty?
 
         ref_path = 'config/validator.yaml'
         return nil unless File.exist? ref_path
@@ -98,9 +98,18 @@ module RSMP
 
       private
 
-      def get_config_path_from_env(mode_name)
-        key = "#{mode_name.upcase}_CONFIG"
-        ENV.fetch(key, nil)
+      def config_path_option(mode_name)
+        case mode_name
+        when 'site' then site_config_path
+        when 'supervisor' then supervisor_config_path
+        end
+      end
+
+      def auto_config_path_option(mode_name)
+        case mode_name
+        when 'site' then auto_site_config_path
+        when 'supervisor' then auto_supervisor_config_path
+        end
       end
 
       def get_config_path_from_validator_yaml(mode_name)
