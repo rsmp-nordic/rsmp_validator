@@ -79,7 +79,7 @@ describe 'Site::Tlc::EmergencyRoutes' do
       emergency_routes.each do |emergency_route|
         site_proxy.tlc.set_emergency_route(route: emergency_route.to_s, active: true, within: timeout)
       end
-      routes = emergency_routes.map { |i| { 'id' => i.to_s } }
+      routes = emergency_routes.map { |i| { 'id' => i.to_i } }
       wait_for_status(site_proxy, "emergency routes #{emergency_routes} to be enabled",
                       [{ 'sCI' => 'S0035', 'n' => 'emergencyroutes', 's' => routes }])
     end

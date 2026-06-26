@@ -98,7 +98,7 @@ module RSMP
           yield
           handle_startup_sequence_result(collector_task.wait, sequencer, collector, timeout)
           wait_for_status(site_proxy, 'control mode to be startup',
-                          [{ 'sCI' => 'S0020', 'n' => 'controlmode', 's' => 'control' }])
+                          [{ 'sCI' => 'S0020', 'n' => 'controlmode', 's' => ['control'] }])
         ensure
           site_proxy.unsubscribe_to_status unsubscribe_list, component: component
         end
