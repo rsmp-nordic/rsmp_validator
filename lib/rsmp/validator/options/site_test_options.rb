@@ -66,7 +66,6 @@ module RSMP
           %w[
             sxls
             core_version
-            rsmp_versions
             intervals
             timeouts
             components

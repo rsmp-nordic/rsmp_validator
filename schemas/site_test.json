@@ -16,12 +16,6 @@
       "propertyNames": { "not": { "const": "core" } },
       "additionalProperties": { "type": "string" }
     },
-    "rsmp_versions": {
-      "oneOf": [
-        { "type": "string" },
-        { "type": "array", "items": { "type": "string" } }
-      ]
-    },
     "timeouts": { "type": "object" },
     "components": { "type": "object" },
     "items": { "type": "object" },

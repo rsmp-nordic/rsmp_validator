@@ -23,7 +23,7 @@ describe 'Supervisor' do
       timeout = RSMP::Validator.get_config('timeouts', 'ready')
       got_messages = nil
       with_supervisor(:isolated,
-                      'rsmp_versions' => [core_version],
+                      'core_version' => core_version,
                       'collect' => {
                         **connection_collect_options(timeout, length)
                       }) do |supervisor_proxy|
