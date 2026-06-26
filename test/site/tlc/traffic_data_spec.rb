@@ -87,12 +87,12 @@ describe 'Site::Tlc::TrafficData' do
       occupancies = result.matcher_got_hash.dig('S0207', 'occupancy')
       start = result.matcher_got_hash.dig('S0207', 'start')
 
-      expect(occupancies).to be_a(String)
+      expect(occupancies).to be_a(Array)
       expect(start).to be_a(String)
 
-      occupancies.split(',').each do |occupancy|
-        num = occupancy.to_i
-        assert((-1..100).cover?(num), "Occupancy must be in the range -1..100, got #{num}")
+      occupancies.each do |occupancy|
+        assert(occupancy.is_a?(Integer), "Occupancy must be an Integer, got #{occupancy.class}")
+        assert((-1..100).cover?(occupancy), "Occupancy must be in the range -1..100, got #{occupancy}")
       end
     end
   end
