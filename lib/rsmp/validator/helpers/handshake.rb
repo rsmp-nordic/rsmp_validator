@@ -28,7 +28,7 @@ module RSMP
 
           RSMP::Validator::SiteTester.isolated(
             'collect' => { timeout: timeout, num: length, ingoing: true, outgoing: true },
-            'sites' => { 'default' => { 'rsmp_versions' => [core_version] } }
+            'sites' => { 'default' => { 'core_version' => core_version } }
           ) do |task, _supervisor, site|
             assert(site.ready?, 'expected site to be ready')
             collector = site.collector
