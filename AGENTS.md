@@ -21,6 +21,13 @@ This repository contains the RSMP Validator, a Ruby gem for testing RSMP site an
 
 Always run gem executables through `bundle exec` so the correct bundle is used.
 
+To more detailed logging when running site/supervisor tests, use the --log options. This will show all RSMP messages send/received,
+errors, etc:
+
+- `bundle exec rsmp-validator run test/site --log`
+- `bundle exec rsmp-validator run test/site --log`
+
+
 ## Conformance Notes
 
 - Test direction is inferred from the path: `test/site/` tests sites, and `test/supervisor/` tests supervisors.
