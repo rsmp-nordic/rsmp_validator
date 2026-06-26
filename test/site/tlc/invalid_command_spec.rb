@@ -12,8 +12,8 @@ describe 'Site::Tlc::InvalidCommand' do
       command_list = RSMP::CommandList.new(:M0001, :setValue,
                                            securityCode: RSMP::Validator.get_config('secrets', 'security_codes', 2),
                                            status: 'NormalControl',
-                                           timeout: 0,
-                                           intersection: 0).to_a
+                                           timeout: '0',
+                                           intersection: '0').to_a
       result = site_proxy.send_command_and_collect(
         command_list,
         component: 'bad',
