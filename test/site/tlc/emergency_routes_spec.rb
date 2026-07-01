@@ -43,9 +43,9 @@ describe 'Site::Tlc::EmergencyRoutes' do
       end
       wait_for_status(site_proxy, "emergency route #{emergency_routes.last} to be enabled",
                       [
-                        { 'sCI' => 'S0006', 'n' => 'status', 's' => (state ? 'True' : 'False') },
+                        { 'sCI' => 'S0006', 'n' => 'status', 's' => state },
                         { 'sCI' => 'S0006', 'n' => 'emergencystage',
-                          's' => (state ? emergency_routes.last.to_s : '0') }
+                          's' => (state ? emergency_routes.last.to_i : 0) }
                       ])
     end
 
