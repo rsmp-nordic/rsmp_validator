@@ -87,10 +87,20 @@ describe 'Site::Tlc::TrafficData' do
       occupancies = result.matcher_got_hash.dig('S0207', 'occupancy')
       start = result.matcher_got_hash.dig('S0207', 'start')
 
-      expect(occupancies).to be_a(Array)
       expect(start).to be_a(String)
 
-      occupancies.each do |occupancy|
+      occupancy_values = if RSMP::Validator.sxl_matches?('<1.1')
+                           expect(occupancies).to be_a(String)
+                           occupancies.split(',').map do |occupancy|
+                             assert(occupancy.match?(/\A-?\d+\z/), "Occupancy must be an Integer, got #{occupancy}")
+                             occupancy.to_i
+                           end
+                         else
+                           expect(occupancies).to be_a(Array)
+                           occupancies
+                         end
+
+      occupancy_values.each do |occupancy|
         assert(occupancy.is_a?(Integer), "Occupancy must be an Integer, got #{occupancy.class}")
         assert((-1..100).cover?(occupancy), "Occupancy must be in the range -1..100, got #{occupancy}")
       end
