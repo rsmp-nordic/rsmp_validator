@@ -2,26 +2,29 @@ require 'sus'
 require 'sus/config'
 require_relative '../compliance/report'
 require_relative 'tee_io'
+require_relative 'validator_overrides'
 
 module RSMP
   module Validator
     # Runs the conformance test suite through Sus while preserving validator
     # specific options that Sus does not know about.
     class Runner
-      def initialize(paths:, verbose:, log_to_stdout:, log_path:, report_json_path:, core_version:, sxls:,
-                     site_config_path:, supervisor_config_path:, auto_site_config_path:,
-                     auto_supervisor_config_path:)
-        @paths = paths
-        @verbose = verbose
-        @log_to_stdout = log_to_stdout
-        @log_path = log_path
-        @report_json_path = report_json_path
-        @core_version = core_version
-        @sxls = sxls
-        @site_config_path = site_config_path
-        @supervisor_config_path = supervisor_config_path
-        @auto_site_config_path = auto_site_config_path
-        @auto_supervisor_config_path = auto_supervisor_config_path
+      include ValidatorOverrides
+
+      def initialize(options)
+        @paths = options[:paths]
+        @verbose = options[:verbose]
+        @log_to_stdout = options[:log_to_stdout]
+        @log_path = options[:log_path]
+        @report_json_path = options[:report_json_path]
+        @overrides = options.slice(
+          :core_version,
+          :sxls,
+          :site_config_path,
+          :supervisor_config_path,
+          :auto_site_config_path,
+          :auto_supervisor_config_path
+        )
       end
 
       def run
@@ -31,12 +34,7 @@ module RSMP
       private
 
       def run_with_args
-        RSMP::Validator.core_version_override = @core_version
-        RSMP::Validator.sxls_override = @sxls
-        RSMP::Validator.site_config_path = @site_config_path
-        RSMP::Validator.supervisor_config_path = @supervisor_config_path
-        RSMP::Validator.auto_site_config_path = @auto_site_config_path
-        RSMP::Validator.auto_supervisor_config_path = @auto_supervisor_config_path
+        apply_overrides(@overrides)
         config = validator_config_class.load
         config.log_to_stdout = @log_to_stdout
         config.log_path = @log_path
@@ -46,13 +44,7 @@ module RSMP
 
         run_with_default_output(config, registry)
       ensure
-        RSMP::Validator.core_version_override = nil
-        RSMP::Validator.sxls_override = nil
-        RSMP::Validator.site_config_path = nil
-        RSMP::Validator.supervisor_config_path = nil
-        RSMP::Validator.auto_site_config_path = nil
-        RSMP::Validator.auto_supervisor_config_path = nil
-        RSMP::Validator.config_path = nil
+        clear_overrides(@overrides)
       end
 
       def sus_args

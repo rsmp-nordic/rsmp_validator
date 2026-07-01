@@ -25,19 +25,7 @@ module RSMP
           raise Thor::Error, '--log and --log-path cannot be used together'
         end
 
-        status = Runner.new(
-          paths: run_options[:paths],
-          verbose: run_options[:verbose],
-          log_to_stdout: run_options[:log_to_stdout],
-          log_path: run_options[:log_path],
-          report_json_path: run_options[:report_json_path],
-          core_version: run_options[:core_version],
-          sxls: run_options[:sxls],
-          site_config_path: run_options[:site_config_path],
-          supervisor_config_path: run_options[:supervisor_config_path],
-          auto_site_config_path: run_options[:auto_site_config_path],
-          auto_supervisor_config_path: run_options[:auto_supervisor_config_path]
-        ).run
+        status = Runner.new(run_options).run
         exit status
       end
       map 'run' => :run_tests
