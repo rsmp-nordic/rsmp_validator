@@ -2,6 +2,7 @@ require 'yaml'
 require_relative 'configuration/loader'
 require_relative 'configuration/validation'
 require_relative 'configuration/secrets'
+require_relative 'configuration/sxls_override'
 
 module RSMP
   module Validator
@@ -10,6 +11,7 @@ module RSMP
       include Loader
       include Validation
       include Secrets
+      include SxlsOverride
 
       def load_tester_config
         config_path = get_config_path
@@ -122,16 +124,6 @@ module RSMP
 
       def warning(message)
         log "Warning: #{message}", level: :warning
-      end
-
-      def parse_sxls(value)
-        value.split(',').each_with_object({}) do |item, memo|
-          parts = item.split(':')
-          abort_with_error "Invalid --sxls item #{item.inspect}, expected name:version" unless parts.length == 2
-
-          name, version = parts
-          memo[name] = version
-        end
       end
     end
   end

@@ -53,6 +53,8 @@ module RSMP
 
         private
 
+        attr_reader :config_path
+
         def env_target_metadata
           env_hash(
             'id' => 'COMPLIANCE_TARGET_ID',
@@ -70,10 +72,6 @@ module RSMP
 
         def env_hash(mapping)
           mapping.transform_values { |name| env_value(name) }.compact
-        end
-
-        def config_path
-          @config_path
         end
 
         def config_value(name)
