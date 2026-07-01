@@ -41,9 +41,9 @@ it 'can be activated with M0005 and read with S0006' do
     end
     wait_for_status(site_proxy, "emergency route #{emergency_routes.last} to be enabled",
                     [
-                      { 'sCI' => 'S0006', 'n' => 'status', 's' => (state ? 'True' : 'False') },
+                      { 'sCI' => 'S0006', 'n' => 'status', 's' => state },
                       { 'sCI' => 'S0006', 'n' => 'emergencystage',
-                        's' => (state ? emergency_routes.last.to_s : '0') }
+                        's' => (state ? emergency_routes.last.to_i : 0) }
                     ])
   end
   with_site(:connected) do |site_proxy|
@@ -123,7 +123,7 @@ it 'emergency routes can be activated with M0005 and read with S0035' do
     emergency_routes.each do |emergency_route|
       site_proxy.tlc.set_emergency_route(route: emergency_route.to_s, active: true, within: timeout)
     end
-    routes = emergency_routes.map { |i| { 'id' => i.to_s } }
+    routes = emergency_routes.map { |i| { 'id' => i.to_i } }
     wait_for_status(site_proxy, "emergency routes #{emergency_routes} to be enabled",
                     [{ 'sCI' => 'S0035', 'n' => 'emergencyroutes', 's' => routes }])
   end
