@@ -75,7 +75,7 @@ GEM
     rainbow (3.1.1)
     rake (13.4.2)
     regexp_parser (2.12.0)
-    rsmp (0.48.2)
+    rsmp (0.48.3)
       async (~> 2.39)
       colorize (~> 1.1)
       io-endpoint (~> 0.17)
@@ -163,7 +163,7 @@ CHECKSUMS
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
   regexp_parser (2.12.0) sha256=35a916a1d63190ab5c9009457136ae5f3c0c7512d60291d0d1378ba18ce08ebb
-  rsmp (0.48.2) sha256=16c544a98b26dab01f45a012905ec9acc0789b03d7143ec9c1229febbc693e22
+  rsmp (0.48.3) sha256=15db3d2cc3501d8def6bd8c1e1dd9ca5bbef381a7361cbe62bd974c513ffb768
   rsmp-validator (0.2.0)
   rubocop (1.88.0) sha256=e420ddf1662d0ef34bc8a2910ac4b396a7ddda0b51a708264405241734b08e0b
   rubocop-ast (1.49.1) sha256=4412f3ee70f6fe4546cc489548e0f6fcf76cafcfa80fa03af67098ffed755035
