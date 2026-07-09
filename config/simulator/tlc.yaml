@@ -3,6 +3,11 @@ site_id: RN+SI0001
 supervisors:
   - ip: 127.0.0.1
     port: 13111
+    secure:
+      id: supervisor
+secure:
+  enabled: true
+  profile: rsmp-secure-v1
 sxls:
   # Start on the newest version; accept testing hints for the other supported versions.
   tlc: ['1.3.0', '1.2.1', '1.2.0', '1.1.0', '1.0.15', '1.0.14', '1.0.13', '1.0.10', '1.0.9', '1.0.8', '1.0.7']

@@ -12,6 +12,15 @@ local_site:
   supervisors:
     - ip: 127.0.0.1
       port: 13111
+      secure:
+        id: supervisor
+        public_key: config/simulator/secure/supervisor.pub
+        credential: config/simulator/secure/supervisor.cred
+  secure:
+    enabled: true
+    profile: rsmp-secure-v1
+    private_key: config/simulator/secure/RN+SI0001.private.key
+    credential: config/simulator/secure/RN+SI0001.cred
   intervals:
     timer: 0.1
     watchdog: 0.1

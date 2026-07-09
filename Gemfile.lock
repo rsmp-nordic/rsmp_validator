@@ -1,3 +1,23 @@
+GIT
+  remote: https://github.com/emiltin/ruby-edhoc.git
+  revision: 1d8b70711dade809514a4d2432ce7505b4c336db
+  branch: suite4
+  specs:
+    edhoc (0.1.0)
+
+PATH
+  remote: ../rsmp
+  specs:
+    rsmp (0.51.1)
+      async (~> 2.45)
+      colorize (~> 1.1)
+      io-endpoint (~> 0.17)
+      io-stream (~> 0.13)
+      json_schemer (~> 2.5)
+      logger (~> 1.7)
+      ostruct (~> 0.6)
+      thor (~> 1.5)
+
 PATH
   remote: .
   specs:
@@ -76,15 +96,6 @@ GEM
     rainbow (3.1.1)
     rake (13.4.2)
     regexp_parser (2.13.4)
-    rsmp (0.54.1)
-      async (~> 2.45)
-      colorize (~> 1.1)
-      io-endpoint (~> 0.17)
-      io-stream (~> 0.13)
-      json_schemer (~> 2.5)
-      logger (~> 1.7)
-      ostruct (~> 0.6)
-      thor (~> 1.5)
     rubocop (1.92.3)
       json (>= 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -123,8 +134,9 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   colorize
+  edhoc!
   rake
-  rsmp
+  rsmp!
   rsmp-validator!
   rubocop
   sus
@@ -142,6 +154,7 @@ CHECKSUMS
   connection_pool (3.0.3) sha256=e0f8ee3ee0039396753e06e8a2dde0ef028e40f7df29e97f57da7577c489cb5e
   console (1.38.0) sha256=35b82f59130e95e9be6b832d9e539c8b3988fc192e4a8e9a86ab4922f44ad5de
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
+  edhoc (0.1.0)
   fiber-annotation (0.2.0) sha256=7abfadf1d119f508867d4103bf231c0354d019cc39a5738945dec2edadaf6c03
   fiber-local (1.1.0) sha256=c885f94f210fb9b05737de65d511136ea602e00c5105953748aa0f8793489f06
   fiber-storage (1.0.1) sha256=f48e5b6d8b0be96dac486332b55cee82240057065dc761c1ea692b2e719240e1
@@ -166,7 +179,7 @@ CHECKSUMS
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
   regexp_parser (2.13.4) sha256=1d0547814f57e6f00946957bd0ca201bc42f42cfb08eee89df60998aedcd8a3b
-  rsmp (0.54.1) sha256=56f51075fa8d21b277d14394329df87cd391a6fbd3bdeef0e6be022bdeb74cae
+  rsmp (0.51.1)
   rsmp-validator (0.4.0)
   rubocop (1.92.3) sha256=fd77feac46e8e91c3a534f868a1702c59f5bf8173515fd00a3c6ce1198672ff6
   rubocop-ast (1.53.0) sha256=027984d28485d6502ae4c72f9341080f54f538599f5dbb54f81875a4ddcad574
