@@ -5,7 +5,8 @@ gemspec
 # runtime dependencies
 gem 'activesupport'
 gem 'colorize'
-gem 'rsmp'
+gem 'edhoc', github: 'emiltin/ruby-edhoc', branch: 'suite4'
+gem 'rsmp', path: '../rsmp'
 gem 'sus'
 gem 'sus-fixtures-async'
 gem 'thor'

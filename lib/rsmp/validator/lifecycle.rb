@@ -90,9 +90,9 @@ module RSMP
         error
       end
 
-      def abort_startup(exception, message)
+      def abort_startup(_exception, message)
         warn "Aborting: #{message}".colorize(:red)
-        raise exception
+        raise StartupError, message
       end
     end
   end
