@@ -1,12 +1,13 @@
 GIT
   remote: https://github.com/emiltin/ruby-edhoc.git
   revision: 1d8b70711dade809514a4d2432ce7505b4c336db
-  branch: suite4
   specs:
     edhoc (0.1.0)
 
-PATH
-  remote: ../rsmp
+GIT
+  remote: https://github.com/rsmp-nordic/rsmp.git
+  revision: 7a6760fe9e0c575aa4af2926494b6819da7188e6
+  branch: e2ee_edhoc
   specs:
     rsmp (0.51.1)
       async (~> 2.45)
