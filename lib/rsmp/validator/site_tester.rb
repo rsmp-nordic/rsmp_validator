@@ -64,6 +64,10 @@ module RSMP
         )
       end
 
+      def start_listener
+        start_and_wait_until_ready
+      end
+
       def wait_for_connection
         @proxy = @node.proxies.first
         return if @proxy
