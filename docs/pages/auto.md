@@ -3,7 +3,7 @@ layout: page
 title: Auto Node
 permalink: /auto/
 parent: Getting Started
-nav_order: 5
+nav_order: 6
 ---
 
 # Auto Node Feature
@@ -25,6 +25,8 @@ The auto site/supervisor runs inside the same Async reactor as the validator.
 ## Configuration
 There are two ways to enable the auto node feature.
 Command-line options take precedence over the `config/validator.yaml` file settings.
+
+To protect the connection to an auto node, both the validator's local endpoint and the auto node must be configured as described in [Using Secure RSMP]({{ site.baseurl}}{% link pages/secure.md %}).
 
 ### config/validator.yaml
 Add either `auto_site` or `auto_supervisor` to your `config/validator.yaml` file:

@@ -9,6 +9,8 @@ nav_order: 3
 # Configuration
 Before you run tests, you must set up a configuration for the equipment you want to test. 
 
+If the equipment uses the Secure RSMP transport, see [Using Secure RSMP]({{ site.baseurl}}{% link pages/secure.md %}) for credential provisioning and validator-specific configuration.
+
 For example, the validator needs to know the SXL (type of equipment), because the SXL is not sent by the equipment when connecting.
 
 ## Config files
