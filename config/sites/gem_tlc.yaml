@@ -40,7 +40,6 @@ local_supervisor:
         1: '1111'
         2: '2222'
       secure:
-        public_key: config/simulator/secure/RN+SI0001.pub
         credential: config/simulator/secure/RN+SI0001.cred
 sxls:
   tlc: '1.2.1'
