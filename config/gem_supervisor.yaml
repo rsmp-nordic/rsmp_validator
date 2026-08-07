@@ -14,7 +14,6 @@ local_site:
       port: 13111
       secure:
         id: supervisor
-        public_key: config/simulator/secure/supervisor.pub
         credential: config/simulator/secure/supervisor.cred
   secure:
     enabled: true

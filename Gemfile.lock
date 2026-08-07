@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: 2bc815d62dec788385e4a8a537c2334f9d5a10a3
+  revision: 99a282d1e2f9f81d904df113184d90735568f2fe
   branch: e2ee_edhoc
   specs:
     rsmp (0.48.4)
@@ -16,9 +16,10 @@ GIT
 
 GIT
   remote: https://github.com/rsmp-nordic/ruby-edhoc.git
-  revision: 2b97efbdb90351dfd6c71c95ad45cde6a7698afb
+  revision: b46ac4395f31b5eabd3f59e22016218ab5dab44a
+  branch: v1
   specs:
-    edhoc (0.2.0)
+    edhoc (1.0.0)
 
 PATH
   remote: .
@@ -154,7 +155,7 @@ CHECKSUMS
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
   console (1.37.0) sha256=8093b286c2595a063849c098594fee5155ecc7967d36f3aa8cbe7569c8f3efd7
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
-  edhoc (0.2.0)
+  edhoc (1.0.0)
   fiber-annotation (0.2.0) sha256=7abfadf1d119f508867d4103bf231c0354d019cc39a5738945dec2edadaf6c03
   fiber-local (1.1.0) sha256=c885f94f210fb9b05737de65d511136ea602e00c5105953748aa0f8793489f06
   fiber-storage (1.0.1) sha256=f48e5b6d8b0be96dac486332b55cee82240057065dc761c1ea692b2e719240e1
