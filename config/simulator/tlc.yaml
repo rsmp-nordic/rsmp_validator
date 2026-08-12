@@ -8,6 +8,7 @@ supervisors:
 secure:
   enabled: true
   profile: rsmp-secure-v1
+  log_decrypted_payloads: true
 sxls:
   tlc: '1.2.1'
 components:

@@ -40,7 +40,7 @@ describe 'Site::Tlc::InvalidCommand' do
   # 3. Then the site_proxy should return NotAck
 
   it 'returns NotAck if command code id is unknown' do
-    with_site(:connected) do |site_proxy|
+    with_site(:isolated) do |site_proxy|
       log 'Sending non-existing command M0000'
       command_list = RSMP::CommandList.new(:M0000, :bad, {}).to_a
       timeout = RSMP::Validator.get_config('timeouts', 'command_response')
@@ -61,7 +61,7 @@ describe 'Site::Tlc::InvalidCommand' do
   # 3. Then the site_proxy return NotAck
 
   it 'returns NotAck if attribute is missing' do
-    with_site(:connected) do |site_proxy|
+    with_site(:isolated) do |site_proxy|
       log "Sending M0001 with 'status' attribute missing"
       command_list = RSMP::CommandList.new(:M0001, :setValue,
                                            securityCode: '1111',
@@ -85,7 +85,7 @@ describe 'Site::Tlc::InvalidCommand' do
   # 3. Then the site_proxy should return NotAck
 
   it 'returns NotAck if command name is bad' do
-    with_site(:connected) do |site_proxy|
+    with_site(:isolated) do |site_proxy|
       log 'Sending M0001'
       # for M0001, cO should be :setValue, here we use the incorrect :bad
       command_list = RSMP::CommandList.new(:M0001, :bad,

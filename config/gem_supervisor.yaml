@@ -18,6 +18,7 @@ local_site:
   secure:
     enabled: true
     profile: rsmp-secure-v1
+    log_decrypted_payloads: true
     private_key: config/simulator/secure/RN+SI0001.private.key
     credential: config/simulator/secure/RN+SI0001.cred
   intervals:

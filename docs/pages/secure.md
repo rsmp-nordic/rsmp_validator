@@ -80,6 +80,7 @@ local_supervisor:
   secure:
     required: true
     profile: rsmp-secure-v1
+    log_decrypted_payloads: true
     private_key: config/private/secure/supervisor.private.key
     credential: config/private/secure/supervisor.cred
   sites:
@@ -125,6 +126,7 @@ local_site:
   secure:
     enabled: true
     profile: rsmp-secure-v1
+    log_decrypted_payloads: true
     private_key: config/private/secure/RN+SI0001.private.key
     credential: config/private/secure/RN+SI0001.cred
 
@@ -190,7 +192,16 @@ Then run the normal test path. No secure-specific test-selection option is requi
     --log
 ```
 
-With logging enabled, the connection log identifies the secure profile and reports completion of the secure handshake before the normal RSMP messages. RSMP messages are logged after decryption, so `--log` and `--log-path` remain useful for diagnosing application-level test failures.
+With logging enabled, the connection log identifies the secure profile and reports completion of the secure handshake before the normal RSMP messages.
+
+Decrypted Secure RSMP payload logging is a separate local policy and defaults
+to off. Set `log_decrypted_payloads: true` in the local endpoint's top-level
+`secure` block when application-level payloads are needed for validator
+development or diagnostics. The supplied `gem_*` and simulator configurations
+set it to `true`. This permits complete decrypted messages in the local archive
+and JSON logs; protect those logs and turn the setting off outside the intended
+diagnostic environment. Peer credential `secure` blocks do not need the
+setting.
 
 Use absolute credential paths if the validator may be launched from different working directories. The relative paths in this page assume it is launched from the repository root, as recommended for other validator commands.
 

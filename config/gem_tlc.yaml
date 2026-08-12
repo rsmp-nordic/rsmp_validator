@@ -15,6 +15,7 @@ local_supervisor:
   secure:
     required: true
     profile: rsmp-secure-v1
+    log_decrypted_payloads: true
     private_key: config/simulator/secure/supervisor.private.key
     credential: config/simulator/secure/supervisor.cred
   default:

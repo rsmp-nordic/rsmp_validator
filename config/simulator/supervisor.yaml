@@ -2,6 +2,7 @@ port: 13111
 secure:
   required: true
   profile: rsmp-secure-v1
+  log_decrypted_payloads: true
 sites:
   default:
     sxls:
