@@ -35,7 +35,7 @@ describe 'Site::Tlc::InvalidStatus' do
   # 2. When we send a non-existing S000 status request
   # 3. Then the site_proxy should return NotAck
   it 'returns NotAck when status code is unknown' do
-    with_site(:isolated) do |site_proxy|
+    with_site(:connected) do |site_proxy|
       log 'Requesting non-existing status S0000'
       expect do
         site_proxy.request_status_and_collect(
@@ -55,7 +55,7 @@ describe 'Site::Tlc::InvalidStatus' do
   # 2. When we send an S0001 request with the stauts name 'bad'
   # 3. Then the site_proxy should return NotAck
   it 'returns NotAck when status name is unknown' do
-    with_site(:isolated) do |site_proxy|
+    with_site(:connected) do |site_proxy|
       log 'Requesting S0001 with non-existing status name'
       expect do
         site_proxy.request_status_and_collect(

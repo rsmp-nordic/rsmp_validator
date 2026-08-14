@@ -69,7 +69,7 @@ describe 'Site::Tlc::System' do
   # 2. When we send a M0008 command with incorrect security codes
   # 3. Then we should received a NotAck
   it 'security code is rejected when incorrect' do
-    with_site(:isolated, sxl: '>=1.1') do |site_proxy|
+    with_site(:connected, sxl: '>=1.1') do |site_proxy|
       expect { wrong_security_code(site_proxy) }.to raise_exception(RSMP::MessageRejected)
     end
   end
