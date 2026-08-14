@@ -1,10 +1,11 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: bee6fe670f004795060b45894050aed92cd72e5e
+  revision: 9b4a355a973bef586213118a72731a620e880af3
   branch: e2ee_edhoc
   specs:
-    rsmp (0.51.1)
-      async (~> 2.45)
+    rsmp (0.48.4)
+      async (~> 2.39)
+      cbor (~> 0.5)
       colorize (~> 1.1)
       io-endpoint (~> 0.17)
       io-stream (~> 0.13)
@@ -54,6 +55,7 @@ GEM
       io-event (~> 1.21)
     base64 (0.3.0)
     bigdecimal (4.1.3)
+    cbor (0.5.10.3)
     colorize (1.1.0)
     concurrent-ruby (1.3.8)
     connection_pool (3.0.3)
@@ -151,6 +153,7 @@ CHECKSUMS
   async (2.46.0) sha256=34f984733dbf63a997376346451ec995e858cacc3105e86ccfeaf8877b4f490b
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bigdecimal (4.1.3) sha256=61ebe1e5e559bdc3cc6f2c0ee7f427321fc838f59611c294356eb04d6e21cf66
+  cbor (0.5.10.3) sha256=c3aa1d0c7e9bbffe8de4bed554f588d7926c62276ffe2dd7fabb65bae801d28a
   colorize (1.1.0) sha256=30b5237f0603f6662ab8d1fc2bd4a96142b806c6415d79e45ef5fdc6a0cfc837
   concurrent-ruby (1.3.8) sha256=b2f1be836e968ccc78ccfce277ea79c72a88633f22306782c16ff23fb415d1e1
   connection_pool (3.0.3) sha256=e0f8ee3ee0039396753e06e8a2dde0ef028e40f7df29e97f57da7577c489cb5e
@@ -181,7 +184,7 @@ CHECKSUMS
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
   regexp_parser (2.13.4) sha256=1d0547814f57e6f00946957bd0ca201bc42f42cfb08eee89df60998aedcd8a3b
-  rsmp (0.51.1)
+  rsmp (0.48.4)
   rsmp-validator (0.4.0)
   rubocop (1.92.3) sha256=fd77feac46e8e91c3a534f868a1702c59f5bf8173515fd00a3c6ce1198672ff6
   rubocop-ast (1.53.0) sha256=027984d28485d6502ae4c72f9341080f54f538599f5dbb54f81875a4ddcad574
