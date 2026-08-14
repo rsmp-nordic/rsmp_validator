@@ -49,6 +49,22 @@ module RSMP
         yield Async::Task.current
       end
 
+      # Start the tester node and wait until its listener is ready.
+      def start_and_wait_until_ready(options = {})
+        return if @node
+
+        @node = build_node options
+        ready_waiter = RSMP::Validator.reactor.async { @node.ready_condition.wait }
+        start_node_runner
+        timeout = config.dig('timeouts', 'connect')
+        Async::Task.current.with_timeout(timeout) { ready_waiter.wait }
+      rescue Async::TimeoutError
+        stop
+        raise RSMP::ConnectionError, "Tester node did not become ready within #{timeout}s"
+      ensure
+        ready_waiter&.stop
+      end
+
       # Stop the rsmp supervisor
       def stop(why = nil)
         if @node
@@ -71,10 +87,13 @@ module RSMP
       def start(options = {}, _why = nil)
         return if @node
 
+        @node = build_node options
+        start_node_runner
+      end
+
+      def start_node_runner
         RSMP::Validator.reactor.async do |task|
           task.annotate 'node runner'
-
-          @node = build_node options
 
           RSMP::Validator.reactor.async do |sentinel|
             sentinel.annotate 'sentinel'

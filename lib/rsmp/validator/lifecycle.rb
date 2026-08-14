@@ -80,7 +80,7 @@ module RSMP
       def run_startup_checks
         error = nil
         reactor.run do |_task|
-          auto_node&.start
+          start_auto_node
           check_connection
         rescue StandardError => e
           error = e
@@ -90,9 +90,14 @@ module RSMP
         error
       end
 
-      def abort_startup(exception, message)
+      def start_auto_node
+        SiteTester.instance.start_listener if mode == :site && auto_node
+        auto_node&.start
+      end
+
+      def abort_startup(_exception, message)
         warn "Aborting: #{message}".colorize(:red)
-        raise exception
+        raise StartupError, message
       end
     end
   end

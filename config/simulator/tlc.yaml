@@ -3,6 +3,12 @@ site_id: RN+SI0001
 supervisors:
   - ip: 127.0.0.1
     port: 13111
+    secure:
+      id: supervisor
+secure:
+  enabled: true
+  profile: rsmp-secure-v1
+  log_decrypted_payloads: true
 sxls:
   tlc: '1.2.1'
 components:

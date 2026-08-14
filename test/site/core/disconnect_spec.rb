@@ -34,6 +34,8 @@ describe 'Site::Core' do
     # 2. When our supervisor stops sending watchdogs
     # 3. Then the site should not disconnect
     it 'is not closed if watchdogs are not received' do
+      skip 'requires core >= 3.1.3' unless RSMP::Validator.core_matches?('>=3.1.3')
+
       with_site(:isolated, sxl: '>=1.0.7') do |site_proxy|
         timeout = RSMP::Validator.get_config('timeouts', 'disconnect')
 

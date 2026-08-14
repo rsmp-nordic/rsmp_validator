@@ -1,5 +1,6 @@
 require 'yaml'
 require_relative 'configuration/loader'
+require_relative 'configuration/overrides'
 require_relative 'configuration/validation'
 require_relative 'configuration/secrets'
 require_relative 'configuration/sxls_override'
@@ -9,6 +10,7 @@ module RSMP
     # Handles loading and validating validator configuration files.
     module Configuration
       include Loader
+      include Overrides
       include Validation
       include Secrets
       include SxlsOverride
@@ -25,11 +27,6 @@ module RSMP
         options = build_tester_options(raw_config, config_path)
         apply_loaded_config(options)
         validate_and_finalize_config!(config_path)
-      end
-
-      def apply_cli_overrides!(raw_config)
-        raw_config['core_version'] = core_version_override if core_version_override
-        raw_config['sxls'] = parse_sxls(sxls_override) if sxls_override
       end
 
       def validate_and_finalize_config!(config_path)

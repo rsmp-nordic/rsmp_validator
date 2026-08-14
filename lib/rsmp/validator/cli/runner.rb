@@ -91,6 +91,9 @@ module RSMP
         begin
           config.before_tests(assertions)
           registry.call(assertions)
+        rescue RSMP::Validator::StartupError
+          write_report(assertions)
+          return 1
         ensure
           config.after_tests(assertions)
         end

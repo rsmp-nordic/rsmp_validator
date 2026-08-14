@@ -1,4 +1,8 @@
 port: 13111
+secure:
+  required: true
+  profile: rsmp-secure-v1
+  log_decrypted_payloads: true
 sites:
   default:
     sxls:
@@ -9,3 +13,6 @@ sites:
     timeouts:
       watchdog: 0.5
       acknowledgement: 0.5
+  RN+SI0001:
+    sxls:
+      tlc: '1.2.1'

@@ -2,6 +2,10 @@ FROM ruby:4
 
 WORKDIR /app
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends cmake \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY .tool-versions Gemfile Gemfile.lock LICENSE rsmp-validator.gemspec ./
 COPY config config
 COPY exe exe

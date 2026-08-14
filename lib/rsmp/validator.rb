@@ -32,6 +32,8 @@ module RSMP
   # Main module for RSMP Validator functionality.
   # Handles configuration, logging, and coordination between sus and the RSMP gem.
   module Validator
+    class StartupError < StandardError; end
+
     extend Configuration
     extend Lifecycle
     extend ModeDetection

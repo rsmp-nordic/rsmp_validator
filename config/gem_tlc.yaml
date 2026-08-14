@@ -12,10 +12,36 @@ local_supervisor:
   ips: all
   max_sites: 1
   proxy_type: tlc
+  secure:
+    required: true
+    profile: rsmp-secure-v1
+    log_decrypted_payloads: true
+    private_key: config/simulator/secure/supervisor.private.key
+    credential: config/simulator/secure/supervisor.cred
   default:
     intervals:
       timer: 0.1
       watchdog: 0.1
+  sites:
+    RN+SI0001:
+      sxls:
+        tlc: '1.2.1'
+      components:
+        main:
+          TC:
+        signal_group:
+          A1:
+          A2:
+          B1:
+          B2:
+        detector_logic:
+          DL1:
+          DL2:
+      security_codes:
+        1: '1111'
+        2: '2222'
+      secure:
+        credential: config/simulator/secure/RN+SI0001.cred
 sxls:
   tlc: '1.2.1'
 timeouts:
