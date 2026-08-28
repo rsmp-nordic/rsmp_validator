@@ -107,8 +107,11 @@ describe 'Site::Tlc::Modes' do
   it 'fixed time control can be activated with M0007' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       timeout = RSMP::Validator.get_config('timeouts', 'command')
-      site_proxy.tlc.set_fixed_time('True', within: timeout)
-      site_proxy.tlc.set_fixed_time('False', within: timeout)
+      begin
+        site_proxy.tlc.set_fixed_time('True', within: timeout)
+      ensure
+        site_proxy.tlc.set_fixed_time('False', within: timeout)
+      end
     end
   end
 
@@ -169,12 +172,15 @@ describe 'Site::Tlc::Modes' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       yellow_flash_timeout = RSMP::Validator.get_config('timeouts', 'yellow_flash')
       startup_timeout = RSMP::Validator.get_config('timeouts', 'startup_sequence')
-      site_proxy.tlc.set_functional_position('YellowFlash', within: yellow_flash_timeout)
-      site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
+      begin
+        site_proxy.tlc.set_functional_position('YellowFlash', within: yellow_flash_timeout)
+      ensure
+        site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
+      end
     end
   end
 
-  # Verify that we can yellow flash causes all groups to go to state 'c'
+  # Verify that yellow flash causes all groups to go to state 'c'
   #
   # 1. Given the site_proxy is connected
   # 2. Send the control command to switch to Yellow flash
@@ -184,13 +190,16 @@ describe 'Site::Tlc::Modes' do
   it 'yellow flash affects all signal groups' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       timeout = RSMP::Validator.get_config('timeouts', 'yellow_flash')
-
-      site_proxy.tlc.set_functional_position('YellowFlash', within: timeout)
-      site_proxy.tlc.wait_for_groups 'c', timeout: timeout      # c means yellow flash
-
       startup_timeout = RSMP::Validator.get_config('timeouts', 'startup_sequence')
-      site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
-      site_proxy.tlc.wait_for_groups '[^c]', timeout: timeout   # not c, ie. not yellow flash
+
+      begin
+        site_proxy.tlc.set_functional_position('YellowFlash', within: timeout)
+        site_proxy.tlc.wait_for_groups 'c', timeout: timeout # c means yellow flash
+      ensure
+        site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
+      end
+
+      site_proxy.tlc.wait_for_groups '[^c]', timeout: timeout # not c, ie. not yellow flash
     end
   end
 
@@ -234,8 +243,11 @@ describe 'Site::Tlc::Modes' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       timeout = RSMP::Validator.get_config('timeouts', 'functional_position')
       startup_timeout = RSMP::Validator.get_config('timeouts', 'startup_sequence')
-      site_proxy.tlc.set_functional_position('Dark', within: timeout)
-      site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
+      begin
+        site_proxy.tlc.set_functional_position('Dark', within: timeout)
+      ensure
+        site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
+      end
     end
   end
 
@@ -249,12 +261,16 @@ describe 'Site::Tlc::Modes' do
   it 'can use yellow flash with a timeout of one minute' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       startup_timeout = RSMP::Validator.get_config('timeouts', 'startup_sequence')
-      site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
       minutes = 1
       timeout = RSMP::Validator.get_config('timeouts', 'yellow_flash')
-      site_proxy.tlc.set_functional_position('YellowFlash', timeout_minutes: minutes, within: timeout)
       fp_timeout = RSMP::Validator.get_config('timeouts', 'functional_position')
-      wait_normal_control(site_proxy, timeout: (minutes * 60) + fp_timeout)
+      begin
+        site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
+        site_proxy.tlc.set_functional_position('YellowFlash', timeout_minutes: minutes, within: timeout)
+        wait_normal_control(site_proxy, timeout: (minutes * 60) + fp_timeout)
+      ensure
+        site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
+      end
     end
   end
 end
