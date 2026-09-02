@@ -65,4 +65,32 @@ describe 'Validator CLI' do
     expect(result[:site_config_path]).to be == 'config/gem_tlc.yaml'
     expect(result[:auto_site_config_path]).to be == 'config/simulator/tlc.yaml'
   end
+
+  it 'returns a failure status for connection errors without propagating them' do
+    runner_class = Class.new(RSMP::Validator::Runner) do
+      private
+
+      def run_with_args
+        raise RSMP::ConnectionError, 'Could not connect'
+      end
+    end
+
+    runner = runner_class.new(paths: [], verbose: false)
+
+    expect(runner.run).to be == 1
+  end
+
+  it 'still propagates unexpected runner errors' do
+    runner_class = Class.new(RSMP::Validator::Runner) do
+      private
+
+      def run_with_args
+        raise 'Unexpected failure'
+      end
+    end
+
+    runner = runner_class.new(paths: [], verbose: false)
+
+    expect { runner.run }.to raise_exception(RuntimeError, message: be == 'Unexpected failure')
+  end
 end
