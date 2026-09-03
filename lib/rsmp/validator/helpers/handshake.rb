@@ -93,7 +93,7 @@ module RSMP
           case version
           when '3.1.1', '3.1.2', '3.1.3'
             check_sequence_v311_to_v313 version
-          when '3.1.4', '3.1.5', '3.2', '3.2.1', '3.2.2'
+          when '3.1.4', '3.1.5', '3.2.0', '3.2.1', '3.2.2'
             check_sequence_v314_or_later version
           when '3.3.0'
             check_sequence_v330 version

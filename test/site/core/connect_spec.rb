@@ -63,9 +63,9 @@ describe 'Site::Core' do
     # 2. When handshake messages are sent and received
     # 3. Then the handshake messages should be in the specified sequence corresponding to version 3.1.5
     # 4. And the connection sequence should be complete
-    it 'is correct for rsmp version 3.2' do
-      skip 'requires core == 3.2' unless RSMP::Validator.core_matches?('3.2')
-      check_sequence '3.2'
+    it 'is correct for rsmp version 3.2.0' do
+      skip 'requires core == 3.2.0' unless RSMP::Validator.core_matches?('3.2.0')
+      check_sequence '3.2.0'
     end
 
     # Verify the connection sequence when using rsmp core 3.2.1
