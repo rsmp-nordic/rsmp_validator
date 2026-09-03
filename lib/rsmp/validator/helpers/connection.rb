@@ -31,8 +31,8 @@ module RSMP
           else
             RSMP::Validator::SiteTester.public_send(state, **opts) do |_task, _node, proxy|
               block.call(proxy)
-            rescue RSMP::TimeoutError => e
-              @__assertions__.assert false, e.message
+            rescue RSMP::OperationError => e
+              @__assertions__.assert false, e.failure.message
             rescue StandardError => e
               @__assertions__.error!(UncaughtException.new(e))
             end
@@ -47,8 +47,8 @@ module RSMP
           else
             RSMP::Validator::SupervisorTester.public_send(state, **opts) do |_task, _node, proxy|
               block.call(proxy)
-            rescue RSMP::TimeoutError => e
-              @__assertions__.assert false, e.message
+            rescue RSMP::OperationError => e
+              @__assertions__.assert false, e.failure.message
             rescue StandardError => e
               @__assertions__.error!(UncaughtException.new(e))
             end

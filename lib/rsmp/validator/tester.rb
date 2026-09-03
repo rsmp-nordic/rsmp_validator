@@ -8,10 +8,6 @@ module RSMP
     class Tester
       include RSMP::Validator::Log
 
-      def self.sentinel_errors
-        @sentinel_errors ||= []
-      end
-
       def config
         RSMP::Validator.config
       end
@@ -22,7 +18,9 @@ module RSMP
       def connected(options = {})
         start options, 'Connecting'
         wait_for_proxy
-        yield Async::Task.current, @node, @proxy
+        result = yield Async::Task.current, @node, @proxy
+        check_health
+        result
       end
 
       # Disconnects the site if connected, then waits until the site is connected
@@ -31,7 +29,9 @@ module RSMP
         stop 'Reconnecting'
         start options
         wait_for_proxy
-        yield Async::Task.current, @node, @proxy
+        result = yield Async::Task.current, @node, @proxy
+        check_health
+        result
       end
 
       # Like connected, except that the connection is closed after the test.
@@ -51,42 +51,37 @@ module RSMP
 
       # Stop the rsmp supervisor
       def stop(why = nil)
-        if @node
-          log why if why
-          @node.ignore_errors RSMP::DisconnectError do
-            @node.stop
-          end
-        end
+        log why if why && @node
+        @node&.stop
+        @node_task&.wait
+        @node_task = nil
         @node = nil
         @proxy = nil
       end
 
+      def receive_event(event)
+        failure = event.failure
+        detail = failure ? "#{failure.code}: #{failure.message}" : event.type
+        log "Node event: #{detail}", level: :debug
+      end
+
       private
+
+      def check_health
+        @node_task.wait if @node_task&.failed?
+      end
 
       def initialize
         parse_config
       end
 
-      # Start the tester node inside an async task that will persist between tests.
+      # Start the tester node under the shared reactor's current task.
       def start(options = {}, _why = nil)
         return if @node
 
-        RSMP::Validator.reactor.async do |task|
-          task.annotate 'node runner'
-
-          @node = build_node options
-
-          RSMP::Validator.reactor.async do |sentinel|
-            sentinel.annotate 'sentinel'
-            while @node
-              e = @node.error_queue.dequeue
-              log "Sentinel warning: #{e.class}: #{e}"
-              self.class.sentinel_errors << e
-            end
-          end
-
-          @node.start
-        end
+        @node = build_node options
+        @node.add_event_receiver(self)
+        @node_task = @node.start(parent: Async::Task.current)
       end
 
       # Wait until communication has been established, and handshake completed.

@@ -1,4 +1,12 @@
 describe 'Site::Tlc::InvalidStatus' do
+  def expect_message_rejected(result)
+    expect(result).to be_a(RSMP::Result::Failure)
+    return unless result.failure?
+
+    expect(result.failure.code).to eq(:message_rejected)
+    expect(result.failure.source).to eq(:peer)
+  end
+
   # Verify that site_proxy reponds with q=undefined when receiving a
   # status request with an unknown component id.
   #
@@ -9,15 +17,14 @@ describe 'Site::Tlc::InvalidStatus' do
   it 'return a command response with age=undefined when component id is unknown' do
     with_site(:connected, core: '>=3.1.3') do |site_proxy|
       log 'Sending M0001 with bad component id'
-      collector = site_proxy.request_status_and_collect(
+      result = site_proxy.request_status_and_collect(
         { S0001: [:signalgroupstatus] },
         component: 'bad',
         within: RSMP::Validator.get_config('timeouts', 'status_response'),
         validate: false
       )
-      collector.ok!
-      expect(collector.status).to eq(:ok)
-      response = collector.messages.first
+      exchange = result.value!
+      response = exchange.messages.first
       expect(response).to be_a(RSMP::StatusResponse)
       ss = response.attributes['sS']
       expect(ss).to be_a(Array)
@@ -37,14 +44,13 @@ describe 'Site::Tlc::InvalidStatus' do
   it 'returns NotAck when status code is unknown' do
     with_site(:connected) do |site_proxy|
       log 'Requesting non-existing status S0000'
-      expect do
-        site_proxy.request_status_and_collect(
-          { S0000: [:status] },
-          component: RSMP::Validator.get_config('main_component'),
-          within: RSMP::Validator.get_config('timeouts', 'status_response'),
-          validate: false
-        ).ok!
-      end.to raise_exception(RSMP::MessageRejected)
+      result = site_proxy.request_status_and_collect(
+        { S0000: [:status] },
+        component: RSMP::Validator.get_config('main_component'),
+        within: RSMP::Validator.get_config('timeouts', 'status_response'),
+        validate: false
+      )
+      expect_message_rejected(result)
     end
   end
 
@@ -57,14 +63,13 @@ describe 'Site::Tlc::InvalidStatus' do
   it 'returns NotAck when status name is unknown' do
     with_site(:connected) do |site_proxy|
       log 'Requesting S0001 with non-existing status name'
-      expect do
-        site_proxy.request_status_and_collect(
-          { S0001: [:bad] },
-          component: RSMP::Validator.get_config('main_component'),
-          within: RSMP::Validator.get_config('timeouts', 'status_response'),
-          validate: false
-        ).ok!
-      end.to raise_exception(RSMP::MessageRejected)
+      result = site_proxy.request_status_and_collect(
+        { S0001: [:bad] },
+        component: RSMP::Validator.get_config('main_component'),
+        within: RSMP::Validator.get_config('timeouts', 'status_response'),
+        validate: false
+      )
+      expect_message_rejected(result)
     end
   end
 end

@@ -10,7 +10,7 @@ describe 'Site::Tlc::SignalGroups' do
     with_site(:connected, sxl: '>=1.0.8') do |site_proxy|
       component = RSMP::Validator.get_config('components', 'signal_group').keys[0]
       timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-      site_proxy.tlc.order_signal_start(component, within: timeout)
+      site_proxy.tlc.order_signal_start!(component, within: timeout)
     end
   end
 
@@ -21,7 +21,7 @@ describe 'Site::Tlc::SignalGroups' do
     with_site(:connected, sxl: '>=1.0.8') do |site_proxy|
       component = RSMP::Validator.get_config('components', 'signal_group').keys[0]
       timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-      site_proxy.tlc.order_signal_stop(component, within: timeout)
+      site_proxy.tlc.order_signal_stop!(component, within: timeout)
     end
   end
 
@@ -35,7 +35,7 @@ describe 'Site::Tlc::SignalGroups' do
       site_proxy.request_status_and_collect(
         { S0001: %i[signalgroupstatus cyclecounter basecyclecounter stage] },
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 
@@ -59,7 +59,7 @@ describe 'Site::Tlc::SignalGroups' do
         ] },
         component: component,
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 
@@ -71,7 +71,7 @@ describe 'Site::Tlc::SignalGroups' do
   it 'list size is read with S0017' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       site_proxy.request_status_and_collect({ S0017: [:number] },
-                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
   end
 
@@ -85,12 +85,12 @@ describe 'Site::Tlc::SignalGroups' do
     with_site(:connected) do |site_proxy|
       verify_startup_sequence(site_proxy) do
         timeout = RSMP::Validator.get_config('timeouts', 'yellow_flash')
-        site_proxy.tlc.set_functional_position('YellowFlash', within: timeout)
+        site_proxy.tlc.set_functional_position!('YellowFlash', within: timeout)
         command_timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-        site_proxy.tlc.set_functional_position('NormalControl', within: command_timeout)
+        site_proxy.tlc.set_functional_position!('NormalControl', within: command_timeout)
       end
       command_timeout ||= RSMP::Validator.get_config('timeouts', 'command_response')
-      site_proxy.tlc.set_functional_position('NormalControl', within: command_timeout)
+      site_proxy.tlc.set_functional_position!('NormalControl', within: command_timeout)
     end
   end
 end

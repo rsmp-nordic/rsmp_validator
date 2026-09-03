@@ -19,25 +19,15 @@ module RSMP
         return if @node
 
         @node = build_node
-
-        @task = Async do |task|
-          task.annotate "auto_#{node_type}"
-          log("Starting auto #{node_type}")
-          @node.start
-        rescue Async::TimeoutError
-          raise RSMP::TimeoutError, "Timeout while starting auto #{node_type}"
-        end
+        log("Starting auto #{node_type}")
+        @task = @node.start(parent: Async::Task.current)
       end
 
       # Stop the auto node
       def stop
-        if @node
-          log("Stopping auto #{node_type}")
-          @node.ignore_errors RSMP::DisconnectError do
-            @node.stop
-          end
-        end
-        @task&.stop
+        log("Stopping auto #{node_type}") if @node
+        @node&.stop
+        @task&.wait
       ensure
         @task = nil
         @node = nil

@@ -11,7 +11,7 @@ describe 'Site::Tlc::Output' do
       site_proxy.request_status_and_collect(
         { S0004: %i[outputstatus extendedoutputstatus] },
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 
@@ -23,7 +23,7 @@ describe 'Site::Tlc::Output' do
   it 'is read with S0004' do
     with_site(:connected, sxl: ['>=1.2']) do |site_proxy|
       site_proxy.request_status_and_collect({ S0004: [:outputstatus] },
-                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
   end
 
@@ -34,7 +34,7 @@ describe 'Site::Tlc::Output' do
   it 'forcing is read with S0030' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
       site_proxy.request_status_and_collect({ S0030: [:status] },
-                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
   end
 
@@ -48,10 +48,10 @@ describe 'Site::Tlc::Output' do
       skip('No outputs configured') if outputs.nil? || outputs.empty?
       timeout = RSMP::Validator.get_config('timeouts', 'command_response')
       outputs.each do |output|
-        site_proxy.tlc.force_output(output: output, status: 'True', value: 'True', within: timeout)
-        site_proxy.tlc.force_output(output: output, status: 'True', value: 'False', within: timeout)
+        site_proxy.tlc.force_output!(output: output, status: 'True', value: 'True', within: timeout)
+        site_proxy.tlc.force_output!(output: output, status: 'True', value: 'False', within: timeout)
       ensure
-        site_proxy.tlc.force_output(output: output, status: 'False', value: 'True', within: timeout)
+        site_proxy.tlc.force_output!(output: output, status: 'False', value: 'True', within: timeout)
       end
     end
   end

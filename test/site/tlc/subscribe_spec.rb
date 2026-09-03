@@ -19,10 +19,10 @@ describe 'Site::Tlc::Subscribe' do
 
       site_proxy.subscribe_to_status_and_collect(status_list,
                                                  component: component,
-                                                 within: RSMP::Validator.get_config('timeouts', 'status_update')).ok!
+                                                 within: RSMP::Validator.get_config('timeouts', 'status_update')).value!
     ensure
       unsubscribe_list = status_list.map { |item| item.slice('sCI', 'n') }
-      site_proxy.unsubscribe_to_status unsubscribe_list, component: component
+      site_proxy.unsubscribe_to_status! unsubscribe_list, component: component
     end
   end
 
@@ -45,7 +45,7 @@ describe 'Site::Tlc::Subscribe' do
       initial_status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
 
       # Subscribe but don't wait for updates (since 60s is too long)
-      site_proxy.subscribe_to_status initial_status_list, component: component
+      site_proxy.subscribe_to_status! initial_status_list, component: component
       log 'Initial subscription with 60s update rate successful'
 
       # Step 3: Change update rate to 1s by re-subscribing and verify we get update within 2s
@@ -54,18 +54,18 @@ describe 'Site::Tlc::Subscribe' do
       updated_status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
 
       # This should collect at least one status update within 2s if the 1s rate is working
-      collector = site_proxy.subscribe_to_status_and_collect(updated_status_list,
-                                                             component: component,
-                                                             within: 2).ok!
+      exchange = site_proxy.subscribe_to_status_and_collect(updated_status_list,
+                                                            component: component,
+                                                            within: 2).value!
 
-      assert(!collector.nil?, 'Expected subscribe_to_status_and_collect to return a collector')
-      assert(!collector.messages.empty?,
+      assert(!exchange.nil?, 'Expected subscribe_to_status_and_collect to return an exchange')
+      assert(!exchange.messages.empty?,
              'Expected to receive status update within 2s with new 1s update rate')
       log 'Successfully received status update within 2s, confirming 1s update rate is active'
     ensure
       # Clean up subscription
       unsubscribe_list = [{ 'sCI' => 'S0001', 'n' => 'cyclecounter' }]
-      site_proxy.unsubscribe_to_status unsubscribe_list, component: component
+      site_proxy.unsubscribe_to_status! unsubscribe_list, component: component
     end
   end
 end

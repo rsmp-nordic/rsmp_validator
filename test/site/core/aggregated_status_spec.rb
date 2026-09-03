@@ -11,7 +11,7 @@ describe 'Site::Core' do
         site_proxy.request_aggregated_status_and_collect(
           RSMP::Validator.get_config('main_component'),
           within: RSMP::Validator.get_config('timeouts', 'status_response')
-        ).ok!
+        ).value!
       end
     end
 
@@ -30,9 +30,7 @@ describe 'Site::Core' do
                              ingoing: true
                            }) do |site_proxy|
         collector = site_proxy.collector
-        collector.use_task Async::Task.current
-        collector.wait!
-        aggregated_status = site_proxy.collector.messages.first
+        aggregated_status = collector.wait!.first
 
         expect(aggregated_status).to be_a(RSMP::AggregatedStatus)
         expect(aggregated_status.attribute('fP')).to be_nil
