@@ -40,15 +40,14 @@ module RSMP
         class RequestHelper < RSMP::Queue
           include RSMP::Validator::Helpers::Status
 
-          def initialize(site_proxy, component:, signal_group_id:, timeout:, task:)
+          def initialize(site_proxy, component:, signal_group_id:, timeout:)
             super(site_proxy,
                   filter: RSMP::Filter.new(
                     type: 'StatusUpdate',
                     ingoing: true,
                     outgoing: false,
                     component: component
-                  ),
-                  task: task)
+                  ))
             @site_proxy = site_proxy
             @component = component
             @signal_group_id = signal_group_id
@@ -76,7 +75,7 @@ module RSMP
                                                  'level' => level,
                                                  'eta' => eta,
                                                  'vehicleType' => vehicle_type).to_a
-            @site_proxy.send_command(command_list, component: @component)
+            @site_proxy.send_command!(command_list, component: @component)
           end
 
           def request_unrelated(level: 7, eta: 2, vehicle_type: 'car')
@@ -87,21 +86,19 @@ module RSMP
                                                  'level' => level,
                                                  'eta' => eta,
                                                  'vehicleType' => vehicle_type).to_a
-            @site_proxy.send_command(command_list, component: @component)
+            @site_proxy.send_command!(command_list, component: @component)
           end
 
           def cancel
             command_list = RSMP::CommandList.new(:M0022, :requestPriority,
                                                  requestId: @request_id,
                                                  type: 'cancel').to_a
-            @site_proxy.send_command(command_list, component: @component)
+            @site_proxy.send_command!(command_list, component: @component)
           end
 
           def expect(state)
             @matcher.state = state
-            wait_for_message timeout: @timeout
-          rescue RSMP::TimeoutError
-            raise RSMP::TimeoutError, "Priority request did not reach state #{state} within #{@timeout}s"
+            wait_for_message!(timeout: @timeout)
           end
 
           private
@@ -112,11 +109,11 @@ module RSMP
 
           def start
             start_receiving
-            @site_proxy.subscribe_to_status @subscribe_list, component: @component
+            @site_proxy.subscribe_to_status! @subscribe_list, component: @component
           end
 
           def stop
-            @site_proxy.unsubscribe_to_status @unsubscribe_list, component: @component
+            @site_proxy.unsubscribe_to_status! @unsubscribe_list, component: @component
             stop_receiving
           end
 

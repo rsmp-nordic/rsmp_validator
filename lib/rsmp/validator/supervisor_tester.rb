@@ -51,14 +51,16 @@ module RSMP
       def wait_for_connection
         log 'Waiting for connection to supervisor'
         @proxy = @node.find_supervisor :any
-        @proxy.wait_for_state %i[connected ready], timeout: config['timeouts']['connect']
-      rescue RSMP::TimeoutError
+        result = @proxy.wait_for_state %i[connected ready], timeout: config['timeouts']['connect']
+        return if result.success?
+
         raise RSMP::ConnectionError, "Could not connect to supervisor within #{config['timeouts']['connect']}s"
       end
 
       def wait_for_handshake
-        @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
-      rescue RSMP::TimeoutError
+        result = @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
+        return if result.success?
+
         raise RSMP::ConnectionError, "Handshake didn't complete within #{config['timeouts']['ready']}s"
       end
 

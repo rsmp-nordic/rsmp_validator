@@ -12,7 +12,7 @@ describe 'Site::Tlc::Input' do
       site_proxy.request_status_and_collect(
         { S0003: %i[inputstatus extendedinputstatus] },
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 
@@ -23,7 +23,7 @@ describe 'Site::Tlc::Input' do
   it 'is read with S0003' do
     with_site(:connected, sxl: '>=1.2') do |site_proxy|
       site_proxy.request_status_and_collect({ S0003: [:inputstatus] },
-                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
   end
 
@@ -34,7 +34,7 @@ describe 'Site::Tlc::Input' do
   it 'forcing is read with S0029' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
       site_proxy.request_status_and_collect({ S0029: [:status] },
-                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
   end
 
@@ -50,10 +50,10 @@ describe 'Site::Tlc::Input' do
       skip('No inputs configured') if inputs.nil? || inputs.empty?
       inputs.each do |input|
         timeout = RSMP::Validator.get_config('timeouts', 'command')
-        site_proxy.tlc.force_input(input: input, status: 'True', value: 'False', within: timeout)
-        site_proxy.tlc.force_input(input: input, status: 'True', value: 'True', within: timeout)
+        site_proxy.tlc.force_input!(input: input, status: 'True', value: 'False', within: timeout)
+        site_proxy.tlc.force_input!(input: input, status: 'True', value: 'True', within: timeout)
       ensure
-        site_proxy.tlc.force_input(input: input, status: 'False', value: 'True', within: timeout)
+        site_proxy.tlc.force_input!(input: input, status: 'False', value: 'True', within: timeout)
       end
     end
   end
@@ -84,7 +84,7 @@ describe 'Site::Tlc::Input' do
       skip('No inputs configured') if inputs.nil? || inputs.empty?
       status = '1,3,12;5,5,10'
       timeout = RSMP::Validator.get_config('timeouts', 'command')
-      site_proxy.tlc.set_inputs(status, within: timeout)
+      site_proxy.tlc.set_inputs!(status, within: timeout)
     end
   end
 
@@ -96,7 +96,7 @@ describe 'Site::Tlc::Input' do
     with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
       timeout = RSMP::Validator.get_config('timeouts', 'command_response')
       status = '1-50'
-      site_proxy.tlc.set_trigger_level(status, within: timeout)
+      site_proxy.tlc.set_trigger_level!(status, within: timeout)
     end
   end
 end

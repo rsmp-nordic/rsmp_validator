@@ -13,7 +13,7 @@ describe 'Site::Tlc::TrafficData' do
         { S0201: %i[starttime vehicles] },
         component: component,
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 
@@ -25,7 +25,7 @@ describe 'Site::Tlc::TrafficData' do
   it 'number of vehicles for all detectors is read with S0205' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
       site_proxy.request_status_and_collect({ S0205: %i[start vehicles] },
-                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
   end
 
@@ -41,7 +41,7 @@ describe 'Site::Tlc::TrafficData' do
         { S0202: %i[starttime speed] },
         component: component,
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 
@@ -53,7 +53,7 @@ describe 'Site::Tlc::TrafficData' do
   it 'vehicle speed for all detectors is read with S0206' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
       site_proxy.request_status_and_collect({ S0206: %i[start speed] },
-                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
   end
 
@@ -69,7 +69,7 @@ describe 'Site::Tlc::TrafficData' do
         { S0203: %i[starttime occupancy] },
         component: component,
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 
@@ -80,12 +80,13 @@ describe 'Site::Tlc::TrafficData' do
   # 3. Expect status response before timeout
   it 'occupancy for all detectors is read with S0207' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
-      result = wait_for_status(site_proxy, 'traffic counting: occupancy',
-                               { S0207: %i[start occupancy] },
-                               update_rate: 60)
+      exchange = wait_for_status(site_proxy, 'traffic counting: occupancy',
+                                 { S0207: %i[start occupancy] },
+                                 update_rate: 60)
+      values = exchange.reached.to_h { |item| [item['n'], item['s']] }
 
-      occupancies = result.matcher_got_hash.dig('S0207', 'occupancy')
-      start = result.matcher_got_hash.dig('S0207', 'start')
+      occupancies = values['occupancy']
+      start = values['start']
 
       expect(start).to be_a(String)
 
@@ -130,7 +131,7 @@ describe 'Site::Tlc::TrafficData' do
         ] },
         component: component,
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 
@@ -155,7 +156,7 @@ describe 'Site::Tlc::TrafficData' do
           F
         ] },
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 end

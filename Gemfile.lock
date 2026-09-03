@@ -1,10 +1,25 @@
+GIT
+  remote: https://github.com/rsmp-nordic/rsmp.git
+  revision: 07624973e1c74f07f8647b5c1c6e958d78e82c92
+  branch: result_model
+  specs:
+    rsmp (0.50.0)
+      async (~> 2.45)
+      colorize (~> 1.1)
+      io-endpoint (~> 0.17)
+      io-stream (~> 0.13)
+      json_schemer (~> 2.5)
+      logger (~> 1.7)
+      ostruct (~> 0.6)
+      thor (~> 1.5)
+
 PATH
   remote: .
   specs:
     rsmp-validator (0.2.2)
       activesupport
       colorize
-      rsmp (>= 0.44.0)
+      rsmp (>= 0.50.0)
       sus
       sus-fixtures-async
       thor
@@ -75,15 +90,6 @@ GEM
     rainbow (3.1.1)
     rake (13.4.2)
     regexp_parser (2.12.0)
-    rsmp (0.48.4)
-      async (~> 2.39)
-      colorize (~> 1.1)
-      io-endpoint (~> 0.17)
-      io-stream (~> 0.13)
-      json_schemer (~> 2.5)
-      logger (~> 1.7)
-      ostruct (~> 0.6)
-      thor (~> 1.5)
     rubocop (1.90.0)
       json (>= 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -121,7 +127,7 @@ DEPENDENCIES
   activesupport
   colorize
   rake
-  rsmp
+  rsmp!
   rsmp-validator!
   rubocop
   sus
@@ -162,7 +168,7 @@ CHECKSUMS
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
   regexp_parser (2.12.0) sha256=35a916a1d63190ab5c9009457136ae5f3c0c7512d60291d0d1378ba18ce08ebb
-  rsmp (0.48.4) sha256=9b049018e82ef19e08b9cdeb6389a4bbe39462d9d6e256a6edbedae91ab3da54
+  rsmp (0.50.0)
   rsmp-validator (0.2.2)
   rubocop (1.90.0) sha256=9eb4c065b5c5154e4ef554c547972f3905a9eb6b53e657e580b6796b54bf8242
   rubocop-ast (1.50.0) sha256=b9ca88300da0803ee222ad20cdb30494c0a784eed06fdc35d254b06d662788db

@@ -84,20 +84,23 @@ module RSMP
         return if @proxy
 
         log 'Waiting for site to connect'
-        @proxy = @node.wait_for_site(:any, timeout: config['timeouts']['connect'])
-      rescue RSMP::TimeoutError
-        raise RSMP::ConnectionError, "Site did not connect within #{config['timeouts']['connect']}s"
+        result = @node.wait_for_site(:any, timeout: config['timeouts']['connect'])
+        raise RSMP::ConnectionError, "Site did not connect within #{config['timeouts']['connect']}s" if result.failure?
+
+        @proxy = result.value
       end
 
       def wait_for_handshake
         return if @proxy.ready?
 
         log 'Waiting for handshake to complete'
-        @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
+        result = @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
+        raise RSMP::ConnectionError, result.failure.message if result.failure?
+
         log 'Ready'
         return if @initial_unsubscribe_done
 
-        @proxy.unsubscribe_from_all component: RSMP::Validator.get_config('main_component')
+        @proxy.unsubscribe_from_all(component: RSMP::Validator.get_config('main_component')).value!
         @initial_unsubscribe_done = true
       end
 

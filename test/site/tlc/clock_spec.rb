@@ -19,7 +19,7 @@ describe 'Site::Tlc::Clock' do
   it 'can be read with S0096' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       site_proxy.request_status_and_collect({ S0096: %i[year month day hour minute second] },
-                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
   end
 
@@ -31,7 +31,7 @@ describe 'Site::Tlc::Clock' do
   it 'can be set with M0104' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
       timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-      site_proxy.tlc.set_clock(clock, within: timeout)
+      site_proxy.tlc.set_clock!(clock, within: timeout)
     end
   end
 
@@ -56,20 +56,19 @@ describe 'Site::Tlc::Clock' do
             second
           ] }
           timeout = RSMP::Validator.get_config('timeouts', 'status_update')
-          collector = site_proxy.request_status_and_collect(
+          exchange = site_proxy.request_status_and_collect(
             status_list,
             within: timeout
-          )
-          collector.ok!
-          status = status_list.keys.first.to_s
+          ).value!
+          values = exchange.reached.to_h { |item| [item['n'], item['s']] }
 
           received = Time.new(
-            collector.matcher_result({ 'sCI' => status, 'n' => 'year' })['s'],
-            collector.matcher_result({ 'sCI' => status, 'n' => 'month' })['s'],
-            collector.matcher_result({ 'sCI' => status, 'n' => 'day' })['s'],
-            collector.matcher_result({ 'sCI' => status, 'n' => 'hour' })['s'],
-            collector.matcher_result({ 'sCI' => status, 'n' => 'minute' })['s'],
-            collector.matcher_result({ 'sCI' => status, 'n' => 'second' })['s'],
+            values.fetch('year'),
+            values.fetch('month'),
+            values.fetch('day'),
+            values.fetch('hour'),
+            values.fetch('minute'),
+            values.fetch('second'),
             'UTC'
           )
 
@@ -106,12 +105,11 @@ describe 'Site::Tlc::Clock' do
           ] }
 
           timeout = RSMP::Validator.get_config('timeouts', 'status_response')
-          collector = site_proxy.request_status_and_collect(status_list,
-                                                            within: timeout)
-          collector.ok!
+          exchange = site_proxy.request_status_and_collect(status_list,
+                                                           within: timeout).value!
 
           max_diff = RSMP::Validator.get_config('timeouts', 'command_response') + timeout
-          diff = Time.parse(collector.messages.first.attributes['sTs']) - clock
+          diff = Time.parse(exchange.messages.first.attributes['sTs']) - clock
           diff = diff.round
           assert(diff.abs <= max_diff,
                  "Timestamp of S0096 is off by #{diff}s, should be within #{max_diff}s")
@@ -135,9 +133,9 @@ describe 'Site::Tlc::Clock' do
         with_clock_set site_proxy, clock, within: RSMP::Validator.get_config('timeouts', 'command_response') do
           component = RSMP::Validator.get_config('main_component')
           timeout = RSMP::Validator.get_config('timeouts', 'status_response')
-          collector = site_proxy.request_aggregated_status_and_collect(component, within: timeout)
+          exchange = site_proxy.request_aggregated_status_and_collect(component, within: timeout).value!
           max_diff = RSMP::Validator.get_config('timeouts', 'command_response') + timeout
-          diff = Time.parse(collector.messages.first.attributes['aSTS']) - clock
+          diff = Time.parse(exchange.messages.first.attributes['aSTS']) - clock
           diff = diff.round
           assert(diff.abs <= max_diff,
                  "Timestamp of aggregated status is off by #{diff}s, should be within #{max_diff}s")
@@ -158,10 +156,9 @@ describe 'Site::Tlc::Clock' do
       site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
         timeout = RSMP::Validator.get_config('timeouts', 'command_response')
         with_clock_set site_proxy, clock, within: timeout do
-          result = site_proxy.tlc.set_functional_position('NormalControl', within: timeout)
-          collector = result[:collector]
+          exchange = site_proxy.tlc.set_functional_position!('NormalControl', within: timeout)
           max_diff = timeout * 2
-          diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
+          diff = Time.parse(exchange.messages.first.attributes['cTS']) - clock
           diff = diff.round
           assert(diff.abs <= max_diff,
                  "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s")
@@ -182,10 +179,9 @@ describe 'Site::Tlc::Clock' do
       site_proxy.with_watchdog_disabled do # avoid time synchronization by disabling watchdogs
         timeout = RSMP::Validator.get_config('timeouts', 'command_response')
         with_clock_set site_proxy, clock, within: timeout do
-          result = site_proxy.tlc.set_functional_position('NormalControl', within: timeout)
-          collector = result[:collector]
+          exchange = site_proxy.tlc.set_functional_position!('NormalControl', within: timeout)
           max_diff = timeout
-          diff = Time.parse(collector.messages.first.attributes['cTS']) - clock
+          diff = Time.parse(exchange.messages.first.attributes['cTS']) - clock
           diff = diff.round
           assert(diff.abs <= max_diff,
                  "Timestamp of command response is off by #{diff}s, should be within #{max_diff}s")
@@ -236,8 +232,12 @@ describe 'Site::Tlc::Clock' do
         with_clock_set site_proxy, clock, within: RSMP::Validator.get_config('timeouts', 'command_response') do
           log 'Checking watchdog timestamp'
           watchdog_timeout = RSMP::Validator.get_config('timeouts', 'watchdog')
-          collector = RSMP::Collector.new(site_proxy, task: Async::Task.current, type: 'Watchdog', num: 1,
-                                                      timeout: watchdog_timeout)
+          collector = RSMP::Collector.new(
+            site_proxy,
+            filter: RSMP::Filter.new(type: 'Watchdog'),
+            num: 1,
+            timeout: watchdog_timeout
+          )
           collector.collect!
           max_diff = RSMP::Validator.get_config('timeouts', 'command_response') +
                      RSMP::Validator.get_config('timeouts', 'status_response')

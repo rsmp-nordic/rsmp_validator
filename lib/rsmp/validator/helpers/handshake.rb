@@ -29,16 +29,13 @@ module RSMP
           RSMP::Validator::SiteTester.isolated(
             'collect' => { timeout: timeout, num: length, ingoing: true, outgoing: true },
             'sites' => { 'default' => { 'core_version' => core_version } }
-          ) do |task, _supervisor, site|
+          ) do |_task, _supervisor, site|
             assert(site.ready?, 'expected site to be ready')
             collector = site.collector
-            collector.use_task task
-            collector.wait!
-            got = collector.messages.map { |message| "#{message.direction}:#{message.type}" }
+            messages = collector.wait!
+            got = messages.map { |message| "#{message.direction}:#{message.type}" }
           end
           got
-        rescue Async::TimeoutError
-          raise "Did not collect #{length} messages within #{timeout}s"
         end
 
         def check_sequence_v311_to_v313(core_version)

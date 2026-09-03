@@ -10,9 +10,7 @@ describe 'Supervisor' do
     end
 
     def prepare_and_wait_for_collector(supervisor_proxy)
-      collector = supervisor_proxy.collector
-      collector.use_task Async::Task.current
-      collector.wait!
+      supervisor_proxy.collector.wait!
     end
 
     def direction_and_type_pairs(messages)
@@ -27,9 +25,8 @@ describe 'Supervisor' do
                       'collect' => {
                         **connection_collect_options(timeout, length)
                       }) do |supervisor_proxy|
-        prepare_and_wait_for_collector(supervisor_proxy)
+        got_messages = prepare_and_wait_for_collector(supervisor_proxy)
         assert(supervisor_proxy.ready?, 'expected site proxy to be ready')
-        got_messages = supervisor_proxy.collector.messages
       end
       direction_and_type_pairs(got_messages)
     rescue Async::TimeoutError

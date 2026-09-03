@@ -18,7 +18,7 @@ describe 'Site::Core' do
           status_list,
           component: component,
           within: RSMP::Validator.get_config('timeouts', 'status_update')
-        ).ok!
+        ).value!
         status_list
       end
     end
@@ -42,12 +42,11 @@ describe 'Site::Core' do
                   ingoing: true
                 }) do |site_proxy|
         collector = site_proxy.collector
-        collector.use_task Async::Task.current
         messages = collector.wait!
         update = messages.first
 
         unsubscribe_list = status_list.map { |item| item.slice('sCI', 'n') }
-        site_proxy.unsubscribe_to_status unsubscribe_list, component: component
+        site_proxy.unsubscribe_to_status! unsubscribe_list, component: component
         update
       end
     end

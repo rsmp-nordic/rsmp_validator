@@ -12,7 +12,7 @@ module RSMP
           component = RSMP::Validator.get_config('components', 'detector_logic').keys[0]
           timeout = RSMP::Validator.get_config('timeouts', 'command_response')
           site_proxy.send_command_and_collect(command_list, component: component,
-                                                            within: timeout).ok!
+                                                            within: timeout)
         end
 
         def require_security_codes
