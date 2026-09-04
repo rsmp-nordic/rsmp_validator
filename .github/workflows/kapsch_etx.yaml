@@ -39,6 +39,7 @@ jobs:
       uses: actions/checkout@v6
 
     - name: Install Ruby and gems
+      id: ruby_setup
       uses: ruby/setup-ruby@v1
       with:
         bundler-cache: true
@@ -53,12 +54,12 @@ jobs:
         --core ${{ matrix.core}}
 
     - name: Show detailed log
+      if: ${{ always() && steps.ruby_setup.outcome == 'success' }}
       shell: bash
-      if: always()
       run: cat validator-${{ steps.log_id.outputs.LOG_ID }}.log
 
     - name: Upload validator.log
-      if: always()
+      if: ${{ always() && steps.ruby_setup.outcome == 'success' }}
       uses: actions/upload-artifact@v7
       with:
         name: validator-${{ steps.log_id.outputs.LOG_ID }}.log
