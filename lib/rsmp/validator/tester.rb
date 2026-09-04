@@ -40,6 +40,7 @@ module RSMP
         start options, 'Connecting'
         wait_for_proxy
         yield Async::Task.current, @node, @proxy
+      ensure
         stop 'Isolating'
       end
 

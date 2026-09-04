@@ -32,9 +32,9 @@ module RSMP
             RSMP::Validator::SiteTester.public_send(state, **opts) do |_task, _node, proxy|
               block.call(proxy)
             rescue RSMP::OperationError => e
-              @__assertions__.assert false, e.failure.message
+              fail_test e.failure.message
             rescue StandardError => e
-              @__assertions__.error!(UncaughtException.new(e))
+              error_test UncaughtException.new(e)
             end
           end
         end
@@ -48,14 +48,24 @@ module RSMP
             RSMP::Validator::SupervisorTester.public_send(state, **opts) do |_task, _node, proxy|
               block.call(proxy)
             rescue RSMP::OperationError => e
-              @__assertions__.assert false, e.failure.message
+              fail_test e.failure.message
             rescue StandardError => e
-              @__assertions__.error!(UncaughtException.new(e))
+              error_test UncaughtException.new(e)
             end
           end
         end
 
         private
+
+        def fail_test(message)
+          @__assertions__.assert false, message
+          throw :rsmp_validator_test_failure
+        end
+
+        def error_test(error)
+          @__assertions__.error! error
+          throw :rsmp_validator_test_failure
+        end
 
         def validate_state!(state)
           return if VALID_STATES.include?(state)
