@@ -2,25 +2,25 @@ describe 'Site::Tlc::EmergencyRoutes' do
   include RSMP::Validator::Helpers::Status
 
   # Verify that current emergency route can be read with S0006.
-  # Depreciated from 1.2, use S0035 instead.
+  # Deprecated from 1.2.0, use S0035 instead.
   # 1. Given the site_proxy is connected.
   # 2. When we request S0006.
   # 3. Then we should receive a status response.
   it 'emergency route is read with S0006' do
-    with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
+    with_site(:connected, sxl: ['>=1.0.7', '<1.2.0']) do |site_proxy|
       site_proxy.request_status_and_collect({ S0006: %i[status emergencystage] },
                                             within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
   end
 
   # Verify that current emergency routes can be read with S0035.
-  # Requires core >= 3.2 since it uses the array data type.
+  # Requires core >= 3.2.0 since it uses the array data type.
   # 1. Given the site_proxy is connected.
   # 2. When we request S0035.
   # 3. Then we should receive a status response.
   it 'emergency route is read with S0035' do
-    skip 'requires core >= 3.2' unless RSMP::Validator.core_matches?('>=3.2')
-    with_site(:connected, sxl: '>=1.2') do |site_proxy|
+    skip 'requires core >= 3.2.0' unless RSMP::Validator.core_matches?('>=3.2.0')
+    with_site(:connected, sxl: '>=1.2.0') do |site_proxy|
       site_proxy.request_status_and_collect({ S0035: [:emergencyroutes] },
                                             within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
@@ -32,7 +32,7 @@ describe 'Site::Tlc::EmergencyRoutes' do
   # 2. When we send M0005 to set emergency route.
   # 3. Then we should get a command responds confirming the change.
   it 'can be activated with M0005 and read with S0006' do
-    skip 'requires sxl >= 1.0.7, < 1.2' unless RSMP::Validator.sxl_matches?(['>=1.0.7', '<1.2'])
+    skip 'requires sxl >= 1.0.7, < 1.2.0' unless RSMP::Validator.sxl_matches?(['>=1.0.7', '<1.2.0'])
     emergency_routes = RSMP::Validator.get_config('items', 'emergency_routes')
     skip('No emergency routes configured') if emergency_routes.nil? || emergency_routes.empty?
 
@@ -68,8 +68,8 @@ describe 'Site::Tlc::EmergencyRoutes' do
   # 5. Then we should receive the list of active routes.
 
   it 'emergency routes can be activated with M0005 and read with S0035' do
-    skip 'requires core >= 3.2' unless RSMP::Validator.core_matches?('>=3.2')
-    skip 'requires sxl >= 1.2' unless RSMP::Validator.sxl_matches?('>=1.2')
+    skip 'requires core >= 3.2.0' unless RSMP::Validator.core_matches?('>=3.2.0')
+    skip 'requires sxl >= 1.2.0' unless RSMP::Validator.sxl_matches?('>=1.2.0')
 
     emergency_routes = RSMP::Validator.get_config('items', 'emergency_routes')
     skip('No emergency routes configured') if emergency_routes.nil? || emergency_routes.empty?

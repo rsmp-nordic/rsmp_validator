@@ -1,7 +1,7 @@
 module RSMP
   module Validator
     module Configuration
-      # Private helpers for validating and normalizing configuration values.
+      # Private helpers for validating configuration values.
       module Validation
         private
 
@@ -74,40 +74,6 @@ module RSMP
         def validate_timeouts_config!
           timeouts = config['timeouts']
           abort_with_error "Error: config 'timeouts' settings is missing or empty" if timeouts.nil? || timeouts == {}
-        end
-
-        def normalize_core_version!
-          core_version = config['core_version'] || RSMP::Schema.latest_core_version
-          core_version = RSMP::Schema.latest_core_version if core_version == 'latest'
-
-          known_versions = RSMP::Schema.core_versions
-          normalized = normalized_core_version(core_version, known_versions)
-          return config['core_version'] = normalized.to_s if normalized
-
-          abort_with_error "Unknown core version #{core_version}, must be one of [#{known_versions.join(', ')}]."
-        end
-
-        def normalized_core_version(core_version, known_versions)
-          known_versions.map { |v| Gem::Version.new(v) }.sort.reverse.detect do |v|
-            Gem::Requirement.new(core_version).satisfied_by?(v)
-          end
-        end
-
-        def normalize_sxls!
-          sxls = config['sxls']
-          if sxls.nil?
-            config['sxls'] = [{ 'name' => 'tlc', 'version' => RSMP::Schema.latest_version(:tlc) }]
-            return
-          end
-
-          sxls.each do |sxl|
-            name = sxl['name']
-            abort_with_error 'SXL name cannot be core.' if name.to_s == 'core'
-
-            RSMP::Schema.find_schema! name, sxl['version'], lenient: true
-          rescue RSMP::Schema::UnknownSchemaError => e
-            abort_with_error "Unknown SXL #{name} #{sxl['version']}: #{e}"
-          end
         end
       end
     end

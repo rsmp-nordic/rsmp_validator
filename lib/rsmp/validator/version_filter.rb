@@ -11,7 +11,7 @@ module RSMP
       end
 
       # Check if the configured core version satisfies the given requirement.
-      # @param requirement [String] Gem::Requirement-compatible string, e.g. ">= 3.2"
+      # @param requirement [String] Gem::Requirement-compatible string, e.g. ">= 3.2.0"
       def self.core_matches?(requirement)
         version_satisfies?(requirement, RSMP::Validator.config['core_version'])
       end
