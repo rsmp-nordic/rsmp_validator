@@ -4,11 +4,11 @@ module RSMP
       # Helpers for connecting to a site or supervisor in tests, with optional
       # version-based skipping via sxl: and core: keyword arguments.
       #
-      # with_site(:connected, sxl: '>=1.2') do |supervisor, site_proxy|
+      # with_site(:connected, sxl: '>=1.2.0') do |supervisor, site_proxy|
       #   ...
       # end
       #
-      # with_supervisor(:connected, core: '>=3.2') do |site, supervisor_proxy|
+      # with_supervisor(:connected, core: '>=3.2.0') do |site, supervisor_proxy|
       #   ...
       # end
       module Connection

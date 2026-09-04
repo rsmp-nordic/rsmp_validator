@@ -8,7 +8,7 @@ describe 'Site::Tlc::SignalPlans' do
   # 3. We should receive a status response before timeout
   it 'currently active is read with S0014' do
     with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-      status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+      status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1.0')
                       { S0014: %i[status source] }
                     else
                       { S0014: [:status] }
@@ -36,7 +36,7 @@ describe 'Site::Tlc::SignalPlans' do
         status_timeout = RSMP::Validator.get_config('timeouts', 'status_response')
         site_proxy.tlc.set_timeplan!(plan, within: command_timeout)
 
-        s0014_fields = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+        s0014_fields = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1.0')
                          { S0014: %i[status source] }
                        else
                          { S0014: [:status] }
@@ -52,13 +52,13 @@ describe 'Site::Tlc::SignalPlans' do
   end
 
   # Verify status S0018 number of time plans
-  # Deprecated from 1.2, use S0022 instead.
+  # Deprecated from 1.2.0, use S0022 instead.
   #
   # 1. Given the site_proxy is connected
   # 2. When we request the status
   # 3. We should receive a status response before timeout
   it 'list size is read with S0018' do
-    with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
+    with_site(:connected, sxl: ['>=1.0.7', '<1.2.0']) do |site_proxy|
       site_proxy.request_status_and_collect({ S0018: [:number] },
                                             within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
@@ -222,7 +222,7 @@ describe 'Site::Tlc::SignalPlans' do
   # 2. When we send command to disable timeout
   # 3. Then we should get a confirmation
   it 'timeout for dynamic bands is set with M0023' do
-    with_site(:connected, sxl: '>=1.1') do |site_proxy|
+    with_site(:connected, sxl: '>=1.1.0') do |site_proxy|
       timeout = RSMP::Validator.get_config('timeouts', 'command_response')
       status = 10
       site_proxy.tlc.set_dynamic_bands_timeout!(status, within: timeout)

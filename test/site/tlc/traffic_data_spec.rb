@@ -90,7 +90,7 @@ describe 'Site::Tlc::TrafficData' do
 
       expect(start).to be_a(String)
 
-      occupancy_values = if RSMP::Validator.sxl_matches?('<1.1')
+      occupancy_values = if RSMP::Validator.sxl_matches?('<1.1.0')
                            expect(occupancies).to be_a(String)
                            occupancies.split(',').map do |occupancy|
                              assert(occupancy.match?(/\A-?\d+\z/), "Occupancy must be an Integer, got #{occupancy}")

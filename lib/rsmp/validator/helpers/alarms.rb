@@ -40,7 +40,7 @@ module RSMP
         end
 
         def build_alarm_matchers(site_proxy)
-          if RSMP::Proxy.version_meets_requirement? site_proxy.core_version, '>=3.2'
+          if RSMP::Proxy.version_meets_requirement? site_proxy.core_version, '>=3.2.0'
             [/Issue/, /Active/, /inActive/]
           else
             [/issue/i, /active/i, /inactive/i]

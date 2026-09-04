@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+- use canonical three-component RSMP Core and SXL versions internally
+- preserve legacy two-component Core and SXL strings when configuring local test nodes
+- fix Core 3.2.0 connection-sequence tests advertising the noncanonical version 3.2
+
 ## 0.1.0
 - package the validator as the `rsmp-validator` gem with the `rsmp-validator` executable
 - migrate the conformance test suite from RSpec to sus
@@ -17,4 +22,3 @@
 - add config validation and compliance report output
 - update simulator configs and workflows
 - update rsmp gem, which include update schemas for all core/sxl versions
-
