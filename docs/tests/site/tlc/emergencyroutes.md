@@ -31,7 +31,7 @@ S0006 should reflect the last route enabled/disabled.
   </summary>
 ```ruby
 it 'can be activated with M0005 and read with S0006' do
-  skip 'requires sxl >= 1.0.7, < 1.2' unless RSMP::Validator.sxl_matches?(['>=1.0.7', '<1.2'])
+  skip 'requires sxl >= 1.0.7, < 1.2.0' unless RSMP::Validator.sxl_matches?(['>=1.0.7', '<1.2.0'])
   emergency_routes = RSMP::Validator.get_config('items', 'emergency_routes')
   skip('No emergency routes configured') if emergency_routes.nil? || emergency_routes.empty?
   def set_emergency_states(site_proxy, emergency_routes, state)
@@ -62,7 +62,7 @@ end
 ## Emergency Routes emergency route is read with S0006
 
 Verify that current emergency route can be read with S0006.
-Depreciated from 1.2, use S0035 instead.
+Deprecated from 1.2.0, use S0035 instead.
 1. Given the site_proxy is connected.
 2. When we request S0006.
 3. Then we should receive a status response.
@@ -73,7 +73,7 @@ Depreciated from 1.2, use S0035 instead.
   </summary>
 ```ruby
 it 'emergency route is read with S0006' do
-  with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
+  with_site(:connected, sxl: ['>=1.0.7', '<1.2.0']) do |site_proxy|
     site_proxy.request_status_and_collect({ S0006: %i[status emergencystage] },
                                           within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
@@ -85,7 +85,7 @@ end
 ## Emergency Routes emergency route is read with S0035
 
 Verify that current emergency routes can be read with S0035.
-Requires core >= 3.2 since it uses the array data type.
+Requires core >= 3.2.0 since it uses the array data type.
 1. Given the site_proxy is connected.
 2. When we request S0035.
 3. Then we should receive a status response.
@@ -96,8 +96,8 @@ Requires core >= 3.2 since it uses the array data type.
   </summary>
 ```ruby
 it 'emergency route is read with S0035' do
-  skip 'requires core >= 3.2' unless RSMP::Validator.core_matches?('>=3.2')
-  with_site(:connected, sxl: '>=1.2') do |site_proxy|
+  skip 'requires core >= 3.2.0' unless RSMP::Validator.core_matches?('>=3.2.0')
+  with_site(:connected, sxl: '>=1.2.0') do |site_proxy|
     site_proxy.request_status_and_collect({ S0035: [:emergencyroutes] },
                                           within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
@@ -114,8 +114,8 @@ end
   </summary>
 ```ruby
 it 'emergency routes can be activated with M0005 and read with S0035' do
-  skip 'requires core >= 3.2' unless RSMP::Validator.core_matches?('>=3.2')
-  skip 'requires sxl >= 1.2' unless RSMP::Validator.sxl_matches?('>=1.2')
+  skip 'requires core >= 3.2.0' unless RSMP::Validator.core_matches?('>=3.2.0')
+  skip 'requires sxl >= 1.2.0' unless RSMP::Validator.sxl_matches?('>=1.2.0')
   emergency_routes = RSMP::Validator.get_config('items', 'emergency_routes')
   skip('No emergency routes configured') if emergency_routes.nil? || emergency_routes.empty?
   def enable_routes(site_proxy, emergency_routes)

@@ -95,7 +95,7 @@ Verify that we can read input status with S0003
   </summary>
 ```ruby
 it 'is read with S0003' do
-  with_site(:connected, sxl: '>=1.2') do |site_proxy|
+  with_site(:connected, sxl: '>=1.2.0') do |site_proxy|
     site_proxy.request_status_and_collect({ S0003: [:inputstatus] },
                                           within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
@@ -117,7 +117,7 @@ Verify that we can read input status with S0003, extendedinputstatus attribute
   </summary>
 ```ruby
 it 'is read with S0003 with extended input status' do
-  with_site(:connected, sxl: '<1.2') do |site_proxy|
+  with_site(:connected, sxl: '<1.2.0') do |site_proxy|
     site_proxy.request_status_and_collect(
       { S0003: %i[inputstatus extendedinputstatus] },
       within: RSMP::Validator.get_config('timeouts', 'status_response')

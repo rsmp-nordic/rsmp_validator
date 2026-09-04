@@ -32,7 +32,7 @@ Verify status S0015 current traffic situation
 ```ruby
 it 'is read with S0015' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1.0')
                     { S0015: %i[status source] }
                   else
                     { S0015: [:status] }

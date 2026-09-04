@@ -82,7 +82,7 @@ Verify that  output status can be read with S0004
   </summary>
 ```ruby
 it 'is read with S0004' do
-  with_site(:connected, sxl: ['>=1.2']) do |site_proxy|
+  with_site(:connected, sxl: ['>=1.2.0']) do |site_proxy|
     site_proxy.request_status_and_collect({ S0004: [:outputstatus] },
                                           within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
@@ -105,7 +105,7 @@ Verify that  output status can be read with S0004, extended output status
   </summary>
 ```ruby
 it 'is read with S0004 with extended output status' do
-  with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
+  with_site(:connected, sxl: ['>=1.0.7', '<1.2.0']) do |site_proxy|
     site_proxy.request_status_and_collect(
       { S0004: %i[outputstatus extendedoutputstatus] },
       within: RSMP::Validator.get_config('timeouts', 'status_response')

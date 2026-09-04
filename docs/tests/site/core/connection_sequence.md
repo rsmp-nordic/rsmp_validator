@@ -129,9 +129,9 @@ end
 
 ## Connection Sequence is correct for rsmp version 3.2.0
 
-Verify the connection sequence when using rsmp core 3.2
+Verify the connection sequence when using rsmp core 3.2.0
 
-1. Given the site is connected and using core 3.2
+1. Given the site is connected and using core 3.2.0
 2. When handshake messages are sent and received
 3. Then the handshake messages should be in the specified sequence corresponding to version 3.1.5
 4. And the connection sequence should be complete

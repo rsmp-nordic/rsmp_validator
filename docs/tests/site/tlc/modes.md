@@ -32,7 +32,7 @@ Verify status S0012 all red
 ```ruby
 it 'all red can be read with S0012' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1.0')
                     { S0012: %i[status intersection source] }
                   else
                     { S0012: %i[status intersection] }
@@ -116,7 +116,7 @@ Verify status S0032 coordinated control
   </summary>
 ```ruby
 it 'coordinated control is read with S0032' do
-  with_site(:connected, sxl: '>=1.1') do |site_proxy|
+  with_site(:connected, sxl: '>=1.1.0') do |site_proxy|
     site_proxy.request_status_and_collect({ S0032: %i[status intersection source] },
                                           within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
@@ -199,7 +199,7 @@ Verify status S0009 fixed time control
 ```ruby
 it 'fixed time control is read with S0009' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1.0')
                     { S0009: %i[status intersection source] }
                   else
                     { S0009: %i[status intersection] }
@@ -227,7 +227,7 @@ Verify status S0010 isolated control
 ```ruby
 it 'isolated control is read with S0010' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1.0')
                     { S0010: %i[status intersection source] }
                   else
                     { S0010: %i[status intersection] }
@@ -255,7 +255,7 @@ Verify status S0008 manual control
 ```ruby
 it 'manual control is read with S0008' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1.0')
                     { S0008: %i[status intersection source] }
                   else
                     { S0008: %i[status intersection] }
@@ -317,7 +317,7 @@ end
 ## Modes startup status is read with S0005 by intersection
 
 Verify status S0005 traffic controller starting by intersection
-statusByIntersection requires core >= 3.2, since it uses the array data type.
+statusByIntersection requires core >= 3.2.0, since it uses the array data type.
 
 1. Given the site_proxy is connected
 2. Request status
@@ -329,8 +329,8 @@ statusByIntersection requires core >= 3.2, since it uses the array data type.
   </summary>
 ```ruby
 it 'startup status is read with S0005 by intersection' do
-  skip 'requires core >= 3.2' unless RSMP::Validator.core_matches?('>=3.2')
-  with_site(:connected, sxl: '>=1.2') do |site_proxy|
+  skip 'requires core >= 3.2.0' unless RSMP::Validator.core_matches?('>=3.2.0')
+  with_site(:connected, sxl: '>=1.2.0') do |site_proxy|
     site_proxy.request_status_and_collect({ S0005: [:statusByIntersection] },
                                           within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
@@ -376,7 +376,7 @@ Verify status S0007 controller switched on, source attribute
   </summary>
 ```ruby
 it 'switched on is read with S0007 with source' do
-  with_site(:connected, sxl: '>=1.1') do |site_proxy|
+  with_site(:connected, sxl: '>=1.1.0') do |site_proxy|
     site_proxy.request_status_and_collect({ S0007: %i[status intersection source] },
                                           within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
@@ -462,7 +462,7 @@ Verify status S0011 yellow flash
 ```ruby
 it 'yellow flash can be read with S0011' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1.0')
                     { S0011: %i[status intersection source] }
                   else
                     { S0011: %i[status intersection] }

@@ -45,8 +45,8 @@ end
 
 ## Aggregated Status uses null for functional position/state
 
-Verify that aggregated status uses null for unused attributes, from SXL 1.1
-For SXL versions before 1.1 empty strings "" is also allowed.
+Verify that aggregated status uses null for unused attributes, from SXL 1.1.0
+For SXL versions before 1.1.0 empty strings "" is also allowed.
 
 1. Given the is reconnected
 2. When we receive an aggregated status
@@ -58,7 +58,7 @@ For SXL versions before 1.1 empty strings "" is also allowed.
   </summary>
 ```ruby
 it 'uses null for functional position/state' do
-  with_site(:isolated, sxl: '>=1.1',
+  with_site(:isolated, sxl: '>=1.1.0',
                        'collect' => {
                          filter: RSMP::Filter.new(type: 'AggregatedStatus'),
                          timeout: RSMP::Validator.get_config('timeouts', 'ready'),

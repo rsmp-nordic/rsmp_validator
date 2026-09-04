@@ -17,12 +17,12 @@ grand_parent: Site
 - TOC
 {:toc}
 
-## Message Buffer marks buffered status values as old for rsmp 3.2 and later
+## Message Buffer marks buffered status values as old for rsmp 3.2.0 and later
 
 Verify that buffered status messages use quality "old" for core versions
 where the core spec requires it.
 
-1. Given the site is connected using core 3.2 or later
+1. Given the site is connected using core 3.2.0 or later
 2. And a status subscription is active
 3. When communication is disrupted and later restored
 4. Then buffered status values should have q=old
@@ -32,8 +32,8 @@ where the core spec requires it.
      View Source
   </summary>
 ```ruby
-it 'marks buffered status values as old for rsmp 3.2 and later' do
-  skip 'requires core >= 3.2' unless RSMP::Validator.core_matches?('>=3.2')
+it 'marks buffered status values as old for rsmp 3.2.0 and later' do
+  skip 'requires core >= 3.2.0' unless RSMP::Validator.core_matches?('>=3.2.0')
   update = collect_buffered_status_after_disruption
   expect(update.attributes['sS'].map { |status| status['q'] }.uniq).to be == ['old']
 end

@@ -25,7 +25,7 @@ grand_parent: Site
   </summary>
 ```ruby
 it 'becomes completed when cancelled' do
-  with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
+  with_site(:connected, core: '>=3.2.0', sxl: '>=1.1.0') do |site_proxy|
     timeout = RSMP::Validator.get_config('timeouts', 'priority_completion')
     component = RSMP::Validator.get_config('main_component')
     signal_group_id = RSMP::Validator.get_config('components', 'signal_group').keys.first
@@ -64,7 +64,7 @@ end
   </summary>
 ```ruby
 it 'becomes stale if not cancelled' do
-  with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
+  with_site(:connected, core: '>=3.2.0', sxl: '>=1.1.0') do |site_proxy|
     timeout = RSMP::Validator.get_config('timeouts', 'priority_completion')
     component = RSMP::Validator.get_config('main_component')
     signal_group_id = RSMP::Validator.get_config('components', 'signal_group').keys.first
@@ -109,7 +109,7 @@ Validate that a signal priority can be requested.
   </summary>
 ```ruby
 it 'can be requested with M0022' do
-  with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
+  with_site(:connected, core: '>=3.2.0', sxl: '>=1.1.0') do |site_proxy|
     signal_group = RSMP::Validator.get_config('components', 'signal_group').keys.first
     command_list = RSMP::CommandList.new(:M0022, :requestPriority,
                                          requestId: SecureRandom.uuid[0..3],
@@ -141,7 +141,7 @@ Validate that signal priority status can be requested.
   </summary>
 ```ruby
 it 'status can be fetched with S0033' do
-  with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
+  with_site(:connected, core: '>=3.2.0', sxl: '>=1.1.0') do |site_proxy|
     site_proxy.request_status_and_collect({ S0033: [:status] },
                                           within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
@@ -165,7 +165,7 @@ Validate that we can subscribe signal priority status
   </summary>
 ```ruby
 it 'status can be subscribed to with S0033' do
-  with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
+  with_site(:connected, core: '>=3.2.0', sxl: '>=1.1.0') do |site_proxy|
     status_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
     status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
     wait_for_status(site_proxy, 'signal priority status', status_list)

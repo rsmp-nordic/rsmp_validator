@@ -32,7 +32,7 @@ Verify status S0091 operator logged in/out OP-panel
 ```ruby
 it 'operator logged in/out of OP-panel is read with S0091' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1.0')
                     { S0091: [:user] }
                   else
                     { S0091: %i[user status] }
@@ -60,7 +60,7 @@ Verify status S0092 operator logged in/out web-interface
 ```ruby
 it 'operator logged in/out of web-interface is read with S0092' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
-    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
+    status_list = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1.0')
                     { S0092: [:user] }
                   else
                     { S0092: %i[user status] }
@@ -76,7 +76,7 @@ end
 ## System security code is rejected when incorrect
 
 Verify that the site_proxy responds with NotAck if we send incorrect security cdoes.
-RThis hehaviour is defined in SXL >= 1.1. For earlier versions,
+This behaviour is defined in SXL >= 1.1.0. For earlier versions,
 The behaviour is undefined.
 1. Given the site_proxy is connected
 2. When we send a M0008 command with incorrect security codes
@@ -88,7 +88,7 @@ The behaviour is undefined.
   </summary>
 ```ruby
 it 'security code is rejected when incorrect' do
-  with_site(:connected, sxl: '>=1.1') do |site_proxy|
+  with_site(:connected, sxl: '>=1.1.0') do |site_proxy|
     result = wrong_security_code(site_proxy)
     expect(result).to be_a(RSMP::Result::Failure)
     expect(result.failure.code).to eq(:message_rejected) if result.failure?
