@@ -38,7 +38,7 @@ it 'is read with S0015' do
                     { S0015: [:status] }
                   end
     site_proxy.request_status_and_collect(status_list,
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -66,10 +66,10 @@ it 'is set with M0003' do
   timeout = RSMP::Validator.get_config('timeouts', 'command')
   with_site(:connected) do |site_proxy|
     situations.each do |traffic_situation|
-      assert site_proxy.tlc.set_traffic_situation(traffic_situation.to_s, within: timeout)
+      assert site_proxy.tlc.set_traffic_situation!(traffic_situation.to_s, within: timeout)
     end
   ensure
-    site_proxy.tlc.unset_traffic_situation(within: timeout)
+    site_proxy.tlc.unset_traffic_situation!(within: timeout)
   end
 end
 ```
@@ -92,7 +92,7 @@ Verify status S0019 number of traffic situations
 it 'list size is read with S0019' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.request_status_and_collect({ S0019: [:number] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```

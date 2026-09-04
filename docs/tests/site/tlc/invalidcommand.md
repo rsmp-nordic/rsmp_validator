@@ -33,11 +33,10 @@ it 'returns NotAck if attribute is missing' do
                                          timeout: '0').to_a
     # intentionally not setting 'status'
     timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-    collector = site_proxy.send_command_and_collect(command_list,
-                                                    within: timeout,
-                                                    validate: false) # disable validation of outgoing message
-    expect(collector.status).to eq(:cancelled)
-    expect(collector.error).to be_a(RSMP::MessageRejected)
+    result = site_proxy.send_command_and_collect(command_list,
+                                                 within: timeout,
+                                                 validate: false) # disable validation of outgoing message
+    expect_message_rejected(result)
   end
 end
 ```
@@ -56,11 +55,10 @@ it 'returns NotAck if command code id is unknown' do
     log 'Sending non-existing command M0000'
     command_list = RSMP::CommandList.new(:M0000, :bad, {}).to_a
     timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-    collector = site_proxy.send_command_and_collect(command_list,
-                                                    within: timeout,
-                                                    validate: false) # disable schema validation of outgoing message
-    expect(collector.status).to eq(:cancelled)
-    expect(collector.error).to be_a(RSMP::MessageRejected)
+    result = site_proxy.send_command_and_collect(command_list,
+                                                 within: timeout,
+                                                 validate: false) # disable schema validation of outgoing message
+    expect_message_rejected(result)
   end
 end
 ```
@@ -83,11 +81,10 @@ it 'returns NotAck if command name is bad' do
                                          intersection: '0',
                                          timeout: '0').to_a
     timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-    collector = site_proxy.send_command_and_collect(command_list,
-                                                    within: timeout,
-                                                    validate: false) # disable validation of outgoing message
-    expect(collector.status).to eq(:cancelled)
-    expect(collector.error).to be_a(RSMP::MessageRejected)
+    result = site_proxy.send_command_and_collect(command_list,
+                                                 within: timeout,
+                                                 validate: false) # disable validation of outgoing message
+    expect_message_rejected(result)
   end
 end
 ```
@@ -115,9 +112,8 @@ it 'returns a command response with age=undefined if compoent id is unknown' do
       within: RSMP::Validator.get_config('timeouts', 'command_response'),
       validate: false # disable validation of outgoing message
     )
-    expect(result).to be_a(RSMP::Collector)
-    expect(result.status).to eq(:ok)
-    response = result.messages.first
+    exchange = result.value!
+    response = exchange.messages.first
     expect(response).to be_a(RSMP::CommandResponse)
     rvs = response.attributes['rvs']
     expect(rvs).to be_a(Array)

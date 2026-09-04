@@ -51,7 +51,7 @@ it 'can acknowledge A0302' do
                                  },
                                  timeout: timeout).collect!
       end
-      site_proxy.send_message RSMP::AlarmAcknowledge.new(
+      site_proxy.send_message! RSMP::AlarmAcknowledge.new(
         'cId' => component_id,
         'aTs' => site_proxy.clock.to_s,
         'aCId' => alarm_code_id
@@ -78,19 +78,19 @@ it 'can suspende and resume A0302' do
     alarm_code_id = 'A0302'
     _, component_id = find_alarm_programming(alarm_code_id)
     # first resume alarm to make sure something happens when we suspend
-    site_proxy.resume_alarm Async::Task.current, c_id: component_id, a_c_id: alarm_code_id, collect: false
+    site_proxy.resume_alarm!(c_id: component_id, a_c_id: alarm_code_id, collect: false)
     begin
       # suspend alarm
-      _, response = site_proxy.suspend_alarm Async::Task.current, c_id: component_id, a_c_id: alarm_code_id,
-                                                                  collect: true
+      exchange = site_proxy.suspend_alarm!(c_id: component_id, a_c_id: alarm_code_id, collect: true)
+      response = exchange.messages.first
       expect(response).to be_a(RSMP::AlarmSuspended)
       # resume alarm
-      _, response = site_proxy.resume_alarm Async::Task.current, c_id: component_id, a_c_id: alarm_code_id,
-                                                                 collect: true
+      exchange = site_proxy.resume_alarm!(c_id: component_id, a_c_id: alarm_code_id, collect: true)
+      response = exchange.messages.first
       expect(response).to be_a(RSMP::AlarmResumed)
     ensure
       # always end with resuming alarm
-      site_proxy.resume_alarm Async::Task.current, c_id: component_id, a_c_id: alarm_code_id, collect: false
+      site_proxy.resume_alarm!(c_id: component_id, a_c_id: alarm_code_id, collect: false)
     end
   end
 end

@@ -33,12 +33,11 @@ Verify status S0098 configuration of traffic parameters
 it 'config is read with S0098' do
   with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
     timeout = RSMP::Validator.get_config('timeouts', 'status_response')
-    collector = site_proxy.request_status_and_collect(
+    exchange = site_proxy.request_status_and_collect(
       { S0098: %i[timestamp config version] },
       within: timeout
-    )
-    collector.ok!
-    ss = collector.messages.last.attributes['sS']
+    ).value!
+    ss = exchange.messages.last.attributes['sS']
     values = ss.to_h { |i| [i['n'], i['s']] }
     assert(!values['timestamp'].empty?, 'expected timestamp to not be empty')
     assert(!values['config'].empty?, 'expected config to not be empty')
@@ -70,7 +69,7 @@ it 'currently active is read with S0014' do
                     { S0014: [:status] }
                   end
     site_proxy.request_status_and_collect(status_list,
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -101,18 +100,17 @@ it 'currently active is set with M0002' do
     plans.each do |plan|
       command_timeout = RSMP::Validator.get_config('timeouts', 'command')
       status_timeout = RSMP::Validator.get_config('timeouts', 'status_response')
-      site_proxy.tlc.set_timeplan(plan, within: command_timeout)
+      site_proxy.tlc.set_timeplan!(plan, within: command_timeout)
       s0014_fields = if RSMP::Proxy.version_meets_requirement?(site_proxy.sxl_version, '>=1.1')
                        { S0014: %i[status source] }
                      else
                        { S0014: [:status] }
                      end
-      collector = site_proxy.request_status_and_collect(
+      exchange = site_proxy.request_status_and_collect(
         s0014_fields,
         within: status_timeout
-      )
-      collector.ok!
-      ss = collector.messages.last.attributes['sS']
+      ).value!
+      ss = exchange.messages.last.attributes['sS']
       expect(ss.find { |i| i['n'] == 'status' }&.fetch('s').to_i).to eq(plan)
     end
   end
@@ -137,7 +135,7 @@ Verify status S0028 cycle time
 it 'cycle time is read with S0028' do
   with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
     site_proxy.request_status_and_collect({ S0028: [:status] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -187,7 +185,7 @@ Verify status S0027 time tables
 it 'day table is read with S0027' do
   with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
     site_proxy.request_status_and_collect({ S0027: [:status] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -211,7 +209,7 @@ it 'day table is set with M0017' do
   with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
     status = '12-1-12-59,1-0-23-12'
     timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-    site_proxy.tlc.set_day_table(status, within: timeout)
+    site_proxy.tlc.set_day_table!(status, within: timeout)
   end
 end
 ```
@@ -234,7 +232,7 @@ Verify status S0023 command table
 it 'dynamic bands are read with S0023' do
   with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
     site_proxy.request_status_and_collect({ S0023: [:status] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -259,7 +257,7 @@ it 'dynamic bands are set with M0014' do
     plan = RSMP::Validator.get_config('items', 'plans').first
     status = '1-12'
     timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-    site_proxy.tlc.set_dynamic_bands(plan: plan, status: status, within: timeout)
+    site_proxy.tlc.set_dynamic_bands!(plan: plan, status: status, within: timeout)
   end
 end
 ```
@@ -277,14 +275,14 @@ it 'dynamic bands values can be changed and read back' do
   with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
     plan = RSMP::Validator.get_config('items', 'plans').first
     band = 3
-    value = site_proxy.tlc.read_dynamic_band(plan: plan, band: band) || 0
+    value = site_proxy.tlc.read_dynamic_band!(plan: plan, band: band) || 0
     expect(value).to be_a(Integer)
     new_value = value + 1
     timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-    site_proxy.tlc.set_dynamic_bands(plan: plan, status: "#{band}-#{new_value}", within: timeout)
-    expect(site_proxy.tlc.read_dynamic_band(plan: plan, band: band)).to eq(new_value)
-    site_proxy.tlc.set_dynamic_bands(plan: plan, status: "#{band}-#{value}", within: timeout)
-    expect(site_proxy.tlc.read_dynamic_band(plan: plan, band: band)).to eq(value)
+    site_proxy.tlc.set_dynamic_bands!(plan: plan, status: "#{band}-#{new_value}", within: timeout)
+    expect(site_proxy.tlc.read_dynamic_band!(plan: plan, band: band)).to eq(new_value)
+    site_proxy.tlc.set_dynamic_bands!(plan: plan, status: "#{band}-#{value}", within: timeout)
+    expect(site_proxy.tlc.read_dynamic_band!(plan: plan, band: band)).to eq(value)
   end
 end
 ```
@@ -307,7 +305,7 @@ Verify status S0022 list of time plans
 it 'list is read with S0022' do
   with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
     site_proxy.request_status_and_collect({ S0022: [:status] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -331,7 +329,7 @@ Deprecated from 1.2, use S0022 instead.
 it 'list size is read with S0018' do
   with_site(:connected, sxl: ['>=1.0.7', '<1.2']) do |site_proxy|
     site_proxy.request_status_and_collect({ S0018: [:number] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -354,7 +352,7 @@ Verify status S0024 offset time
 it 'offset is read with S0024' do
   with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
     site_proxy.request_status_and_collect({ S0024: [:status] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -377,7 +375,7 @@ it 'offset is set with M0015' do
     plan = RSMP::Validator.get_config('items', 'plans').first
     offset = 99
     timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-    site_proxy.tlc.set_offset(plan: plan, offset: offset, within: timeout)
+    site_proxy.tlc.set_offset!(plan: plan, offset: offset, within: timeout)
   end
 end
 ```
@@ -403,9 +401,9 @@ it 'timeout for dynamic bands is set with M0023' do
   with_site(:connected, sxl: '>=1.1') do |site_proxy|
     timeout = RSMP::Validator.get_config('timeouts', 'command_response')
     status = 10
-    site_proxy.tlc.set_dynamic_bands_timeout(status, within: timeout)
+    site_proxy.tlc.set_dynamic_bands_timeout!(status, within: timeout)
     status = 0
-    site_proxy.tlc.set_dynamic_bands_timeout(status, within: timeout)
+    site_proxy.tlc.set_dynamic_bands_timeout!(status, within: timeout)
   end
 end
 ```
@@ -428,7 +426,7 @@ Verify status S0097 version of traffic program
 it 'version is read with S0097' do
   with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
     site_proxy.request_status_and_collect({ S0097: %i[timestamp checksum] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -451,7 +449,7 @@ Verify status S0026 week time table
 it 'week table is read with S0026' do
   with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
     site_proxy.request_status_and_collect({ S0026: [:status] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -475,7 +473,7 @@ it 'week table is set with M0016' do
   with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
     status = '0-1,6-2'
     timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-    site_proxy.tlc.set_week_table(status, within: timeout)
+    site_proxy.tlc.set_week_table!(status, within: timeout)
   end
 end
 ```

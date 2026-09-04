@@ -38,7 +38,7 @@ it 'all red can be read with S0012' do
                     { S0012: %i[status intersection] }
                   end
     site_proxy.request_status_and_collect(status_list,
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -67,11 +67,11 @@ it 'can use yellow flash with a timeout of one minute' do
     timeout = RSMP::Validator.get_config('timeouts', 'yellow_flash')
     fp_timeout = RSMP::Validator.get_config('timeouts', 'functional_position')
     begin
-      site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
-      site_proxy.tlc.set_functional_position('YellowFlash', timeout_minutes: minutes, within: timeout)
+      site_proxy.tlc.set_functional_position!('NormalControl', within: startup_timeout)
+      site_proxy.tlc.set_functional_position!('YellowFlash', timeout_minutes: minutes, within: timeout)
       wait_normal_control(site_proxy, timeout: (minutes * 60) + fp_timeout)
     ensure
-      site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
+      site_proxy.tlc.set_functional_position!('NormalControl', within: startup_timeout)
     end
   end
 end
@@ -95,7 +95,7 @@ Verify status S0020 control mode
 it 'control mode is read with S0020' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.request_status_and_collect({ S0020: %i[controlmode intersection] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -118,7 +118,7 @@ Verify status S0032 coordinated control
 it 'coordinated control is read with S0032' do
   with_site(:connected, sxl: '>=1.1') do |site_proxy|
     site_proxy.request_status_and_collect({ S0032: %i[status intersection source] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -145,9 +145,9 @@ it 'dark mode can be activated with M0001' do
     timeout = RSMP::Validator.get_config('timeouts', 'functional_position')
     startup_timeout = RSMP::Validator.get_config('timeouts', 'startup_sequence')
     begin
-      site_proxy.tlc.set_functional_position('Dark', within: timeout)
+      site_proxy.tlc.set_functional_position!('Dark', within: timeout)
     ensure
-      site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
+      site_proxy.tlc.set_functional_position!('NormalControl', within: startup_timeout)
     end
   end
 end
@@ -174,9 +174,9 @@ it 'fixed time control can be activated with M0007' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     timeout = RSMP::Validator.get_config('timeouts', 'command')
     begin
-      site_proxy.tlc.set_fixed_time('True', within: timeout)
+      site_proxy.tlc.set_fixed_time!('True', within: timeout)
     ensure
-      site_proxy.tlc.set_fixed_time('False', within: timeout)
+      site_proxy.tlc.set_fixed_time!('False', within: timeout)
     end
   end
 end
@@ -205,7 +205,7 @@ it 'fixed time control is read with S0009' do
                     { S0009: %i[status intersection] }
                   end
     site_proxy.request_status_and_collect(status_list,
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -233,7 +233,7 @@ it 'isolated control is read with S0010' do
                     { S0010: %i[status intersection] }
                   end
     site_proxy.request_status_and_collect(status_list,
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -261,7 +261,7 @@ it 'manual control is read with S0008' do
                     { S0008: %i[status intersection] }
                   end
     site_proxy.request_status_and_collect(status_list,
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -284,7 +284,7 @@ Verify status S0013 police key
 it 'police key can be read with S0013' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.request_status_and_collect({ S0013: [:status] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -307,7 +307,7 @@ Verify status S0005 traffic controller starting
 it 'startup status is read with S0005' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.request_status_and_collect({ S0005: [:status] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -332,7 +332,7 @@ it 'startup status is read with S0005 by intersection' do
   skip 'requires core >= 3.2' unless RSMP::Validator.core_matches?('>=3.2')
   with_site(:connected, sxl: '>=1.2') do |site_proxy|
     site_proxy.request_status_and_collect({ S0005: [:statusByIntersection] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -355,7 +355,7 @@ Verify status S0007 controller switched on (dark mode=off)
 it 'switched on is read with S0007' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.request_status_and_collect({ S0007: %i[status intersection] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -378,7 +378,7 @@ Verify status S0007 controller switched on, source attribute
 it 'switched on is read with S0007 with source' do
   with_site(:connected, sxl: '>=1.1') do |site_proxy|
     site_proxy.request_status_and_collect({ S0007: %i[status intersection source] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -405,12 +405,12 @@ it 'yellow flash affects all signal groups' do
     timeout = RSMP::Validator.get_config('timeouts', 'yellow_flash')
     startup_timeout = RSMP::Validator.get_config('timeouts', 'startup_sequence')
     begin
-      site_proxy.tlc.set_functional_position('YellowFlash', within: timeout)
-      site_proxy.tlc.wait_for_groups 'c', timeout: timeout # c means yellow flash
+      site_proxy.tlc.set_functional_position!('YellowFlash', within: timeout)
+      site_proxy.tlc.wait_for_groups! 'c', timeout: timeout # c means yellow flash
     ensure
-      site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
+      site_proxy.tlc.set_functional_position!('NormalControl', within: startup_timeout)
     end
-    site_proxy.tlc.wait_for_groups '[^c]', timeout: timeout # not c, ie. not yellow flash
+    site_proxy.tlc.wait_for_groups! '[^c]', timeout: timeout # not c, ie. not yellow flash
   end
 end
 ```
@@ -437,9 +437,9 @@ it 'yellow flash can be activated with M0001' do
     yellow_flash_timeout = RSMP::Validator.get_config('timeouts', 'yellow_flash')
     startup_timeout = RSMP::Validator.get_config('timeouts', 'startup_sequence')
     begin
-      site_proxy.tlc.set_functional_position('YellowFlash', within: yellow_flash_timeout)
+      site_proxy.tlc.set_functional_position!('YellowFlash', within: yellow_flash_timeout)
     ensure
-      site_proxy.tlc.set_functional_position('NormalControl', within: startup_timeout)
+      site_proxy.tlc.set_functional_position!('NormalControl', within: startup_timeout)
     end
   end
 end
@@ -468,7 +468,7 @@ it 'yellow flash can be read with S0011' do
                     { S0011: %i[status intersection] }
                   end
     site_proxy.request_status_and_collect(status_list,
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```

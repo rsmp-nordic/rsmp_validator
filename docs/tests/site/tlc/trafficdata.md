@@ -48,7 +48,7 @@ it 'classification for a single detector is read with S0204' do
       ] },
       component: component,
       within: RSMP::Validator.get_config('timeouts', 'status_response')
-    ).ok!
+    ).value!
   end
 end
 ```
@@ -84,7 +84,7 @@ it 'classification for all detectors is read with S0208' do
         F
       ] },
       within: RSMP::Validator.get_config('timeouts', 'status_response')
-    ).ok!
+    ).value!
   end
 end
 ```
@@ -111,7 +111,7 @@ it 'number of vehicles for a single detector is read with S0201' do
       { S0201: %i[starttime vehicles] },
       component: component,
       within: RSMP::Validator.get_config('timeouts', 'status_response')
-    ).ok!
+    ).value!
   end
 end
 ```
@@ -134,7 +134,7 @@ Verify status S0205 traffic counting: number of vehicles
 it 'number of vehicles for all detectors is read with S0205' do
   with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
     site_proxy.request_status_and_collect({ S0205: %i[start vehicles] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -161,7 +161,7 @@ it 'occupancy for a single detector is read with S0203' do
       { S0203: %i[starttime occupancy] },
       component: component,
       within: RSMP::Validator.get_config('timeouts', 'status_response')
-    ).ok!
+    ).value!
   end
 end
 ```
@@ -183,11 +183,12 @@ Verify status S0207 traffic counting: occupancy
 ```ruby
 it 'occupancy for all detectors is read with S0207' do
   with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
-    result = wait_for_status(site_proxy, 'traffic counting: occupancy',
-                             { S0207: %i[start occupancy] },
-                             update_rate: 60)
-    occupancies = result.matcher_got_hash.dig('S0207', 'occupancy')
-    start = result.matcher_got_hash.dig('S0207', 'start')
+    exchange = wait_for_status(site_proxy, 'traffic counting: occupancy',
+                               { S0207: %i[start occupancy] },
+                               update_rate: 60)
+    values = exchange.reached.to_h { |item| [item['n'], item['s']] }
+    occupancies = values['occupancy']
+    start = values['start']
     expect(start).to be_a(String)
     occupancy_values = if RSMP::Validator.sxl_matches?('<1.1')
                          expect(occupancies).to be_a(String)
@@ -229,7 +230,7 @@ it 'vehicle speed for a single detector is read with S0202' do
       { S0202: %i[starttime speed] },
       component: component,
       within: RSMP::Validator.get_config('timeouts', 'status_response')
-    ).ok!
+    ).value!
   end
 end
 ```
@@ -252,7 +253,7 @@ Verify status S0206 traffic counting: vehicle speed
 it 'vehicle speed for all detectors is read with S0206' do
   with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
     site_proxy.request_status_and_collect({ S0206: %i[start speed] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```

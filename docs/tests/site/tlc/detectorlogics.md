@@ -33,7 +33,7 @@ Verify status S0021 manually set detector logic
 it 'forcing is read with S0021' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.request_status_and_collect({ S0021: [:detectorlogics] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -55,13 +55,13 @@ it 'forcing is set with M0008' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     RSMP::Validator.get_config('components', 'detector_logic').keys.each_with_index do |component, indx|
       timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-      site_proxy.tlc.force_detector_logic(component, status: 'True', mode: 'True', within: timeout)
+      site_proxy.tlc.force_detector_logic!(component, status: 'True', mode: 'True', within: timeout)
       wait_for_status(
         site_proxy,
         "detector logic #{component} to be True",
         [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /^.{#{indx}}1/ }]
       )
-      site_proxy.tlc.force_detector_logic(component, status: 'True', mode: 'False', within: timeout)
+      site_proxy.tlc.force_detector_logic!(component, status: 'True', mode: 'False', within: timeout)
       wait_for_status(
         site_proxy,
         "detector logic #{component} to be False",
@@ -90,7 +90,7 @@ Verify status S0016 number of detector logics
 it 'list size is read with S0016' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.request_status_and_collect({ S0016: [:number] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -113,7 +113,7 @@ Verify status S0031 trigger level sensitivity for loop detector
 it 'sensitivity is read with S0031' do
   with_site(:connected, sxl: '>=1.0.15') do |site_proxy|
     site_proxy.request_status_and_collect({ S0031: [:status] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
@@ -136,7 +136,7 @@ Verify status S0002 detector logic status
 it 'status is read with S0002' do
   with_site(:connected, sxl: '>=1.0.7') do |site_proxy|
     site_proxy.request_status_and_collect({ S0002: [:detectorlogicstatus] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```

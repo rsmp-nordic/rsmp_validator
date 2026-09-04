@@ -127,7 +127,7 @@ end
 </details>
 
 
-## Connection Sequence exchanges correct connection sequence of rsmp version 3.2
+## Connection Sequence exchanges correct connection sequence of rsmp version 3.2.0
 
 Verify the connection sequence when using rsmp core 3.2
 
@@ -141,9 +141,9 @@ Verify the connection sequence when using rsmp core 3.2
      View Source
   </summary>
 ```ruby
-it 'exchanges correct connection sequence of rsmp version 3.2' do
-  skip 'requires core == 3.2' unless RSMP::Validator.core_matches?('3.2')
-  check_sequence '3.2'
+it 'exchanges correct connection sequence of rsmp version 3.2.0' do
+  skip 'requires core == 3.2.0' unless RSMP::Validator.core_matches?('3.2.0')
+  check_sequence '3.2.0'
 end
 ```
 </details>

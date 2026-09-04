@@ -33,8 +33,7 @@ it 'becomes completed when cancelled' do
       site_proxy,
       component: component,
       signal_group_id: signal_group_id,
-      timeout: timeout,
-      task: Async::Task.current
+      timeout: timeout
     )
     prio.run do
       log 'Before: Send unrelated signal priority request.'
@@ -73,8 +72,7 @@ it 'becomes stale if not cancelled' do
       site_proxy,
       component: component,
       signal_group_id: signal_group_id,
-      timeout: timeout,
-      task: Async::Task.current
+      timeout: timeout
     )
     prio.run do
       log 'Before: Send unrelated signal priority request.'
@@ -122,7 +120,7 @@ it 'can be requested with M0022' do
                                          vehicleType: 'car').to_a
     log "Request signal priority for signal group #{signal_group}"
     timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-    site_proxy.send_command_and_collect(command_list, within: timeout).ok!
+    site_proxy.send_command_and_collect(command_list, within: timeout).value!
   end
 end
 ```
@@ -145,7 +143,7 @@ Validate that signal priority status can be requested.
 it 'status can be fetched with S0033' do
   with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
     site_proxy.request_status_and_collect({ S0033: [:status] },
-                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                          within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
   end
 end
 ```
