@@ -77,7 +77,7 @@ jobs:
         path: simulator-${{ steps.log_id.outputs.LOG_ID }}.log
 
     - name: Upload compliance result
-      if: always()
+      if: ${{ always() && steps.ruby_setup.outcome == 'success' }}
       uses: actions/upload-artifact@v7
       with:
         name: compliance-${{ steps.log_id.outputs.LOG_ID }}.json
