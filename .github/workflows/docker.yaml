@@ -10,8 +10,16 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
+concurrency:
+  group: docker-publish-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  docker-smoke:
+    uses: ./.github/workflows/docker_smoke.yaml
+
   build-and-push-image:
+    needs: docker-smoke
     runs-on: ubuntu-latest
     permissions:
       contents: read
