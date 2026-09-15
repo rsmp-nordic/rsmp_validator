@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY .tool-versions Gemfile Gemfile.lock LICENSE rsmp-validator.gemspec ./
 COPY config config
+COPY config/validator_example.yaml config/validator.yaml
 COPY exe exe
 COPY lib lib
 COPY schemas schemas
