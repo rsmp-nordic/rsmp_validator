@@ -1,0 +1,13 @@
+.git
+.bundle
+coverage
+log
+pkg
+test/reports
+tmp
+vendor
+config/*secrets.yaml
+!config/secrets_example.yaml
+!config/gem_tlc_secrets.yaml
+config/private
+config/validator.yaml

@@ -22,6 +22,11 @@ jobs:
     - name: Check CLI help
       run: docker run --rm rsmp-validator:smoke --help
 
+    - name: Check external-system defaults
+      run: |
+        docker run --rm --entrypoint ruby rsmp-validator:smoke \
+          -ryaml -e 'config = YAML.load_file("config/validator.yaml"); abort "auto node enabled" if config.key?("auto_site") || config.key?("auto_supervisor")'
+
     - name: Run validator tests
       run: |
         docker run --rm --entrypoint bundle \
