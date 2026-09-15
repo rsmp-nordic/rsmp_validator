@@ -4,7 +4,9 @@ name: Docker Smoke
 
 on:
   push:
+    branches-ignore: [ main ]
   pull_request:
+  workflow_call:
 
 jobs:
   docker-smoke:
@@ -20,7 +22,31 @@ jobs:
     - name: Check CLI help
       run: docker run --rm rsmp-validator:smoke --help
 
-    - name: Run validator smoke test
+    - name: Run validator tests
+      run: |
+        docker run --rm --entrypoint bundle \
+          rsmp-validator:smoke \
+          exec sus test/validator
+
+    - name: Run Core 3.1.5 validator smoke test
+      run: |
+        docker run --rm \
+          rsmp-validator:smoke \
+          run test/site/core/connect_spec.rb --verbose \
+          --site-config config/gem_tlc.yaml \
+          --auto-site-config config/simulator/tlc.yaml \
+          --core 3.1.5
+
+    - name: Run Core 3.2.2 validator smoke test
+      run: |
+        docker run --rm \
+          rsmp-validator:smoke \
+          run test/site/core/connect_spec.rb --verbose \
+          --site-config config/gem_tlc.yaml \
+          --auto-site-config config/simulator/tlc.yaml \
+          --core 3.2.2
+
+    - name: Run Core 3.3.0 validator smoke test
       run: |
         docker run --rm \
           rsmp-validator:smoke \

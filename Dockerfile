@@ -9,6 +9,7 @@ COPY lib lib
 COPY schemas schemas
 COPY test test
 RUN bundle install
+COPY fixtures fixtures
 EXPOSE 13111
 ENTRYPOINT [ "bundle", "exec", "rsmp-validator" ]
 CMD [ "run", "test/site/core", "test/site/tlc" ]
