@@ -39,6 +39,11 @@ For other types of equipment, the tests cover only the RSMP Core specification. 
 
 The validator also includes preliminary support for testing supervisor systems.
 
+## Safety and Operational Equipment
+Do not run the validator against equipment controlling street traffic or systems in production. Many tests send commands, trigger alarms, or otherwise change equipment behaviour, which can disrupt normal operation and cause unsafe situations.
+
+Only run a restricted set of tests on operational equipment if every selected test has been reviewed and confirmed safe for that specific equipment and operating environment.
+
 ## Do I need to learn the Ruby language?
 No. You can use the validator without writing any Ruby code. Ruby is only needed if you want to [modify or add tests]({{ site.baseurl}}{% link pages/writing.md %}), or you need more in-depth understanding of how specific tests work.
 
