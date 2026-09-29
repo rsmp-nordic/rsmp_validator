@@ -5,7 +5,7 @@ describe 'Site::Tlc::Subscribe' do
   # is arbitrary as we simply want to check that
   # the subscription mechanism works.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we subscribe to S0001
   # 3. Then we should receive a status update
   # 4. Finally we unsubscribe from S0001
@@ -31,7 +31,7 @@ describe 'Site::Tlc::Subscribe' do
   # The test subscribes to S0001 'cyclecounter' attribute with an initial update rate of 60s,
   # then changes the update rate to 1s and verifies the new rate is in effect.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we subscribe to S0001 'cyclecounter' with update rate 60s
   # 3. And we change the update rate to 1s
   # 4. Then we should receive two immediate updates and one periodic update within 2s

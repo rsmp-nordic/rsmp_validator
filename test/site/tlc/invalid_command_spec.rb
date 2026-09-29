@@ -10,7 +10,7 @@ describe 'Site::Tlc::InvalidCommand' do
   # Verify that site_proxy reponds with age=undefined when receiving
   # a command with an unknown component id
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send a command with an unknown component id
   # 3. Then the site_proxy should return a command response with age=undefined
 
@@ -42,7 +42,7 @@ describe 'Site::Tlc::InvalidCommand' do
 
   # Verify that site_proxy returns NotAck when receiving an unknown command
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send a non-existing M0000 command
   # 3. Then the site_proxy should return NotAck
 
@@ -62,7 +62,7 @@ describe 'Site::Tlc::InvalidCommand' do
   # Verify that site_proxy returns NotAck when receiving a command
   # with a mising command attribute
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send an M0001 command with 'status' missing
   # 3. Then the site_proxy return NotAck
 
@@ -85,7 +85,7 @@ describe 'Site::Tlc::InvalidCommand' do
   # Verify that site_proxy returns NotAck when receiving a command
   # with an unknown command name
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send an M0001 command with 'bad' as command name
   # 3. Then the site_proxy should return NotAck
 

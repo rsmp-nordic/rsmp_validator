@@ -3,7 +3,7 @@ describe 'Site::Tlc::EmergencyRoutes' do
 
   # Verify that current emergency route can be read with S0006.
   # Deprecated from 1.2.0, use S0035 instead.
-  # 1. Given the site_proxy is connected.
+  # 1. Given the site is connected.
   # 2. When we request S0006.
   # 3. Then we should receive a status response.
   it 'emergency route is read with S0006' do
@@ -15,7 +15,7 @@ describe 'Site::Tlc::EmergencyRoutes' do
 
   # Verify that current emergency routes can be read with S0035.
   # Requires core >= 3.2.0 since it uses the array data type.
-  # 1. Given the site_proxy is connected.
+  # 1. Given the site is connected.
   # 2. When we request S0035.
   # 3. Then we should receive a status response.
   it 'emergency route is read with S0035' do
@@ -28,7 +28,7 @@ describe 'Site::Tlc::EmergencyRoutes' do
 
   # Verify that emergency routes can be activated with M0005.
   # S0006 should reflect the last route enabled/disabled.
-  # 1. Given the site_proxy is connected.
+  # 1. Given the site is connected.
   # 2. When we send M0005 to set emergency route.
   # 3. Then we should get a command responds confirming the change.
   it 'can be activated with M0005 and read with S0006' do
@@ -61,7 +61,7 @@ describe 'Site::Tlc::EmergencyRoutes' do
 
   # Verify that emergency routes can be activated with M0005.
   # S0035 should show all active routes.
-  # 1. Given the site_proxy is connected.
+  # 1. Given the site is connected.
   # 2. When we send M0005 to set emergency route.
   # 3. Then we should get a command responds confirming the change.
   # 4. When we request the current emergency routes with S035.
