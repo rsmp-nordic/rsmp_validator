@@ -13,7 +13,7 @@ describe 'Site::Tlc::Clock' do
 
   # Verify status 0096 current date and time
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'can be read with S0096' do
@@ -25,7 +25,7 @@ describe 'Site::Tlc::Clock' do
 
   # Verify that the controller responds to M0104
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Send command
   # 3. Expect status response before timeout
   it 'can be set with M0104' do
@@ -37,7 +37,7 @@ describe 'Site::Tlc::Clock' do
 
   # Verify status S0096 clock after changing clock
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Send control command to set_clock
   # 3. Request status S0096
   # 4. Compare set_clock and status timestamp
@@ -86,7 +86,7 @@ describe 'Site::Tlc::Clock' do
 
   # Verify status response timestamp after changing clock
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Send control command to set_clock
   # 3. Request status S0096
   # 4. Compare set_clock and response timestamp
@@ -120,7 +120,7 @@ describe 'Site::Tlc::Clock' do
 
   # Verify aggregated status response timestamp after changing clock
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Send control command to set clock
   # 3. Wait for status = true
   # 4. Request aggregated status
@@ -146,7 +146,7 @@ describe 'Site::Tlc::Clock' do
 
   # Verify command response timestamp after changing clock
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Send control command to set clock
   # 3. Send command to set functional position
   # 4. Compare set_clock and response timestamp
@@ -169,7 +169,7 @@ describe 'Site::Tlc::Clock' do
 
   # Verify command response timestamp after changing clock
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Send control command to set clock
   # 3. Send command to set functional position
   # 4. Compare set_clock and response timestamp
@@ -195,7 +195,7 @@ describe 'Site::Tlc::Clock' do
   # a A0302 alarm can be raise by activating a specific input, as
   # configuted in the test config.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send a command to change the clock
   # 3. And we raise an alarm, by acticate an input
   # 4. Then we should receive an alarm
@@ -221,7 +221,7 @@ describe 'Site::Tlc::Clock' do
 
   # Verify timestamp of watchdog after changing clock
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Send control command to setset_clock
   # 3. Wait for Watchdog
   # 4. Compare set_clock and alarm response timestamp

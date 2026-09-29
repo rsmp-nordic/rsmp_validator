@@ -3,7 +3,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify status S0014 current time plan
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we request the status
   # 3. We should receive a status response before timeout
   it 'currently active is read with S0014' do
@@ -21,7 +21,7 @@ describe 'Site::Tlc::SignalPlans' do
   # Verify that we change time plan (signal program)
   # We try switching all programs configured
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. And there is a RSMP::Validator.get_config('validator') with a time plan
   # 3. When we send the command
   # 3. We should receive a confirmative command response before timeout
@@ -54,7 +54,7 @@ describe 'Site::Tlc::SignalPlans' do
   # Verify status S0018 number of time plans
   # Deprecated from 1.2.0, use S0022 instead.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we request the status
   # 3. We should receive a status response before timeout
   it 'list size is read with S0018' do
@@ -66,7 +66,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify status S0022 list of time plans
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we request the status
   # 3. We should receive a status response before timeout
   it 'list is read with S0022' do
@@ -78,7 +78,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify status S0026 week time table
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we request the status
   # 3. We should receive a status response before timeout
   it 'week table is read with S0026' do
@@ -90,7 +90,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify that we can set week table with M0016
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send the command
   # 3. We should receive a confirmative command response before timeout
   it 'week table is set with M0016' do
@@ -103,7 +103,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify status S0027 time tables
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we request the status
   # 3. We should receive a status response before timeout
   it 'day table is read with S0027' do
@@ -115,7 +115,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify that we can set day table with M0017
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send the command
   # 3. We should receive a confirmative command response before timeout
   it 'day table is set with M0017' do
@@ -128,7 +128,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify status S0097 version of traffic program
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we request the status
   # 3. We should receive a status response before timeout
   it 'version is read with S0097' do
@@ -141,7 +141,7 @@ describe 'Site::Tlc::SignalPlans' do
   #
   # Verify status S0098 configuration of traffic parameters
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we request the status
   # 3. We should receive a status response before timeout
   it 'config is read with S0098' do
@@ -162,7 +162,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify status S0023 command table
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we request the status
   # 3. We should receive a status response before timeout
   it 'dynamic bands are read with S0023' do
@@ -174,7 +174,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify that dynamic bands can the set with M0014
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send the command
   # 3. We should receive a confirmative command response before timeout
   it 'dynamic bands are set with M0014' do
@@ -188,7 +188,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify that dynamic bands can be read and changed
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. And we read dynamic band
   # 3. When we set dynamic band to 2x previous value
   # 4. Then reading dynamic bands should confirm the change
@@ -216,7 +216,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify command M0023 timeout of dynamic bands
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send command to set timeout
   # 3. Then we should get a confirmation
   # 2. When we send command to disable timeout
@@ -233,7 +233,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify status S0024 offset time
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'offset is read with S0024' do
@@ -243,9 +243,9 @@ describe 'Site::Tlc::SignalPlans' do
     end
   end
 
-  # 1. Verify connection
-  # 2. Send control command to set dynamic_bands
-  # 3. Wait for status = true
+  # 1. Given the site is connected
+  # 2. When we set the offset of a signal plan with M0015
+  # 3. Then we should receive a confirmation
   it 'offset is set with M0015' do
     with_site(:connected, sxl: '>=1.0.13') do |site_proxy|
       plan = RSMP::Validator.get_config('items', 'plans').first
@@ -257,7 +257,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify status S0028 cycle time
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we request the status
   # 3. We should receive a status response before timeout
   it 'cycle time is read with S0028' do
@@ -269,7 +269,7 @@ describe 'Site::Tlc::SignalPlans' do
 
   # Verify that cycle time can be changed with M0018
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. And we read cycle times
   # 3. When we extend cycle time of curent plan with 5s
   # 4. Then reading the cycle time should confirm the change

@@ -3,7 +3,7 @@ describe 'Site::Tlc::TrafficData' do
 
   # Verify status S0201 traffic counting: number of vehicles
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'number of vehicles for a single detector is read with S0201' do
@@ -19,7 +19,7 @@ describe 'Site::Tlc::TrafficData' do
 
   # Verify status S0205 traffic counting: number of vehicles
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'number of vehicles for all detectors is read with S0205' do
@@ -31,7 +31,7 @@ describe 'Site::Tlc::TrafficData' do
 
   # Verify status S0202 traffic counting: vehicle speed
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'vehicle speed for a single detector is read with S0202' do
@@ -47,7 +47,7 @@ describe 'Site::Tlc::TrafficData' do
 
   # Verify status S0206 traffic counting: vehicle speed
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'vehicle speed for all detectors is read with S0206' do
@@ -59,7 +59,7 @@ describe 'Site::Tlc::TrafficData' do
 
   # Verify status S0203 traffic counting: occupancy
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'occupancy for a single detector is read with S0203' do
@@ -75,7 +75,7 @@ describe 'Site::Tlc::TrafficData' do
 
   # Verify status S0207 traffic counting: occupancy
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'occupancy for all detectors is read with S0207' do
@@ -110,7 +110,7 @@ describe 'Site::Tlc::TrafficData' do
 
   # Verify status S0204 traffic counting: classification
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'classification for a single detector is read with S0204' do
@@ -137,7 +137,7 @@ describe 'Site::Tlc::TrafficData' do
 
   # Verify status S0208 traffic counting: classification
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'classification for all detectors is read with S0208' do

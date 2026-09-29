@@ -10,7 +10,7 @@ describe 'Site::Tlc::InvalidStatus' do
   # Verify that site_proxy reponds with q=undefined when receiving a
   # status request with an unknown component id.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send a status request with an unknown component id
   # 3. Then the site_proxy should return a status response with q=undefined
 
@@ -38,7 +38,7 @@ describe 'Site::Tlc::InvalidStatus' do
   # Verify that site_proxy returns NotAck when receiving
   # a request for an unknown status
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send a non-existing S000 status request
   # 3. Then the site_proxy should return NotAck
   it 'returns NotAck when status code is unknown' do
@@ -57,7 +57,7 @@ describe 'Site::Tlc::InvalidStatus' do
   # Verify that site_proxy returns NotAck when receiving
   # a request for an unknown status
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send an S0001 request with the stauts name 'bad'
   # 3. Then the site_proxy should return NotAck
   it 'returns NotAck when status name is unknown' do

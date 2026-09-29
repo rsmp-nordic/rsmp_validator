@@ -5,7 +5,7 @@ describe 'Site::Tlc::SignalPriority' do
 
   # Validate that a signal priority can be requested.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send a signal priority request
   # 3. Then we should receive an acknowledgement
   it 'can be requested with M0022' do
@@ -26,7 +26,7 @@ describe 'Site::Tlc::SignalPriority' do
 
   # Validate that signal priority status can be requested.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we request signal priority status
   # 3. Then we should receive a status update
   it 'status can be fetched with S0033' do
@@ -38,7 +38,7 @@ describe 'Site::Tlc::SignalPriority' do
 
   # Validate that we can subscribe signal priority status
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. And we subscribe to signal priority status updates
   # 4. Then we should receive an acknowledgement
   # 5. And we should reive a status updates
@@ -52,7 +52,7 @@ describe 'Site::Tlc::SignalPriority' do
 
   # Validate that a signal priority completes when we cancel it.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. And we subscribe to signal priority status
   # 3. When we send a signal priority request
   # 4. Then the request state should become 'received'
@@ -97,7 +97,7 @@ describe 'Site::Tlc::SignalPriority' do
 
   # Validate that a signal priority times out if not cancelled.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. And we subscribe to signal priority status
   # 3. When we send a signal priority request
   # 4. Then the request state should become 'received'
