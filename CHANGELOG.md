@@ -1,5 +1,8 @@
 # Changelog
 
+## unreleased
+- remove obsolete generated documentation pages during deployment to prevent duplicate index entries
+
 ## 0.3.3
 - update subscription test to ensure we actually receive periodid updates
 - add operational equipment safety note to the documentation
