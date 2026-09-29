@@ -21,7 +21,7 @@ grand_parent: Site
 
 Verify status 0096 current date and time
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -44,7 +44,7 @@ end
 
 Verify that the controller responds to M0104
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Send command
 3. Expect status response before timeout
 
@@ -67,7 +67,7 @@ end
 
 Verify command response timestamp after changing clock
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Send control command to set clock
 3. Send command to set functional position
 4. Compare set_clock and response timestamp
@@ -101,7 +101,7 @@ end
 
 Verify command response timestamp after changing clock
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Send control command to set clock
 3. Send command to set functional position
 4. Compare set_clock and response timestamp
@@ -135,7 +135,7 @@ end
 
 Verify status response timestamp after changing clock
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Send control command to set_clock
 3. Request status S0096
 4. Compare set_clock and response timestamp
@@ -178,7 +178,7 @@ end
 
 Verify status S0096 clock after changing clock
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Send control command to set_clock
 3. Request status S0096
 4. Compare set_clock and status timestamp
@@ -235,7 +235,7 @@ end
 
 Verify aggregated status response timestamp after changing clock
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Send control command to set clock
 3. Wait for status = true
 4. Request aggregated status
@@ -300,7 +300,7 @@ end
 
 Verify timestamp of watchdog after changing clock
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Send control command to setset_clock
 3. Wait for Watchdog
 4. Compare set_clock and alarm response timestamp

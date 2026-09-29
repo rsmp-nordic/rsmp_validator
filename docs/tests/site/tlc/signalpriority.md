@@ -99,7 +99,7 @@ end
 
 Validate that a signal priority can be requested.
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. When we send a signal priority request
 3. Then we should receive an acknowledgement
 
@@ -131,7 +131,7 @@ end
 
 Validate that signal priority status can be requested.
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. When we request signal priority status
 3. Then we should receive a status update
 
@@ -154,7 +154,7 @@ end
 
 Validate that we can subscribe signal priority status
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. And we subscribe to signal priority status updates
 4. Then we should receive an acknowledgement
 5. And we should reive a status updates

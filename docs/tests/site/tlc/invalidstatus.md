@@ -53,7 +53,7 @@ end
 Verify that site_proxy returns NotAck when receiving
 a request for an unknown status
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. When we send a non-existing S000 status request
 3. Then the site_proxy should return NotAck
 
@@ -83,7 +83,7 @@ end
 Verify that site_proxy returns NotAck when receiving
 a request for an unknown status
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. When we send an S0001 request with the stauts name 'bad'
 3. Then the site_proxy should return NotAck
 

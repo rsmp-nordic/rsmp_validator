@@ -21,7 +21,7 @@ grand_parent: Site
 
 Verify that we can activate normal control after yellow flash mode is turned off
 
-1. Given the site_proxy is connected and in yellow flash mode
+1. Given the site is connected and in yellow flash mode
 2. When we activate normal control
 3. All signal groups should go through e, f and g
 
@@ -51,9 +51,9 @@ end
 
 Validate that a signal group can be ordered to green using the M0010 command.
 
-1. Verify connection
-2. Send control command to start signalgrup, set_signal_start= true, include security_code
-3. Wait for status = true
+1. Given the site is connected
+2. When we order a signal group to green with M0010
+3. Then we should receive a confirmation
 
 <details markdown="block">
   <summary>
@@ -73,9 +73,9 @@ end
 
 ## Signal Groups is ordered to red with M0011
 
-1. Verify connection
-2. Send control command to stop signalgrup, set_signal_start= false, include security_code
-3. Wait for status = true
+1. Given the site is connected
+2. When we order a signal group to red with M0011
+3. Then we should receive a confirmation
 
 <details markdown="block">
   <summary>
@@ -97,7 +97,7 @@ end
 
 Verify status S0017 number of signal groups
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -120,7 +120,7 @@ end
 
 Verify that time-of-green/time-of-red can be read with S0025.
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -155,7 +155,7 @@ end
 
 Verify that signal group status can be read with S0001.
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 

@@ -21,7 +21,7 @@ grand_parent: Site
 
 Verify status S0021 manually set detector logic
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -42,9 +42,11 @@ end
 
 ## Detector Logics forcing is set with M0008
 
-1. Verify connection
-2. Send control command to switch detector_logic= true
-3. Wait for status = true
+1. Given the site is connected
+2. When we force each detector logic on with M0008
+3. Then S0002 should show the detector logic is on
+4. When we force the detector logic off with M0008
+5. Then S0002 should show the detector logic is off
 
 <details markdown="block">
   <summary>
@@ -78,7 +80,7 @@ end
 
 Verify status S0016 number of detector logics
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -101,7 +103,7 @@ end
 
 Verify status S0031 trigger level sensitivity for loop detector
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -124,7 +126,7 @@ end
 
 Verify status S0002 detector logic status
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 

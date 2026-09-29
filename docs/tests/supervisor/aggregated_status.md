@@ -23,6 +23,10 @@ Validate behaviour related to aggregated status messages
 
 Validate that the supervisor responds correctly when we send an aggregated status message
 
+1. Given the supervisor is connected
+2. When we send an aggregated status with a high priority alarm
+3. Then the supervisor should acknowledge the message
+
 <details markdown="block">
   <summary>
      View Source

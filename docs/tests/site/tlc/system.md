@@ -21,7 +21,7 @@ grand_parent: Site
 
 Verify status S0091 operator logged in/out OP-panel
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -49,7 +49,7 @@ end
 
 Verify status S0092 operator logged in/out web-interface
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -78,7 +78,7 @@ end
 Verify that the site_proxy responds with NotAck if we send incorrect security cdoes.
 This behaviour is defined in SXL >= 1.1.0. For earlier versions,
 The behaviour is undefined.
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. When we send a M0008 command with incorrect security codes
 3. Then we should received a NotAck
 
@@ -100,11 +100,11 @@ end
 
 ## System security code is set with M0103
 
-1. Verify connection
-2. Send control command to set securitycode_level
-3. Wait for status = true
-4. Send control command to setsecuritycode_level
-5. Wait for status = true
+1. Given the site is connected
+2. When we set the Level1 security code to its current value with M0103
+3. Then we should receive a confirmation
+4. When we set the Level2 security code to its current value with M0103
+5. Then we should receive a confirmation
 
 <details markdown="block">
   <summary>
@@ -128,7 +128,7 @@ end
 
 Verify status S0095 version of traffic controller
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 

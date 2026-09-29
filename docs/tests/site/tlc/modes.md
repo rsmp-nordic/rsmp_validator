@@ -21,7 +21,7 @@ grand_parent: Site
 
 Verify status S0012 all red
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -49,7 +49,7 @@ end
 
 Verify that we can activate yellow flash and after 1 minute goes back to NormalControl
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Send the control command to switch to Normal Control, and wait for this
 2. Send the control command to switch to Yellow flash
 3. Wait for status Yellow flash
@@ -83,7 +83,7 @@ end
 
 Verify status S0020 control mode
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -106,7 +106,7 @@ end
 
 Verify status S0032 coordinated control
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -129,7 +129,7 @@ end
 
 Verify that we can activate dark mode
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Send the control command to switch todarkmode
 3. Wait for status"Controller on" = false
 4. Send command to switch to normal control
@@ -159,11 +159,11 @@ end
 
 Verify command M0007 fixed time control
 
-1. Verify connection
-2. Send command to switch to fixed time = true
-3. Wait for status = true
-4. Send command to switch to fixed time = false
-5. Wait for status = false
+1. Given the site is connected
+2. When we activate fixed time control with M0007
+3. Then S0009 should show fixed time control is active
+4. When we deactivate fixed time control with M0007
+5. Then S0009 should show fixed time control is inactive
 
 <details markdown="block">
   <summary>
@@ -188,7 +188,7 @@ end
 
 Verify status S0009 fixed time control
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -216,7 +216,7 @@ end
 
 Verify status S0010 isolated control
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -244,7 +244,7 @@ end
 
 Verify status S0008 manual control
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -272,7 +272,7 @@ end
 
 Verify status S0013 police key
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -295,7 +295,7 @@ end
 
 Verify status S0005 traffic controller starting
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -319,7 +319,7 @@ end
 Verify status S0005 traffic controller starting by intersection
 statusByIntersection requires core >= 3.2.0, since it uses the array data type.
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -343,7 +343,7 @@ end
 
 Verify status S0007 controller switched on (dark mode=off)
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -366,7 +366,7 @@ end
 
 Verify status S0007 controller switched on, source attribute
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -389,7 +389,7 @@ end
 
 Verify that yellow flash causes all groups to go to state 'c'
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Send the control command to switch to Yellow flash
 3. Wait for all groups to go to group 'c'
 4. Send command to switch to normal control
@@ -421,7 +421,7 @@ end
 
 Verify that we can activate yellow flash
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Send the control command to switch to Yellow flash
 3. Wait for status Yellow flash
 4. Send command to switch to normal control
@@ -451,7 +451,7 @@ end
 
 Verify status S0011 yellow flash
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 

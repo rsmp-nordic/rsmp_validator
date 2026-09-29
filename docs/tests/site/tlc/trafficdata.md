@@ -21,7 +21,7 @@ grand_parent: Site
 
 Verify status S0204 traffic counting: classification
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -59,7 +59,7 @@ end
 
 Verify status S0208 traffic counting: classification
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -95,7 +95,7 @@ end
 
 Verify status S0201 traffic counting: number of vehicles
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -122,7 +122,7 @@ end
 
 Verify status S0205 traffic counting: number of vehicles
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -145,7 +145,7 @@ end
 
 Verify status S0203 traffic counting: occupancy
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -172,7 +172,7 @@ end
 
 Verify status S0207 traffic counting: occupancy
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -214,7 +214,7 @@ end
 
 Verify status S0202 traffic counting: vehicle speed
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -241,7 +241,7 @@ end
 
 Verify status S0206 traffic counting: vehicle speed
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 

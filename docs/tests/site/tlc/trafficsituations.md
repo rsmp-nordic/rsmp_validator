@@ -21,7 +21,7 @@ grand_parent: Site
 
 Verify status S0015 current traffic situation
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
@@ -49,7 +49,7 @@ end
 
 Verify that we change traffic situation
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Verify that there is a RSMP::Validator.get_config('validator') with a traffic situation
 3. Send the control command to switch traffic situation for each traffic situation
 4. Wait for status "Current traffic situation" = requested traffic situation
@@ -80,7 +80,7 @@ end
 
 Verify status S0019 number of traffic situations
 
-1. Given the site_proxy is connected
+1. Given the site is connected
 2. Request status
 3. Expect status response before timeout
 
