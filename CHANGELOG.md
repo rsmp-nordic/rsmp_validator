@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- verify subscription interval changes with three updates, excluding a pass based only on immediate subscription responses
 - use canonical three-component RSMP Core and SXL versions internally
 - preserve legacy two-component Core and SXL strings when configuring local test nodes
 - fix Core 3.2.0 connection-sequence tests advertising the noncanonical version 3.2

@@ -5,9 +5,10 @@ describe 'Site::Tlc::Subscribe' do
   # is arbitrary as we simply want to check that
   # the subscription mechanism works.
   #
-  # 1. subscribe
-  # 1. check that we receive a status update with a predefined time
-  # 1. unsubscribe
+  # 1. Given the site_proxy is connected
+  # 2. When we subscribe to S0001
+  # 3. Then we should receive a status update
+  # 4. Finally we unsubscribe from S0001
 
   it 'can be turned on and off for S0001' do
     with_site(:connected) do |site_proxy|
@@ -30,39 +31,41 @@ describe 'Site::Tlc::Subscribe' do
   # The test subscribes to S0001 'cyclecounter' attribute with an initial update rate of 60s,
   # then changes the update rate to 1s and verifies the new rate is in effect.
   #
-  # 1. Subscribe to S0001 'cyclecounter' with update rate 60s
-  # 2. Verify that subscription succeeds
-  # 3. Send the same subscription again with update rate 1s
-  # 4. Verify that the new update rate is in effect by checking next update is received within 2s
+  # 1. Given the site_proxy is connected
+  # 2. When we subscribe to S0001 'cyclecounter' with update rate 60s
+  # 3. And we change the update rate to 1s
+  # 4. Then we should receive two immediate updates and one periodic update within 2s
+  # 5. Finally we unsubscribe from S0001
 
   it 'can change interval during active subscription' do
     with_site(:connected) do |site_proxy|
       component = RSMP::Validator.get_config('main_component')
+      matcher = RSMP::StatusMatcher.new('sCI' => 'S0001', 'n' => 'cyclecounter')
 
-      # Step 1: Subscribe with 60s update rate (no need to wait for updates with long interval)
+      # start collecting matching status updates
+      collector = RSMP::Collector.new(
+        site_proxy,
+        filter: RSMP::Filter.new(type: 'StatusUpdate', component: component, ingoing: true, outgoing: false),
+        num: 3,
+        timeout: 2
+      )
+      collector.start do |message|
+        :keep if message.attributes.fetch('sS', []).any? { |item| matcher.match(item) }
+      end
+
       log 'Subscribe to S0001 cyclecounter with 60s update rate'
-      initial_status_list = [{ 'sCI' => 'S0001', 'n' => 'cyclecounter', 'uRt' => '60' }]
-      initial_status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
+      status_list = [{ 'sCI' => 'S0001', 'n' => 'cyclecounter', 'uRt' => '60' }]
+      status_list.each { |item| item['sOc'] = false } if site_proxy.tlc.use_soc?
+      site_proxy.subscribe_to_status! status_list, component: component
 
-      # Subscribe but don't wait for updates (since 60s is too long)
-      site_proxy.subscribe_to_status! initial_status_list, component: component
-      log 'Initial subscription with 60s update rate successful'
+      log 'Change update rate to 1s and wait for three updates within 2s'
+      status_list.first['uRt'] = '1'
+      site_proxy.subscribe_to_status! status_list, component: component
 
-      # Step 3: Change update rate to 1s by re-subscribing and verify we get update within 2s
-      log 'Change update rate to 1s by re-subscribing and verify update within 2s'
-      updated_status_list = [{ 'sCI' => 'S0001', 'n' => 'cyclecounter', 'uRt' => '1' }]
-      updated_status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
-
-      # This should collect at least one status update within 2s if the 1s rate is working
-      exchange = site_proxy.subscribe_to_status_and_collect(updated_status_list,
-                                                            component: component,
-                                                            within: 2).value!
-
-      assert(!exchange.nil?, 'Expected subscribe_to_status_and_collect to return an exchange')
-      assert(!exchange.messages.empty?,
-             'Expected to receive status update within 2s with new 1s update rate')
-      log 'Successfully received status update within 2s, confirming 1s update rate is active'
+      expect(collector.wait).to be(:success?)
+      log 'Received three updates within 2s, confirming periodic updates at the new rate'
     ensure
+      collector&.stop
       # Clean up subscription
       unsubscribe_list = [{ 'sCI' => 'S0001', 'n' => 'cyclecounter' }]
       site_proxy.unsubscribe_to_status! unsubscribe_list, component: component
