@@ -52,26 +52,28 @@ end
 it 'can change interval during active subscription' do
   with_site(:connected) do |site_proxy|
     component = RSMP::Validator.get_config('main_component')
-    # Step 1: Subscribe with 60s update rate (no need to wait for updates with long interval)
+    matcher = RSMP::StatusMatcher.new('sCI' => 'S0001', 'n' => 'cyclecounter')
+    # start collecting matching status updates
+    collector = RSMP::Collector.new(
+      site_proxy,
+      filter: RSMP::Filter.new(type: 'StatusUpdate', component: component, ingoing: true, outgoing: false),
+      num: 3,
+      timeout: 2
+    )
+    collector.start do |message|
+      :keep if message.attributes.fetch('sS', []).any? { |item| matcher.match(item) }
+    end
     log 'Subscribe to S0001 cyclecounter with 60s update rate'
-    initial_status_list = [{ 'sCI' => 'S0001', 'n' => 'cyclecounter', 'uRt' => '60' }]
-    initial_status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
-    # Subscribe but don't wait for updates (since 60s is too long)
-    site_proxy.subscribe_to_status! initial_status_list, component: component
-    log 'Initial subscription with 60s update rate successful'
-    # Step 3: Change update rate to 1s by re-subscribing and verify we get update within 2s
-    log 'Change update rate to 1s by re-subscribing and verify update within 2s'
-    updated_status_list = [{ 'sCI' => 'S0001', 'n' => 'cyclecounter', 'uRt' => '1' }]
-    updated_status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
-    # This should collect at least one status update within 2s if the 1s rate is working
-    exchange = site_proxy.subscribe_to_status_and_collect(updated_status_list,
-                                                          component: component,
-                                                          within: 2).value!
-    assert(!exchange.nil?, 'Expected subscribe_to_status_and_collect to return an exchange')
-    assert(!exchange.messages.empty?,
-           'Expected to receive status update within 2s with new 1s update rate')
-    log 'Successfully received status update within 2s, confirming 1s update rate is active'
+    status_list = [{ 'sCI' => 'S0001', 'n' => 'cyclecounter', 'uRt' => '60' }]
+    status_list.each { |item| item['sOc'] = false } if site_proxy.tlc.use_soc?
+    site_proxy.subscribe_to_status! status_list, component: component
+    log 'Change update rate to 1s and wait for three updates within 2s'
+    status_list.first['uRt'] = '1'
+    site_proxy.subscribe_to_status! status_list, component: component
+    expect(collector.wait.success?).to be == true
+    log 'Received three updates within 2s, confirming periodic updates at the new rate'
   ensure
+    collector&.stop
     # Clean up subscription
     unsubscribe_list = [{ 'sCI' => 'S0001', 'n' => 'cyclecounter' }]
     site_proxy.unsubscribe_to_status! unsubscribe_list, component: component
