@@ -56,7 +56,7 @@ Note that `site_proxy` runs inside the Async reactor. Therefore you cannot use i
 You can also pass `sxl:` or `core:` keyword arguments to skip the test automatically when the configured version does not match:
 
 ```ruby
-with_site(:connected, sxl: '>=1.2', core: '>=3.2') do |site_proxy|
+with_site(:connected, sxl: '>=1.2.0', core: '>=3.2.0') do |site_proxy|
   # ...
 end
 ```

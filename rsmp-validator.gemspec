@@ -26,6 +26,6 @@ Gem::Specification.new do |spec|
   spec.bindir = 'exe'
   spec.executables = ['rsmp-validator']
 
-  spec.add_dependency 'rsmp', '>= 0.44.0'
+  spec.add_dependency 'rsmp', '>= 0.50.0'
   %w[activesupport colorize sus sus-fixtures-async thor].each { |name| spec.add_dependency name }
 end

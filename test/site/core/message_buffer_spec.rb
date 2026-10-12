@@ -18,7 +18,7 @@ describe 'Site::Core' do
           status_list,
           component: component,
           within: RSMP::Validator.get_config('timeouts', 'status_update')
-        ).ok!
+        ).value!
         status_list
       end
     end
@@ -42,12 +42,11 @@ describe 'Site::Core' do
                   ingoing: true
                 }) do |site_proxy|
         collector = site_proxy.collector
-        collector.use_task Async::Task.current
         messages = collector.wait!
         update = messages.first
 
         unsubscribe_list = status_list.map { |item| item.slice('sCI', 'n') }
-        site_proxy.unsubscribe_to_status unsubscribe_list, component: component
+        site_proxy.unsubscribe_to_status! unsubscribe_list, component: component
         update
       end
     end
@@ -82,12 +81,12 @@ describe 'Site::Core' do
     # Verify that buffered status messages use quality "old" for core versions
     # where the core spec requires it.
     #
-    # 1. Given the site is connected using core 3.2 or later
+    # 1. Given the site is connected using core 3.2.0 or later
     # 2. And a status subscription is active
     # 3. When communication is disrupted and later restored
     # 4. Then buffered status values should have q=old
-    it 'marks buffered status values as old for rsmp 3.2 and later' do
-      skip 'requires core >= 3.2' unless RSMP::Validator.core_matches?('>=3.2')
+    it 'marks buffered status values as old for rsmp 3.2.0 and later' do
+      skip 'requires core >= 3.2.0' unless RSMP::Validator.core_matches?('>=3.2.0')
 
       update = collect_buffered_status_after_disruption
 

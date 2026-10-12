@@ -83,7 +83,7 @@ module RSMP
         end
 
         def wait_normal_control(site_proxy, timeout: RSMP::Validator.get_config('timeouts', 'startup_sequence'))
-          site_proxy.tlc.wait_for_normal_control(timeout: timeout)
+          site_proxy.tlc.wait_for_normal_control!(timeout: timeout)
         end
 
         def verify_startup_sequence(site_proxy)
@@ -94,13 +94,14 @@ module RSMP
           collector = RSMP::StatusCollector.new site_proxy, status_list, timeout: timeout
           sequencer = SignalGroupSequence.new RSMP::Validator.get_config('startup_sequence')
           collector_task = start_sequence_collector(collector, sequencer)
-          site_proxy.subscribe_to_status subscribe_list, component: component
+          site_proxy.subscribe_to_status! subscribe_list, component: component
           yield
-          handle_startup_sequence_result(collector_task.wait, sequencer, collector, timeout)
+          collector_task.wait.value!
+          log 'Startup sequence verified'
           wait_for_status(site_proxy, 'control mode to be startup',
                           [{ 'sCI' => 'S0020', 'n' => 'controlmode', 's' => ['control'] }])
         ensure
-          site_proxy.unsubscribe_to_status unsubscribe_list, component: component
+          site_proxy.unsubscribe_to_status! unsubscribe_list, component: component
         end
 
         private
@@ -135,21 +136,6 @@ module RSMP
 
           log "Startup sequence #{states}: Fail"
           collector.cancel status
-        end
-
-        def handle_startup_sequence_result(result, sequencer, collector, timeout)
-          case result
-          when :ok
-            log 'Startup sequence verified'
-          when :timeout
-            raise(
-              "Startup sequence '#{sequencer.sequence}' didn't complete in #{timeout}s, " \
-              "reached #{sequencer.latest}, #{sequencer.num_started} started, " \
-              "#{sequencer.num_done} done"
-            )
-          when :cancelled
-            raise "Startup sequence '#{sequencer.sequence}' not followed: #{collector.error}"
-          end
         end
       end
     end

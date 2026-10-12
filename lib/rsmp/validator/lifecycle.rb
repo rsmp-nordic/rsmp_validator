@@ -51,17 +51,20 @@ module RSMP
 
       # Called at sus shutdown: stops the auto node and reactor.
       def after_suite
-        reactor.run do |_task|
-          auto_node&.stop
+        task = reactor.run do |_task|
+          begin
+            auto_node&.stop
+          ensure
+            current_tester&.stop
+          end
         ensure
           reactor.interrupt
         end
+        task.wait
         # Explicitly close the reactor now, while the log stream is still open.
         # Without this, Ruby's fiber scheduler hook fires after the File.open block
         # has closed the log file, causing IOError when cancelled tasks try to log.
         reactor.close
-      rescue StandardError
-        nil
       end
 
       # Initialize the Async reactor.
@@ -71,6 +74,10 @@ module RSMP
       end
 
       private
+
+      def current_tester
+        mode == :site ? SiteTester.instance : SupervisorTester.instance
+      end
 
       def load_log_defaults(name)
         path = File.expand_path("../../../config/#{name}.yaml", __dir__)

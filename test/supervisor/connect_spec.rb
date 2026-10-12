@@ -10,9 +10,7 @@ describe 'Supervisor' do
     end
 
     def prepare_and_wait_for_collector(supervisor_proxy)
-      collector = supervisor_proxy.collector
-      collector.use_task Async::Task.current
-      collector.wait!
+      supervisor_proxy.collector.wait!
     end
 
     def direction_and_type_pairs(messages)
@@ -27,9 +25,8 @@ describe 'Supervisor' do
                       'collect' => {
                         **connection_collect_options(timeout, length)
                       }) do |supervisor_proxy|
-        prepare_and_wait_for_collector(supervisor_proxy)
+        got_messages = prepare_and_wait_for_collector(supervisor_proxy)
         assert(supervisor_proxy.ready?, 'expected site proxy to be ready')
-        got_messages = supervisor_proxy.collector.messages
       end
       direction_and_type_pairs(got_messages)
     rescue Async::TimeoutError
@@ -108,7 +105,7 @@ describe 'Supervisor' do
       case version
       when '3.1.1', '3.1.2', '3.1.3'
         check_sequence_v311 version
-      when '3.1.4', '3.1.5', '3.2', '3.2.1', '3.2.2'
+      when '3.1.4', '3.1.5', '3.2.0', '3.2.1', '3.2.2'
         check_sequence_v314 version
       when '3.3.0'
         check_sequence_v330 version
@@ -172,15 +169,15 @@ describe 'Supervisor' do
       check_sequence '3.1.5'
     end
 
-    # Verify the connection sequence when using rsmp core 3.2
+    # Verify the connection sequence when using rsmp core 3.2.0
     #
-    # 1. Given the site is connected and using core 3.2
+    # 1. Given the site is connected and using core 3.2.0
     # 2. Send and receive handshake messages
     # 3. Expect the handshake messages to be in the specified sequence corresponding to version 3.1.5
     # 4. Expect the connection sequence to be complete
-    it 'exchanges correct connection sequence of rsmp version 3.2' do
-      skip 'requires core == 3.2' unless RSMP::Validator.core_matches?('3.2')
-      check_sequence '3.2'
+    it 'exchanges correct connection sequence of rsmp version 3.2.0' do
+      skip 'requires core == 3.2.0' unless RSMP::Validator.core_matches?('3.2.0')
+      check_sequence '3.2.0'
     end
 
     # Verify the connection sequence when using rsmp core 3.2.1

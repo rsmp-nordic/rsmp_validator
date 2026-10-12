@@ -1,6 +1,7 @@
 require 'yaml'
 require_relative 'configuration/loader'
 require_relative 'configuration/validation'
+require_relative 'configuration/version_normalization'
 require_relative 'configuration/secrets'
 require_relative 'configuration/sxls_override'
 
@@ -10,6 +11,7 @@ module RSMP
     module Configuration
       include Loader
       include Validation
+      include VersionNormalization
       include Secrets
       include SxlsOverride
 
@@ -51,7 +53,7 @@ module RSMP
           using_message: '',
           missing_message: "Auto #{mode} config file #{path} is missing"
         )
-        raw_config['sxls'] = parse_sxls(sxls_override) if sxls_override
+        apply_auto_node_overrides!(raw_config)
         options_class = auto_node_options_class_for(raw_config)
         options = build_options_from_raw(raw_config, path, options_class)
         self.auto_node_config = options.to_h

@@ -44,7 +44,8 @@ jobs:
       - name: Checkout changes from docs folder to local gh-pages branch
         run: |
           git checkout gh-pages
-          git checkout $BRANCH_NAME -- docs
+          # Match the source tree exactly, including removal of obsolete pages.
+          git restore --source="$BRANCH_NAME" --staged --worktree -- docs
 
       - name: Check for changes
         run: |

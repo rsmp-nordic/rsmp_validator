@@ -3,7 +3,7 @@ describe 'Site::Tlc::TrafficData' do
 
   # Verify status S0201 traffic counting: number of vehicles
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'number of vehicles for a single detector is read with S0201' do
@@ -13,25 +13,25 @@ describe 'Site::Tlc::TrafficData' do
         { S0201: %i[starttime vehicles] },
         component: component,
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 
   # Verify status S0205 traffic counting: number of vehicles
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'number of vehicles for all detectors is read with S0205' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
       site_proxy.request_status_and_collect({ S0205: %i[start vehicles] },
-                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
   end
 
   # Verify status S0202 traffic counting: vehicle speed
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'vehicle speed for a single detector is read with S0202' do
@@ -41,25 +41,25 @@ describe 'Site::Tlc::TrafficData' do
         { S0202: %i[starttime speed] },
         component: component,
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 
   # Verify status S0206 traffic counting: vehicle speed
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'vehicle speed for all detectors is read with S0206' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
       site_proxy.request_status_and_collect({ S0206: %i[start speed] },
-                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
   end
 
   # Verify status S0203 traffic counting: occupancy
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'occupancy for a single detector is read with S0203' do
@@ -69,27 +69,28 @@ describe 'Site::Tlc::TrafficData' do
         { S0203: %i[starttime occupancy] },
         component: component,
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 
   # Verify status S0207 traffic counting: occupancy
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'occupancy for all detectors is read with S0207' do
     with_site(:connected, sxl: '>=1.0.14') do |site_proxy|
-      result = wait_for_status(site_proxy, 'traffic counting: occupancy',
-                               { S0207: %i[start occupancy] },
-                               update_rate: 60)
+      exchange = wait_for_status(site_proxy, 'traffic counting: occupancy',
+                                 { S0207: %i[start occupancy] },
+                                 update_rate: 60)
+      values = exchange.reached.to_h { |item| [item['n'], item['s']] }
 
-      occupancies = result.matcher_got_hash.dig('S0207', 'occupancy')
-      start = result.matcher_got_hash.dig('S0207', 'start')
+      occupancies = values['occupancy']
+      start = values['start']
 
       expect(start).to be_a(String)
 
-      occupancy_values = if RSMP::Validator.sxl_matches?('<1.1')
+      occupancy_values = if RSMP::Validator.sxl_matches?('<1.1.0')
                            expect(occupancies).to be_a(String)
                            occupancies.split(',').map do |occupancy|
                              assert(occupancy.match?(/\A-?\d+\z/), "Occupancy must be an Integer, got #{occupancy}")
@@ -109,7 +110,7 @@ describe 'Site::Tlc::TrafficData' do
 
   # Verify status S0204 traffic counting: classification
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'classification for a single detector is read with S0204' do
@@ -130,13 +131,13 @@ describe 'Site::Tlc::TrafficData' do
         ] },
         component: component,
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 
   # Verify status S0208 traffic counting: classification
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. Request status
   # 3. Expect status response before timeout
   it 'classification for all detectors is read with S0208' do
@@ -155,7 +156,7 @@ describe 'Site::Tlc::TrafficData' do
           F
         ] },
         within: RSMP::Validator.get_config('timeouts', 'status_response')
-      ).ok!
+      ).value!
     end
   end
 end

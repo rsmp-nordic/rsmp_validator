@@ -29,6 +29,8 @@ module RSMP
 
       def run
         with_argv(sus_args) { run_with_args }
+      rescue RSMP::ConnectionError
+        1
       end
 
       private
