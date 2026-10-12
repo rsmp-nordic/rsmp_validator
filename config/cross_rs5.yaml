@@ -14,26 +14,26 @@ local_supervisor:
   sites:
     default:
       intervals:
-        timer: 10
+        timer: 1
         watchdog: 60
 sxls:
   tlc: '1.2.1'
 timeouts:
-  watchdog: 65
+  watchdog: 30
   acknowledgement: 5
   connect: 30
-  ready: 10
-  status_response: 10
+  ready: 1
+  status_response: 3
   status_update: 1 # Without this subscription don't work: "It is not valid to set updateRate=0 and sendOnChange=false since it means that no subscription updates will be sent."
-  subscribe: 1
+  subscribe: 30
   command: 300
   command_response: 30
-  alarm: 15
-  disconnect: 21
-  startup_sequence: 45
+  alarm: 3
+  disconnect: 20
+  startup_sequence: 100
   functional_position: 60
   priority_completion: 15
-  yellow_flash: 2
+  yellow_flash: 30
 components:
   main:
     CZ+77000=101TC001:
@@ -54,7 +54,7 @@ items:
 startup_sequence: 'efg'
 alarm_triggers:
   A0302:
-    input: 7
+    input: 1
     component: CZ+77000=101DL001
 secrets:
   security_codes:
