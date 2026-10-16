@@ -1,15 +1,15 @@
 describe 'Site::Tlc::SignalPriority' do
   include RSMP::Validator::Helpers::Status
 
-  # Signal requests require core >= 3.2 because they uses the Array data type.
+  # Signal requests require core >= 3.2.0 because they use the Array data type.
 
   # Validate that a signal priority can be requested.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send a signal priority request
   # 3. Then we should receive an acknowledgement
   it 'can be requested with M0022' do
-    with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
+    with_site(:connected, core: '>=3.2.0', sxl: '>=1.1.0') do |site_proxy|
       signal_group = RSMP::Validator.get_config('components', 'signal_group').keys.first
       command_list = RSMP::CommandList.new(:M0022, :requestPriority,
                                            requestId: SecureRandom.uuid[0..3],
@@ -20,30 +20,30 @@ describe 'Site::Tlc::SignalPriority' do
                                            vehicleType: 'car').to_a
       log "Request signal priority for signal group #{signal_group}"
       timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-      site_proxy.send_command_and_collect(command_list, within: timeout).ok!
+      site_proxy.send_command_and_collect(command_list, within: timeout).value!
     end
   end
 
   # Validate that signal priority status can be requested.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we request signal priority status
   # 3. Then we should receive a status update
   it 'status can be fetched with S0033' do
-    with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
+    with_site(:connected, core: '>=3.2.0', sxl: '>=1.1.0') do |site_proxy|
       site_proxy.request_status_and_collect({ S0033: [:status] },
-                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).ok!
+                                            within: RSMP::Validator.get_config('timeouts', 'status_response')).value!
     end
   end
 
   # Validate that we can subscribe signal priority status
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. And we subscribe to signal priority status updates
   # 4. Then we should receive an acknowledgement
   # 5. And we should reive a status updates
   it 'status can be subscribed to with S0033' do
-    with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
+    with_site(:connected, core: '>=3.2.0', sxl: '>=1.1.0') do |site_proxy|
       status_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
       status_list.map! { |item| item.merge!('sOc' => true) } if site_proxy.tlc.use_soc?
       wait_for_status(site_proxy, 'signal priority status', status_list)
@@ -52,7 +52,7 @@ describe 'Site::Tlc::SignalPriority' do
 
   # Validate that a signal priority completes when we cancel it.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. And we subscribe to signal priority status
   # 3. When we send a signal priority request
   # 4. Then the request state should become 'received'
@@ -61,7 +61,7 @@ describe 'Site::Tlc::SignalPriority' do
   # 7. Then the state should become 'completed'
 
   it 'becomes completed when cancelled' do
-    with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
+    with_site(:connected, core: '>=3.2.0', sxl: '>=1.1.0') do |site_proxy|
       timeout = RSMP::Validator.get_config('timeouts', 'priority_completion')
       component = RSMP::Validator.get_config('main_component')
       signal_group_id = RSMP::Validator.get_config('components', 'signal_group').keys.first
@@ -69,8 +69,7 @@ describe 'Site::Tlc::SignalPriority' do
         site_proxy,
         component: component,
         signal_group_id: signal_group_id,
-        timeout: timeout,
-        task: Async::Task.current
+        timeout: timeout
       )
 
       prio.run do
@@ -98,7 +97,7 @@ describe 'Site::Tlc::SignalPriority' do
 
   # Validate that a signal priority times out if not cancelled.
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. And we subscribe to signal priority status
   # 3. When we send a signal priority request
   # 4. Then the request state should become 'received'
@@ -107,7 +106,7 @@ describe 'Site::Tlc::SignalPriority' do
   # 7. Then the state should become 'stale'
 
   it 'becomes stale if not cancelled' do
-    with_site(:connected, core: '>=3.2', sxl: '>=1.1') do |site_proxy|
+    with_site(:connected, core: '>=3.2.0', sxl: '>=1.1.0') do |site_proxy|
       timeout = RSMP::Validator.get_config('timeouts', 'priority_completion')
       component = RSMP::Validator.get_config('main_component')
       signal_group_id = RSMP::Validator.get_config('components', 'signal_group').keys.first
@@ -115,8 +114,7 @@ describe 'Site::Tlc::SignalPriority' do
         site_proxy,
         component: component,
         signal_group_id: signal_group_id,
-        timeout: timeout,
-        task: Async::Task.current
+        timeout: timeout
       )
 
       prio.run do

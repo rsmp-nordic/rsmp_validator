@@ -1,8 +1,16 @@
 describe 'Site::Tlc::InvalidCommand' do
+  def expect_message_rejected(result)
+    expect(result).to be_a(RSMP::Result::Failure)
+    return unless result.failure?
+
+    expect(result.failure.code).to eq(:message_rejected)
+    expect(result.failure.source).to eq(:peer)
+  end
+
   # Verify that site_proxy reponds with age=undefined when receiving
   # a command with an unknown component id
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send a command with an unknown component id
   # 3. Then the site_proxy should return a command response with age=undefined
 
@@ -20,9 +28,8 @@ describe 'Site::Tlc::InvalidCommand' do
         within: RSMP::Validator.get_config('timeouts', 'command_response'),
         validate: false # disable validation of outgoing message
       )
-      expect(result).to be_a(RSMP::Collector)
-      expect(result.status).to eq(:ok)
-      response = result.messages.first
+      exchange = result.value!
+      response = exchange.messages.first
       expect(response).to be_a(RSMP::CommandResponse)
       rvs = response.attributes['rvs']
       expect(rvs).to be_a(Array)
@@ -35,7 +42,7 @@ describe 'Site::Tlc::InvalidCommand' do
 
   # Verify that site_proxy returns NotAck when receiving an unknown command
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send a non-existing M0000 command
   # 3. Then the site_proxy should return NotAck
 
@@ -45,18 +52,17 @@ describe 'Site::Tlc::InvalidCommand' do
       command_list = RSMP::CommandList.new(:M0000, :bad, {}).to_a
       timeout = RSMP::Validator.get_config('timeouts', 'command_response')
 
-      collector = site_proxy.send_command_and_collect(command_list,
-                                                      within: timeout,
-                                                      validate: false) # disable schema validation of outgoing message
-      expect(collector.status).to eq(:cancelled)
-      expect(collector.error).to be_a(RSMP::MessageRejected)
+      result = site_proxy.send_command_and_collect(command_list,
+                                                   within: timeout,
+                                                   validate: false) # disable schema validation of outgoing message
+      expect_message_rejected(result)
     end
   end
 
   # Verify that site_proxy returns NotAck when receiving a command
   # with a mising command attribute
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send an M0001 command with 'status' missing
   # 3. Then the site_proxy return NotAck
 
@@ -69,18 +75,17 @@ describe 'Site::Tlc::InvalidCommand' do
                                            timeout: '0').to_a
       # intentionally not setting 'status'
       timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-      collector = site_proxy.send_command_and_collect(command_list,
-                                                      within: timeout,
-                                                      validate: false) # disable validation of outgoing message
-      expect(collector.status).to eq(:cancelled)
-      expect(collector.error).to be_a(RSMP::MessageRejected)
+      result = site_proxy.send_command_and_collect(command_list,
+                                                   within: timeout,
+                                                   validate: false) # disable validation of outgoing message
+      expect_message_rejected(result)
     end
   end
 
   # Verify that site_proxy returns NotAck when receiving a command
   # with an unknown command name
   #
-  # 1. Given the site_proxy is connected
+  # 1. Given the site is connected
   # 2. When we send an M0001 command with 'bad' as command name
   # 3. Then the site_proxy should return NotAck
 
@@ -93,11 +98,10 @@ describe 'Site::Tlc::InvalidCommand' do
                                            intersection: '0',
                                            timeout: '0').to_a
       timeout = RSMP::Validator.get_config('timeouts', 'command_response')
-      collector = site_proxy.send_command_and_collect(command_list,
-                                                      within: timeout,
-                                                      validate: false) # disable validation of outgoing message
-      expect(collector.status).to eq(:cancelled)
-      expect(collector.error).to be_a(RSMP::MessageRejected)
+      result = site_proxy.send_command_and_collect(command_list,
+                                                   within: timeout,
+                                                   validate: false) # disable validation of outgoing message
+      expect_message_rejected(result)
     end
   end
 end

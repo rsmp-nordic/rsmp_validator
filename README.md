@@ -7,10 +7,15 @@ The validator is packaged as the `rsmp-validator` gem. It is written in Ruby, us
 
 Tests are shipped with the gem and run with the `rsmp-validator` executable. The current validator supports RSMP Core 3.3.0 and earlier supported core versions.
 
-# Documentation
+## Safety and Operational Equipment
+Do not run the validator against equipment controlling street traffic or systems in production. Many tests send commands, trigger alarms, or otherwise change equipment behaviour, which can disrupt normal operation and cause unsafe situations.
+
+Only run a restricted set of tests on operational equipment if every selected test has been reviewed and confirmed safe for that specific equipment and operating environment.
+
+## Documentation
 See the [detailed documentation](https://rsmp-nordic.github.io/rsmp_validator/).
 
-# Test Hub
+## Test Hub
 The RSMP Validator tests are run daily against a set of Traffic Light Controllers and emulators. The results are published at the RSMP Nordic website [compliance page](https://rsmp-nordic.org/compliance/).
 
 If you're a supplier with equipment that you would like included in our Test Hub, please contact the [RSMP Nordic secretariat](https://rsmp-nordic.org/contact/).

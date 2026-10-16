@@ -4,11 +4,11 @@ module RSMP
       # Helpers for connecting to a site or supervisor in tests, with optional
       # version-based skipping via sxl: and core: keyword arguments.
       #
-      # with_site(:connected, sxl: '>=1.2') do |supervisor, site_proxy|
+      # with_site(:connected, sxl: '>=1.2.0') do |supervisor, site_proxy|
       #   ...
       # end
       #
-      # with_supervisor(:connected, core: '>=3.2') do |site, supervisor_proxy|
+      # with_supervisor(:connected, core: '>=3.2.0') do |site, supervisor_proxy|
       #   ...
       # end
       module Connection
@@ -31,10 +31,10 @@ module RSMP
           else
             RSMP::Validator::SiteTester.public_send(state, **opts) do |_task, _node, proxy|
               block.call(proxy)
-            rescue RSMP::TimeoutError => e
-              @__assertions__.assert false, e.message
+            rescue RSMP::OperationError => e
+              fail_test e.failure.message
             rescue StandardError => e
-              @__assertions__.error!(UncaughtException.new(e))
+              error_test UncaughtException.new(e)
             end
           end
         end
@@ -47,15 +47,25 @@ module RSMP
           else
             RSMP::Validator::SupervisorTester.public_send(state, **opts) do |_task, _node, proxy|
               block.call(proxy)
-            rescue RSMP::TimeoutError => e
-              @__assertions__.assert false, e.message
+            rescue RSMP::OperationError => e
+              fail_test e.failure.message
             rescue StandardError => e
-              @__assertions__.error!(UncaughtException.new(e))
+              error_test UncaughtException.new(e)
             end
           end
         end
 
         private
+
+        def fail_test(message)
+          @__assertions__.assert false, message
+          throw :rsmp_validator_test_failure
+        end
+
+        def error_test(error)
+          @__assertions__.error! error
+          throw :rsmp_validator_test_failure
+        end
 
         def validate_state!(state)
           return if VALID_STATES.include?(state)

@@ -8,6 +8,7 @@ compliance:
   product_url: https://www.cross-traffic.com/en/traffic-light-controllers/
 
 local_supervisor:
+  port: 12222
   ips: all
   max_sites: 1
   sites:
