@@ -26,8 +26,9 @@ describe 'Site::Core' do
       RSMP::Validator::SiteTester.instance.stop 'Simulating communication disruption'
       sleep outage_duration
 
-      # return outage time range
-      initial_timestamp...(initial_timestamp + outage_duration)
+      # Exclude half an update interval at each end of the outage window.
+      margin = 0.5 * update_rate
+      (initial_timestamp + margin)...(initial_timestamp + outage_duration - margin)
     end
 
     def queue_factory
