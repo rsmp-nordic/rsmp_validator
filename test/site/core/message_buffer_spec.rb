@@ -77,7 +77,7 @@ describe 'Site::Core' do
     end
 
     def assert_message(buffered_message, outage_window)
-      expectation = 'Received StatusUpdate timestamped within outage'
+      expectation = 'Received StatusUpdate timestamped within window'
       return expectation if buffered_message
 
       window_string = format_outage_window(outage_window)
