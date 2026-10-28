@@ -47,7 +47,7 @@ describe 'Site::Core' do
                            'collect' => {
                              filter: RSMP::Filter.new(type: 'AggregatedStatus', ingoing: true, outgoing: false),
                              timeout: RSMP::Validator.get_config('timeouts', 'ready'),
-                             num: 1 
+                             num: 1
                            }) do |site_proxy|
         collector = site_proxy.collector
         aggregated_status = collector.wait!.first
