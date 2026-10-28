@@ -47,13 +47,16 @@ describe 'Site::Core' do
       end
     end
 
+    def matching_status_update?(message)
+      message.is_a?(RSMP::StatusUpdate) && !matching_statuses(message).empty?
+    end
+
     def wait_for_buffered_update(queue, outage_window)
       timestamps = []
       Async::Task.current.with_timeout(collect_timeout) do
         loop do
           update = queue.wait_for_message!
-          next unless update.is_a?(RSMP::StatusUpdate)
-          next if matching_statuses(update).empty?
+          next unless matching_status_update?(update)
 
           timestamp = Time.parse(update.attribute('sTs'))
           timestamps << timestamp
@@ -73,10 +76,10 @@ describe 'Site::Core' do
       "#{first.strftime('%Y-%m-%d %H:%M:%S.%L')}..#{last.strftime(end_format)} UTC"
     end
 
-    def assert_message(buffered_message, timestamps, outage_window)
-      expectation = "Received StatusUpdate timestamped within outage"
+    def assert_message(buffered_message, outage_window)
+      expectation = 'Received StatusUpdate timestamped within outage'
       return expectation if buffered_message
-      
+
       window_string = format_outage_window(outage_window)
       "#{expectation} #{window_string}"
     end
@@ -93,8 +96,8 @@ describe 'Site::Core' do
       initial_timestamp = with_site(:connected) { |site_proxy| subscribe_to_status(site_proxy) }
       outage_window = simulate_outage(initial_timestamp)
       with_site(:connected, 'collect' => queue_factory) do |site_proxy|
-        buffered_message, timestamps = wait_for_buffered_update(site_proxy.collector, outage_window)
-        assert(buffered_message, assert_message(buffered_message, timestamps, outage_window))
+        buffered_message, = wait_for_buffered_update(site_proxy.collector, outage_window)
+        assert(buffered_message, assert_message(buffered_message, outage_window))
       ensure
         site_proxy.collector.stop
         site_proxy.unsubscribe_to_status! status_list, component: component
@@ -114,10 +117,11 @@ describe 'Site::Core' do
       initial_timestamp = with_site(:connected) { |site_proxy| subscribe_to_status(site_proxy) }
       outage_window = simulate_outage(initial_timestamp)
       with_site(:connected, 'collect' => queue_factory) do |site_proxy|
-        buffered_update, timestamps = wait_for_buffered_update(site_proxy.collector, outage_window)
-        assert(buffered_update, assert_message(buffered_update, timestamps, outage_window))
+        buffered_update, = wait_for_buffered_update(site_proxy.collector, outage_window)
+        assert(buffered_update, assert_message(buffered_update, outage_window))
         next unless buffered_update # skip the rest if no message was received
-        assert(buffered_update.attribute('sS').all? { |status| status['q'] == 'old' }, "Each status values have q=old")
+
+        assert(buffered_update.attribute('sS').all? { |status| status['q'] == 'old' }, 'Each status values have q=old')
       ensure
         site_proxy.collector.stop
         site_proxy.unsubscribe_to_status! status_list, component: component
