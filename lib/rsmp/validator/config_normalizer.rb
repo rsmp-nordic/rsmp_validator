@@ -27,7 +27,7 @@ module RSMP
         return unless codes.is_a?(Hash)
 
         settings['security_codes'] = codes.each_with_object({}) do |(key, value), memo|
-          int_key = key.is_a?(String) && key.match?(/^\d+$/) ? key.to_i : key
+          int_key = key.is_a?(String) && key.match?(/\A\d+\z/) ? key.to_i : key
           memo[int_key] = value
         end
       end
@@ -45,7 +45,7 @@ module RSMP
 
       def self.normalize_programming_keys(programming)
         programming.each_with_object({}) do |(key, value), memo|
-          int_key = key.is_a?(String) && key.match?(/^\d+$/) ? key.to_i : key
+          int_key = key.is_a?(String) && key.match?(/\A\d+\z/) ? key.to_i : key
           memo[int_key] = value
         end
       end

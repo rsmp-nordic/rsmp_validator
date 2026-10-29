@@ -13,7 +13,7 @@ module RSMP
             site_proxy,
             "input #{input} to be #{value}",
             [
-              { 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{input - 1}}#{digit}/ }
+              { 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /\A.{#{input - 1}}#{digit}/ }
             ]
           )
         end
@@ -25,7 +25,7 @@ module RSMP
             site_proxy,
             "input #{indx} to be True",
             [
-              { 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{indx - 1}}1/ }
+              { 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /\A.{#{indx - 1}}1/ }
             ]
           )
 
@@ -33,7 +33,7 @@ module RSMP
           wait_for_status(
             site_proxy,
             "input #{indx} to be False",
-            [{ 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /^.{#{indx - 1}}0/ }]
+            [{ 'sCI' => 'S0003', 'n' => 'inputstatus', 's' => /\A.{#{indx - 1}}0/ }]
           )
         end
       end
