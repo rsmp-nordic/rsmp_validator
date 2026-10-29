@@ -29,7 +29,7 @@ module RSMP
           return unless codes.is_a?(Hash)
 
           normalized = codes.each_with_object({}) do |(key, value), memo|
-            int_key = key.is_a?(String) && key.match?(/^\d+$/) ? key.to_i : key
+            int_key = key.is_a?(String) && key.match?(/\A\d+\z/) ? key.to_i : key
             memo[int_key] = value
           end
 

@@ -29,7 +29,7 @@ module RSMP
             yield collect_task.wait, component_id
 
             matcher = { 'cId' => component_id, 'aCId' => alarm_code_id,
-                        'aSp' => /Issue/i, 'aS' => alarm_inactive }
+                        'aSp' => /\AIssue\z/i, 'aS' => alarm_inactive }
             collect_task = start_alarm_collector(site_proxy, matcher, alarm_timeout)
             force_input_and_confirm site_proxy, input:, value: 'False', within: status_timeout
             state = false
@@ -41,9 +41,9 @@ module RSMP
 
         def build_alarm_matchers(site_proxy)
           if RSMP::Proxy.version_meets_requirement? site_proxy.core_version, '>=3.2.0'
-            [/Issue/, /Active/, /inActive/]
+            [/\AIssue\z/, /\AActive\z/, /\AinActive\z/]
           else
-            [/issue/i, /active/i, /inactive/i]
+            [/\Aissue\z/i, /\Aactive\z/i, /\Ainactive\z/i]
           end
         end
 
