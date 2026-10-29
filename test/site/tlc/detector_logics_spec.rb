@@ -51,14 +51,14 @@ describe 'Site::Tlc::DetectorLogics' do
         wait_for_status(
           site_proxy,
           "detector logic #{component} to be True",
-          [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /^.{#{indx}}1/ }]
+          [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /\A.{#{indx}}1/ }]
         )
 
         site_proxy.tlc.force_detector_logic!(component, status: 'True', mode: 'False', within: timeout)
         wait_for_status(
           site_proxy,
           "detector logic #{component} to be False",
-          [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /^.{#{indx}}0/ }]
+          [{ 'sCI' => 'S0002', 'n' => 'detectorlogicstatus', 's' => /\A.{#{indx}}0/ }]
         )
       end
     end

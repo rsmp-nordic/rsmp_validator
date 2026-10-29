@@ -68,7 +68,7 @@ describe 'Site::Tlc::Alarm' do
 
         # verify that the alarm is not acknowledged when initially raised
         ack_message = "Alarm should not be acknowledged when raised, got: #{alarm.attributes['ack']}"
-        assert(alarm.attributes['ack'].match?(/notAcknowledged/i), ack_message)
+        assert(alarm.attributes['ack'].match?(/\AnotAcknowledged\z/i), ack_message)
         log "Verified alarm #{alarm_code_id} is correctly not acknowledged when raised"
 
         # test acknowledge and confirm
@@ -79,9 +79,9 @@ describe 'Site::Tlc::Alarm' do
                                    num: 1,
                                    matcher: {
                                      'aCId' => alarm_code_id,
-                                     'aSp' => /Acknowledge/i,
-                                     'ack' => /Acknowledged/i,
-                                     'aS' => /Active/i
+                                     'aSp' => /\AAcknowledge\z/i,
+                                     'ack' => /\AAcknowledged\z/i,
+                                     'aS' => /\AActive\z/i
                                    },
                                    timeout: timeout).collect!
         end
