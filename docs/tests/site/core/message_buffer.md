@@ -34,59 +34,47 @@ where the core spec requires it.
 ```ruby
 it 'marks buffered status values as old for rsmp 3.2.0 and later' do
   skip 'requires core >= 3.2.0' unless RSMP::Validator.core_matches?('>=3.2.0')
-  update = collect_buffered_status_after_disruption
-  expect(update.attributes['sS'].map { |status| status['q'] }.uniq).to be == ['old']
+  initial_timestamp = with_site(:connected) { |site_proxy| subscribe_to_status(site_proxy) }
+  outage_window = simulate_outage(initial_timestamp)
+  with_site(:connected, 'collect' => queue_factory) do |site_proxy|
+    buffered_update, = wait_for_buffered_update(site_proxy.collector, outage_window)
+    assert(buffered_update, assert_message(buffered_update, outage_window))
+    next unless buffered_update # skip the rest if no message was received
+    assert(buffered_update.attribute('sS').all? { |status| status['q'] == 'old' }, 'Each status values have q=old')
+  ensure
+    site_proxy.collector.stop
+    site_proxy.unsubscribe_to_status! status_list, component: component
+  end
 end
 ```
 </details>
 
 
-## Message Buffer preserves buffered status timestamps from before reconnect
+## Message Buffer sends status updates timestamped during the communication outage
 
-Verify that buffered status timestamps reflect when the status data was
-generated, not when the buffered message was sent after reconnect.
+Verify that historical status data arrives after communication is restored.
 
 1. Given the site is connected and a status subscription is active
 2. When communication is disrupted long enough for a status update to be due
 3. And communication is restored
-4. Then the buffered status timestamp should be older than the reconnect
+4. Then an update timestamped within the outage should arrive, even if fresh updates arrive first
 
 <details markdown="block">
   <summary>
      View Source
   </summary>
 ```ruby
-it 'preserves buffered status timestamps from before reconnect' do
+it 'sends status updates timestamped during the communication outage' do
   skip 'requires core >= 3.1.4' unless RSMP::Validator.core_matches?('>=3.1.4')
-  result = collect_buffered_status_after_disruption_with_timing
-  status_time = Time.parse(result[:update].attributes['sTs'])
-  assert(status_time < result[:reconnect_started_at],
-         "expected buffered status timestamp #{status_time} to be before reconnect " \
-         "#{result[:reconnect_started_at]}")
-end
-```
-</details>
-
-
-## Message Buffer sends buffered status messages after communication is restored
-
-Verify that a site sends buffered status messages after communication is restored.
-
-1. Given the site is connected and a status subscription is active
-2. When communication is disrupted long enough for a status update to be due
-3. And communication is restored
-4. Then the site should send the buffered status update
-
-<details markdown="block">
-  <summary>
-     View Source
-  </summary>
-```ruby
-it 'sends buffered status messages after communication is restored' do
-  skip 'requires core >= 3.1.4' unless RSMP::Validator.core_matches?('>=3.1.4')
-  update = collect_buffered_status_after_disruption
-  expect(update).to be_a(RSMP::StatusUpdate)
-  assert(!update.attributes['sS'].empty?, 'expected buffered status update to include status values')
+  initial_timestamp = with_site(:connected) { |site_proxy| subscribe_to_status(site_proxy) }
+  outage_window = simulate_outage(initial_timestamp)
+  with_site(:connected, 'collect' => queue_factory) do |site_proxy|
+    buffered_message, = wait_for_buffered_update(site_proxy.collector, outage_window)
+    assert(buffered_message, assert_message(buffered_message, outage_window))
+  ensure
+    site_proxy.collector.stop
+    site_proxy.unsubscribe_to_status! status_list, component: component
+  end
 end
 ```
 </details>
