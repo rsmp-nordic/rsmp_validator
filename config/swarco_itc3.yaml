@@ -5,8 +5,7 @@ compliance:
   id: swarco-itc3
   kind: site
   name: Swarco ITC-3
-  product_url: https://www.swarco.com/products/traffic-light-controllers/itc-3-traffic-controller
-
+  product_url: https://www.swarco-its.com/products/roadside-systems/itc-controllers/itc-3-traffic-controller
 local_supervisor:
   ips: all
   max_sites: 1
