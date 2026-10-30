@@ -5,7 +5,7 @@
 # This workflow will run rsmp validator
 name: Cross RS4S
 on:
-  push:
+  #push:
   pull_request:
     types: [ opened, reopened, synchronize, labeled ]
   schedule:
@@ -15,11 +15,12 @@ on:
     - cron: '0 22 * * *'
 jobs:
   validator:
-    #if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
+    if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
     runs-on: [ self-hosted, Linux, X64, cross-rs4s ]
     strategy:
       matrix:
         core: ['3.1.2','3.1.3','3.1.4','3.1.5','3.2.0','3.2.1','3.2.2','3.3.0']
+        sxl: ['1.2.1']
       fail-fast: false
 
     steps:
@@ -49,8 +50,7 @@ jobs:
       shell: bash
       run: |
         bundle exec rsmp-validator run test/site \
-        --verbose \
-        --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
+        --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
         --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json \
         --site-config config/cross_rs4s.yaml \
         --core ${{ matrix.core}}
