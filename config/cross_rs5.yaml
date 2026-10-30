@@ -24,7 +24,7 @@ timeouts:
   connect: 30
   ready: 1
   status_response: 3
-  status_update: 1 # Without this subscription don't work: "It is not valid to set updateRate=0 and sendOnChange=false since it means that no subscription updates will be sent."
+  status_update: 2 # Without this subscription don't work: "It is not valid to set updateRate=0 and sendOnChange=false since it means that no subscription updates will be sent."
   subscribe: 30
   command: 300
   command_response: 30
