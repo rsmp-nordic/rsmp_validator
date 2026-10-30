@@ -4,10 +4,11 @@
 compliance:
   id: cross-rs4s
   kind: site
-  name: Cross RS4S/RS4T/RS5
+  name: Cross RS4S/RS4T
   product_url: https://www.cross-traffic.com/en/traffic-light-controllers/
 
 local_supervisor:
+  port: 12222
   ips: all
   max_sites: 1
   sites:
@@ -23,7 +24,7 @@ timeouts:
   connect: 30
   ready: 1
   status_response: 3
-  status_update: 5
+  status_update: 1 # Without this subscription don't work: "It is not valid to set updateRate=0 and sendOnChange=false since it means that no subscription updates will be sent."
   subscribe: 1
   command: 300
   command_response: 30
@@ -32,7 +33,7 @@ timeouts:
   startup_sequence: 45
   functional_position: 60
   priority_completion: 15
-  yellow_flash: 2
+  yellow_flash: 1
 components:
   main:
     CZ+76000=101TC001:
@@ -45,7 +46,7 @@ components:
     CZ+76000=101DL002:
     CZ+76000=101DL003:
 items:
-  plans: [1,2]  #switching to each plan takes a lot of time
+  plans: [6,1]  #switching to each plan takes a lot of time
   traffic_situations: [1,2,3]
   emergency_routes: [1] # only one emergency route
   inputs: [1,3,8]
