@@ -33,7 +33,7 @@ timeouts:
   startup_sequence: 45
   functional_position: 60
   priority_completion: 15
-  yellow_flash: 2
+  yellow_flash: 1
 components:
   main:
     CZ+76000=101TC001:
