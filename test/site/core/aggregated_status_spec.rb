@@ -15,19 +15,18 @@ describe 'Site::Core' do
       end
     end
 
-    # Verify that aggregated status uses null for unused attributes, from SXL 1.1.0
+    # Verify that aggregated status uses null for unused attributes, from SXL 1.1.0 and core before 3.3.0.
     # For SXL versions before 1.1.0 empty strings "" is also allowed.
     #
     # 1. Given the is reconnected
     # 2. When we receive an aggregated status
     # 3. Then fP and fS should be null
     it 'uses null for functional position/state' do
-      with_site(:isolated, sxl: '>=1.1.0',
+      with_site(:isolated, sxl: '>=1.1.0', core: '<3.3.0',
                            'collect' => {
-                             filter: RSMP::Filter.new(type: 'AggregatedStatus'),
+                             filter: RSMP::Filter.new(type: 'AggregatedStatus', ingoing: true, outgoing: false),
                              timeout: RSMP::Validator.get_config('timeouts', 'ready'),
-                             num: 1,
-                             ingoing: true
+                             num: 1
                            }) do |site_proxy|
         collector = site_proxy.collector
         aggregated_status = collector.wait!.first
@@ -35,6 +34,27 @@ describe 'Site::Core' do
         expect(aggregated_status).to be_a(RSMP::AggregatedStatus)
         expect(aggregated_status.attribute('fP')).to be_nil
         expect(aggregated_status.attribute('fS')).to be_nil
+      end
+    end
+
+    # Verify that aggregated status omits unused attributes from core  3.3.0.
+    #
+    # 1. Given the is reconnected
+    # 2. When we receive an aggregated status
+    # 3. Then fP and fS should be omitted
+    it 'omits functional position/state' do
+      with_site(:isolated, core: '>=3.3.0',
+                           'collect' => {
+                             filter: RSMP::Filter.new(type: 'AggregatedStatus', ingoing: true, outgoing: false),
+                             timeout: RSMP::Validator.get_config('timeouts', 'ready'),
+                             num: 1
+                           }) do |site_proxy|
+        collector = site_proxy.collector
+        aggregated_status = collector.wait!.first
+
+        expect(aggregated_status).to be_a(RSMP::AggregatedStatus)
+        expect(aggregated_status.attributes.key?('fP')).to be == false
+        expect(aggregated_status.attributes.key?('fS')).to be == false
       end
     end
   end
