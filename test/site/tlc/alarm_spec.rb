@@ -68,7 +68,14 @@ describe 'Site::Tlc::Alarm' do
 
         # verify that the alarm is not acknowledged when initially raised
         ack_message = "Alarm should not be acknowledged when raised, got: #{alarm.attributes['ack']}"
+<<<<<<< HEAD
         assert(alarm.attributes['ack'].match?(/\AnotAcknowledged\z/i), ack_message)
+=======
+        unacknowledged = alarm.attributes['ack'].match?(/notAcknowledged/i)
+        assert(unacknowledged, ack_message)
+        next unless unacknowledged
+
+>>>>>>> af3b6d6 (fix tests that did not abort on failed assert, to match sus pattern)
         log "Verified alarm #{alarm_code_id} is correctly not acknowledged when raised"
 
         # test acknowledge and confirm
@@ -93,6 +100,8 @@ describe 'Site::Tlc::Alarm' do
         )
         messages = collect_task.wait
         expect(messages).to be_a(Array)
+        next unless messages.is_a?(Array)
+
         expect(messages.first).to be_a(RSMP::Alarm)
       end
     end

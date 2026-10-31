@@ -28,7 +28,7 @@ describe 'DocGen integration' do
       skip 'io_spec.rb not found' unless File.exist?(REAL_IO_SPEC)
       tlc = contexts.first.subcontexts.find { |c| c.name == 'Tlc' }
       io_ns = tlc&.subcontexts&.find { |c| c.name == 'Io' }
-      expect(io_ns).not.to be.nil?
+      expect(io_ns).not.to be_nil
     end
 
     it 'has Input and Output subcontexts directly under Io' do
@@ -46,7 +46,9 @@ describe 'DocGen integration' do
       io_ns = tlc&.subcontexts&.find { |c| c.name == 'Io' }
       input = io_ns&.subcontexts&.find { |c| c.name == 'Input' }
       spec  = input&.specs&.find { |s| s.name == 'is read with S0003 with extended input status' }
-      expect(spec).not.to be.nil?
+      expect(spec).not.to be_nil
+      next unless spec
+
       expect(spec.docstring).to be(:include?, 'Verify that we can read input status')
     end
   end
