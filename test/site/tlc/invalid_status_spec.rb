@@ -26,8 +26,12 @@ describe 'Site::Tlc::InvalidStatus' do
       exchange = result.value!
       response = exchange.messages.first
       expect(response).to be_a(RSMP::StatusResponse)
+      next unless response.is_a?(RSMP::StatusResponse)
+
       ss = response.attributes['sS']
       expect(ss).to be_a(Array)
+      next unless ss.is_a?(Array)
+
       ss.each do |s|
         q = s['q']
         expect(q).to eq('undefined')

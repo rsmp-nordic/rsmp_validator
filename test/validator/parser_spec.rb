@@ -189,6 +189,8 @@ describe DocGen::Parser do
     it 'parses specify as an alias for it' do
       conn_seq = contexts.first.subcontexts.first.subcontexts.first
       expect(conn_seq.specs.size).to be == 1
+      next unless conn_seq.specs.size == 1
+
       expect(conn_seq.specs.first.name).to be == 'uses specify alias'
     end
 
