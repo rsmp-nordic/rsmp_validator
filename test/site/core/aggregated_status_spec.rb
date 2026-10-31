@@ -32,6 +32,8 @@ describe 'Site::Core' do
         aggregated_status = collector.wait!.first
 
         expect(aggregated_status).to be_a(RSMP::AggregatedStatus)
+        next unless aggregated_status.is_a?(RSMP::AggregatedStatus)
+
         expect(aggregated_status.attribute('fP')).to be_nil
         expect(aggregated_status.attribute('fS')).to be_nil
       end
@@ -53,6 +55,8 @@ describe 'Site::Core' do
         aggregated_status = collector.wait!.first
 
         expect(aggregated_status).to be_a(RSMP::AggregatedStatus)
+        next unless aggregated_status.is_a?(RSMP::AggregatedStatus)
+
         expect(aggregated_status.attributes.key?('fP')).to be == false
         expect(aggregated_status.attributes.key?('fS')).to be == false
       end
