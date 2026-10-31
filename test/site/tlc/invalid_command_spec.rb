@@ -31,8 +31,12 @@ describe 'Site::Tlc::InvalidCommand' do
       exchange = result.value!
       response = exchange.messages.first
       expect(response).to be_a(RSMP::CommandResponse)
+      next unless response.is_a?(RSMP::CommandResponse)
+
       rvs = response.attributes['rvs']
       expect(rvs).to be_a(Array)
+      next unless rvs.is_a?(Array)
+
       rvs.each do |rv|
         age = rv['age']
         expect(age).to eq('undefined')
