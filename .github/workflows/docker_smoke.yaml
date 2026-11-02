@@ -38,7 +38,7 @@ jobs:
         docker run --rm \
           rsmp-validator:smoke \
           run test/site/core/connect_spec.rb --verbose \
-          --site-config config/gem_tlc.yaml \
+          --site-config config/sites/gem_tlc.yaml \
           --auto-site-config config/simulator/tlc.yaml \
           --core 3.1.5
 
@@ -47,7 +47,7 @@ jobs:
         docker run --rm \
           rsmp-validator:smoke \
           run test/site/core/connect_spec.rb --verbose \
-          --site-config config/gem_tlc.yaml \
+          --site-config config/sites/gem_tlc.yaml \
           --auto-site-config config/simulator/tlc.yaml \
           --core 3.2.2
 
@@ -56,6 +56,6 @@ jobs:
         docker run --rm \
           rsmp-validator:smoke \
           run test/site/core/connect_spec.rb --verbose \
-          --site-config config/gem_tlc.yaml \
+          --site-config config/sites/gem_tlc.yaml \
           --auto-site-config config/simulator/tlc.yaml \
           --core 3.3.0

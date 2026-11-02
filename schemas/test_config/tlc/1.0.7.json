@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "TLC site-test settings. Supervisor tests currently need only the Core settings.",
+  "if": { "required": ["local_supervisor"] },
+  "then": {
+    "required": ["timeouts", "components", "items", "startup_sequence", "secrets"],
+    "properties": {
+      "timeouts": {
+        "type": "object",
+        "required": ["status_response", "status_update", "command", "command_response", "alarm", "startup_sequence", "functional_position", "yellow_flash"],
+        "properties": {
+          "status_response": { "$ref": "../common.json#/$defs/timeout" },
+          "status_update": { "$ref": "../common.json#/$defs/timeout" },
+          "command": { "$ref": "../common.json#/$defs/timeout" },
+          "command_response": { "$ref": "../common.json#/$defs/timeout" },
+          "alarm": { "$ref": "../common.json#/$defs/timeout" },
+          "startup_sequence": { "$ref": "../common.json#/$defs/timeout" },
+          "functional_position": { "$ref": "../common.json#/$defs/timeout" },
+          "yellow_flash": { "$ref": "../common.json#/$defs/timeout" }
+        }
+      },
+      "components": {
+        "type": "object",
+        "required": ["detector_logic"],
+        "properties": { "detector_logic": { "$ref": "../common.json#/$defs/components" } }
+      },
+      "items": {
+        "type": "object",
+        "required": ["plans", "traffic_situations", "emergency_routes", "inputs"],
+        "properties": {
+          "plans": { "$ref": "../common.json#/$defs/nonemptyItems" },
+          "traffic_situations": { "$ref": "../common.json#/$defs/nonemptyItems" },
+          "emergency_routes": { "$ref": "../common.json#/$defs/items" },
+          "inputs": { "$ref": "../common.json#/$defs/nonemptyItems" }
+        }
+      },
+      "startup_sequence": { "type": "string", "minLength": 1 },
+      "secrets": {
+        "type": "object",
+        "required": ["security_codes"],
+        "properties": {
+          "security_codes": {
+            "type": "object",
+            "required": ["1", "2"],
+            "properties": {
+              "1": { "type": "string", "minLength": 1 },
+              "2": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      },
+      "alarm_triggers": {
+        "type": "object",
+        "properties": {
+          "A0302": {
+            "type": "object",
+            "required": ["input"],
+            "properties": {
+              "input": { "type": "integer", "minimum": 1 },
+              "component": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -6,10 +6,10 @@
 # But you can leave both, the unused key will just be ignored.
 
 # when testing a site, the config describes the local supervisor
-site: config/gem_tlc.yaml
+site: config/sites/gem_tlc.yaml
 
 # when testing a supervisor, the config describes the local site
-supervisor: config/gem_supervisor.yaml
+supervisor: config/supervisors/gem_supervisor.yaml
 
 # Optional: Auto Node Feature
 # Automatically start a local site/supervisor to test instead of an external one.

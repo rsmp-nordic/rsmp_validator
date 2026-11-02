@@ -20,6 +20,8 @@ module RSMP
           return normalized.to_s if normalized
 
           abort_with_error "Unknown core version #{core_version}, must be one of [#{known_versions.join(', ')}]."
+        rescue ArgumentError
+          abort_with_error "Invalid core version #{core_version.inspect}"
         end
 
         def normalized_core_version(core_version, known_versions)
@@ -44,7 +46,9 @@ module RSMP
         end
 
         def canonical_sxl_version(name, version)
+          version = RSMP::Schema.latest_version(name) if version == 'latest'
           normalized = RSMP::Schema.sanitize_version(version.to_s)
+          abort_with_error "Invalid SXL version #{name} #{version.inspect}" unless normalized
           RSMP::Schema.find_schema! name, normalized
           normalized
         rescue RSMP::Schema::UnknownSchemaError => e

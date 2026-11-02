@@ -6,8 +6,13 @@ module RSMP
         private
 
         def build_tester_options(raw_config, config_path)
-          options_class = tester_options_class_for(raw_config)
-          build_options_from_raw(raw_config, config_path, options_class)
+          ConfigCheck.build_options(
+            raw_config,
+            mode: mode, path: config_path,
+            core: core_version_override, sxls: sxls_override
+          )
+        rescue RSMP::ConfigurationError => e
+          abort_with_error e.message
         end
 
         def apply_loaded_config(options)
@@ -49,17 +54,6 @@ module RSMP
           option_class.new(options_hash, source: path, log_settings: log_settings)
         rescue RSMP::ConfigurationError => e
           abort_with_error e.message
-        end
-
-        def tester_options_class_for(_raw)
-          case mode
-          when :site
-            RSMP::Validator::SiteTest::Options
-          when :supervisor
-            RSMP::Validator::SupervisorTest::Options
-          else
-            abort_with_error "Unknown test mode: #{mode}"
-          end
         end
 
         def auto_node_options_class_for(raw)

@@ -50,7 +50,7 @@ jobs:
         bundle exec rsmp-validator run test/supervisor \
         --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
         --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json \
-        --supervisor-config config/tecsen_tmacs_supervisor.yaml \
+        --supervisor-config config/supervisors/tecsen_tmacs_supervisor.yaml \
         --core ${{ matrix.core}}
 
     - name: Show detailed log

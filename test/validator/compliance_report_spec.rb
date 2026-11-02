@@ -77,7 +77,7 @@ describe RSMP::Validator::Compliance::Report do
       env: {},
       generated_at: Time.utc(2026, 6, 17, 8, 0, 0),
       config: resolved_config,
-      config_path: 'config/gem_tlc.yaml'
+      config_path: 'config/sites/gem_tlc.yaml'
     ).to_h
 
     expect(report['target']['id']).to be == 'gem-tlc'

@@ -4,9 +4,8 @@ require_relative '../../lib/rsmp/validator'
 require_relative '../../lib/rsmp/validator/cli/entrypoint'
 
 VALIDATOR_CONFIG_DIR = File.expand_path('../../config', __dir__)
-DEVICE_CONFIG_PATHS = Dir[File.join(VALIDATOR_CONFIG_DIR, '*.yaml')].select do |path|
-  raw = YAML.load_file(path)
-  %w[site supervisor].include?(raw.dig('compliance', 'kind')) if raw.is_a?(Hash)
+DEVICE_CONFIG_PATHS = Dir[File.join(VALIDATOR_CONFIG_DIR, '{sites,supervisors}', '**', '*.{yaml,yml}')].reject do |path|
+  path.end_with?('_secrets.yaml', '_secrets.yml')
 end
 ConfigCheckCliResult = Struct.new(:status, :output, :error, keyword_init: true)
 
@@ -61,11 +60,11 @@ describe 'Validator config check' do
   end
 
   it 'checks validator configs from the CLI' do
-    path = File.join(VALIDATOR_CONFIG_DIR, 'gem_tlc.yaml')
+    path = File.join(VALIDATOR_CONFIG_DIR, 'sites/gem_tlc.yaml')
     result = invoke_cli('config', 'check', path)
 
     expect(result.status).to be(:zero?)
-    expect(result.output).to be == "OK\n"
+    expect(result.output).to be == "OK: #{path}\n"
   end
 
   it 'reports embedded RSMP config errors' do
@@ -83,7 +82,7 @@ describe 'Validator config check' do
       result = invoke_cli('config', 'check', path, '--mode', 'site')
 
       expect(result.status).to be == 1
-      expect(result.output).to be(:include?, 'Error: Invalid configuration')
+      expect(result.output).to be(:include?, "Error: #{path}: Invalid configuration")
       expect(result.output).to be(:include?, '/default')
     end
   end
@@ -95,12 +94,12 @@ describe 'Validator config check' do
     expect(result.output).to be(:include?, 'Cannot infer validator config mode')
   end
 
-  it 'reports directory paths' do
+  it 'reports empty directories' do
     Dir.mktmpdir('rsmp-validator-config') do |dir|
       result = invoke_cli('config', 'check', dir)
 
       expect(result.status).to be == 1
-      expect(result.output).to be(:include?, 'Error: is not a file')
+      expect(result.output).to be(:include?, "Error: #{dir}: No test config files found")
     end
   end
 
@@ -109,7 +108,79 @@ describe 'Validator config check' do
       result = invoke_cli('config', 'check', path)
 
       expect(result.status).to be == 1
-      expect(result.output).to be(:include?, 'Error: must be a YAML file')
+      expect(result.output).to be(:include?, "Error: #{path}: must be a YAML file")
+    end
+  end
+
+  it 'checks all site and supervisor directories in one invocation' do
+    result = invoke_cli('config', 'check', File.join(VALIDATOR_CONFIG_DIR, 'sites'),
+                        File.join(VALIDATOR_CONFIG_DIR, 'supervisors'))
+
+    expect(result.status).to be(:zero?)
+    expect(result.output.lines).to be == DEVICE_CONFIG_PATHS.map { |path| "OK: #{path}\n" }
+    expect(DEVICE_CONFIG_PATHS).not.to be(:empty?)
+  end
+
+  it 'recurses into directories and skips sidecars and non-YAML files' do
+    settings = YAML.load_file(File.join(VALIDATOR_CONFIG_DIR, 'sites/gem_tlc.yaml'))
+    settings.delete('compliance')
+    secrets = settings.delete('secrets')
+    Dir.mktmpdir('rsmp-validator-config') do |dir|
+      nested = File.join(dir, 'nested')
+      Dir.mkdir(nested)
+      path = File.join(nested, 'site.yml')
+      File.write(path, YAML.dump(settings))
+      File.write(File.join(nested, 'site_secrets.yaml'), YAML.dump(secrets))
+      File.write(File.join(nested, 'unused_secrets.yml'), 'not a test config')
+      File.write(File.join(dir, 'README.txt'), 'not a test config')
+
+      result = invoke_cli('config', 'check', dir)
+
+      expect(result.status).to be(:zero?)
+      expect(result.output).to be == "OK: #{path}\n"
+    end
+  end
+
+  it 'reports malformed YAML and continues checking other files and paths' do
+    valid_path = File.join(VALIDATOR_CONFIG_DIR, 'sites/gem_tlc.yaml')
+    with_temp_config('a-invalid.yaml', '{') do |path|
+      dir = File.dirname(path)
+      next_path = File.join(dir, 'z-valid.yaml')
+      File.write(next_path, File.read(valid_path))
+
+      result = invoke_cli('config', 'check', dir, valid_path)
+
+      expect(result.status).to be == 1
+      expect(result.output).to be(:include?, "Error: #{path}: Cannot read config file")
+      expect(result.output).to be(:include?, "OK: #{next_path}\n")
+      expect(result.output).to be(:include?, "OK: #{valid_path}\n")
+    end
+  end
+
+  it 'continues after an empty directory or a missing path' do
+    valid_path = File.join(VALIDATOR_CONFIG_DIR, 'sites/gem_tlc.yaml')
+    Dir.mktmpdir('rsmp-validator-config') do |dir|
+      missing_path = File.join(dir, 'missing.yaml')
+      result = invoke_cli('config', 'check', dir, missing_path, valid_path)
+
+      expect(result.status).to be == 1
+      expect(result.output).to be(:include?, "Error: #{dir}: No test config files found")
+      expect(result.output).to be(:include?, "Error: #{missing_path}: not found")
+      expect(result.output).to be(:include?, "OK: #{valid_path}\n")
+    end
+  end
+
+  it 'applies version overrides to directory checks' do
+    settings = YAML.load_file(File.join(VALIDATOR_CONFIG_DIR, 'sites/gem_tlc.yaml'))
+    settings['timeouts'].delete('priority_completion')
+    with_temp_config('site.yaml', YAML.dump(settings)) do |path|
+      dir = File.dirname(path)
+      older = invoke_cli('config', 'check', dir, '--core', '3.1.5', '--sxls', 'tlc:1.0.15')
+      newer = invoke_cli('config', 'check', dir, '--core', '3.1.5', '--sxls', 'tlc:1.1.0')
+
+      expect(older.status).to be(:zero?)
+      expect(newer.status).to be == 1
+      expect(newer.output).to be(:include?, 'priority_completion')
     end
   end
 end

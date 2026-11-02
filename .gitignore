@@ -1,6 +1,8 @@
 log
-config/*secrets.yaml
+config/**/*secrets.yaml
+config/**/*secrets.yml
 !config/secrets_example.yaml
+!config/sites/gem_tlc_secrets.yaml
 config/validator.yaml
 config/private/
 /.bundle/

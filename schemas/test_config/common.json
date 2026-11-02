@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "timeout": { "type": "number", "exclusiveMinimum": 0 },
+    "components": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "minLength": 1 },
+      "additionalProperties": { "type": ["object", "null"] }
+    },
+    "items": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 1 },
+      "uniqueItems": true
+    },
+    "nonemptyItems": {
+      "allOf": [{ "$ref": "#/$defs/items" }],
+      "minItems": 1
+    }
+  }
+}

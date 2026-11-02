@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [{ "$ref": "1.0.7.json" }],
+  "if": { "required": ["local_supervisor"] },
+  "then": {
+    "properties": {
+      "components": {
+        "required": ["signal_group"],
+        "properties": { "signal_group": { "$ref": "../common.json#/$defs/components" } }
+      }
+    }
+  }
+}

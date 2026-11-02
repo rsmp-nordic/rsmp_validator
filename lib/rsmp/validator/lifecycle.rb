@@ -51,6 +51,8 @@ module RSMP
 
       # Called at sus shutdown: stops the auto node and reactor.
       def after_suite
+        return unless reactor
+
         task = reactor.run do |_task|
           begin
             auto_node&.stop

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [{ "$ref": "1.0.8.json" }],
+  "if": { "required": ["local_supervisor"] },
+  "then": {
+    "properties": {
+      "items": {
+        "required": ["outputs"],
+        "properties": { "outputs": { "$ref": "../common.json#/$defs/nonemptyItems" } }
+      }
+    }
+  }
+}

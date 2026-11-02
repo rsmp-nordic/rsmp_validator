@@ -50,7 +50,7 @@ jobs:
         bundle exec rsmp-validator run test/site \
         --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
         --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json \
-        --site-config config/lightmotion_satellite.yaml \
+        --site-config config/sites/lightmotion_satellite.yaml \
         --core ${{ matrix.core}}
 
     - name: Show detailed log

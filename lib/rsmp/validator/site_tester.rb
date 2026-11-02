@@ -30,7 +30,6 @@ module RSMP
 
       def parse_config
         setup_supervisor_config
-        validate_timeouts
       end
 
       def setup_supervisor_config
@@ -44,26 +43,12 @@ module RSMP
       end
 
       def apply_security_codes
+        return unless config['secrets'].is_a?(Hash)
+
         security_codes = config.dig('secrets', 'security_codes')
-        return unless security_codes && !@supervisor_config['sites']['default']['security_codes']
+        return unless security_codes.is_a?(Hash) && !@supervisor_config['sites']['default']['security_codes']
 
         @supervisor_config['sites']['default']['security_codes'] = security_codes
-      end
-
-      def validate_timeouts
-        %w[
-          connect
-          ready
-          status_response
-          status_update
-          subscribe
-          command
-          command_response
-          alarm
-          disconnect
-        ].each do |key|
-          raise "config 'timeouts/#{key}' is missing" unless config['timeouts'][key]
-        end
       end
 
       def build_node(options)
