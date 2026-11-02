@@ -12,7 +12,8 @@ Before you run tests, you must set up a configuration for the equipment you want
 For example, the validator needs to know the SXL (type of equipment), because the SXL is not sent by the equipment when connecting.
 
 ## Config files
-Configurations are stored as YAML files in the folder `config/`.
+Device test configurations are stored as YAML files in `config/sites/` and
+`config/supervisors/`. Simulator configurations live in `config/simulator/`.
 
 The config file contains network settings, timeouts and intervals, list of RSMP components, etc. used to run tests.
 
@@ -50,6 +51,58 @@ Core and SXL versions are normally read from the selected config file. For tempo
 ```console
 % bundle exec rsmp-validator run test/site --site-config config/my_site_validation_config.yaml --core 3.3.0 --sxls tlc:1.3.0
 ```
+
+## Checking configuration
+
+Validate a device configuration before connecting to it:
+
+```console
+% bundle exec rsmp-validator config check config/my_site_validation_config.yaml
+```
+
+You can also pass directories, or mix directories and individual files:
+
+```console
+% bundle exec rsmp-validator config check config/sites config/supervisors
+```
+
+Directories are searched recursively for `.yaml` and `.yml` files. Secrets sidecars
+ending in `_secrets.yaml` or `_secrets.yml` are not checked as standalone configs.
+Each result includes its filename. Checking continues after errors and exits with
+a nonzero status if any config is invalid, a path is missing, or a directory has no
+test configs.
+
+The GitHub Actions **Config Check** workflow runs this directory check on pushes
+and pull requests, and can also be started manually. It checks each config using
+its configured versions and does not connect to any devices.
+
+Both `config check` and `run` apply version overrides before validating the complete
+configuration. Use the same overrides for each CI matrix entry:
+
+```console
+% bundle exec rsmp-validator config check config/my_site_validation_config.yaml --core 3.3.0 --sxls tlc:1.3.0
+```
+
+Core and SXL configuration schemas are selected independently. For example, TLC
+1.1.0 and later require `timeouts.priority_completion`, even with a Core version
+that skips the signal-priority tests. Running a subset of tests still requires a
+complete configuration for the selected versions.
+
+Settings unused by the selected versions are allowed and their values are not
+validated by those test schemas. This lets one configuration serve several matrix
+entries. Embedded RSMP node settings are also checked by the rsmp gem.
+
+Timeouts must be positive numbers. Required component groups must contain at least
+one component. TLC site tests require the applicable item lists, startup sequence,
+and security codes; codes can also be loaded from a sibling `<name>_secrets.yaml`
+file. Alarm triggers remain optional, and an empty emergency-route list explicitly
+skips tests that need routes. Supervisor tests require their Core settings, without
+the additional TLC site-test settings.
+
+The version-to-schema mapping is in `schemas/test_config/versions.json`. Versions
+with the same requirements share a schema. When adding a Core or TLC version, add
+its mapping and, if necessary, a new schema. SXLs without a conformance suite have
+no additional test configuration schema.
 
 ## Options for Site testing
 The config is used to start the local supervisor that will communicate with the site you're testing, and it also includes validator-only options like timeouts and items to test.
@@ -322,6 +375,6 @@ For detailed information about the auto node feature, including configuration, l
 To enable it, add `auto_site` or `auto_supervisor` to your `config/validator.yaml`:
 
 ```yaml
-site: config/gem_tlc.yaml
+site: config/sites/gem_tlc.yaml
 auto_site: config/simulator/tlc.yaml  # Optional: starts a local site to test
 ```

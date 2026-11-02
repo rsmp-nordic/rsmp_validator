@@ -14,14 +14,14 @@ This section explains how to run the RSMP Validator using Docker. You can also [
 
 2. Create a local folder for storing validator configurations. When mounted into the container, this folder serves the same purpose as the [config folder](https://rsmp-nordic.org/rsmp_validator/config/) when you install manually.
 
-3. Create a configuration file for the equipment, simulator or supervisor that you want to test. Check out the [TLC example config](https://github.com/rsmp-nordic/rsmp_validator/blob/main/config/gem_tlc.yaml), or read more about [site test configurations](https://rsmp-nordic.org/rsmp_validator/config/#options-for-site-testing) and [supervisor test configurations](https://rsmp-nordic.org/rsmp_validator/config/#options-for-supervisor-testing).
+3. Create a configuration file for the equipment, simulator or supervisor that you want to test. Check out the [TLC example config](https://github.com/rsmp-nordic/rsmp_validator/blob/main/config/sites/gem_tlc.yaml), or read more about [site test configurations](https://rsmp-nordic.org/rsmp_validator/config/#options-for-site-testing) and [supervisor test configurations](https://rsmp-nordic.org/rsmp_validator/config/#options-for-supervisor-testing).
 
 4. Choose the config with `--site-config` or `--supervisor-config` when you run the validator. Alternatively, create a [validator.yaml](https://rsmp-nordic.org/rsmp_validator/config/#choosing-what-config-to-use) file and mount it at `/app/config/validator.yaml`, as described below.
 
 ## Run from the Terminal
 You run the validator by starting the container. The container image includes the validator, test suite, and example configuration files under `/app`.
 
-By default, the image runs the bundled site tests and waits for an external site using the bundled `config/gem_tlc.yaml` test configuration:
+By default, the image runs the bundled site tests and waits for an external site using the bundled `config/sites/gem_tlc.yaml` test configuration:
 
 ```console
 % docker run --rm -it -p 13111:13111 ghcr.io/rsmp-nordic/rsmp_validator
@@ -59,7 +59,7 @@ After running, you can start the container again to re-run the same set of tests
 To run with different options, remove the container and run again with different options. You can pass `--rm` when running to automatically remove the container after each completion. See the Docker docs for more info about managing containers.
 
 ## Choosing Config
-Inside the container, relative paths are resolved from `/app`. For example, `config/gem_tlc.yaml` means `/app/config/gem_tlc.yaml`, the bundled example config.
+Inside the container, relative paths are resolved from `/app`. For example, `config/sites/gem_tlc.yaml` means `/app/config/sites/gem_tlc.yaml`, the bundled example config.
 
 If you mount your own config folder with `-v "$PWD/config:/config:ro"`, refer to those host files with `/config/...`.
 

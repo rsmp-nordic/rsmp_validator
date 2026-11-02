@@ -47,13 +47,13 @@ You can also enable the auto node feature using command-line options.
 Automatically start a site to be tested:
 
 ```console
-% bundle exec rsmp-validator run test/site/core --site-config config/gem_tlc.yaml --auto-site-config config/simulator/tlc.yaml
+% bundle exec rsmp-validator run test/site/core --site-config config/sites/gem_tlc.yaml --auto-site-config config/simulator/tlc.yaml
 ```
 
 Or automatically start a supervisor to be tested:
 
 ```console
-% bundle exec rsmp-validator run test/supervisor --supervisor-config config/gem_supervisor.yaml --auto-supervisor-config config/simulator/supervisor.yaml
+% bundle exec rsmp-validator run test/supervisor --supervisor-config config/supervisors/gem_supervisor.yaml --auto-supervisor-config config/simulator/supervisor.yaml
 ```
 
 
