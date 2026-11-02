@@ -1,3 +1,5 @@
+require_relative '../missing_configuration'
+
 module RSMP
   module Validator
     module Helpers
@@ -27,14 +29,10 @@ module RSMP
           validate_state!(state)
           check_version_requirements(sxl, core)
           if state == :disconnected
-            RSMP::Validator::SiteTester.disconnected { block.call }
+            RSMP::Validator::SiteTester.disconnected { run_test(&block) }
           else
             RSMP::Validator::SiteTester.public_send(state, **opts) do |_task, _node, proxy|
-              block.call(proxy)
-            rescue RSMP::OperationError => e
-              fail_test e.failure.message
-            rescue StandardError => e
-              error_test UncaughtException.new(e)
+              run_test { block.call(proxy) }
             end
           end
         end
@@ -43,19 +41,25 @@ module RSMP
           validate_state!(state)
           check_version_requirements(sxl, core)
           if state == :disconnected
-            RSMP::Validator::SupervisorTester.disconnected { block.call }
+            RSMP::Validator::SupervisorTester.disconnected { run_test(&block) }
           else
             RSMP::Validator::SupervisorTester.public_send(state, **opts) do |_task, _node, proxy|
-              block.call(proxy)
-            rescue RSMP::OperationError => e
-              fail_test e.failure.message
-            rescue StandardError => e
-              error_test UncaughtException.new(e)
+              run_test { block.call(proxy) }
             end
           end
         end
 
         private
+
+        def run_test
+          yield
+        rescue MissingConfiguration => e
+          fail_test e.message
+        rescue RSMP::OperationError => e
+          fail_test e.failure.message
+        rescue StandardError => e
+          error_test UncaughtException.new(e)
+        end
 
         def fail_test(message)
           @__assertions__.assert false, message
