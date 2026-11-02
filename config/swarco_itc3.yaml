@@ -28,9 +28,9 @@ timeouts:     # Timeouts used when waiting for messages from site.
   command_response: 60
   alarm: 60
   disconnect: 60
-  shutdown: 60
   startup_sequence: 60
   functional_position: 60
+  priority_completion: 60
   yellow_flash: 60
 components:
   main:
