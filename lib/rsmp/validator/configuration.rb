@@ -1,4 +1,5 @@
 require 'yaml'
+require_relative 'missing_configuration'
 require_relative 'configuration/loader'
 require_relative 'configuration/validation'
 require_relative 'configuration/version_normalization'
@@ -96,7 +97,7 @@ module RSMP
         elsif assume
           assume
         else
-          raise "Config #{path_name} is missing"
+          raise MissingConfiguration, path
         end
       end
 
