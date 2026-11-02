@@ -12,7 +12,7 @@ module RSMP
         end
 
         def load_secrets_file(config_path)
-          basename = File.basename(config_path, '.yaml')
+          basename = File.basename(config_path, File.extname(config_path))
           folder = File.dirname(config_path)
           secrets_path = File.join(folder, "#{basename}_secrets.yaml")
           return unless File.exist?(secrets_path)
@@ -23,6 +23,8 @@ module RSMP
         end
 
         def normalize_security_codes!
+          return unless config['secrets'].is_a?(Hash)
+
           codes = config.dig('secrets', 'security_codes')
           return unless codes.is_a?(Hash)
 
@@ -35,7 +37,9 @@ module RSMP
         end
 
         def warn_missing_security_codes
-          return warn_no_security_code unless config.dig('secrets', 'security_codes')
+          return unless config['secrets'].nil? || config['secrets'].is_a?(Hash)
+
+          return warn_no_security_code unless config.dig('secrets', 'security_codes').is_a?(Hash)
 
           warn_security_code_not_configured(1) unless config.dig('secrets', 'security_codes', 1)
           warn_security_code_not_configured(2) unless config.dig('secrets', 'security_codes', 2)

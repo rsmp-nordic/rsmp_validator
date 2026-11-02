@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [{ "$ref": "1.0.15.json" }],
+  "if": { "required": ["local_supervisor"] },
+  "then": {
+    "properties": {
+      "timeouts": {
+        "required": ["priority_completion"],
+        "properties": { "priority_completion": { "$ref": "../common.json#/$defs/timeout" } }
+      }
+    }
+  }
+}

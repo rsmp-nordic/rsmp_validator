@@ -19,9 +19,13 @@ module RSMP
         end
 
         def parse_sxls(value)
-          value.split(',').each_with_object({}) do |item, memo|
-            parts = item.split(':')
-            abort_with_error "Invalid --sxls item #{item.inspect}, expected name:version" unless parts.length == 2
+          abort_with_error 'Invalid --sxls value, expected name:version,...' if value.empty?
+
+          value.split(',', -1).each_with_object({}) do |item, memo|
+            parts = item.split(':', -1)
+            unless parts.length == 2 && parts.none?(&:empty?)
+              abort_with_error "Invalid --sxls item #{item.inspect}, expected name:version"
+            end
 
             name, version = parts
             memo[name] = version

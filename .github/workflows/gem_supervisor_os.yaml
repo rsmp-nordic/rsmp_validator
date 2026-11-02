@@ -52,7 +52,7 @@ jobs:
       run: |
         bundle exec rsmp-validator run test/supervisor \
         --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
-        --supervisor-config config/gem_supervisor.yaml
+        --supervisor-config config/supervisors/gem_supervisor.yaml
 
     - name: Show detailed log
       if: ${{ always() && steps.ruby_setup.outcome == 'success' }}

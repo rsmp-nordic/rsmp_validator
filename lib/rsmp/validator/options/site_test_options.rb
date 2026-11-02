@@ -10,7 +10,7 @@ module RSMP
         end
 
         def schema_path
-          File.expand_path("../../../schemas/#{schema_file}", __dir__)
+          File.expand_path("../../../../schemas/#{schema_file}", __dir__)
         end
 
         private

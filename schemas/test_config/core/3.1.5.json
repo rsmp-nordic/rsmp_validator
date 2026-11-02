@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "AggregatedStatus requests use status_response from Core 3.1.5.",
+  "allOf": [{ "$ref": "3.1.4.json" }],
+  "if": { "required": ["local_supervisor"] },
+  "then": {
+    "properties": {
+      "timeouts": {
+        "required": ["status_response"],
+        "properties": { "status_response": { "$ref": "../common.json#/$defs/timeout" } }
+      }
+    }
+  }
+}

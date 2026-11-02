@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["timeouts", "components"],
+  "properties": {
+    "timeouts": {
+      "type": "object",
+      "required": ["connect", "ready", "watchdog", "acknowledgement"],
+      "properties": {
+        "connect": { "$ref": "common.json#/$defs/timeout" },
+        "ready": { "$ref": "common.json#/$defs/timeout" },
+        "watchdog": { "$ref": "common.json#/$defs/timeout" },
+        "acknowledgement": { "$ref": "common.json#/$defs/timeout" }
+      }
+    },
+    "components": {
+      "type": "object",
+      "required": ["main"],
+      "properties": { "main": { "$ref": "common.json#/$defs/components" } }
+    }
+  },
+  "if": { "required": ["local_supervisor"] },
+  "then": {
+    "properties": {
+      "timeouts": {
+        "required": ["disconnect"],
+        "properties": {
+          "disconnect": { "$ref": "common.json#/$defs/timeout" }
+        }
+      }
+    }
+  }
+}

@@ -51,7 +51,7 @@ jobs:
       run: |
         bundle exec rsmp-validator run test/site \
         --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
-        --site-config config/gem_tlc.yaml
+        --site-config config/sites/gem_tlc.yaml
     
     - name: Show detailed log
       if: ${{ always() && steps.ruby_setup.outcome == 'success' }}

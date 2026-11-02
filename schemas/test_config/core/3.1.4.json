@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "The message-buffer tests use status_update from Core 3.1.4.",
+  "allOf": [{ "$ref": "../core.json" }],
+  "if": { "required": ["local_supervisor"] },
+  "then": {
+    "properties": {
+      "timeouts": {
+        "required": ["status_update"],
+        "properties": { "status_update": { "$ref": "../common.json#/$defs/timeout" } }
+      }
+    }
+  }
+}

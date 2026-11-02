@@ -18,11 +18,7 @@
     },
     "timeouts": { "type": "object" },
     "components": { "type": "object" },
-    "items": { "type": "object" },
-    "startup_sequence": { "type": ["string", "null"] },
     "skip_validation": { "type": "array", "items": { "type": "string" } },
-    "secrets": { "type": "object" },
-    "alarm_triggers": { "type": "object" },
     "log": { "type": "object" }
   },
   "required": ["local_supervisor"],

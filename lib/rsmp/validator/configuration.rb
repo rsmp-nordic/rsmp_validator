@@ -24,23 +24,15 @@ module RSMP
           missing_message: "#{mode.capitalize} config file #{config_path} is missing"
         )
 
-        apply_cli_overrides!(raw_config)
         options = build_tester_options(raw_config, config_path)
         apply_loaded_config(options)
         validate_and_finalize_config!(config_path)
-      end
-
-      def apply_cli_overrides!(raw_config)
-        raw_config['core_version'] = core_version_override if core_version_override
-        raw_config['sxls'] = parse_sxls(sxls_override) if sxls_override
       end
 
       def validate_and_finalize_config!(config_path)
         validate_mode_config!(config_path)
         validate_components_config!
         validate_timeouts_config!
-        normalize_core_version!
-        normalize_sxls!
         load_secrets config_path
       end
 

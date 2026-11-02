@@ -50,7 +50,7 @@ jobs:
         bundle exec rsmp-validator run test/site \
         --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
         --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json \
-        --site-config config/semaforica_cartesio.yaml \
+        --site-config config/sites/semaforica_cartesio.yaml \
         --core ${{ matrix.core}}
 
     - name: Show detailed log

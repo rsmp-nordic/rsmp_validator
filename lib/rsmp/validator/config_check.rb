@@ -1,4 +1,8 @@
 require 'yaml'
+require_relative 'options/site_test_options'
+require_relative 'options/supervisor_test_options'
+require_relative 'configuration/sxls_override'
+require_relative 'configuration/test_requirements'
 
 module RSMP
   module Validator
@@ -7,15 +11,30 @@ module RSMP
       Result = Struct.new(:path, :mode, :options, keyword_init: true)
 
       class << self
-        def check_file(path, mode: 'auto')
+        include Configuration::SxlsOverride
+
+        def check_file(path, mode: 'auto', core: nil, sxls: nil)
           raw = load_file(path)
           resolved_mode = resolve_mode(mode, raw)
-          options = options_class_for(resolved_mode).new(config_settings(raw), log_settings: raw['log'])
+          options = build_options(raw, mode: resolved_mode, path: path, core: core, sxls: sxls)
 
           Result.new(path: path, mode: resolved_mode, options: options)
         end
 
+        def build_options(raw, mode:, path:, core: nil, sxls: nil)
+          settings = config_settings(raw)
+          settings['core_version'] = core if core
+          settings['sxls'] = parse_sxls(sxls) if sxls
+          options = options_class_for(mode.to_s).new(settings, source: path, log_settings: raw['log'])
+          Configuration::TestRequirements.new(options).validate!
+          options
+        end
+
         private
+
+        def abort_with_error(message)
+          raise RSMP::ConfigurationError, message
+        end
 
         def load_file(path)
           ensure_config_file!(path)
