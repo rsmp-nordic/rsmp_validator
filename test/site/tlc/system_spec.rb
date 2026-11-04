@@ -71,8 +71,8 @@ describe 'Site::Tlc::System' do
   it 'security code is rejected when incorrect' do
     with_site(:connected, sxl: '>=1.1.0') do |site_proxy|
       result = wrong_security_code(site_proxy)
-      expect(result).to be_a(RSMP::Result::Failure)
-      expect(result.failure.code).to eq(:message_rejected) if result.failure?
+      expect_or_stop(result).to be_a(RSMP::Result::Failure)
+      expect(result.failure.code).to eq(:message_rejected)
     end
   end
 end

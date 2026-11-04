@@ -42,6 +42,25 @@ For example, you can request statuses, subscribe to statuses and send commands. 
 
 See the `rsmp` [gem](https://github.com/rsmp-nordic/rsmp) for more documentation.
 
+## Checking Prerequisites
+
+Sus's `expect` records failures and continues running the test. Use the validator's
+`expect_or_stop` when later steps depend on an expectation passing:
+
+```ruby
+expect_or_stop(items).to be_a(Array)
+expect(items.size).to be == 3
+```
+
+On failure, `expect_or_stop` preserves Sus's diagnostic and stops the current test,
+including code after `with_site` or `with_supervisor`. Ruby `ensure` blocks still
+run, and subsequent tests continue normally. Ordinary `expect` is unchanged.
+
+Negation (`expect_or_stop(items).not.to be_nil`), block expectations, and `.and`
+chaining are supported. Deferred assertions, such as checking that a method will
+be called later, require ordinary `expect`: their result is not yet available to
+decide whether to continue. Using them with `expect_or_stop` reports an error.
+
 ## Working with Exceptions and Timeouts
 Timeouts are essential when testing external systems. When you send a command or request, you expect a response within a certain amount of time. These timeouts must be defined in the test [configuration]({{ site.baseurl}}{% link pages/configuring.md %}).
 

@@ -95,8 +95,7 @@ describe 'Site::Tlc::Alarm' do
           'aCId' => alarm_code_id
         )
         messages = collect_task.wait
-        expect(messages).to be_a(Array)
-        next unless messages.is_a?(Array)
+        expect_or_stop(messages).to be_a(Array)
 
         expect(messages.first).to be_a(RSMP::Alarm)
       end

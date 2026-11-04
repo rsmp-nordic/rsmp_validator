@@ -1,7 +1,6 @@
 describe 'Site::Tlc::InvalidStatus' do
   def expect_message_rejected(result)
-    expect(result).to be_a(RSMP::Result::Failure)
-    return unless result.failure?
+    expect_or_stop(result).to be_a(RSMP::Result::Failure)
 
     expect(result.failure.code).to eq(:message_rejected)
     expect(result.failure.source).to eq(:peer)
@@ -25,12 +24,10 @@ describe 'Site::Tlc::InvalidStatus' do
       )
       exchange = result.value!
       response = exchange.messages.first
-      expect(response).to be_a(RSMP::StatusResponse)
-      next unless response.is_a?(RSMP::StatusResponse)
+      expect_or_stop(response).to be_a(RSMP::StatusResponse)
 
       ss = response.attributes['sS']
-      expect(ss).to be_a(Array)
-      next unless ss.is_a?(Array)
+      expect_or_stop(ss).to be_a(Array)
 
       ss.each do |s|
         q = s['q']

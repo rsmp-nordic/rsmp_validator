@@ -9,6 +9,7 @@ Sus::Base.include(RSMP::Validator::Log)
 
 # Include Connection helpers so with_site/with_supervisor are available in all tests
 Sus::Base.include(RSMP::Validator::Helpers::Connection)
+Sus::Base.include(RSMP::Validator::Helpers::Expectations)
 
 # Include AsyncContext so all tests run inside the shared reactor
 Sus::Base.prepend(RSMP::Validator::AsyncContext)
