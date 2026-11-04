@@ -68,14 +68,10 @@ describe 'Site::Tlc::Alarm' do
 
         # verify that the alarm is not acknowledged when initially raised
         ack_message = "Alarm should not be acknowledged when raised, got: #{alarm.attributes['ack']}"
-<<<<<<< HEAD
-        assert(alarm.attributes['ack'].match?(/\AnotAcknowledged\z/i), ack_message)
-=======
-        unacknowledged = alarm.attributes['ack'].match?(/notAcknowledged/i)
+        unacknowledged = alarm.attributes['ack'].match?(/\AnotAcknowledged\z/i)
         assert(unacknowledged, ack_message)
         next unless unacknowledged
 
->>>>>>> af3b6d6 (fix tests that did not abort on failed assert, to match sus pattern)
         log "Verified alarm #{alarm_code_id} is correctly not acknowledged when raised"
 
         # test acknowledge and confirm

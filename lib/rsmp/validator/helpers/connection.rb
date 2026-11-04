@@ -54,16 +54,12 @@ module RSMP
         def run_test
           yield
         rescue MissingConfiguration => e
-          fail_test e.message
+          error_test e
         rescue RSMP::OperationError => e
-          fail_test e.failure.message
+          @__assertions__.assert false, e.failure.message
+          throw :rsmp_validator_test_failure
         rescue StandardError => e
           error_test UncaughtException.new(e)
-        end
-
-        def fail_test(message)
-          @__assertions__.assert false, message
-          throw :rsmp_validator_test_failure
         end
 
         def error_test(error)
