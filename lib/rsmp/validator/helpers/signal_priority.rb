@@ -52,7 +52,7 @@ module RSMP
             @component = component
             @signal_group_id = signal_group_id
             @request_id = SecureRandom.uuid[0..3]
-            @matcher = S0033Matcher.new({ 'cCI' => 'S0033', 'q' => 'recent' }, request_id: @request_id)
+            @matcher = S0033Matcher.new({ 'sCI' => 'S0033', 'q' => 'recent' }, request_id: @request_id)
             @subscribe_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
             @subscribe_list.map! { |item| item.merge!('sOc' => true) } if @site_proxy.tlc.use_soc?
             @unsubscribe_list = [{ 'sCI' => 'S0033', 'n' => 'status' }]
