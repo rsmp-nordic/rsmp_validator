@@ -6,28 +6,17 @@ module RSMP
       module SignalPriority
         # Match a specific status response or update
         class S0033Matcher < RSMP::StatusMatcher
-          attr_accessor :state
-
-          def initialize(want, request_id:, state: nil)
+          def initialize(want, request_id:)
             super(want)
             @request_id = request_id
-            @state = state
-            @latest_state = nil
           end
 
-          def match(item)
-            super_matched = super
-            if super_matched == true
-              state = find_request_state item['s']
-              if state == @state.to_s && state != @latest_state
-                @latest_state = state
-                true
-              else
-                false
-              end
-            else
-              super_matched
-            end
+          def match(item, state: nil)
+            super_matched = super(item)
+            return super_matched unless super_matched == true
+
+            got = find_request_state item['s']
+            !got.nil? && (state.nil? || got == state.to_s)
           end
 
           def find_request_state(list)
@@ -52,11 +41,10 @@ module RSMP
             @component = component
             @signal_group_id = signal_group_id
             @request_id = SecureRandom.uuid[0..3]
-            @matcher = S0033Matcher.new({ 'sCI' => 'S0033', 'q' => 'recent' }, request_id: @request_id)
+            @matcher = S0033Matcher.new({ 'sCI' => 'S0033', 'n' => 'status', 'q' => 'recent' }, request_id: @request_id)
             @subscribe_list = [{ 'sCI' => 'S0033', 'n' => 'status', 'uRt' => '0' }]
             @subscribe_list.map! { |item| item.merge!('sOc' => true) } if @site_proxy.tlc.use_soc?
             @unsubscribe_list = [{ 'sCI' => 'S0033', 'n' => 'status' }]
-            @got = []
             @timeout = timeout
           end
 
@@ -97,8 +85,21 @@ module RSMP
           end
 
           def expect(state)
-            @matcher.state = state
-            wait_for_message!(timeout: @timeout)
+            # Consume in arrival order, retaining later updates for the next expectation.
+            # One timeout covers the whole search, including non-matching updates.
+            Async::Task.current.with_timeout(@timeout) do
+              loop do
+                message = wait_for_message!
+                return message if get_items(message).any? { |item| @matcher.match(item, state: state) }
+              end
+            end
+          rescue Async::TimeoutError => e
+            RSMP::Result.failure(
+              :timeout,
+              message: "Signal priority request #{@request_id} did not become #{state} within #{@timeout}s",
+              source: :timeout,
+              cause: e
+            ).value!
           end
 
           private
