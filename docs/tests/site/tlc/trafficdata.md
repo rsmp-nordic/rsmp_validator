@@ -191,13 +191,13 @@ it 'occupancy for all detectors is read with S0207' do
     start = values['start']
     expect(start).to be_a(String)
     occupancy_values = if RSMP::Validator.sxl_matches?('<1.1.0')
-                         expect(occupancies).to be_a(String)
+                         expect_or_stop(occupancies).to be_a(String)
                          occupancies.split(',').map do |occupancy|
                            assert(occupancy.match?(/\A-?\d+\z/), "Occupancy must be an Integer, got #{occupancy}")
                            occupancy.to_i
                          end
                        else
-                         expect(occupancies).to be_a(Array)
+                         expect_or_stop(occupancies).to be_a(Array)
                          occupancies
                        end
     occupancy_values.each do |occupancy|

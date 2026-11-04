@@ -35,9 +35,9 @@ it 'return a command response with age=undefined when component id is unknown' d
     )
     exchange = result.value!
     response = exchange.messages.first
-    expect(response).to be_a(RSMP::StatusResponse)
+    expect_or_stop(response).to be_a(RSMP::StatusResponse)
     ss = response.attributes['sS']
-    expect(ss).to be_a(Array)
+    expect_or_stop(ss).to be_a(Array)
     ss.each do |s|
       q = s['q']
       expect(q).to eq('undefined')

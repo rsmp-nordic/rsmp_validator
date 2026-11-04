@@ -114,9 +114,9 @@ it 'returns a command response with age=undefined if compoent id is unknown' do
     )
     exchange = result.value!
     response = exchange.messages.first
-    expect(response).to be_a(RSMP::CommandResponse)
+    expect_or_stop(response).to be_a(RSMP::CommandResponse)
     rvs = response.attributes['rvs']
-    expect(rvs).to be_a(Array)
+    expect_or_stop(rvs).to be_a(Array)
     rvs.each do |rv|
       age = rv['age']
       expect(age).to eq('undefined')

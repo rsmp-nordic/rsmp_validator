@@ -65,7 +65,7 @@ it 'omits functional position/state' do
                        }) do |site_proxy|
     collector = site_proxy.collector
     aggregated_status = collector.wait!.first
-    expect(aggregated_status).to be_a(RSMP::AggregatedStatus)
+    expect_or_stop(aggregated_status).to be_a(RSMP::AggregatedStatus)
     expect(aggregated_status.attributes.key?('fP')).to be == false
     expect(aggregated_status.attributes.key?('fS')).to be == false
   end
@@ -97,7 +97,7 @@ it 'uses null for functional position/state' do
                        }) do |site_proxy|
     collector = site_proxy.collector
     aggregated_status = collector.wait!.first
-    expect(aggregated_status).to be_a(RSMP::AggregatedStatus)
+    expect_or_stop(aggregated_status).to be_a(RSMP::AggregatedStatus)
     expect(aggregated_status.attribute('fP')).to be_nil
     expect(aggregated_status.attribute('fS')).to be_nil
   end

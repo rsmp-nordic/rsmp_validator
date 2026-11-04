@@ -36,7 +36,9 @@ it 'can acknowledge A0302' do
       expect(alarm_time).to be_within(1.minute).of(Time.now.utc)
       # verify that the alarm is not acknowledged when initially raised
       ack_message = "Alarm should not be acknowledged when raised, got: #{alarm.attributes['ack']}"
-      assert(alarm.attributes['ack'].match?(/notAcknowledged/i), ack_message)
+      unacknowledged = alarm.attributes['ack'].match?(/\AnotAcknowledged\z/i)
+      assert(unacknowledged, ack_message)
+      next unless unacknowledged
       log "Verified alarm #{alarm_code_id} is correctly not acknowledged when raised"
       # test acknowledge and confirm
       log "Acknowledge alarm #{alarm_code_id}"
@@ -45,9 +47,9 @@ it 'can acknowledge A0302' do
                                  num: 1,
                                  matcher: {
                                    'aCId' => alarm_code_id,
-                                   'aSp' => /Acknowledge/i,
-                                   'ack' => /Acknowledged/i,
-                                   'aS' => /Active/i
+                                   'aSp' => /\AAcknowledge\z/i,
+                                   'ack' => /\AAcknowledged\z/i,
+                                   'aS' => /\AActive\z/i
                                  },
                                  timeout: timeout).collect!
       end
@@ -57,7 +59,7 @@ it 'can acknowledge A0302' do
         'aCId' => alarm_code_id
       )
       messages = collect_task.wait
-      expect(messages).to be_a(Array)
+      expect_or_stop(messages).to be_a(Array)
       expect(messages.first).to be_a(RSMP::Alarm)
     end
   end

@@ -276,7 +276,7 @@ it 'dynamic bands values can be changed and read back' do
     plan = RSMP::Validator.get_config('items', 'plans').first
     band = 3
     value = site_proxy.tlc.read_dynamic_band!(plan: plan, band: band) || 0
-    expect(value).to be_a(Integer)
+    expect_or_stop(value).to be_a(Integer)
     new_value = value + 1
     timeout = RSMP::Validator.get_config('timeouts', 'command_response')
     site_proxy.tlc.set_dynamic_bands!(plan: plan, status: "#{band}-#{new_value}", within: timeout)
