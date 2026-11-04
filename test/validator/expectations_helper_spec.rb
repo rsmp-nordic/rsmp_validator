@@ -139,6 +139,6 @@ describe RSMP::Validator::Helpers::Expectations do
     expect(assertions.errored).to be(:empty?)
   ensure
     RSMP::Validator.instance_variable_set(:@reactor, previous_reactor)
-    reactor&.close
+    Fiber.set_scheduler(nil)
   end
 end
