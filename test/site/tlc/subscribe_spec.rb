@@ -63,8 +63,7 @@ describe 'Site::Tlc::Subscribe' do
       site_proxy.subscribe_to_status! status_list, component: component
 
       success = collector.wait.success?
-      expect(success).to be == true
-      next unless success
+      expect_or_stop(success).to be == true
 
       log 'Received three updates within 2s, confirming periodic updates at the new rate'
     ensure

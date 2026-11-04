@@ -201,8 +201,7 @@ describe 'Site::Tlc::SignalPlans' do
       band = 3
 
       value = site_proxy.tlc.read_dynamic_band!(plan: plan, band: band) || 0
-      expect(value).to be_a(Integer)
-      next unless value.is_a?(Integer)
+      expect_or_stop(value).to be_a(Integer)
 
       new_value = value + 1
 

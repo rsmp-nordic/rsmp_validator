@@ -1,7 +1,6 @@
 describe 'Site::Tlc::InvalidCommand' do
   def expect_message_rejected(result)
-    expect(result).to be_a(RSMP::Result::Failure)
-    return unless result.failure?
+    expect_or_stop(result).to be_a(RSMP::Result::Failure)
 
     expect(result.failure.code).to eq(:message_rejected)
     expect(result.failure.source).to eq(:peer)
@@ -30,12 +29,10 @@ describe 'Site::Tlc::InvalidCommand' do
       )
       exchange = result.value!
       response = exchange.messages.first
-      expect(response).to be_a(RSMP::CommandResponse)
-      next unless response.is_a?(RSMP::CommandResponse)
+      expect_or_stop(response).to be_a(RSMP::CommandResponse)
 
       rvs = response.attributes['rvs']
-      expect(rvs).to be_a(Array)
-      next unless rvs.is_a?(Array)
+      expect_or_stop(rvs).to be_a(Array)
 
       rvs.each do |rv|
         age = rv['age']
