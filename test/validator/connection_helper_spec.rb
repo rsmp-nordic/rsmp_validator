@@ -37,20 +37,36 @@ describe RSMP::Validator::Helpers::Connection do
       end
 
       RSMP::Validator::Helpers::Connection::VALID_STATES.each do |state|
-        it "reports missing configuration as a failure when #{state}" do
+        it "records an operational failure and aborts when #{state}" do
+          continued = false
+
+          catch(:rsmp_validator_test_failure) do
+            helper.public_send(method, state) do
+              RSMP::Result.failure(:disconnected, message: 'connection closed').value!
+            end
+            continued = true
+          end
+
+          expect(continued).to be == false
+          expect(assertions.recorded).to be == [[:assert, false, 'connection closed']]
+        end
+
+        it "reports missing configuration as an error and aborts when #{state}" do
           continued = false
 
           catch(:rsmp_validator_test_failure) do
             helper.public_send(method, state) do
               RSMP::Validator.get_config('timeouts', 'priority_completion')
-              continued = true
             end
+            continued = true
           end
 
           expect(continued).to be == false
-          expect(assertions.recorded).to be == [
-            [:assert, false, 'Missing required test configuration: timeouts.priority_completion']
-          ]
+          expect(assertions.recorded.size).to be == 1
+          kind, error = assertions.recorded.first
+          expect(kind).to be == :error
+          expect(error).to be_a(RSMP::Validator::MissingConfiguration)
+          expect(error.message).to be == 'Missing required test configuration: timeouts.priority_completion'
         end
 
         it "preserves unexpected exception details when #{state}" do
@@ -67,18 +83,6 @@ describe RSMP::Validator::Helpers::Connection do
         end
       end
     end
-  end
-
-  it 'records an operational failure and stops the test body' do
-    continued = false
-
-    catch(:rsmp_validator_test_failure) do
-      helper.send(:fail_test, 'connection closed')
-      continued = true
-    end
-
-    expect(continued).to be == false
-    expect(assertions.recorded).to be == [[:assert, false, 'connection closed']]
   end
 
   it 'records a validator error and stops the test body' do
