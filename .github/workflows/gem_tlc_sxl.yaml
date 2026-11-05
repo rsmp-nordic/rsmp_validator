@@ -47,8 +47,8 @@ jobs:
       run: |
         bundle exec rsmp site \
         --config config/simulator/tlc.yaml \
-        --sxls tlc:${{ matrix.sxl }} \
-        2>&1 > simulator-${{ steps.log_id.outputs.LOG_ID }}.log \
+        --core 3.2.2 \
+        > simulator-${{ steps.log_id.outputs.LOG_ID }}.log 2>&1 \
         &
 
     - name: Run tests
@@ -58,7 +58,7 @@ jobs:
         --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
         --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json \
         --site-config config/sites/gem_tlc.yaml \
-        --sxls tlc:${{ matrix.sxl }}
+        --core 3.2.2 --sxls tlc:${{ matrix.sxl }}
 
     - name: Show detailed log
       if: ${{ always() && steps.ruby_setup.outcome == 'success' }}

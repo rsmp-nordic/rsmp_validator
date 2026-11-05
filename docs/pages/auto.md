@@ -56,6 +56,22 @@ Or automatically start a supervisor to be tested:
 % bundle exec rsmp-validator run test/supervisor --supervisor-config config/supervisors/gem_supervisor.yaml --auto-supervisor-config config/simulator/supervisor.yaml
 ```
 
+### Testing SXL hints
+
+An auto site may configure an ordered SXL version list when using an RSMP gem with hint support:
+
+```yaml
+core_version: '3.2.2'
+sxls:
+  tlc: ['1.2.1', '1.2.0', '1.0.15']
+```
+
+`--sxls tlc:1.0.15` still selects one fixed version for the validator run. It preserves an explicitly
+configured auto-site list, allowing the site to start on `1.2.1`, receive a rejection with `hint: 1.0.15`,
+and reconnect on `1.0.15`. Single-version auto-site settings continue to follow the CLI override directly.
+Only the first entry determines the initial version; the order of the remaining allowed hint targets does not matter.
+`--core` also selects the auto site's Core version. Use a version before 3.3.0 for hints;
+hint/reconnect behavior is a testing convention outside RSMP Core.
 
 ## Configurations
 The auto node config file should contain the settings for the site or supervisor you want to start. See the `rsmp` gem for details.
