@@ -45,6 +45,7 @@ jobs:
       shell: bash
       run: |
         bundle exec rsmp site --config config/simulator/tlc.yaml \
+        --sxls tlc:1.2.1 \
         2>&1 > simulator-${{ steps.log_id.outputs.LOG_ID }}.log \
         &
 
