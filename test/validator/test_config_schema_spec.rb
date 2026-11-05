@@ -124,13 +124,13 @@ describe 'Versioned test configuration schemas' do
     expect(check.dig('items', 'emergency_routes')).to be == []
   end
 
-  it 'uses canonical versions for selection and preserves embedded wire versions' do
-    checked = check(core: '3.2', sxls: 'tlc:1.2')
+  it 'uses canonical SXL versions and preserves embedded legacy Core versions' do
+    checked = check(core: '3.2', sxls: 'tlc:1.2.0')
 
     expect(checked['core_version']).to be == '3.2.0'
     expect(checked['sxls']).to be == [{ 'name' => 'tlc', 'version' => '1.2.0' }]
     expect(checked.dig('local_supervisor', 'sites', 'default', 'core_version')).to be == '3.2'
-    expect(checked.dig('local_supervisor', 'sites', 'default', 'sxls').first['version']).to be == '1.2'
+    expect(checked.dig('local_supervisor', 'sites', 'default', 'sxls').first['version']).to be == '1.2.0'
     expect(raw['sxls']).to be == { 'tlc' => '1.2.1' }
   end
 
@@ -139,6 +139,13 @@ describe 'Versioned test configuration schemas' do
 
     expect(checked['core_version']).to be == RSMP::Schema.latest_core_version
     expect(checked['sxls'].first['version']).to be == RSMP::Schema.latest_version(:tlc)
+  end
+
+  it 'rejects legacy SXL spellings in config and CLI overrides' do
+    expect { check(sxls: 'tlc:1.2') }.to raise_exception(RSMP::ConfigurationError)
+
+    raw['sxls'] = { 'tlc' => '1.2' }
+    expect { check }.to raise_exception(RSMP::ConfigurationError)
   end
 
   it 'supports all bundled Core and TLC versions' do
