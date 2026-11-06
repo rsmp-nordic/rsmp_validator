@@ -78,7 +78,7 @@ module RSMP
       def wait_for_handshake
         return if @proxy.ready?
 
-        log 'Waiting for handshake to complete'
+        log 'Waiting for site to become ready'
         result = @proxy.wait_for_state :ready, timeout: config['timeouts']['ready']
         raise RSMP::ConnectionError, result.failure.message if result.failure?
 

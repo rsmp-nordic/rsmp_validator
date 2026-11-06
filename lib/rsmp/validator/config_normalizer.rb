@@ -83,6 +83,7 @@ module RSMP
           sxl = item.dup
           sxl.delete('name')
           version = sxl.delete('version')
+          version = sxl.delete('versions') || version
           sxl.delete('prefix')
           memo[name] = sxl.empty? ? version : sxl.merge('version' => version)
         end

@@ -2,8 +2,8 @@ module RSMP
   module Validator
     module Configuration
       # Canonicalizes the versions used by filters and compliance metadata.
-      # Embedded RSMP nodes retain configured legacy spellings for wire
-      # compatibility; the rsmp gem normalizes them only for schema lookup.
+      # Embedded RSMP nodes retain configured legacy Core spellings for wire
+      # compatibility. Configured SXL versions always use MAJOR.MINOR.PATCH.
       module VersionNormalization
         private
 
@@ -47,10 +47,11 @@ module RSMP
 
         def canonical_sxl_version(name, version)
           version = RSMP::Schema.latest_version(name) if version == 'latest'
-          normalized = RSMP::Schema.sanitize_version(version.to_s)
-          abort_with_error "Invalid SXL version #{name} #{version.inspect}" unless normalized
-          RSMP::Schema.find_schema! name, normalized
-          normalized
+          unless RSMP::Schema.strict_version?(version)
+            abort_with_error "Invalid SXL version #{name} #{version.inspect}: must use MAJOR.MINOR.PATCH"
+          end
+          RSMP::Schema.find_schema! name, version
+          version
         rescue RSMP::Schema::UnknownSchemaError => e
           abort_with_error "Unknown SXL #{name} #{version}: #{e}"
         end
