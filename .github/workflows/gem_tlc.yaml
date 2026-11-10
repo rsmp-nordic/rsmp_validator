@@ -11,7 +11,7 @@ on:
     # Schedules run on the default branch, at 22:00 UTC.
     - cron: '0 22 * * 0-4' # Curated: Sunday–Thursday.
 jobs:
-  validator:
+  validate_core_sxl:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     strategy:
