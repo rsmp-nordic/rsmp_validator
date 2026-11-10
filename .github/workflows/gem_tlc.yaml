@@ -5,16 +5,39 @@
 # This workflow will run rsmp validator
 name: Gem TLC
 on:
-  push:
+  pull_request:
+    types: [ opened, reopened, synchronize, labeled ]
   schedule:
-    - cron: '0 22 * * *'
+    # Schedules run on the default branch, at 22:00 UTC.
+    - cron: '0 22 * * 0-4' # Curated: Sunday–Thursday.
 jobs:
   validator:
+    name: Core ${{ matrix.core }} / SXL ${{ matrix.sxl }}
+    if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
     timeout-minutes: 10
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        core: ['3.3.0', '3.2.2', '3.2.1', '3.2.0', '3.1.5', '3.1.4', '3.1.3', '3.1.2']
+        include:
+          # Every SXL on the latest supported Core.
+          - { core: '3.3.0', sxl: '1.2.1' }
+          - { core: '3.3.0', sxl: '1.2.0' }
+          - { core: '3.3.0', sxl: '1.1.0' }
+          - { core: '3.3.0', sxl: '1.0.15' }
+          - { core: '3.3.0', sxl: '1.0.14' }
+          - { core: '3.3.0', sxl: '1.0.13' }
+          - { core: '3.3.0', sxl: '1.0.10' }
+          - { core: '3.3.0', sxl: '1.0.9' }
+          - { core: '3.3.0', sxl: '1.0.8' }
+          - { core: '3.3.0', sxl: '1.0.7' }
+          # Historical pairs cover the older Core versions.
+          - { core: '3.2.2', sxl: '1.2.1' }
+          - { core: '3.2.1', sxl: '1.2.0' }
+          - { core: '3.2.0', sxl: '1.1.0' }
+          - { core: '3.1.5', sxl: '1.0.15' }
+          - { core: '3.1.4', sxl: '1.0.14' }
+          - { core: '3.1.3', sxl: '1.0.13' }
+          - { core: '3.1.2', sxl: '1.0.7' }
       fail-fast: false
 
     steps:
@@ -24,7 +47,7 @@ jobs:
       run: |
         echo "LOG_ID=\
         gem-tlc-ubuntu-latest-\
-        core-${{ matrix.core }}-\
+        core-${{ matrix.core }}-sxl-${{ matrix.sxl }}-\
         run-\
         ${{ github.run_id }}-\
         ${{ github.run_number }}-\
@@ -45,8 +68,8 @@ jobs:
       shell: bash
       run: |
         bundle exec rsmp site --config config/simulator/tlc.yaml \
-        --sxls tlc:1.2.1 \
-        2>&1 > simulator-${{ steps.log_id.outputs.LOG_ID }}.log \
+        --core ${{ matrix.core }} --sxls tlc:${{ matrix.sxl }} \
+        > simulator-${{ steps.log_id.outputs.LOG_ID }}.log 2>&1 \
         &
 
     - name: Run tests
@@ -56,7 +79,7 @@ jobs:
         --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
         --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json \
         --site-config config/sites/gem_tlc.yaml \
-        --core ${{ matrix.core}}
+        --core ${{ matrix.core }} --sxls tlc:${{ matrix.sxl }}
 
     - name: Show detailed log
       if: ${{ always() && steps.ruby_setup.outcome == 'success' }}
