@@ -6,13 +6,12 @@
 name: Gem TLC
 on:
   pull_request:
-    types: [ opened, reopened, synchronize, labeled ]
+    types: [ opened, reopened, synchronize ]
   schedule:
     # Schedules run on the default branch, at 22:00 UTC.
     - cron: '0 22 * * 0-4' # Curated: Sunday–Thursday.
 jobs:
   validator:
-    if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
     timeout-minutes: 10
     runs-on: ubuntu-latest
     strategy:
