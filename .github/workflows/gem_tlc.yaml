@@ -7,9 +7,6 @@ name: Gem TLC
 on:
   pull_request:
     types: [ opened, reopened, synchronize ]
-  schedule:
-    # Schedules run on the default branch, at 22:00 UTC.
-    - cron: '0 22 * * 0-4' # Curated: Sunday–Thursday.
 jobs:
   validate_core_sxl:
     timeout-minutes: 10
