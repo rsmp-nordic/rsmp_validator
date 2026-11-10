@@ -3,18 +3,24 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 # This workflow will run rsmp validator
-name: Gem TLC SXL matrix
+name: Gem TLC full matrix
 on:
-  push:
+  pull_request:
+    types: [ opened, reopened, synchronize, labeled ]
   schedule:
-    - cron: '0 22 * * *'
+    # Schedules run on the default branch, at 22:00 UTC.
+    - cron: '0 22 * * 5,6' # Full: Friday–Saturday.
 jobs:
   validator:
+    name: Core ${{ matrix.core }} / SXL ${{ matrix.sxl }}
+    if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub-full') }}
     timeout-minutes: 10
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sxl: ['1.0.7','1.0.8','1.0.9','1.0.10','1.0.13','1.0.15','1.1.0','1.2.0','1.2.1']
+        # All 80 Core/SXL combinations.
+        core: ['3.1.2', '3.1.3', '3.1.4', '3.1.5', '3.2.0', '3.2.1', '3.2.2', '3.3.0']
+        sxl: ['1.0.7', '1.0.8', '1.0.9', '1.0.10', '1.0.13', '1.0.14', '1.0.15', '1.1.0', '1.2.0', '1.2.1']
       fail-fast: false
 
     steps:
@@ -23,9 +29,8 @@ jobs:
       id: log_id
       run: |
         echo "LOG_ID=\
-        gem-tlc-\
-        ubuntu-latest-\
-        sxl-${{ matrix.sxl }}-\
+        gem-tlc-ubuntu-latest-\
+        core-${{ matrix.core }}-sxl-${{ matrix.sxl }}-\
         run-\
         ${{ github.run_id }}-\
         ${{ github.run_number }}-\
@@ -40,14 +45,13 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         bundler-cache: true
-        cache-version: 1
+        cache-version: 2
 
     - name: Start TLC in background
       shell: bash
       run: |
-        bundle exec rsmp site \
-        --config config/simulator/tlc.yaml \
-        --core 3.2.2 \
+        bundle exec rsmp site --config config/simulator/tlc.yaml \
+        --core ${{ matrix.core }} --sxls tlc:${{ matrix.sxl }} \
         > simulator-${{ steps.log_id.outputs.LOG_ID }}.log 2>&1 \
         &
 
@@ -58,7 +62,7 @@ jobs:
         --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
         --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json \
         --site-config config/sites/gem_tlc.yaml \
-        --core 3.2.2 --sxls tlc:${{ matrix.sxl }}
+        --core ${{ matrix.core }} --sxls tlc:${{ matrix.sxl }}
 
     - name: Show detailed log
       if: ${{ always() && steps.ruby_setup.outcome == 'success' }}
