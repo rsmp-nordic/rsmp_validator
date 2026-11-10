@@ -12,7 +12,6 @@ on:
     - cron: '0 22 * * 0-4' # Curated: Sunday–Thursday.
 jobs:
   validator:
-    name: Core ${{ matrix.core }} / SXL ${{ matrix.sxl }}
     if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub') }}
     runs-on: [ self-hosted, Linux, X64, itc3 ]
     timeout-minutes: 20
