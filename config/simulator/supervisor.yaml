@@ -1,6 +1,10 @@
 port: 13111
 sites:
   default:
+    test_hints: true
+    components:
+      main:
+        TC:
     sxls:
       tlc: '1.2.1'
     intervals:

@@ -1,4 +1,5 @@
 require_relative '../missing_configuration'
+require_relative '../scenario'
 
 module RSMP
   module Validator
@@ -6,13 +7,16 @@ module RSMP
       # Helpers for connecting to a site or supervisor in tests, with optional
       # version-based skipping via sxl: and core: keyword arguments.
       #
-      # with_site(:connected, sxl: '>=1.2.0') do |supervisor, site_proxy|
+      # with_site(:connected, sxl: '>=1.2.0') do |site_proxy|
       #   ...
       # end
       #
-      # with_supervisor(:connected, core: '>=3.2.0') do |site, supervisor_proxy|
+      # with_supervisor(:connected, core: '>=3.2.0') do |supervisor_proxy|
       #   ...
       # end
+      #
+      # with_scenario(proxy, id) checks test_scenarios and collects messages for
+      # the duration of its block. The test decides when to send the hint.
       module Connection
         VALID_STATES = %i[connected reconnected isolated disconnected].freeze
 
@@ -47,6 +51,13 @@ module RSMP
               run_test { block.call(proxy) }
             end
           end
+        end
+
+        def with_scenario(proxy, id)
+          skip 'Supervisor test scenarios are disabled' unless RSMP::Validator.config['test_scenarios'] == true
+
+          scenario = Scenario.new(proxy, id)
+          scenario.collect { yield scenario }
         end
 
         private

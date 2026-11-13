@@ -311,6 +311,105 @@ This typically includes setting an IP address and port. If the site and the vali
 
 When testing a supervisor, you need to configure it to listen for connections on the same port as the validator uses, and make sure the connection is not blocked due to firewalls, IP filtering, or RSMP site ID filtering.
 
+### Supervisor test scenarios
+
+The prototype supervisor tests can request an action over the RSMP connection
+using an optional Test Hub convention. Enable all applicable scenarios in the
+supervisor test config:
+
+```yaml
+test_scenarios: true
+```
+
+The M0002 scenario checks the CommandRequest, CommandResponse and MessageAck
+sequence, the M0002 command code, and the acknowledgement's response ID. Normal
+message validation still applies. The supervisor chooses the arguments; the hint carries only a
+scenario ID. Its chosen plan and security code must work with the simulated site's
+configuration. The Gem supervisor prototype uses plan 1 and code `2222`, matching
+the bundled test configuration. The second scenario requests a
+subscription to S0014/status, then checks acknowledgement of an update and
+unsubscription. The exact exchange is documented in
+`test/supervisor/test_hints_spec.rb`. When enabled, all scenarios applicable to the
+negotiated Core/SXL versions are expected to pass, including any added in future.
+A scenario fails if the supervisor sends nothing or an invalid exchange.
+Set `test_scenarios: false` or omit the setting to skip these hint-driven tests;
+other supervisor tests still run normally.
+
+Tests use `with_supervisor` for the connection and version requirements, then
+`with_scenario(proxy, id)` for the scenario:
+
+```ruby
+with_supervisor(:isolated, sxl: '>=1.0.7') do |proxy|
+  with_scenario(proxy, 'M0002.set_plan') do |scenario|
+    expect_or_stop(scenario.send_hint).to be_a(RSMP::Result::Success)
+
+    result = scenario.wait_for_command('M0002')
+    expect_or_stop(result).to be_a(RSMP::Result::Success)
+    command, response = result.value
+
+    expect_or_stop(scenario.wait_for_ack(response)).to be_a(RSMP::Result::Success)
+  end
+end
+```
+
+`with_scenario` skips when `test_scenarios` is disabled. Otherwise it starts
+collecting before yielding and stops when the block exits, including after failed
+expectations. The test sends the hint explicitly. Messages are buffered throughout
+the block, so a fast acknowledgement is retained until its wait is reached.
+
+Waits return `RSMP::Result::Success` or `RSMP::Result::Failure`. `wait_for_command`
+returns the received command and the site's automatically sent response in the
+success value. `wait_for_ack` checks the original message ID and returns the
+acknowledgement. `wait_for_subscribe('S0014')` returns the incoming subscription
+and the site's first matching outgoing update as `[subscribe, update]`. After
+checking `wait_for_ack(update)`, use `wait_for_unsubscribe` to check that the
+supervisor cancels that subscription's component and status fields. The site
+acknowledges the unsubscribe normally. `wait_for_message(type, direction:)`
+supports other messages, with an optional `component:` filter for `cId`.
+The unsubscribe wait uses the original subscription's component, so unsubscribes
+for other components are ignored. The gem's `Queue` handles buffering, per-wait
+filtering, status matching, acknowledgement correlation and failure events. Each
+queue wait uses one timeout across unrelated messages. The scenario coordinates
+the exchange and checks the relationships between its messages.
+A missing requested code or filtered component causes a timeout. The scenario
+still checks that an unsubscribe cancels the original status fields.
+
+```ruby
+result = scenario.wait_for_subscribe('S0014')
+expect_or_stop(result).to be_a(RSMP::Result::Success)
+subscribe, update = result.value
+
+result = scenario.wait_for_ack(update)
+expect_or_stop(result).to be_a(RSMP::Result::Success)
+
+result = scenario.wait_for_unsubscribe
+expect_or_stop(result).to be_a(RSMP::Result::Success)
+```
+
+Waits consume messages in order, discarding unrelated
+traffic; a later wait cannot reuse a message that preceded an earlier step.
+
+Timeouts use `timeouts.acknowledgement` for each wait. Invalid-message events,
+disconnects and missing acknowledgements return failures; a matching MessageNotAck
+also fails an acknowledgement wait. `expect_or_stop` records a failed expectation
+and stops the test before it accesses a missing exchange or performs another wait.
+
+The Gem supervisor must separately enable `test_hints: true` in its settings for
+the simulated site. This is enabled in `config/simulator/supervisor.yaml` for local
+testing. These hints are not standard RSMP messages in meaning: they use
+MessageNotAck with a synthetic UUID-v4 `oMId` and a `rea` string such as
+`test: {"scenario":"M0002.set_plan"}`.
+
+While developing both `test_hints` branches in sibling checkouts, use the local
+gem's implementation without changing the validator's Gemfile:
+
+```sh
+RUBYLIB=../rsmp/lib bundle exec rsmp-validator run test/supervisor \
+  --supervisor-config config/supervisors/gem_supervisor.yaml \
+  --auto-supervisor-config config/simulator/supervisor.yaml \
+  --core 3.2.2 --sxls tlc:1.2.1
+```
+
 RSMP Traffic Light Controllers by default communicate on port 12111, but to avoid interfering with real installations, the validator uses port 13111 by default. You can use another port if you like, just be sure to configure the equipment and the validator to use the same port.
 
 If the site cannot connect to the validator, check the IP and port, and make sure firewalls, etc. are not blocking the connection.

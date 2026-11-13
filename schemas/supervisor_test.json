@@ -11,6 +11,7 @@
       "additionalProperties": true
     },
     "core_version": { "type": "string" },
+    "test_scenarios": { "type": "boolean" },
     "sxls": {
       "type": "object",
       "propertyNames": { "not": { "const": "core" } },

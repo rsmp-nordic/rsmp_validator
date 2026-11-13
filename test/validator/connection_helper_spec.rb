@@ -37,6 +37,14 @@ describe RSMP::Validator::Helpers::Connection do
       end
 
       RSMP::Validator::Helpers::Connection::VALID_STATES.each do |state|
+        if method == :with_supervisor
+          it "preserves the existing block arguments when #{state}" do
+            args = nil
+            helper.with_supervisor(state) { |*yielded| args = yielded }
+            expect(args).to be == (state == :disconnected ? [] : [:proxy])
+          end
+        end
+
         it "records an operational failure and aborts when #{state}" do
           continued = false
 
@@ -80,6 +88,60 @@ describe RSMP::Validator::Helpers::Connection do
           expect(error).to be_a(RSMP::Validator::Helpers::Connection::UncaughtException)
           expect(error.message).to be == 'RuntimeError: validator bug'
           expect(error.backtrace.first).to be(:include?, __FILE__)
+        end
+      end
+
+      if method == :with_supervisor
+        it 'skips disabled or omitted scenarios before collecting or yielding' do
+          helper.define_singleton_method(:skip) { |reason| throw :skip, reason }
+          [{}, { 'test_scenarios' => false }].each do |config|
+            RSMP::Validator.config = config
+            reason = catch(:skip) do
+              helper.with_scenario(nil, 'M0002.set_plan') { raise 'must not run test' }
+            end
+            expect(reason).to be == 'Supervisor test scenarios are disabled'
+          end
+        end
+
+        it 'starts collection before yielding the scenario and stops it afterward' do
+          RSMP::Validator.config['test_scenarios'] = true
+          proxy = Object.new.extend(RSMP::Distributor)
+          proxy.initialize_distributor
+          helper.with_scenario(proxy, 'M0002.set_plan') do |scenario|
+            expect(scenario).to be_a(RSMP::Validator::Scenario)
+            expect(scenario.id).to be == 'M0002.set_plan'
+            expect(scenario.proxy).to be == proxy
+            expect(proxy.receivers.size).to be == 1
+            expect(proxy.receivers.first).to be_a(RSMP::Queue)
+          end
+          expect(proxy.receivers).to be(:empty?)
+        end
+
+        it 'stops collection when a failed expectation aborts the scenario block' do
+          RSMP::Validator.config['test_scenarios'] = true
+          proxy = Object.new.extend(RSMP::Distributor)
+          proxy.initialize_distributor
+          catch(:rsmp_validator_test_failure) do
+            helper.with_scenario(proxy, 'M0002.set_plan') { throw :rsmp_validator_test_failure }
+          end
+          expect(proxy.receivers).to be(:empty?)
+        end
+
+        it 'still skips enabled scenarios when Core or SXL requirements are not met' do
+          RSMP::Validator.config['test_scenarios'] = true
+          helper.define_singleton_method(:skip) { |reason| throw :skip, reason }
+          mock(tester).replace(:isolated) { raise 'must not start connection' }
+          mock(RSMP::Validator).replace(:sxl_matches?) { |_requirement| false }
+          mock(RSMP::Validator).replace(:core_matches?) { |_requirement| false }
+
+          %i[core sxl].each do |version|
+            reason = catch(:skip) do
+              helper.with_supervisor(:isolated, **{ version => '>=99.0.0' }) do |proxy|
+                helper.with_scenario(proxy, 'M0002.set_plan') { raise 'must not run test' }
+              end
+            end
+            expect(reason).to be == "requires #{version} >=99.0.0"
+          end
         end
       end
     end

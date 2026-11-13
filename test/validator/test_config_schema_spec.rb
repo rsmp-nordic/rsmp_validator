@@ -258,4 +258,21 @@ describe 'Versioned test configuration schemas' do
 
     expect { check }.to raise_exception(RSMP::ConfigurationError, message: be(:include?, '/local_supervisor'))
   end
+
+  it 'accepts a boolean or omitted supervisor test scenario switch' do
+    settings = YAML.load_file(File.expand_path('../../config/supervisors/gem_supervisor.yaml', __dir__))
+    [true, false].each do |enabled|
+      settings['test_scenarios'] = enabled
+      checked = RSMP::Validator::ConfigCheck.build_options(settings, mode: :supervisor, path: nil).to_h
+      expect(checked['test_scenarios']).to be == enabled
+    end
+    settings.delete('test_scenarios')
+    checked = RSMP::Validator::ConfigCheck.build_options(settings, mode: :supervisor, path: nil).to_h
+    expect(checked['test_scenarios']).to be_nil
+
+    settings['test_scenarios'] = ['M0002.set_plan']
+    expect do
+      RSMP::Validator::ConfigCheck.build_options(settings, mode: :supervisor, path: nil)
+    end.to raise_exception(RSMP::ConfigurationError, message: be(:include?, '/test_scenarios'))
+  end
 end
