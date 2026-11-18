@@ -12,7 +12,10 @@ on:
     - cron: '48 18 * * *'
 jobs:
   validate_core_sxl:
-    if: ${{ github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'testhub-full') }}
+    if: >-
+      ${{ github.event_name == 'schedule' ||
+          (contains(github.event.pull_request.labels.*.name, 'testhub') &&
+           contains(github.event.pull_request.labels.*.name, 'full')) }}
     runs-on: [ self-hosted, Linux, X64, itc3 ]
     timeout-minutes: 20
     strategy:
