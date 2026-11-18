@@ -9,7 +9,9 @@ on:
     types: [ opened, reopened, synchronize, labeled ]
 jobs:
   validate_core_sxl:
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'testhub') }}
+    if: >-
+      ${{ contains(github.event.pull_request.labels.*.name, 'testhub') &&
+          !contains(github.event.pull_request.labels.*.name, 'full') }}
     runs-on: [ self-hosted, Linux, X64, itc3 ]
     timeout-minutes: 20
     strategy:
