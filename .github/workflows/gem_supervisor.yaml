@@ -5,16 +5,34 @@
 # This workflow will run rsmp validator
 name: Gem supervisor
 on:
-  push:
-  schedule:
-    - cron: '0 22 * * *'
+  pull_request:
+    types: [ opened, reopened, synchronize ]
 jobs:
-  validator:
+  validate_core_sxl:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        core: ['3.3.0', '3.2.2', '3.2.1', '3.2.0', '3.1.5', '3.1.4', '3.1.3', '3.1.2']
+        include:
+          # Every SXL on the latest supported Core.
+          - { core: '3.3.0', sxl: '1.2.1' }
+          - { core: '3.3.0', sxl: '1.2.0' }
+          - { core: '3.3.0', sxl: '1.1.0' }
+          - { core: '3.3.0', sxl: '1.0.15' }
+          - { core: '3.3.0', sxl: '1.0.14' }
+          - { core: '3.3.0', sxl: '1.0.13' }
+          - { core: '3.3.0', sxl: '1.0.10' }
+          - { core: '3.3.0', sxl: '1.0.9' }
+          - { core: '3.3.0', sxl: '1.0.8' }
+          - { core: '3.3.0', sxl: '1.0.7' }
+          # Historical pairs cover the older Core versions.
+          - { core: '3.2.2', sxl: '1.2.1' }
+          - { core: '3.2.1', sxl: '1.2.0' }
+          - { core: '3.2.0', sxl: '1.1.0' }
+          - { core: '3.1.5', sxl: '1.0.15' }
+          - { core: '3.1.4', sxl: '1.0.14' }
+          - { core: '3.1.3', sxl: '1.0.13' }
+          - { core: '3.1.2', sxl: '1.0.7' }
       fail-fast: false
 
     steps:
@@ -24,7 +42,7 @@ jobs:
       run: |
         echo "LOG_ID=\
         gem-supervisor-ubuntu-latest-\
-        core-${{ matrix.core }}-\
+        core-${{ matrix.core }}-sxl-${{ matrix.sxl }}-\
         run-\
         ${{ github.run_id }}-\
         ${{ github.run_number }}-\
@@ -44,7 +62,7 @@ jobs:
       shell: bash
       run: |
         bundle exec rsmp supervisor --config config/simulator/supervisor.yaml \
-        2>&1 > simulator-${{ steps.log_id.outputs.LOG_ID }}.log \
+        > simulator-${{ steps.log_id.outputs.LOG_ID }}.log 2>&1 \
         &
 
     - name: Run tests
@@ -54,7 +72,7 @@ jobs:
         --verbose --log-path validator-${{ steps.log_id.outputs.LOG_ID }}.log \
         --report-json compliance-${{ steps.log_id.outputs.LOG_ID }}.json \
         --supervisor-config config/supervisors/gem_supervisor.yaml \
-        --core ${{ matrix.core}}
+        --core ${{ matrix.core }} --sxls tlc:${{ matrix.sxl }}
 
     - name: Show detailed log
       if: ${{ always() && steps.ruby_setup.outcome == 'success' }}
