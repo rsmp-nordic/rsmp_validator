@@ -1,44 +1,40 @@
+require_relative '../../../lib/rsmp/validator/buffer_replay_queue'
+
 describe 'Site::Core' do
   describe 'Message Buffer' do
     let(:update_rate) { 1 }
     let(:outage_duration) { 2 * update_rate }
+    let(:boundary_margin) { 0.5 * update_rate }
     let(:status_list) { [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus' }] }
     let(:component) { RSMP::Validator.get_config('main_component') }
     let(:collect_timeout) { RSMP::Validator.get_config('timeouts', 'status_update') }
 
     def subscribe_list(site_proxy)
-      subscribe_list = status_list.map { |item| item.merge('uRt' => update_rate.to_s) }
+      # Confirm that live updates are arriving before disconnecting.
+      subscribe_list = status_list.map { |item| item.merge('uRt' => update_rate.to_s, 'q' => 'recent') }
       return subscribe_list unless site_proxy.tlc.use_soc?
 
       subscribe_list.map { |item| item.merge('sOc' => false) }
     end
 
-    def subscribe_to_status(site_proxy)
-      exchange = site_proxy.subscribe_to_status_and_collect(
-        subscribe_list(site_proxy),
-        component: component,
-        within: RSMP::Validator.get_config('timeouts', 'status_update')
-      ).value!
-      Time.parse(exchange.messages.first.attribute('sTs'))
+    def monotonic_now
+      Process.clock_gettime(Process::CLOCK_MONOTONIC)
     end
 
-    def simulate_outage(initial_timestamp)
-      RSMP::Validator::SiteTester.instance.stop 'Simulating communication disruption'
-      sleep outage_duration
+    def subscribe_to_status(site_proxy)
+      site_proxy.subscribe_to_status_and_collect(
+        subscribe_list(site_proxy), component: component, within: collect_timeout
+      ).value!
+    end
 
-      # Exclude half an update interval at each end of the outage window.
-      margin = 0.5 * update_rate
-      (initial_timestamp + margin)...(initial_timestamp + outage_duration - margin)
+    def simulate_outage
+      closed_at = monotonic_now
+      sleep outage_duration
+      closed_at...monotonic_now
     end
 
     def queue_factory
-      # Keep updates received during the handshake until the test can inspect them.
-      proc do |proxy|
-        RSMP::Queue.new(
-          proxy,
-          filter: RSMP::Filter.new(type: 'StatusUpdate', component: component, ingoing: true, outgoing: false)
-        )
-      end
+      proc { |proxy| RSMP::Validator::BufferReplayQueue.new(proxy, component: component) }
     end
 
     def matching_statuses(message)
@@ -93,9 +89,10 @@ describe 'Site::Core' do
     it 'sends status updates timestamped during the communication outage' do
       skip 'requires core >= 3.1.4' unless RSMP::Validator.core_matches?('>=3.1.4')
 
-      initial_timestamp = with_site(:connected) { |site_proxy| subscribe_to_status(site_proxy) }
-      outage_window = simulate_outage(initial_timestamp)
+      with_site(:connected) { |site_proxy| subscribe_to_status(site_proxy) }
+      offline = with_site(:disconnected) { simulate_outage }
       with_site(:connected, 'collect' => queue_factory) do |site_proxy|
+        outage_window = site_proxy.collector.site_time_window(offline, boundary_margin)
         buffered_message, = wait_for_buffered_update(site_proxy.collector, outage_window)
         assert(buffered_message, assert_message(buffered_message, outage_window))
       ensure
@@ -114,9 +111,10 @@ describe 'Site::Core' do
     it 'marks buffered status values as old for rsmp 3.2.0 and later' do
       skip 'requires core >= 3.2.0' unless RSMP::Validator.core_matches?('>=3.2.0')
 
-      initial_timestamp = with_site(:connected) { |site_proxy| subscribe_to_status(site_proxy) }
-      outage_window = simulate_outage(initial_timestamp)
+      with_site(:connected) { |site_proxy| subscribe_to_status(site_proxy) }
+      offline = with_site(:disconnected) { simulate_outage }
       with_site(:connected, 'collect' => queue_factory) do |site_proxy|
+        outage_window = site_proxy.collector.site_time_window(offline, boundary_margin)
         buffered_update, = wait_for_buffered_update(site_proxy.collector, outage_window)
         assert(buffered_update, assert_message(buffered_update, outage_window))
         next unless buffered_update # skip the rest if no message was received
