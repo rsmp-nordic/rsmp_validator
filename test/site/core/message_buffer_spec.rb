@@ -7,7 +7,8 @@ describe 'Site::Core' do
     let(:collect_timeout) { RSMP::Validator.get_config('timeouts', 'status_update') }
 
     def subscribe_list(site_proxy)
-      subscribe_list = status_list.map { |item| item.merge('uRt' => update_rate.to_s) }
+      # A replay from an earlier outage must not supply the baseline timestamp.
+      subscribe_list = status_list.map { |item| item.merge('uRt' => update_rate.to_s, 'q' => 'recent') }
       return subscribe_list unless site_proxy.tlc.use_soc?
 
       subscribe_list.map { |item| item.merge('sOc' => false) }
