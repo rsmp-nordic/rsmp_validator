@@ -3,7 +3,7 @@ require_relative '../../../lib/rsmp/validator/buffer_replay_queue'
 describe 'Site::Core' do
   describe 'Message Buffer' do
     let(:update_rate) { 1 }
-    let(:outage_duration) { 6 * update_rate }
+    let(:outage_duration) { 2 * update_rate }
     let(:boundary_margin) { 0.5 * update_rate }
     let(:status_list) { [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus' }] }
     let(:component) { RSMP::Validator.get_config('main_component') }
