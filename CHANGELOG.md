@@ -1,6 +1,15 @@
 # Changelog
 
-## unreleased
+## 0.4.0
+- validate test configurations against the selected Core and SXL versions before connecting, and report missing settings by name
+- extend `config check` to accept multiple files and directories, and check bundled device configurations in CI
+- move bundled device configurations to `config/sites/` and `config/supervisors/`
+- apply `--core` to auto-started sites and preserve their configured SXL version lists when testing SXL hints
+- check that `AggregatedStatus` omits `fP` and `fS` for Core 3.3.0 and later
+- fix message buffer tests to identify replayed updates by their timestamps even when fresh updates arrive first after reconnection
+- stop tests when prerequisite assertions fail and fix a race when checking signal priority state changes for `M0022`
+- run curated Core and SXL version combinations, with full matrices nightly
+- describe conformance tests using Given/When/Then steps
 - remove obsolete generated documentation pages during deployment to prevent duplicate index entries
 
 ## 0.3.3
