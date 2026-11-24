@@ -99,4 +99,31 @@ describe RSMP::Validator::Compliance::Report do
 
     expect(report['matrix']['sxls']).to be == { 'tlc' => '1.0.15' }
   end
+
+  it 'records one named outcome per executed example' do
+    Dir.mktmpdir do |dir|
+      Dir.chdir(dir) do
+        File.write('example_spec.rb', <<~RUBY)
+          describe 'Connection' do
+            it('responds') { assert(true) }
+            it('responds') { assert(false) }
+            it('times out') { raise 'timeout' }
+            describe 'older core' do
+              it('responds') { skip 'requires a newer core' }
+            end
+          end
+        RUBY
+        assertions = Sus::Assertions.default(output: Sus::Output::Null.new)
+        Sus::File[File.expand_path('example_spec.rb')].call(assertions)
+        report = RSMP::Validator::Compliance::Report.new(assertions: assertions).to_h
+
+        expect(report['test_outcomes']).to be == {
+          'example_spec.rb#Connection#responds' => 'passed',
+          'example_spec.rb#Connection#responds@2' => 'failed',
+          'example_spec.rb#Connection#times out' => 'errored',
+          'example_spec.rb#Connection#older core#responds' => 'skipped'
+        }
+      end
+    end
+  end
 end

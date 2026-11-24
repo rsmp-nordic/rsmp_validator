@@ -12,6 +12,15 @@ nav_order: 5
 ## Sus Output
 When you run tests, sus reports the results. By default sus shows a compact progress indicator and a summary at the end.
 
+## Compliance JSON
+
+`bundle exec rsmp-validator run test/site --report-json compliance.json` writes a machine-readable report.
+The `test_outcomes` object maps each executed test's ID to `passed`, `failed`, `errored`, or `skipped`.
+For example, `test/site/core/message_buffer_spec.rb#Site::Core#Message Buffer#sends status updates timestamped during the communication outage` identifies one test across runs even if its line number changes.
+IDs include the file, enclosing descriptions and test name. Repeated sibling names receive suffixes such as `@2`.
+An absent ID means the report supplies no outcome for that test. Older reports omit `test_outcomes` entirely.
+Use `test_outcomes` to count individual tests by outcome. The existing `summary` fields follow Sus's aggregate counts, which can include a skipped example in both `passed_count` and `skipped_count`.
+
 ## RSMP Log output
 RSMP messages exchanged during testing can optionally be logged. Use the `--log` flag with the `rsmp-validator` executable to enable RSMP logging:
 
