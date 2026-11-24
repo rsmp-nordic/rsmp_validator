@@ -5,6 +5,7 @@ require 'json'
 require 'time'
 require_relative 'report_failure'
 require_relative 'report_metadata'
+require_relative 'test_outcomes'
 
 module RSMP
   module Validator
@@ -42,6 +43,7 @@ module RSMP
             'run' => @metadata.run,
             'matrix' => @metadata.matrix,
             'summary' => summary,
+            'test_outcomes' => TestOutcomes.new(@assertions).to_h,
             'failures' => failures
           }
         end
