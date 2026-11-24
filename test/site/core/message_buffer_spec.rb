@@ -4,7 +4,7 @@ describe 'Site::Core' do
   describe 'Message Buffer' do
     let(:update_rate) { 1 }
     let(:outage_duration) { 2 * update_rate }
-    let(:boundary_margin) { 0.5 * update_rate }
+    let(:boundary_margin) { 0.25 * update_rate }
     let(:status_list) { [{ 'sCI' => 'S0001', 'n' => 'signalgroupstatus' }] }
     let(:component) { RSMP::Validator.get_config('main_component') }
     let(:collect_timeout) { RSMP::Validator.get_config('timeouts', 'status_update') }
