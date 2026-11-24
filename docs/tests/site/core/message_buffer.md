@@ -34,9 +34,10 @@ where the core spec requires it.
 ```ruby
 it 'marks buffered status values as old for rsmp 3.2.0 and later' do
   skip 'requires core >= 3.2.0' unless RSMP::Validator.core_matches?('>=3.2.0')
-  initial_timestamp = with_site(:connected) { |site_proxy| subscribe_to_status(site_proxy) }
-  outage_window = simulate_outage(initial_timestamp)
+  with_site(:connected) { |site_proxy| subscribe_to_status(site_proxy) }
+  offline = with_site(:disconnected) { simulate_outage }
   with_site(:connected, 'collect' => queue_factory) do |site_proxy|
+    outage_window = site_proxy.collector.site_time_window(offline, boundary_margin)
     buffered_update, = wait_for_buffered_update(site_proxy.collector, outage_window)
     assert(buffered_update, assert_message(buffered_update, outage_window))
     next unless buffered_update # skip the rest if no message was received
@@ -66,9 +67,10 @@ Verify that historical status data arrives after communication is restored.
 ```ruby
 it 'sends status updates timestamped during the communication outage' do
   skip 'requires core >= 3.1.4' unless RSMP::Validator.core_matches?('>=3.1.4')
-  initial_timestamp = with_site(:connected) { |site_proxy| subscribe_to_status(site_proxy) }
-  outage_window = simulate_outage(initial_timestamp)
+  with_site(:connected) { |site_proxy| subscribe_to_status(site_proxy) }
+  offline = with_site(:disconnected) { simulate_outage }
   with_site(:connected, 'collect' => queue_factory) do |site_proxy|
+    outage_window = site_proxy.collector.site_time_window(offline, boundary_margin)
     buffered_message, = wait_for_buffered_update(site_proxy.collector, outage_window)
     assert(buffered_message, assert_message(buffered_message, outage_window))
   ensure
