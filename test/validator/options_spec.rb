@@ -61,12 +61,13 @@ describe 'Validator options' do
     old_override = RSMP::Validator.sxls_override
     RSMP::Validator.mode = :supervisor
     RSMP::Validator.sxls_override = 'tlc:1.2.0'
-    raw = { 'sites' => { 'default' => {} } }
+    raw = { 'sites' => { 'default' => {}, 'RN+SI0001' => { 'secure' => {} } } }
 
     RSMP::Validator.send(:apply_auto_node_overrides!, raw)
 
     expect(raw.key?('sxls')).to be == false
     expect(raw.dig('sites', 'default', 'sxls')).to be == { 'tlc' => '1.2.0' }
+    expect(raw.dig('sites', 'RN+SI0001')).to be == { 'secure' => {}, 'sxls' => { 'tlc' => '1.2.0' } }
   ensure
     RSMP::Validator.mode = old_mode
     RSMP::Validator.sxls_override = old_override
@@ -96,6 +97,13 @@ describe 'Validator options' do
   ensure
     RSMP::Validator.mode = previous_mode
     RSMP::Validator.sxls_override = previous_override
+  end
+
+  it 'offers a configured Core 3.3 SXL override first on the auto site' do
+    raw = { 'core_version' => '3.3.0', 'sxls' => { 'tlc' => ['1.3.0', '1.2.1'] } }
+    selected = RSMP::Validator.send(:auto_site_sxls, { 'tlc' => '1.2.1' }, raw)
+
+    expect(selected['tlc']).to be == ['1.2.1', '1.3.0']
   end
 
   it 'applies the requested Core version to the auto site without changing its SXL list' do

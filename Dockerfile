@@ -13,7 +13,7 @@ COPY exe exe
 COPY lib lib
 COPY schemas schemas
 COPY test test
-RUN bundle install
+RUN chmod 600 config/simulator/secure/*.private.key && bundle install
 COPY fixtures fixtures
 EXPOSE 13111
 ENTRYPOINT [ "bundle", "exec", "rsmp-validator" ]

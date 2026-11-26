@@ -170,6 +170,25 @@ describe 'Validator config check' do
     end
   end
 
+  it 'applies run and check overrides to explicitly configured local peers' do
+    {
+      'site' => ['sites/gem_tlc.yaml', %w[local_supervisor sites RN+SI0001]],
+      'supervisor' => ['supervisors/gem_supervisor.yaml', %w[local_site]]
+    }.each do |mode, (file, peer_path)|
+      path = File.join(VALIDATOR_CONFIG_DIR, file)
+      raw = YAML.load_file(path)
+      peer = raw.dig(*peer_path)
+      peer.merge!('core_version' => '3.3.0', 'sxls' => { 'tlc' => '1.2.1' })
+      options = RSMP::Validator::ConfigCheck.build_options(
+        raw, mode: mode, path: path, core: '3.2.2', sxls: 'tlc:1.0.15'
+      )
+      effective = options.to_h.dig(*peer_path)
+      expect(effective['core_version']).to be == '3.2.2'
+      expect(effective['sxls'].first['version']).to be == '1.0.15'
+      expect(peer['core_version']).to be == '3.3.0'
+    end
+  end
+
   it 'applies version overrides to directory checks' do
     settings = YAML.load_file(File.join(VALIDATOR_CONFIG_DIR, 'sites/gem_tlc.yaml'))
     settings['timeouts'].delete('priority_completion')

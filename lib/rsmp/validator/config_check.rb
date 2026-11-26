@@ -1,4 +1,5 @@
 require 'yaml'
+require_relative 'config_normalizer'
 require_relative 'options/site_test_options'
 require_relative 'options/supervisor_test_options'
 require_relative 'configuration/sxls_override'
@@ -23,14 +24,26 @@ module RSMP
 
         def build_options(raw, mode:, path:, core: nil, sxls: nil)
           settings = config_settings(raw)
-          settings['core_version'] = core if core
-          settings['sxls'] = parse_sxls(sxls) if sxls
+          overrides = {}
+          overrides['core_version'] = core if core
+          overrides['sxls'] = parse_sxls(sxls) if sxls
+          apply_version_overrides!(settings, mode.to_s, overrides) unless overrides.empty?
           options = options_class_for(mode.to_s).new(settings, source: path, log_settings: raw['log'])
           Configuration::TestRequirements.new(options).validate!
           options
         end
 
         private
+
+        def apply_version_overrides!(settings, mode, overrides)
+          settings.merge!(overrides)
+          if mode == 'supervisor'
+            local = settings['local_site']
+            local.merge!(overrides) if local.is_a?(Hash)
+          else
+            apply_supervisor_site_overrides!(settings['local_supervisor'], overrides)
+          end
+        end
 
         def abort_with_error(message)
           raise RSMP::ConfigurationError, message
@@ -58,7 +71,7 @@ module RSMP
         end
 
         def config_settings(raw)
-          settings = raw.dup
+          settings = RSMP::Validator::ConfigNormalizer.deep_dup(raw)
           settings.delete('log')
           settings
         end

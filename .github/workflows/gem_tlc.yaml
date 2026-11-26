@@ -62,6 +62,7 @@ jobs:
     - name: Start TLC in background
       shell: bash
       run: |
+        chmod 600 config/simulator/secure/*.private.key
         bundle exec rsmp site --config config/simulator/tlc.yaml \
         --core ${{ matrix.core }} --sxls tlc:${{ matrix.sxl }} \
         > simulator-${{ steps.log_id.outputs.LOG_ID }}.log 2>&1 \

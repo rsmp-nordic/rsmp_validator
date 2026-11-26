@@ -106,8 +106,7 @@ describe RSMP::Validator::Helpers::Connection do
 
   it 'classifies closed RSMP connections separately from unexpected exceptions' do
     errors = [
-      RSMP::NotReady.new('Cannot send StatusRequest: connection is disconnected'),
-      RSMP::DisconnectError.new('Connection was closed'),
+      RSMP::ConnectionError.new('Connection was closed'),
       EOFError.new('Secure RSMP peer closed connection'),
       IOError.new('Secure RSMP transport is closed'),
       IOError.new('Cannot send StatusRequest: connection transport is closed'),
@@ -126,7 +125,7 @@ describe RSMP::Validator::Helpers::Connection do
   end
 
   it 'preserves the cause and backtrace in connection-loss reports' do
-    error = RSMP::NotReady.new('Cannot send StatusRequest: connection is disconnected')
+    error = RSMP::ConnectionError.new('Cannot send StatusRequest: connection is disconnected')
     error.set_backtrace(['/tmp/connection.rb:1'])
     wrapped = RSMP::Validator::Helpers::Connection::ConnectionLost.new(error)
     expected_message =

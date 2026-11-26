@@ -1,7 +1,6 @@
 require 'yaml'
 require_relative 'missing_configuration'
 require_relative 'configuration/loader'
-require_relative 'configuration/overrides'
 require_relative 'configuration/validation'
 require_relative 'configuration/version_normalization'
 require_relative 'configuration/secrets'
@@ -12,7 +11,6 @@ module RSMP
     # Handles loading and validating validator configuration files.
     module Configuration
       include Loader
-      include Overrides
       include Validation
       include VersionNormalization
       include Secrets

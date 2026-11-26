@@ -1,10 +1,10 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: 9b4a355a973bef586213118a72731a620e880af3
+  revision: 332544f0690150c03093e711d8d468053a866afb
   branch: e2ee_edhoc
   specs:
-    rsmp (0.48.4)
-      async (~> 2.39)
+    rsmp (0.54.1)
+      async (~> 2.45)
       cbor (~> 0.5)
       colorize (~> 1.1)
       io-endpoint (~> 0.17)
@@ -16,8 +16,7 @@ GIT
 
 GIT
   remote: https://github.com/rsmp-nordic/ruby-edhoc.git
-  revision: b46ac4395f31b5eabd3f59e22016218ab5dab44a
-  branch: v1
+  revision: 7a42e9ef7b84e1e469f5e96632cbd8d27197d990
   specs:
     edhoc (1.0.0)
 
@@ -184,7 +183,7 @@ CHECKSUMS
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
   regexp_parser (2.13.4) sha256=1d0547814f57e6f00946957bd0ca201bc42f42cfb08eee89df60998aedcd8a3b
-  rsmp (0.48.4)
+  rsmp (0.54.1)
   rsmp-validator (0.4.0)
   rubocop (1.92.3) sha256=fd77feac46e8e91c3a534f868a1702c59f5bf8173515fd00a3c6ce1198672ff6
   rubocop-ast (1.53.0) sha256=027984d28485d6502ae4c72f9341080f54f538599f5dbb54f81875a4ddcad574

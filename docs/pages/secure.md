@@ -10,7 +10,7 @@ nav_order: 4
 
 The validator can run its existing site and supervisor conformance tests over the `rsmp-secure-v1` transport. Enable it when the equipment under test supports the same Secure RSMP profile and you want the test connection to be end-to-end authenticated and encrypted.
 
-Secure mode changes the transport used by the tests. It does not select different test files, and a successful validator run is not by itself a complete cryptographic conformance assessment. The full profile and protocol details belong to the [Secure RSMP documentation in the `rsmp` gem](https://github.com/rsmp-nordic/rsmp/blob/v1/documentation/configuration.md#secure-rsmp). This page explains how to configure and use that layer with the validator.
+Secure mode changes the transport used by the tests. It does not select different test files, and a successful validator run is not by itself a complete cryptographic conformance assessment. The full profile and protocol details belong to the [Secure RSMP documentation in the `rsmp` gem](https://github.com/rsmp-nordic/rsmp/blob/e2ee_edhoc/documentation/configuration.md#secure-rsmp). This page explains how to configure and use that layer with the validator.
 
 ## How it works
 
@@ -106,7 +106,7 @@ Configure the site under test to:
 - use its own matching private key and credential; and
 - trust the validator's `supervisor.cred` credential.
 
-See `config/gem_tlc.yaml` for a complete validator configuration.
+See `config/sites/gem_tlc.yaml` for a complete validator configuration.
 
 ## Testing a supervisor
 
@@ -145,40 +145,41 @@ Configure the supervisor under test to:
 - use the private key corresponding to `supervisor.cred`; and
 - trust the validator site's `RN+SI0001.cred` credential and authorize the same site ID.
 
-See `config/gem_supervisor.yaml` for a complete validator configuration.
+See `config/supervisors/gem_supervisor.yaml` for a complete validator configuration.
 
 ## Using secure auto nodes
 
 Both sides must be configured when using an [auto node]({{ site.baseurl}}{% link pages/auto.md %}):
 
-- `config/gem_tlc.yaml` configures the validator's secure supervisor, while `config/simulator/tlc.yaml` configures the auto site.
-- `config/gem_supervisor.yaml` configures the validator's secure site, while `config/simulator/supervisor.yaml` configures the auto supervisor.
+- `config/sites/gem_tlc.yaml` configures the validator's secure supervisor, while `config/simulator/tlc.yaml` configures the auto site.
+- `config/supervisors/gem_supervisor.yaml` configures the validator's secure site, while `config/simulator/supervisor.yaml` configures the auto supervisor.
 
-The supplied auto-node configurations use conventional credential paths below `config/simulator/secure/`. Generate the local test fixtures there before running them if the files are absent:
+The simulator credentials are included in the checkout. On POSIX systems, set owner-only permissions on the sample private keys before starting either simulator.
 
 ```console
-% bundle exec rsmp secure generate --out config/simulator/secure
+% chmod 600 config/simulator/secure/*.private.key
 ```
 
 Run the site tests with both configurations:
 
 ```console
 % bundle exec rsmp-validator run test/site \
-    --site-config config/gem_tlc.yaml \
-    --auto-site-config config/simulator/tlc.yaml
+    --site-config config/sites/gem_tlc.yaml \
+    --auto-site-config config/simulator/tlc.yaml \
+    --core 3.3.0 --sxls tlc:1.2.1
 ```
 
 Run the supervisor tests similarly:
 
 ```console
 % bundle exec rsmp-validator run test/supervisor \
-    --supervisor-config config/gem_supervisor.yaml \
+    --supervisor-config config/supervisors/gem_supervisor.yaml \
     --auto-supervisor-config config/simulator/supervisor.yaml
 ```
 
 ## Check the configuration and run tests
 
-Validate credential paths, configuration shape, key-to-credential consistency, credential identities, and other secure settings before starting a test:
+Check the configuration before starting a test. At startup, each endpoint also checks the credential files, private-key permissions, and key-to-credential match.
 
 ```console
 % bundle exec rsmp-validator config check config/my_site_validation_config.yaml

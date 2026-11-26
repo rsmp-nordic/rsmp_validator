@@ -87,7 +87,7 @@ module RSMP
         raise RSMP::ConnectionError, result.failure.message if result.failure?
 
         log 'Ready'
-        return if @initial_unsubscribe_done
+        return if @initial_unsubscribe_done || @proxy.accepted_sxls.empty?
 
         @proxy.unsubscribe_from_all(component: RSMP::Validator.get_config('main_component')).value!
         @initial_unsubscribe_done = true

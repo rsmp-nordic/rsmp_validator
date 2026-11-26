@@ -101,7 +101,7 @@ module RSMP
         end
 
         def connection_lost?(error)
-          return true if error.is_a?(RSMP::NotReady) || error.is_a?(RSMP::DisconnectError)
+          return true if error.is_a?(RSMP::ConnectionError)
           return true if connection_system_error?(error)
           return error.message == 'Secure RSMP peer closed connection' if error.is_a?(EOFError)
           return false unless error.is_a?(IOError)
