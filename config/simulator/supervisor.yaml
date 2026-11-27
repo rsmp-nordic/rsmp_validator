@@ -1,6 +1,10 @@
 port: 13111
+secure:
+  required: true
+  profile: rsmp-secure-v1
+  log_decrypted_payloads: true
 sites:
-  default:
+  RN+SI0001:
     sxls:
       tlc: ['1.2.1', '1.2.0', '1.1.0', '1.0.15', '1.0.14', '1.0.13', '1.0.10', '1.0.9', '1.0.8', '1.0.7']
     intervals:

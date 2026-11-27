@@ -25,6 +25,24 @@ module RSMP
           end
         end
 
+        # Reports a recognizable transport-level failure without presenting it as
+        # an uncaught validator exception.
+        class ConnectionLost < StandardError
+          def initialize(original)
+            super("RSMP connection was lost while the test was running: #{original.message}")
+            set_backtrace(original.backtrace)
+          end
+        end
+
+        # A malformed secure frame is still a test error, but identifying it as
+        # a protocol failure makes the cause and severity explicit.
+        class SecureProtocolFailure < StandardError
+          def initialize(original)
+            super("Secure RSMP protocol failure while the test was running: #{original.message}")
+            set_backtrace(original.backtrace)
+          end
+        end
+
         def with_site(state, sxl: nil, core: nil, **opts, &block)
           validate_state!(state)
           check_version_requirements(sxl, core)
@@ -59,12 +77,45 @@ module RSMP
           @__assertions__.assert false, e.failure.message
           throw :rsmp_validator_test_failure
         rescue StandardError => e
-          error_test UncaughtException.new(e)
+          report_exception(e)
         end
 
         def error_test(error)
           @__assertions__.error! error
           throw :rsmp_validator_test_failure
+        end
+
+        def report_exception(error)
+          wrapped = if secure_protocol_failure?(error)
+                      SecureProtocolFailure.new(error)
+                    elsif connection_lost?(error)
+                      ConnectionLost.new(error)
+                    else
+                      UncaughtException.new(error)
+                    end
+          error_test wrapped
+        end
+
+        def secure_protocol_failure?(error)
+          defined?(RSMP::Secure::FrameError) && error.is_a?(RSMP::Secure::FrameError)
+        end
+
+        def connection_lost?(error)
+          return true if error.is_a?(RSMP::ConnectionError)
+          return true if connection_system_error?(error)
+          return error.message == 'Secure RSMP peer closed connection' if error.is_a?(EOFError)
+          return false unless error.is_a?(IOError)
+
+          error.message == 'Secure RSMP transport is closed' ||
+            error.message.match?(/\ACannot send .+: connection (?:is|transport is) /)
+        end
+
+        def connection_system_error?(error)
+          return false unless error.is_a?(SystemCallError)
+
+          %w[ECONNABORTED ECONNREFUSED ECONNRESET ENOTCONN EPIPE ETIMEDOUT].include?(
+            error.class.name.delete_prefix('Errno::')
+          )
         end
 
         def validate_state!(state)
