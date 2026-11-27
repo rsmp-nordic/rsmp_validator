@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rsmp-nordic/rsmp.git
-  revision: 332544f0690150c03093e711d8d468053a866afb
+  revision: 74ce2585eb395b808da89b27706ab5c0c2393331
   branch: e2ee_edhoc
   specs:
     rsmp (0.54.1)
